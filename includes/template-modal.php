@@ -1,4 +1,4 @@
-<div class="wpr-modal" id="wpr-modal-<?php echo $product_id; ?>">
+<div class="wpr-modal" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
 <div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
     <div class="wpr-modal-content">
         <div class="wpr-modal-head">
