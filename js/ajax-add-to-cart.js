@@ -24,6 +24,11 @@
                 data.product_id = $submitButton.val();
             }
 
+            // add product id to button to catch it by modal.
+            $submitButton.attr('data-product_id', data.product_id);
+
+
+
         
             $submitButton.removeClass( 'added' );
             $submitButton.addClass( 'loading' );
