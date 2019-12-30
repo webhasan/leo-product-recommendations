@@ -79,6 +79,7 @@
     $( document.body).on('added_to_cart', function(e, ...data) {
         const [,,buttonInfo] = data;
         var button =  buttonInfo[0];
+        
         var buttonId = $(button).data('product_id');
         var modalId = '#wpr-modal-' + buttonId;
        
