@@ -1,18 +1,47 @@
-<div class="wpr-modal" id="product-1">
-    <div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
-        <div class="wpr-modal-content">
-            <div class="wpr-modal-head">
-                <h2>You might like following prodcuts.</h2>
-                <span aria-hidden="true" class="wpr-modal-close">×</span>
-            </div>
-            <div class="wpr-modal-body">
-                
-            </div>
+<div class="wpr-modal" id="wpr-modal-<?php echo $product_id; ?>">
+<div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
+    <div class="wpr-modal-content">
+        <div class="wpr-modal-head">
+        <div class="woocommerce-message" role="alert">
 
-            <div class="wpr-modal-footer">
-                <a href="#" class="wpr-button wpr-button-blue">Shop More</a>
-                <a href="#" class="wpr-button wpr-button-green">Go Checkout</a>
+            <a href="<?php echo get_post_permalink($product_id); ?>" class="button wc-forward">View cart</a> “<?php echo get_the_title($product_id); ?>” has been added to your cart.	</div>
+
+            <h2>You may purchase following product with "<?php echo get_the_title($product_id); ?>"</h2>
+            <span aria-hidden="true" class="wpr-modal-close">×</span>
+        </div>
+        <div class="wpr-modal-body">
+            <div class="recommended-product-list">
+            <?php
+            $args = array(
+                'post_type' => 'product',
+                'posts_per_page' => -1,
+                'post__in' => $selectedPostsId,
+            );
+                $loop = new WP_Query( $args );
+                if ( $loop->have_posts() ) {
+                    while ( $loop->have_posts() ) : $loop->the_post();
+                ?>
+                <div class="single-wpr">
+                    <a href="<?php the_permalink(); ?>">
+                        <?php the_post_thumbnail(); ?>
+                        <?php the_title(); ?>
+                    </a>
+                    
+                </div>
+                <?php
+                    endwhile;
+                } else {
+                    echo __( 'No products found' );
+                }
+                wp_reset_postdata();
+                ?>
             </div>
         </div>
+
+        <div class="wpr-modal-footer">
+            <a href="#" class="wpr-button wpr-button-blue">Shop More</a>
+            <a href="#" class="wpr-button wpr-button-green">Go Checkout</a>
+        </div>
     </div>
+</div>
 </div>
