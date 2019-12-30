@@ -15,3 +15,6 @@ Go to edit product you will see panel for add product as recommend product.
 
 3. ### Update Feature 
    Think about update feature to make it more useful. 
+
+4. ### Typographyjs integration
+   Vertical rythm setup
