@@ -204,6 +204,9 @@ class Pgfy_Woo_Product_Recommend {
 		add_action( 'wp_ajax_nopriv_pr_fetch', array($this, 'fetch_post_meta'));
 
 		add_action('woocommerce_after_shop_loop_item', array($this, 'product_archive_modal'));
+		add_action('woocommerce_after_single_product_summary', array($this, 'product_single_modal'), 21);
+		add_filter('woocommerce_blocks_product_grid_item_html', array($this, 'product_gutenberg_block'), 10, 3);
+		
 	}
 
 	/**
@@ -346,11 +349,9 @@ class Pgfy_Woo_Product_Recommend {
 	}
 
 	/**
-	 * Get class instance.
+	 * Add modal to archive / shop page prodcuts
      * @since      1.0.0
-	 * @return object Instance.
 	 */
-
 	public function product_archive_modal() {
 		global $product;
 		$product_id = $product->id;
@@ -365,6 +366,51 @@ class Pgfy_Woo_Product_Recommend {
 				include($modal_template);
 			}
 		}
+	}
+
+	/**
+	 * Add modal to single product page
+     * @since      1.0.0
+	 */
+	public function product_single_modal() {
+		global $product;
+
+		$product_id = $product->id;
+
+		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
+		$selectedPostsId = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+
+		if(!empty($selectedPostsId)) {
+
+			$modal_template = $this->get_path('includes/template-modal.php');
+
+			if($modal_template) {
+				include($modal_template);
+			}
+		}
+	}
+
+	/**
+	 * Add modal to Guterberg block product
+     * @since      1.0.0
+	 */
+	public function product_gutenberg_block($html, $data, $product) {
+
+		$product_id = $product->id;
+		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
+		$selectedPostsId = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+
+		if(empty($selectedPostsId)) 
+			return $html;
+
+
+		$modal_template = $this->get_path('includes/template-modal.php');
+
+		ob_start();
+			include($modal_template);
+		$modalHtml = ob_get_clean();
+
+		return $html . $modalHtml;
 	}
 
     /**

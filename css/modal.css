@@ -104,6 +104,10 @@ body.wpr-modal-opened {
     border-top-right-radius: calc(.3rem - 1px);
 }
 
+.wpr-modal-head h2 {
+	text-align: center;
+}
+
 .wpr-modal-close {
     font-size: 1.5rem;
     font-weight: 700;
