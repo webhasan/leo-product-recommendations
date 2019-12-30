@@ -2,11 +2,21 @@
 <div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
     <div class="wpr-modal-content">
         <div class="wpr-modal-head">
-        <div class="woocommerce-message" role="alert">
 
-            <a href="<?php echo get_post_permalink($product_id); ?>" class="button wc-forward">View cart</a> “<?php echo get_the_title($product_id); ?>” has been added to your cart.	</div>
+            <div class="woocommerce-message" role="alert">
+                <a href="<?php echo wc_get_cart_url(); ?>" class="button wc-forward"><?php _e('View cart', 'woocommerce-product-recommend');?></a> 
+                “<?php echo get_the_title($product_id); ?>” <?php _e('has been added to your cart.','woocommerce-product-recommend'); ?>	
+            </div>
 
-            <h2>You may purchase following product with "<?php echo get_the_title($product_id); ?>"</h2>
+            <?php 
+                $modal_heading = apply_filters('pgfy_modal_heading', sprintf(
+                    __('<h2>You may purchase following product with "%s"</h2>','woocommerce-product-recommend'), 
+                    get_the_title($product_id)
+                ));
+
+                echo $modal_heading;
+            ?>
+            
             <span aria-hidden="true" class="wpr-modal-close">×</span>
         </div>
         <div class="wpr-modal-body">
