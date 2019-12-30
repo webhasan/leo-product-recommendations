@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "^6.0.0"
+    "@wordpress/scripts": "^6.0.0",
+    "react-preloaders": "^3.0.3"
   },
   "dependencies": {
     "react-reorder": "^3.0.0-alpha.7"
