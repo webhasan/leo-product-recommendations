@@ -50,7 +50,7 @@
 
         <div class="wpr-modal-footer">
             <a href="#" class="wpr-button wpr-button-blue">Shop More</a>
-            <a href="#" class="wpr-button wpr-button-green">Go Checkout</a>
+            <a href="<?php echo wc_get_cart_url(); ?>" class="wpr-button wpr-button-green"><?php _e('View cart', 'woocommerce-product-recommend');?></a>
         </div>
     </div>
 </div>
