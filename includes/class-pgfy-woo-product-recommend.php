@@ -1,0 +1,422 @@
+<?php 
+/**
+ * The core plugin class
+ *
+ * @since      1.0.0
+ * @author     Md Hasanuzzaman <webhasan24@gmail.com>
+ */
+
+class Pgfy_Woo_Product_Recommend {
+
+    static protected $instance;
+
+    /**
+    * Class constructor. 
+    * Does not right now
+    * 
+    * @since      1.0.0
+     */
+    public function __construct() {
+
+    }
+
+	/**
+	 * Init the plugin when all dependency as available.
+     * 
+     * @since      1.0.0
+     * @return     void
+	 */
+    public function init() {
+
+        $this->define_constant();
+
+		register_activation_hook( WP_PR_FILE, array( $this, 'on_activation' ) );
+
+		register_deactivation_hook( WP_PR_FILE, array( $this, 'on_deactivation' ) );
+
+		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
+    }
+
+    /**
+	 * Do stuff when plugin activated
+     * 
+	 * @since      1.0.0
+	 */
+	public function on_activation() {
+		update_option('woocommerce_enable_ajax_add_to_cart', 'yes');
+		update_option('woocommerce_cart_redirect_after_add', 'no');
+    }
+    
+    /**
+	 * Dofing stuff when plugin delete.
+	 *
+     * @since      1.0.0
+	 * @return void
+	 */
+	public function on_deactivation() {
+		
+    }
+    
+    /**
+     * Setup plugin once all other plugins are loaded.
+     *
+     * @since      1.0.0
+     * @return void
+     */
+    public function on_plugins_loaded() {
+
+		$this->load_textdomain();
+		
+        if ( ! $this->has_satisfied_dependencies() ) {
+			add_action( 'admin_init', array( $this, 'deactivate_self' ) );
+			add_action( 'admin_notices', array( $this, 'render_dependencies_notice' ) );
+			return;
+		}
+
+		$this->includes();
+		$this->hooks();
+    }
+
+    /**
+	 * Define Constances
+	 *
+     * @since      1.0.0    
+	 * @return void
+	 */
+	protected function define_constant() {
+        $this->define( 'WC_PR_ABSPATH', dirname( __DIR__ ) . '/' );
+        $this->define('WP_PR_FILE', WC_PR_ABSPATH.'woocommerce-product-recommend.php');
+        $this->define('WC_PR_URL', plugin_dir_url(WP_PR_FILE));
+    }  
+    
+    /**
+	 * Load Localisation files.
+	 *
+     * @since      1.0.0    
+	 * @return void
+	 */
+    public function load_textdomain() {
+        load_plugin_textdomain( 'woocommerce-product-recommend', false, dirname( plugin_basename( WP_PR_FILE ) ) . '/languages' );
+    }
+    
+    /**
+	 * Define constant if not already set.
+	 *
+     * @since      1.0.0   
+	 * @param string      $name  Constant name.
+	 * @param string|bool $value Constant value.
+	 */
+	protected function define( $name, $value ) {
+		if ( ! defined( $name ) ) {
+			define( $name, $value );
+		}
+    }
+    
+    /**
+	 * Returns true if all dependencies for the plugin are loaded.
+	 *
+     * @since      1.0.0   
+	 * @return bool
+	 */
+	protected function has_satisfied_dependencies() {
+		$dependency_errors = $this->get_dependency_errors();
+		return 0 === count( $dependency_errors );
+    }
+    
+
+    /**
+	 * Get an array of dependency error messages.
+	 *
+     * @since      1.0.0   
+	 * @return array
+	 */
+	protected function get_dependency_errors() {
+		$errors                      = array();
+		$wordpress_version           = get_bloginfo( 'version' );
+		$minimum_wordpress_version   = '5.0';
+		$minimum_woocommerce_version = '3.2';
+		$wordpress_minimum_met       = version_compare( $wordpress_version, $minimum_wordpress_version, '>=' );
+		$woocommerce_minimum_met     = class_exists( 'WooCommerce' ) && version_compare( WC_VERSION, $minimum_woocommerce_version, '>=' );
+
+		if ( ! $woocommerce_minimum_met ) {
+			$errors[] = sprintf(
+				__( 'The WooCommerce Product Recommond  plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'woocommrece-product-recommend' ),
+				'https://wordpress.org/plugins/woocommerce/',
+				$minimum_woocommerce_version
+			);
+		}
+
+		if ( ! $wordpress_minimum_met ) {
+			$errors[] = sprintf(
+				__( 'The WooCommerce Product Recommond  plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'woocommrece-product-recommend' ),
+				'https://wordpress.org/',
+				$minimum_wordpress_version
+			);
+		}
+
+		return $errors;
+    }
+    
+
+     /**
+	 * Deactive Plugin
+     * 
+     * @since      1.0.0
+	 */
+
+	public function deactivate_self() {
+		deactivate_plugins( plugin_basename( WP_PR_FILE ) );
+		unset( $_GET['activate'] );
+    }
+    
+    /**
+     * Notify users of the plugin requirements.
+     * 
+     * @since      1.0.0
+     */
+	public function render_dependencies_notice() {
+		$message = $this->get_dependency_errors();
+		printf( '<div class="error"><p>%s</p></div>', implode( ' ', $message ) );
+	}
+
+	/**
+     * Include all require files.
+     * 
+     * @since      1.0.0
+     */
+	public function includes() {
+
+	}
+
+	/**
+     * Add all actions hook.
+     * 
+     * @since      1.0.0
+     */
+	public function hooks() {
+		
+		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts')); // back-end scripts
+		add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts')); // front-end scripts
+
+		add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
+		add_action('save_post', array($this, 'on_save_post'));
+		add_action( 'wp_ajax_pr_fetch', array($this, 'fetch_post_meta'));
+		add_action( 'wp_ajax_nopriv_pr_fetch', array($this, 'fetch_post_meta'));
+
+		add_action('woocommerce_after_shop_loop_item', array($this, 'product_archive_modal'));
+	}
+
+	/**
+	 * Enqueue all admin scripts and styles
+	 * 
+	 * @since      1.0.0
+	 */
+	public function admin_enqueue_scripts() {
+		wp_enqueue_script('wpr-script', $this->get_url('js/build/index.js'), array('wp-element','jquery'), false, true);
+		wp_localize_script( 'wpr-script', 'ajax_url', admin_url( 'admin-ajax.php' ));
+		wp_enqueue_style( 'wpr-panel', $this->get_url('css/panel.css'));
+	}
+
+	/**
+	 * Enqueue all front end scripts and styles
+	 * 
+	 * @since      1.0.0
+	 */
+	public function wp_enqueue_scripts() {
+		wp_enqueue_script('wpr-modal', $this->get_url('js/modal.js'), array('jquery'), false, true);
+
+		if(is_product()) {
+			wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('js/ajax-add-to-cart.js'), array('jquery'), false, true);
+		}
+		
+		wp_enqueue_style( 'wpr-modal', $this->get_url('css/modal.css'));
+	}
+	
+	/**
+	 * Plugin file URL
+	 * 
+	 * @since      1.0.0
+	 * @return     URL link of file.
+	 * @param      stirng File name with folder path.
+	 */
+	public function get_url($file_path = '') {
+		return plugin_dir_url( WP_PR_FILE ) . $file_path;
+	}
+
+	/**
+	 * Add Meta Box
+	 * 
+	 * @since      1.0.0
+	 */
+	public function add_meta_boxes() {
+		add_meta_box( 
+			'plfy_prodcut_selection', 
+			__('Recommended Products','woocommerce-product-recommend'), 
+			array($this, 'product_selection'),
+			array('product')
+		);
+	}
+
+	/**
+	 * Include Products Recommend Panel
+	 * 
+	 * @since      1.0.0
+	 */
+
+	public function product_selection($post) {
+		$path = $this->get_path('includes/option-select-products.php');
+
+		if($path) {
+			include_once($path);
+		}
+	}
+
+	/**
+	 * Get file path from abspath
+	 * 
+	 * @since      1.0.0
+	 * @param      stirng File name with folder path.
+	 * @return     string Full path of file.
+	 */
+	public function get_path($file_path) {
+		$file = plugin_dir_path( WP_PR_FILE ) . $file_path;
+
+		if(file_exists($file)) {
+			return $file;
+		}
+	}
+
+	/**
+	 * Save post callback function
+	 * 
+	 * @since      1.0.0
+	 */
+	public function on_save_post($id) {
+		$selected = isset($_POST['pgfy_pr_data']) ? $_POST['pgfy_pr_data'] : array();
+		update_post_meta($id, 'pgfy_pr_data', $selected);
+	}
+
+	/**
+	 * Fetch Product Meta and Recommend Products, etc 
+	 * 
+	 * @since      1.0.0
+	 */
+	public function fetch_post_meta() {
+		// Get all prodcuts
+		$post_data = get_posts(array(
+			'post_type' => 'product',
+			'numberposts' => -1
+		));
+	
+		// map prodcut id , title, thumbnails and categoris
+		$products = array_map(function($item) {
+			$id = $item->ID;
+			$title = $item->post_title;
+			$thumbnail_image = get_the_post_thumbnail_url($id);
+	
+			$categories = get_the_terms($id, 'product_cat');
+	
+			$categories = array_map(function($category) {
+				return $category->name;
+			}, $categories);
+	
+	
+			return compact('id','title','thumbnail_image', 'categories');
+		}, $post_data);
+	
+
+		// Get product recommend data.
+		$pr_data = get_post_meta($_POST['post_id'],'pgfy_pr_data', true);
+
+		// Get product recommend heading
+
+		$heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
+
+		// Get selected recommended products id
+		$selectedPostsId = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+
+		// Get selected prodcuts by id
+		$selectedProducts = array_values(array_filter($products, function($product) use($selectedPostsId) {
+			return in_array($product['id'], $selectedPostsId);
+		}));
+	
+		// Parse arry to json string
+		echo json_encode(compact("products", "selectedProducts", "heading"));
+		die;
+	}
+
+	/**
+	 * Get class instance.
+     * @since      1.0.0
+	 * @return object Instance.
+	 */
+
+	public function product_archive_modal() {
+		global $product;
+		$product_id = $product->id;
+		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
+		$selectedPostsId = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+
+		if(!empty($selectedPostsId)): ?>
+			<div class="wpr-modal" id="wpr-modal-<?php echo $product_id; ?>">
+				<div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
+					<div class="wpr-modal-content">
+						<div class="wpr-modal-head">
+						<div class="woocommerce-message" role="alert">
+
+							<a href="<?php echo get_post_permalink($product_id); ?>" class="button wc-forward">View cart</a> “<?php echo get_the_title($product_id); ?>” has been added to your cart.	</div>
+
+							<h2>You may purchase following product with "<?php echo get_the_title($product_id); ?>"</h2>
+							<span aria-hidden="true" class="wpr-modal-close">×</span>
+						</div>
+						<div class="wpr-modal-body">
+							<div class="recommended-product-list">
+							<?php
+							$args = array(
+								'post_type' => 'product',
+								'posts_per_page' => -1,
+								'post__in' => $selectedPostsId,
+							);
+								$loop = new WP_Query( $args );
+								if ( $loop->have_posts() ) {
+									while ( $loop->have_posts() ) : $loop->the_post();
+								?>
+								<div class="single-wpr">
+									<a href="<?php the_permalink(); ?>">
+										<?php the_post_thumbnail(); ?>
+										<?php the_title(); ?>
+									</a>
+									
+								</div>
+								<?php
+									endwhile;
+								} else {
+									echo __( 'No products found' );
+								}
+								wp_reset_postdata();
+								?>
+							</div>
+						</div>
+
+						<div class="wpr-modal-footer">
+							<a href="#" class="wpr-button wpr-button-blue">Shop More</a>
+							<a href="#" class="wpr-button wpr-button-green">Go Checkout</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endif;
+	}
+
+    /**
+	 * Get class instance.
+     * @since      1.0.0
+	 * @return object Instance.
+	 */
+    public static function instance() {
+        if(is_null(self::$instance)) 
+            self::$instance = new self;
+
+        return self::$instance;
+    }
+}

@@ -1,0 +1,205 @@
+.pgfy-recommend-product {
+	position: relative;
+	z-index: 10;
+}
+.pgfy-recommend-product .pgfy-recommend-product-prelaoder {
+	font-size: 20px;
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 999;
+	transform: translate(-50%, -50%);
+}
+
+.recommend-product-options {
+	padding: 15px 0;
+}
+
+.recommend-product-options .product-selection-panel {
+	border: 1px solid #ccd0d4;
+}
+
+.recommend-product-options .rp-panel-title {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.recommend-product-options .product-filter {
+	padding: 7px;
+	border-bottom: 1px solid #ccd0d4;
+}
+
+.recommend-product-options .product-filter:after {
+	content: "";
+	clear: both;
+	display: table;
+}
+
+.recommend-product-options .product-filter .search {
+	width: 50%;
+	display: inline-block;
+	float: left;
+}
+
+.recommend-product-options .product-filter .search input[type=text],
+.recommend-product-options .product-filter .search input[type=text]:focus {
+	width: 100%;
+	border: none;
+	box-shadow: none;
+}
+
+.recommend-product-options .product-selection-panel .product-selection .list-panel,
+.recommend-product-options .product-selection-panel .product-selection .select-item-panel {
+	width: 50%;
+	float: left;
+	background-color: #fff;
+	box-sizing: border-box;
+}
+
+.recommend-product-options .product-selection-panel .product-selection .list-panel {
+	border-right: 1px solid #ccd0d4;
+	background: #F9F9F9;
+}
+
+.recommend-product-options .product-selection {
+	overflow: auto;
+}
+
+.recommend-product-options .product-selection:before {
+	  content: "";
+	  clear: both;
+	  display: table;	
+}
+
+.recommend-product-options .product-selection-panel ul {
+	list-style: none;
+	margin: 0;
+	padding-left: 10px;
+	height: 300px;
+	overflow: auto;
+	padding: 5px;
+}
+
+.recommend-product-options .product-selection-panel .pr-perload {
+	height: 300px;
+	line-height: 300px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.recommend-product-options .product-selection-panel ul li {
+	display: block;
+	padding: 5px 7px;
+}
+
+.recommend-product-options .product-selection-panel ul li:hover {
+	background-color: gray;
+	cursor: pointer;
+	background: #e14d43;
+	color: #fff;
+}
+
+.recommend-product-options .product-selection-panel .product-selection img {
+	max-width: 20px;
+	margin-top: -1px;
+	margin-right: 10px;
+	max-height: 20px;
+	display: inline-block;
+	height: auto;
+	width: auto;
+	float: left;
+}
+
+.recommend-product-options .product-selection-panel .select-item-panel li {
+	position: relative;
+	box-sizing: border-box;
+	  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.recommend-product-options .product-selection-panel .select-item-panel li.dragged {
+	z-index: 10;
+}
+
+.recommend-product-options .product-selection-panel .select-item-panel li:hover {
+	cursor: grab;
+}
+.recommend-product-options .product-selection-panel .select-item-panel li.dragged {
+	cursor: grabbing;
+	opacity: .9;
+	background: gray;
+}
+
+.recommend-product-options .product-selection-panel .select-item-panel  li .remove-item {
+	position: absolute;
+	text-decoration: none;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	line-height: 18px;
+	border-radius: 50%;
+	background: #000;
+	text-align: center;
+	color: #fff;
+	counter-reset: pointer;
+	right: 10px;
+	top: 5px;
+	z-index: 10px;
+	opacity: 0;
+	transition: color .2s;
+}
+
+.recommend-product-options .product-selection-panel .select-item-panel li:hover .remove-item {
+	opacity: 1;
+	cursor: pointer;
+}
+
+.recommend-product-options .product-selection-panel .select-item-panel  li .remove-item:hover {
+	color: #e14d43;
+	counter-reset: pointer;
+}
+
+.recommend-product-options .product-selection-panel li.custom-placeholder {
+	display: block;
+	height: 30px;
+	background: #f1f1f1;
+	border: 1px dashed #e14d43;
+}
+
+.pr-field {
+	border-top: 1px solid #ccd0d4;
+	margin-top: 25px;
+	padding-top: 25px;
+	padding-left: 12px;
+	padding-right: 12px;
+	clear: both;
+}
+
+.pr-field input[type="text"] {
+	width: 100%;
+}
+
+#plfy_prodcut_selection .inside {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.pr-field:first-child {
+	border-top: none;
+	margin-top: 0;
+	padding-top: 0;
+}
+
+.recommend-product-options .category-filter {
+	width: 25%;
+	float: right;
+}
+
+.recommend-product-options .category-filter select {
+	width: 100%;
+}
