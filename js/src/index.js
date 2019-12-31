@@ -1,16 +1,21 @@
 import Reorder from 'react-reorder';
-import { Lines } from 'react-preloaders';
-(function(React, $, app, Reorder, Lines) {
+
+(function(React, $, app, Reorder) {
+
 	if(!app) return;
 	const postId = parseInt(app.getAttribute('data-id'));
 
 	const { reorder	} = Reorder;
 
-	const apiEndPoint = ajax_url;
+	const apiEndPoint = ajax_url; 
+
 	const {useState, useEffect} = React;
 
+
 	const SelectProduct = () => {
+
 		const [facedDate, setFacedDate] = useState(false);
+
 		const [heading, setHeading] = useState([]);
 		const [products, setProducts] = useState([]);
 		const [selectedProducts, setSelectedProducts] = useState([]);
@@ -89,6 +94,7 @@ import { Lines } from 'react-preloaders';
 		
 				success: function(data) {
 					let {products, selectedProducts, heading} = JSON.parse(data);
+					
 					setHeading(heading);
 					setProducts(products);
 					setSelectedProducts(selectedProducts);
@@ -193,4 +199,4 @@ import { Lines } from 'react-preloaders';
 	React.render(
 		<SelectProduct/>, app
 	)
-})(wp.element, jQuery, document.getElementById('pr-app'), Reorder, Lines);
+})(wp.element, jQuery, document.getElementById('pr-app'), Reorder);

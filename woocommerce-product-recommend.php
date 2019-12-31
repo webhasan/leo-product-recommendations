@@ -17,6 +17,7 @@
 
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+
 if(!class_exists('Pgfy_Woo_Product_Recommend')) {
 	require plugin_dir_path( __FILE__ ) . 'includes/class-pgfy-woo-product-recommend.php';
 }
