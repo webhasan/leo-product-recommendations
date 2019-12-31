@@ -305,11 +305,16 @@ class Pgfy_Woo_Product_Recommend {
 	 * @since      1.0.0
 	 */
 	public function fetch_post_meta() {
+		// post ID 
+		$post_id = $_POST['post_id'];
+
 		// Get all prodcuts
 		$post_data = get_posts(array(
 			'post_type' => 'product',
 			'numberposts' => -1
 		));
+
+
 	
 		// map prodcut id , title, thumbnails and categoris
 		$products = array_map(function($item) {
@@ -326,10 +331,16 @@ class Pgfy_Woo_Product_Recommend {
 	
 			return compact('id','title','thumbnail_image', 'categories');
 		}, $post_data);
+
+		// remove product itself from it list
+		$products = array_filter($products, function($product) use($post_id) {
+			return  $product['id'] != $post_id;
+		});
+		
 	
 
 		// Get product recommend data.
-		$pr_data = get_post_meta($_POST['post_id'],'pgfy_pr_data', true);
+		$pr_data = get_post_meta($post_id,'pgfy_pr_data', true);
 
 		// Get product recommend heading
 
