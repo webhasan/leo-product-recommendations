@@ -310,8 +310,9 @@ class Pgfy_Woo_Product_Recommend {
 
 		// Get all prodcuts
 		$post_data = get_posts(array(
-			'post_type' => 'product',
-			'numberposts' => -1
+			'post_type' 	=> 'product',
+			'numberposts' 	=> -1,
+			'exclude'     	=> array($post_id),
 		));
 
 
@@ -332,11 +333,13 @@ class Pgfy_Woo_Product_Recommend {
 			return compact('id','title','thumbnail_image', 'categories');
 		}, $post_data);
 
+
+
+
 		// remove product itself from it list
 		$products = array_filter($products, function($product) use($post_id) {
 			return  $product['id'] != $post_id;
 		});
-		
 	
 
 		// Get product recommend data.

@@ -68,6 +68,7 @@ import Reorder from 'react-reorder';
 		}
 
 		const mergeCategory = (products) => {
+
 			 let _categories  = products.reduce((total, current) => {
 				return [...total, ...current.categories];
 			 }, []);
@@ -94,10 +95,11 @@ import Reorder from 'react-reorder';
 		
 				success: function(data) {
 					let {products, selectedProducts, heading} = JSON.parse(data);
-					
+
 					setHeading(heading);
 					setProducts(products);
 					setSelectedProducts(selectedProducts);
+
 					setCategories(mergeCategory(products));
 
 					setFacedDate(true);
