@@ -10,7 +10,7 @@
 
                 <?php 
                     $modal_heading = apply_filters('pgfy_modal_heading', sprintf(
-                        __('<h2>You may purchase following product with "%s"</h2>','woocommerce-product-recommend'), 
+                        __('<h2 class="modal-heading">You may purchase following product with "%s"</h2>','woocommerce-product-recommend'), 
                         get_the_title($product_id)
                     ));
 
@@ -32,7 +32,7 @@
                     $loop = new WP_Query( $args );
                         if ( $loop->have_posts() ): while ( $loop->have_posts() ) : $loop->the_post();
                     ?>
-                    
+
                     <div class="single-wpr">
                         <a href="<?php the_permalink(); ?>"> 
                         <?php 

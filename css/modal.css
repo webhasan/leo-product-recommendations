@@ -104,7 +104,7 @@ body.wpr-modal-opened {
     border-top-right-radius: calc(.3rem - 1px);
 }
 
-.wpr-modal-head h2 {
+.wpr-modal-head h2.modal-heading {
 	text-align: center;
 }
 

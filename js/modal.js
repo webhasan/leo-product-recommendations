@@ -79,12 +79,16 @@
     $( document.body).on('added_to_cart', function(e, ...data) {
         const [,,buttonInfo] = data;
         var button =  buttonInfo[0];
-        
-        var buttonId = $(button).data('product_id');
-        var modalId = '#wpr-modal-' + buttonId;
-       
-        if($(modalId).length) 
-            $(modalId).wprModal();
+
+        if(! $(button).closest('.recommended-product-list').length) {
+
+            var buttonId = $(button).data('product_id');
+            var modalId = '#wpr-modal-' + buttonId;
+    
+            if($(modalId).length) 
+                $(modalId).wprModal();
+
+        }
     });
 
 }( jQuery ));
