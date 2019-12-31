@@ -4,13 +4,14 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "start": "wp-scripts start",
-    "build": "wp-scripts build"
+    "start": "wp-scripts start && node-sass --watch ../css/scss/modal.scss -o ../css/",
+    "build": "node-sass ../css/scss/modal.scss -o ../css/ && wp-scripts build"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "^6.0.0"
+    "@wordpress/scripts": "^6.0.0",
+    "node-sass": "^4.13.0"
   },
   "dependencies": {
     "bulma": "^0.8.0",

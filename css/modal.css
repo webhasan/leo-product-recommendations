@@ -2,183 +2,154 @@
  * stylesheet for front end modal
  * modal class ".wpr-modal"
  */
-
- 
 body.wpr-modal-opened {
-	overflow: hidden;
-}
+  overflow: hidden; }
 
 .wpr-modal {
-	overflow-x: hidden;
-    overflow-y: auto;
-	z-index: 1072;
-	position: fixed;
-    top: 0;
-    left: 0;
-   	/* display: none; */
-    width: 100%;
-    height: 100%;
-    outline: 0;
-}
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 1072;
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* display: none; */
+  width: 100%;
+  height: 100%;
+  outline: 0; }
 
 .wpr-modal.show {
-	display: block !important;
-	transition: opacity .2s linear;	
-	opacity: 0;
-}
+  display: block !important;
+  transition: opacity .2s linear;
+  opacity: 0; }
 
 .wpr-modal.show.fadeIn {
-	opacity: 1;
-}
+  opacity: 1; }
 
 .wpr-modal-overlay {
-	 position: fixed;
-	 top: 0;
-	 left: 0;
-	 z-index: 1000;
-	 width: 100vw;
-	 height: 100vh;
-	 background-color: #000;
-}
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000; }
 
 .wpr-modal-overlay.show {
- 	opacity: 0;
- 	transition: opacity .2s linear;
-}
+  opacity: 0;
+  transition: opacity .2s linear; }
 
 .wpr-modal-overlay.show.fadeIn {
- 	opacity: 0.5;
-}
+  opacity: 0.5; }
 
 .wpr-modal-dialog {
-	pointer-events: none;
-	width: auto;
-	position: relative;
-	transition: transform .4s ease-out,
-	-webkit-transform .4s ease-out;
-	margin: .5rem;
-	margin-top: 0;
-	transform: translate(0, -50px);
-}
+  pointer-events: none;
+  width: auto;
+  position: relative;
+  transition: transform .4s ease-out, -webkit-transform .4s ease-out;
+  margin: .5rem;
+  margin-top: 0;
+  transform: translate(0, -50px); }
 
 .wpr-modal.show.fadeIn .wpr-modal-dialog {
-	transform: translate(0, 0);
-}
+  transform: translate(0, 0); }
 
-
-@media (min-width: 576px){
-	.wpr-modal-dialog {
-		max-width: 500px;
-		max-height: calc(100% - 3.5rem);
-		margin: 1.75rem auto;
-	}
-}
-
+@media (min-width: 576px) {
+  .wpr-modal-dialog {
+    max-width: 500px;
+    max-height: calc(100% - 3.5rem);
+    margin: 1.75rem auto; } }
 
 @media (min-width: 992px) {
-	.wpr-modal-dialog {
-		max-width: 800px;
-	}
-}
+  .wpr-modal-dialog {
+    max-width: 800px; } }
 
 .wpr-modal-content {
-	max-height: calc(100vh - 3.5rem);
-	overflow: hidden;
-	position: relative;
-	width: 100%;
-	pointer-events: auto;
-	background-color: #fff;
-	background-clip: padding-box;
-	border: 1px solid rgba(0,0,0,.2);
-	border-radius: .3rem;
-	display: flex;
-    flex-direction: column;
-	outline: 0;
-}
+  max-height: calc(100vh - 3.5rem);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: .3rem;
+  display: flex;
+  flex-direction: column;
+  outline: 0; }
 
 .wpr-modal-head {
-	display: -ms-flexbox;
-    padding: 1rem 1rem;
-    border-bottom: 1px solid #dee2e6;
-    border-top-left-radius: calc(.3rem - 1px);
-    border-top-right-radius: calc(.3rem - 1px);
-}
+  display: -ms-flexbox;
+  padding: 1rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: calc(.3rem - 1px);
+  border-top-right-radius: calc(.3rem - 1px); }
 
 .wpr-modal-head h2.modal-heading {
-	text-align: center;
-}
+  text-align: center; }
 
 .wpr-modal-close {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1;
-    color: #000;
-    text-shadow: 0 1px 0 #fff;
-    opacity: .5;
-    cursor: pointer;
-    text-transform: none;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    display: inline-block;
-}
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: .5;
+  cursor: pointer;
+  text-transform: none;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: inline-block; }
 
 .wpr-modal-body {
-	overflow-y: auto;
-	position: relative;
-	-ms-flex: 1 1 auto;
-	flex: 1 1 auto;
-	padding: 1rem;
-}
+  overflow-y: auto;
+  position: relative;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 1rem; }
 
 .wpr-modal-footer {
-	padding: .75rem;
-	text-align: center;
-    border-top: 1px solid #dee2e6;
-    border-bottom-right-radius: calc(.3rem - 1px);
-    border-bottom-left-radius: calc(.3rem - 1px);	
-}
+  padding: .75rem;
+  text-align: center;
+  border-top: 1px solid #dee2e6;
+  border-bottom-right-radius: calc(.3rem - 1px);
+  border-bottom-left-radius: calc(.3rem - 1px); }
 
 .wpr-button {
-	display: inline-block;
-    font-weight: 400;
-    color: #212529;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-color: transparent;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    text-decoration: none;
-    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out,box-shadow .15s ease-in-out; }
 
 .wpr-button-blue {
-	background-color: blue;
-	color: #fff;
-	margin: 0 10px;
-}
+  background-color: blue;
+  color: #fff;
+  margin: 0 10px; }
 
 .wpr-button-green {
-	background-color: green;
-	color: #fff;
-	margin: 0 10px;
-} 
+  background-color: green;
+  color: #fff;
+  margin: 0 10px; }
 
 .wpr-modal .recommended-product-list {
-	overflow: hidden;
-	margin-left: -10px;
-	margin-right: -10px;
-}
+  overflow: hidden;
+  margin-left: -10px;
+  margin-right: -10px; }
 
 .wpr-modal .recommended-product-list .single-wpr {
-	width: 25%;
-	float: left;
-	padding: 0 10px;
-}
+  width: 25%;
+  float: left;
+  padding: 0 10px; }
