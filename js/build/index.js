@@ -3527,8 +3527,7 @@ __webpack_require__.r(__webpack_exports__);
       var restProducst = selectedProducts.filter(function (product) {
         return product.id !== id;
       });
-      setSelectedProducts(restProducst);
-      return false;
+      setSelectedProducts(restProducst); // return false;
     };
 
     var mergeCategory = function mergeCategory(products) {
@@ -3660,13 +3659,13 @@ __webpack_require__.r(__webpack_exports__);
       })), product.title, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("span", {
         className: "remove-item",
         onMouseDown: function onMouseDown(e) {
-          e.stopPropagation;
-          e.preventDefault;
+          e.preventDefault();
+          e.stopPropagation();
           removeProduct(product.id);
         },
         onClick: function onClick(e) {
-          e.stopPropagation;
-          e.preventDefault;
+          e.stopPropagation();
+          e.preventDefault();
         }
       }, "-")));
     }))))))));

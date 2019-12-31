@@ -61,10 +61,11 @@ import Reorder from 'react-reorder';
 		}
 
 		const removeProduct = (id) => {
+			
 			let restProducst = selectedProducts.filter(product => product.id !== id);
 			setSelectedProducts(restProducst);
 
-			return false;
+			// return false;
 		}
 
 		const mergeCategory = (products) => {
@@ -175,13 +176,13 @@ import Reorder from 'react-reorder';
 												{product.title}
 												<span  className="remove-item" 
 												onMouseDown = {(e) => {
-													e.stopPropagation; 
-													e.preventDefault; 
+													e.preventDefault();
+													e.stopPropagation();
 													removeProduct(product.id)
 												}}
 												onClick = { (e) => {
-													e.stopPropagation; 
-													e.preventDefault; 
+													e.stopPropagation();
+													e.preventDefault();
 												}}
 												>-</span>
 											</span>
