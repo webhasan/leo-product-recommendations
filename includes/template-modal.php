@@ -3,7 +3,7 @@
         <div class="wpr-modal-content">
             <div class="wpr-modal-head">
 
-                <div class="woocommerce-message" role="alert">
+                <div class="wpr-message" role="alert">
                     <a href="<?php echo wc_get_cart_url(); ?>" class="button wc-forward"><?php _e('View cart', 'woocommerce-product-recommend');?></a> 
                     “<?php echo get_the_title($product_id); ?>” <?php _e('has been added to your cart.','woocommerce-product-recommend'); ?>	
                 </div>
