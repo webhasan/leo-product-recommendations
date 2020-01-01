@@ -48,7 +48,7 @@ body.wpr-modal-opened {
   opacity: 0.5;
 }
 
-.wpr-modal-dialog {
+.wpr-modal .wpr-modal-dialog {
   pointer-events: none;
   width: auto;
   position: relative;
@@ -57,24 +57,10 @@ body.wpr-modal-opened {
   margin-top: 0;
   transform: translate(0, -50px);
 }
-
 .wpr-modal.show.fadeIn .wpr-modal-dialog {
   transform: translate(0, 0);
 }
-
-@media (min-width: 576px) {
-  .wpr-modal-dialog {
-    max-width: 500px;
-    max-height: calc(100% - 3.5rem);
-    margin: 1.75rem auto;
-  }
-}
-@media (min-width: 992px) {
-  .wpr-modal-dialog {
-    max-width: 800px;
-  }
-}
-.wpr-modal-content {
+.wpr-modal .wpr-modal-content {
   max-height: calc(100vh - 3.5rem);
   overflow: hidden;
   position: relative;
@@ -88,20 +74,17 @@ body.wpr-modal-opened {
   flex-direction: column;
   outline: 0;
 }
-
-.wpr-modal-head {
+.wpr-modal .wpr-modal-head {
   display: -ms-flexbox;
   padding: 1rem 1rem;
   border-bottom: 1px solid #dee2e6;
   border-top-left-radius: calc(.3rem - 1px);
   border-top-right-radius: calc(.3rem - 1px);
 }
-
-.wpr-modal-head h2.modal-heading {
+.wpr-modal .wpr-modal-head h2.modal-heading {
   text-align: center;
 }
-
-.wpr-modal-close {
+.wpr-modal .wpr-modal-close {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1;
@@ -115,24 +98,21 @@ body.wpr-modal-opened {
   right: 15px;
   display: inline-block;
 }
-
-.wpr-modal-body {
+.wpr-modal .wpr-modal-body {
   overflow-y: auto;
   position: relative;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   padding: 1rem;
 }
-
-.wpr-modal-footer {
+.wpr-modal .wpr-modal-footer {
   padding: 0.75rem;
   text-align: center;
   border-top: 1px solid #dee2e6;
   border-bottom-right-radius: calc(.3rem - 1px);
   border-bottom-left-radius: calc(.3rem - 1px);
 }
-
-.wpr-button {
+.wpr-modal .wpr-button {
   display: inline-block;
   font-weight: 400;
   color: #212529;
@@ -151,33 +131,38 @@ body.wpr-modal-opened {
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-
-.wpr-button-blue {
+.wpr-modal .wpr-button-blue {
   background-color: blue;
   color: #fff;
   margin: 0 10px;
 }
-
-.wpr-button-green {
+.wpr-modal .wpr-button-green {
   background-color: green;
   color: #fff;
   margin: 0 10px;
 }
-
 .wpr-modal .recommended-product-list {
   overflow: hidden;
   margin-left: -10px;
   margin-right: -10px;
 }
-
 .wpr-modal .recommended-product-list .single-wpr {
   width: 25%;
   float: left;
   padding: 0 10px;
 }
 
-body {
-  color: blue;
+@media (min-width: 576px) {
+  .wpr-modal-dialog {
+    max-width: 500px;
+    max-height: calc(100% - 3.5rem);
+    margin: 1.75rem auto;
+  }
+}
+@media (min-width: 992px) {
+  .wpr-modal-dialog {
+    max-width: "800px";
+  }
 }
 
 /*# sourceMappingURL=modal.css.map */

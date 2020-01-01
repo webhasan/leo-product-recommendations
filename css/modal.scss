@@ -2,13 +2,19 @@
  * stylesheet for front end modal
  * modal class ".wpr-modal"
  */
+$base_class: wpr-modal;
+$overlay_class: wpr-modal-overlay;
+
+$small_modal: '500px';
+$large_modal: '800px';
+$large_media: '992px';
 
  
 body.wpr-modal-opened {
 	overflow: hidden;
 }
 
-.wpr-modal {
+.#{$base_class} {
 	overflow-x: hidden;
     overflow-y: auto;
 	z-index: 1072;
@@ -21,17 +27,17 @@ body.wpr-modal-opened {
     outline: 0;
 }
 
-.wpr-modal.show {
+.#{$base_class}.show {
 	display: block !important;
 	transition: opacity .2s linear;	
 	opacity: 0;
 }
 
-.wpr-modal.show.fadeIn {
+.#{$base_class}.show.fadeIn {
 	opacity: 1;
 }
 
-.wpr-modal-overlay {
+.#{$overlay_class} {
 	 position: fixed;
 	 top: 0;
 	 left: 0;
@@ -41,29 +47,134 @@ body.wpr-modal-opened {
 	 background-color: #000;
 }
 
-.wpr-modal-overlay.show {
+.#{$overlay_class}.show {
  	opacity: 0;
  	transition: opacity .2s linear;
 }
 
-.wpr-modal-overlay.show.fadeIn {
+.#{$overlay_class}.show.fadeIn {
  	opacity: 0.5;
 }
 
-.wpr-modal-dialog {
-	pointer-events: none;
-	width: auto;
-	position: relative;
-	transition: transform .4s ease-out,
-	-webkit-transform .4s ease-out;
-	margin: .5rem;
-	margin-top: 0;
-	transform: translate(0, -50px);
+.#{$base_class} {
+	.wpr-modal-dialog {
+		pointer-events: none;
+		width: auto;
+		position: relative;
+		transition: transform .4s ease-out,
+		-webkit-transform .4s ease-out;
+		margin: .5rem;
+		margin-top: 0;
+		transform: translate(0, -50px);
+	}
+
+	&.show.fadeIn .wpr-modal-dialog {
+		transform: translate(0, 0);
+	}
+
+	.wpr-modal-content {
+		max-height: calc(100vh - 3.5rem);
+		overflow: hidden;
+		position: relative;
+		width: 100%;
+		pointer-events: auto;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid rgba(0,0,0,.2);
+		border-radius: .3rem;
+		display: flex;
+		flex-direction: column;
+		outline: 0;
+	}
+
+	.wpr-modal-head {
+		display: -ms-flexbox;
+		padding: 1rem 1rem;
+		border-bottom: 1px solid #dee2e6;
+		border-top-left-radius: calc(.3rem - 1px);
+		border-top-right-radius: calc(.3rem - 1px);
+
+		h2.modal-heading {
+			text-align: center;
+		}
+	}
+
+	.wpr-modal-close {
+		font-size: 1.5rem;
+		font-weight: 700;
+		line-height: 1;
+		color: #000;
+		text-shadow: 0 1px 0 #fff;
+		opacity: .5;
+		cursor: pointer;
+		text-transform: none;
+		position: absolute;
+		top: 15px;
+		right: 15px;
+		display: inline-block;
+	}
+
+	.wpr-modal-body {
+		overflow-y: auto;
+		position: relative;
+		-ms-flex: 1 1 auto;
+		flex: 1 1 auto;
+		padding: 1rem;
+	}
+	
+	.wpr-modal-footer {
+		padding: .75rem;
+		text-align: center;
+		border-top: 1px solid #dee2e6;
+		border-bottom-right-radius: calc(.3rem - 1px);
+		border-bottom-left-radius: calc(.3rem - 1px);	
+	}
+	
+	.wpr-button {
+		display: inline-block;
+		font-weight: 400;
+		color: #212529;
+		text-align: center;
+		vertical-align: middle;
+		cursor: pointer;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		background-color: transparent;
+		border: 1px solid transparent;
+		padding: .375rem .75rem;
+		font-size: 1rem;
+		line-height: 1.5;
+		text-decoration: none;
+		transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	}
+	
+	.wpr-button-blue {
+		background-color: blue;
+		color: #fff;
+		margin: 0 10px;
+	}
+	
+	.wpr-button-green {
+		background-color: green;
+		color: #fff;
+		margin: 0 10px;
+	} 
+
+	.recommended-product-list {
+		overflow: hidden;
+		margin-left: -10px;
+		margin-right: -10px;
+	}
+
+	.recommended-product-list .single-wpr {
+		width: 25%;
+		float: left;
+		padding: 0 10px;
+	}
 }
 
-.wpr-modal.show.fadeIn .wpr-modal-dialog {
-	transform: translate(0, 0);
-}
 
 
 @media (min-width: 576px){
@@ -75,114 +186,8 @@ body.wpr-modal-opened {
 }
 
 
-@media (min-width: 992px) {
+@media (min-width: $large_media) {
 	.wpr-modal-dialog {
-		max-width: 800px;
+		max-width: $large_modal;
 	}
-}
-
-.wpr-modal-content {
-	max-height: calc(100vh - 3.5rem);
-	overflow: hidden;
-	position: relative;
-	width: 100%;
-	pointer-events: auto;
-	background-color: #fff;
-	background-clip: padding-box;
-	border: 1px solid rgba(0,0,0,.2);
-	border-radius: .3rem;
-	display: flex;
-    flex-direction: column;
-	outline: 0;
-}
-
-.wpr-modal-head {
-	display: -ms-flexbox;
-    padding: 1rem 1rem;
-    border-bottom: 1px solid #dee2e6;
-    border-top-left-radius: calc(.3rem - 1px);
-    border-top-right-radius: calc(.3rem - 1px);
-}
-
-.wpr-modal-head h2.modal-heading {
-	text-align: center;
-}
-
-.wpr-modal-close {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1;
-    color: #000;
-    text-shadow: 0 1px 0 #fff;
-    opacity: .5;
-    cursor: pointer;
-    text-transform: none;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    display: inline-block;
-}
-
-.wpr-modal-body {
-	overflow-y: auto;
-	position: relative;
-	-ms-flex: 1 1 auto;
-	flex: 1 1 auto;
-	padding: 1rem;
-}
-
-.wpr-modal-footer {
-	padding: .75rem;
-	text-align: center;
-    border-top: 1px solid #dee2e6;
-    border-bottom-right-radius: calc(.3rem - 1px);
-    border-bottom-left-radius: calc(.3rem - 1px);	
-}
-
-.wpr-button {
-	display: inline-block;
-    font-weight: 400;
-    color: #212529;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-color: transparent;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    text-decoration: none;
-    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-
-.wpr-button-blue {
-	background-color: blue;
-	color: #fff;
-	margin: 0 10px;
-}
-
-.wpr-button-green {
-	background-color: green;
-	color: #fff;
-	margin: 0 10px;
-} 
-
-.wpr-modal .recommended-product-list {
-	overflow: hidden;
-	margin-left: -10px;
-	margin-right: -10px;
-}
-
-.wpr-modal .recommended-product-list .single-wpr {
-	width: 25%;
-	float: left;
-	padding: 0 10px;
-}
-
-body {
-	color: blue;
 }
