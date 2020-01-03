@@ -350,11 +350,11 @@ class Pgfy_Woo_Product_Recommend {
 		$heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
 		// Get selected recommended products id
-		$selectedPostsId = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 
 		// Get selected prodcuts by id
-		$selectedProducts = array_values(array_filter($products, function($product) use($selectedPostsId) {
-			return in_array($product['id'], $selectedPostsId);
+		$selectedProducts = array_values(array_filter($products, function($product) use($selected_products_id) {
+			return in_array($product['id'], $selected_products_id);
 		}));
 	
 		// Parse arry to json string
@@ -370,9 +370,9 @@ class Pgfy_Woo_Product_Recommend {
 		global $product;
 		$product_id = $product->id;
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
-		$selectedPostsId = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 
-		if(!empty($selectedPostsId)) {
+		if(!empty( $selected_products_id )) {
 
 			$modal_template = $this->get_path('includes/template-modal.php');
 
@@ -392,9 +392,9 @@ class Pgfy_Woo_Product_Recommend {
 		$product_id = $product->id;
 
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
-		$selectedPostsId = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 
-		if(!empty($selectedPostsId)) {
+		if(!empty($selected_products_id)) {
 
 			$modal_template = $this->get_path('includes/template-modal.php');
 
@@ -412,9 +412,9 @@ class Pgfy_Woo_Product_Recommend {
 
 		$product_id = $product->id;
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
-		$selectedPostsId = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 
-		if(empty($selectedPostsId)) 
+		if(empty($selected_products_id)) 
 			return $html;
 
 
@@ -424,7 +424,20 @@ class Pgfy_Woo_Product_Recommend {
 			include($modal_template);
 		$modalHtml = ob_get_clean();
 
-		return $html . $modalHtml;
+		$output = "<li class=\"wc-block-grid__product\">
+			<a href=\"{$data->permalink}\" class=\"wc-block-grid__product-link\">
+				{$data->image}
+				{$data->title}
+			</a>
+			{$data->badge}
+			{$data->price}
+			{$data->rating}
+			{$data->button} ";
+
+		$output .= $modalHtml;
+		$output .= "</li>";
+
+		return $output;
 	}
 
     /**

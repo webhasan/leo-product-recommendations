@@ -1,4 +1,19 @@
-<div class="wpr-modal" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
+<?php 
+    $total_rc_products = count($selected_products_id);
+
+    $modal_rows = 'wpr-modal-4';
+
+    if($total_rc_products === 3) {
+        $modal_rows = 'wpr-modal-3';
+    }
+
+    if($total_rc_products <= 2) {
+        $modal_rows = 'wpr-modal-2';
+    }
+
+?>
+
+<div class="wpr-modal <?php echo $modal_rows; ?>" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
     <div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
         <div class="wpr-modal-content">
             <div class="wpr-modal-head">
@@ -20,20 +35,20 @@
                 <span aria-hidden="true" class="wpr-modal-close">×</span>
             </div>
             <div class="wpr-modal-body">
-                <div class="recommended-product-list">
+                <ul class="products recommended-product-list">
 
                 <?php
                     $args = array(
                         'post_type' => 'product',
                         'posts_per_page' => -1,
-                        'post__in' => $selectedPostsId,
+                        'post__in' => $selected_products_id,
                     );
 
                     $loop = new WP_Query( $args );
                         if ( $loop->have_posts() ): while ( $loop->have_posts() ) : $loop->the_post();
                     ?>
 
-                    <div class="single-wpr">
+                    <li class="product single-wpr">
                         <a href="<?php the_permalink(); ?>"> 
                         <?php 
                             do_action( 'woocommerce_before_shop_loop_item_title' );
@@ -46,10 +61,10 @@
                             show_price = "FALSE"
                             style=""
                         ]'); ?>
-                    </div>
+                    </li>
                     
                     <?php endwhile;  wp_reset_postdata(); endif; ?>
-                </div>
+                </ul>
             </div>
 
             <div class="wpr-modal-footer">
