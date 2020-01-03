@@ -199,7 +199,5 @@ import Reorder from 'react-reorder';
 	}
 
 
-	React.render(
-		<SelectProduct/>, app
-	)
+	React.render(<SelectProduct/>, app)
 })(wp.element, jQuery, document.getElementById('pr-app'), Reorder);

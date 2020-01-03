@@ -1,0 +1,19 @@
+{
+  "name": "js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "wp-scripts start & sass --watch css/",
+    "build": "sass css/ & wp-scripts build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/scripts": "^6.1.1",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.13.0",
+    "react-reorder": "^3.0.0-alpha.7",
+    "sass-loader": "^8.0.0"
+  }
+}

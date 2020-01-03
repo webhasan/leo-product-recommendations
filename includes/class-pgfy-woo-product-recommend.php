@@ -215,7 +215,7 @@ class Pgfy_Woo_Product_Recommend {
 	 * @since      1.0.0
 	 */
 	public function admin_enqueue_scripts() {
-		wp_enqueue_script('wpr-script', $this->get_url('js/build/index.js'), array('wp-element','jquery'), false, true);
+		wp_enqueue_script('wpr-script', $this->get_url('build/index.js'), array('wp-element','jquery'), false, true);
 		wp_localize_script( 'wpr-script', 'ajax_url', admin_url( 'admin-ajax.php' ));
 		wp_enqueue_style( 'wpr-panel', $this->get_url('css/panel.css'));
 	}
