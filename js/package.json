@@ -12,8 +12,6 @@
     "@wordpress/scripts": "^6.0.0"
   },
   "dependencies": {
-    "bulma": "^0.8.0",
-    "csv": "^5.3.1",
     "react-reorder": "^3.0.0-alpha.7"
   }
 }
