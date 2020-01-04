@@ -182,13 +182,43 @@ body.wpr-modal-opened {
 		justify-content: center;
 	}
 
+	@media (min-width: 576px){
+		.#{$base_class} {
+			.wpr-modal-dialog {
+				max-width: 500px;
+				max-height: calc(100% - 3.5rem);
+				margin: 1.75rem auto;
+			}
+		}
+	}
+	
+
 	.recommended-product-list .single-wpr {
-		flex: 0 0 25%;
-		max-width: 25%;
 		padding: 0 10px;
 		text-align: center;
 		float: none !important;
 		margin-right: 0 !important;
+	}
+
+	&.wpr-modal-4 {
+		.recommended-product-list .single-wpr {
+			flex: 0 0 25%;
+			max-width: 25%;
+		}
+	}
+
+	&.wpr-modal-3 {
+		.recommended-product-list .single-wpr {
+			flex: 0 0 33.33333%;
+			max-width: 33.33333%;
+		}
+	}
+
+	&.wpr-modal-2 {
+		.recommended-product-list .single-wpr {
+			flex: 0 0 50%;
+			max-width: 50%;
+		}
 	}
 
 	.wpr-message {
@@ -236,48 +266,6 @@ body.wpr-modal-opened {
 			}
 		}
 	}
-
-	.single-wpr {
-
-		// .attachment-woocommerce_thumbnail {
-		// 	margin-bottom: 22px;
-		// 	border-radius: 3px;
-		// 	display: block;
-		// 	max-width: 100%;
-		// }
-
-		// .woocommerce-loop-product__title {
-		// 	color: #333333;
-		// 	font-size: 16px;
-		// 	font-weight: 400;
-		// 	line-height: 1.214;
-		// 	margin-bottom: 8.5px;
-		// }
-
-		// .onsale {
-		// 	border: 1px solid;
-		// 	border-color: #4c4c4c;
-		// 	color: #4c4c4c;
-		// 	background: transparent;
-		// 	padding: 3px 7.5px;
-		// 	font-size: 12.5px;
-		// 	text-transform: uppercase;
-		// 	font-weight: 600;
-		// 	display: inline-block;
-		// 	margin-bottom: 1em;
-		// 	border-radius: 3px;
-		// 	position: relative;
-		// }
-
-		// .price {
-		// 	color: #4c4c4c;
-		// 	display: block;
-		// 	font-weight: 400;
-		// 	font-size: 14px;
-		// }
-	}
-
-
 }
 
 @media (min-width: 576px){
@@ -292,8 +280,22 @@ body.wpr-modal-opened {
 
 @media (min-width: $large_media) {
 	.#{$base_class} {
-		.wpr-modal-dialog {
-			max-width: $large_modal;
+		&.wpr-modal-4 {
+			.wpr-modal-dialog {
+				max-width: $large_modal;
+			}
+		}
+
+		&.wpr-modal-3 {
+			.wpr-modal-dialog {
+				max-width: $medium_modal;
+			}
+		}
+
+		&.wpr-modal-2 {
+			.wpr-modal-dialog {
+				max-width: $small_modal;
+			}
 		}
 	}
 }

@@ -155,13 +155,30 @@ body.wpr-modal-opened {
   flex-wrap: wrap;
   justify-content: center;
 }
+@media (min-width: 576px) {
+  .wpr-modal .wpr-modal .wpr-modal-dialog {
+    max-width: 500px;
+    max-height: calc(100% - 3.5rem);
+    margin: 1.75rem auto;
+  }
+}
 .wpr-modal .recommended-product-list .single-wpr {
-  flex: 0 0 25%;
-  max-width: 25%;
   padding: 0 10px;
   text-align: center;
   float: none !important;
   margin-right: 0 !important;
+}
+.wpr-modal.wpr-modal-4 .recommended-product-list .single-wpr {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+.wpr-modal.wpr-modal-3 .recommended-product-list .single-wpr {
+  flex: 0 0 33.33333%;
+  max-width: 33.33333%;
+}
+.wpr-modal.wpr-modal-2 .recommended-product-list .single-wpr {
+  flex: 0 0 50%;
+  max-width: 50%;
 }
 .wpr-modal .wpr-message {
   padding: 10px 15px;
@@ -206,6 +223,7 @@ body.wpr-modal-opened {
   content: "";
   margin-left: 0.5407911001em;
 }
+
 @media (min-width: 576px) {
   .wpr-modal .wpr-modal-dialog {
     max-width: 500px;
@@ -214,8 +232,14 @@ body.wpr-modal-opened {
   }
 }
 @media (min-width: 1200px) {
-  .wpr-modal .wpr-modal-dialog {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
     max-width: 1000px;
+  }
+  .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
+    max-width: 750px;
+  }
+  .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
+    max-width: 500px;
   }
 }
 
