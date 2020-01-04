@@ -36,34 +36,19 @@
             </div>
             <div class="wpr-modal-body">
                 <ul class="products recommended-product-list">
+                    <?php
+                        $args = array(
+                            'post_type' => 'product',
+                            'posts_per_page' => -1,
+                            'post__in' => $selected_products_id,
+                        );
 
-                <?php
-                    $args = array(
-                        'post_type' => 'product',
-                        'posts_per_page' => -1,
-                        'post__in' => $selected_products_id,
-                    );
+                        $loop = new WP_Query( $args );
 
-                    $loop = new WP_Query( $args );
                         if ( $loop->have_posts() ): while ( $loop->have_posts() ) : $loop->the_post();
+                            include($this->get_path('templates/template-single-product.php'));
+                        endwhile;  wp_reset_postdata(); endif; 
                     ?>
-
-                    <li class="product single-wpr">
-                        <a href="<?php the_permalink(); ?>"> 
-                        <?php 
-                            do_action( 'woocommerce_before_shop_loop_item_title' );
-                            do_action( 'woocommerce_shop_loop_item_title' );     
-                            do_action( 'woocommerce_after_shop_loop_item_title' );               
-                        ?>
-                        </a>
-                        <?php echo do_shortcode('[add_to_cart 
-                            id="'.get_the_ID().'" 
-                            show_price = "FALSE"
-                            style=""
-                        ]'); ?>
-                    </li>
-                    
-                    <?php endwhile;  wp_reset_postdata(); endif; ?>
                 </ul>
             </div>
 
