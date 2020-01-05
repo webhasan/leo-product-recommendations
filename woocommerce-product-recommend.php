@@ -5,7 +5,7 @@
  * Description: WooCommerce product recommend after added to cart.
  * Version: 1.0.0
  * Requires at least: 4.5
- * Author: Pluginsify Team
+ * Author: Pluginsify
  * Author URI: https://pluginsify.com/
  * License: GPLv2 or later
  * License URI: http://www.opensource.org/licenses/gpl-license.php
