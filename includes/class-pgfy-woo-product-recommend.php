@@ -3,7 +3,7 @@
  * The core plugin class
  *
  * @since      1.0.0
- * @author     Pluginsify <info@pluginsify.com>
+ * @author     Md Hasanuzzaman <webhasan24@gmail.com>
  */
 
 class Pgfy_Woo_Product_Recommend {
@@ -422,16 +422,7 @@ class Pgfy_Woo_Product_Recommend {
 			include($this->get_path('templates/template-modal.php'));
 		$modalHtml = ob_get_clean();
 
-		$output = "<li class=\"wc-block-grid__product\">
-			<a href=\"{$data->permalink}\" class=\"wc-block-grid__product-link\">
-				{$data->image}
-				{$data->title}
-			</a>
-			{$data->badge}
-			{$data->price}
-			{$data->rating}
-			{$data->button} ";
-
+		$output = str_replace('</li>', '',$html);
 		$output .= $modalHtml;
 		$output .= "</li>";
 
