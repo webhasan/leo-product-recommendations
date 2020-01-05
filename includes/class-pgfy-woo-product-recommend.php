@@ -373,12 +373,7 @@ class Pgfy_Woo_Product_Recommend {
 		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 
 		if(!empty( $selected_products_id )) {
-
-			$modal_template = $this->get_path('includes/template-modal.php');
-
-			if($modal_template) {
-				include($modal_template);
-			}
+			include($this->get_path('templates/template-modal.php'));
 		}
 	}
 
@@ -395,12 +390,7 @@ class Pgfy_Woo_Product_Recommend {
 		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 
 		if(!empty($selected_products_id)) {
-
-			$modal_template = $this->get_path('includes/template-modal.php');
-
-			if($modal_template) {
-				include($modal_template);
-			}
+			include($this->get_path('templates/template-modal.php'));
 		}
 	}
 
@@ -418,10 +408,8 @@ class Pgfy_Woo_Product_Recommend {
 			return $html;
 
 
-		$modal_template = $this->get_path('includes/template-modal.php');
-
 		ob_start();
-			include($modal_template);
+			include($this->get_path('templates/template-modal.php'));
 		$modalHtml = ob_get_clean();
 
 		$output = "<li class=\"wc-block-grid__product\">

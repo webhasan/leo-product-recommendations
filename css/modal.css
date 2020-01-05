@@ -75,7 +75,6 @@ body.wpr-modal-opened {
   display: flex;
   flex-direction: column;
   outline: 0;
-  padding: 15px;
 }
 .wpr-modal .wpr-modal-head {
   display: -ms-flexbox;
@@ -113,6 +112,10 @@ body.wpr-modal-opened {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   padding: 1rem;
+}
+.wpr-modal .recommended-product-list .single-wpr {
+  flex: 0 0 50%;
+  max-width: 50%;
 }
 .wpr-modal .wpr-modal-footer {
   padding: 0.75rem;
@@ -156,9 +159,11 @@ body.wpr-modal-opened {
   flex-wrap: wrap;
   justify-content: center;
 }
+.wpr-modal .wpr-modal-dialog {
+  max-height: calc(100% - 3.5rem);
+  margin: 1.75rem auto;
+}
 .wpr-modal .recommended-product-list .single-wpr {
-  flex: 0 0 25%;
-  max-width: 25%;
   padding: 0 10px;
   text-align: center;
   float: none !important;
@@ -207,16 +212,72 @@ body.wpr-modal-opened {
   content: "";
   margin-left: 0.5407911001em;
 }
-@media (min-width: 576px) {
-  .wpr-modal .wpr-modal-dialog {
+
+@media (max-width: 421px) {
+  .wpr-modal .wpr-message {
+    font-size: 12px;
+  }
+  .wpr-modal .wpr-message a.button {
+    display: block;
+    float: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  .wpr-modal .wpr-modal-head h2.modal-heading {
+    font-size: 16px;
+  }
+}
+@media (min-width: 768px) {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
+    max-width: 720px;
+  }
+  .wpr-modal.wpr-modal-4 .recommended-product-list .single-wpr {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+  }
+  .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
+    max-width: 720px;
+  }
+  .wpr-modal.wpr-modal-3 .recommended-product-list .single-wpr {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+  }
+  .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
     max-width: 500px;
-    max-height: calc(100% - 3.5rem);
-    margin: 1.75rem auto;
+  }
+}
+@media (min-width: 992px) {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
+    max-width: 960px;
+  }
+  .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
+    max-width: 750px;
+  }
+  .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
+    max-width: 500px;
   }
 }
 @media (min-width: 1200px) {
-  .wpr-modal .wpr-modal-dialog {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
     max-width: 1000px;
+  }
+  .wpr-modal.wpr-modal-4 .recommended-product-list .single-wpr {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
+    max-width: 750px;
+  }
+  .wpr-modal.wpr-modal-3 .recommended-product-list .single-wpr {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+  }
+  .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
+    max-width: 500px;
+  }
+  .wpr-modal.wpr-modal-2 .recommended-product-list .single-wpr {
+    flex: 0 0 50%;
+    max-width: 50%;
   }
 }
 
