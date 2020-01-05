@@ -17,7 +17,6 @@
     <div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
         <div class="wpr-modal-content">
             <div class="wpr-modal-head">
-
                 <div class="wpr-message" role="alert">
                 “<?php echo get_the_title($product_id); ?>” <?php _e('has been added to your cart.','woocommerce-product-recommend'); ?>
                 <a href="<?php echo wc_get_cart_url(); ?>" class="button wc-forward"><?php _e('View cart', 'woocommerce-product-recommend');?></a> 

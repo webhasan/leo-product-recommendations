@@ -8,37 +8,34 @@
 
 class Pgfy_Woo_Product_Recommend {
 
-    static protected $instance;
+	static protected $instance;
 
     /**
-    * Class constructor. 
-    * Does not right now
+    * Class constructor
     * 
     * @since      1.0.0
      */
     public function __construct() {
-
+		
     }
 
 	/**
-	 * Init the plugin when all dependency as available.
+	 * initialize the plugin
      * 
      * @since      1.0.0
      * @return     void
 	 */
     public function init() {
-
         $this->define_constant();
-
 		register_activation_hook( WP_PR_FILE, array( $this, 'on_activation' ) );
-
 		register_deactivation_hook( WP_PR_FILE, array( $this, 'on_deactivation' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
     }
 
     /**
-	 * Do stuff when plugin activated
+	 * Action after plugin active.
+	 * enable ajax add to cart and disabel redirec to cart page.
      * 
 	 * @since      1.0.0
 	 */
@@ -48,7 +45,7 @@ class Pgfy_Woo_Product_Recommend {
     }
     
     /**
-	 * Dofing stuff when plugin delete.
+	 * Action after plugin deactive
 	 *
      * @since      1.0.0
 	 * @return void
@@ -65,6 +62,7 @@ class Pgfy_Woo_Product_Recommend {
      */
     public function on_plugins_loaded() {
 
+
 		$this->load_textdomain();
 		
         if ( ! $this->has_satisfied_dependencies() ) {
@@ -74,7 +72,9 @@ class Pgfy_Woo_Product_Recommend {
 		}
 
 		$this->includes();
+
 		$this->hooks();
+
     }
 
     /**
@@ -84,13 +84,13 @@ class Pgfy_Woo_Product_Recommend {
 	 * @return void
 	 */
 	protected function define_constant() {
-        $this->define( 'WC_PR_ABSPATH', dirname( __DIR__ ) . '/' );
-        $this->define('WP_PR_FILE', WC_PR_ABSPATH.'woocommerce-product-recommend.php');
-        $this->define('WC_PR_URL', plugin_dir_url(WP_PR_FILE));
+        $this->define( 'WC_PR_PATH', dirname( __DIR__ ) . '/' ); // root directory path
+        $this->define('WP_PR_FILE', WC_PR_PATH.'woocommerce-product-recommend.php'); // root file
+		$this->define('WC_PR_URL', plugin_dir_url(WP_PR_FILE)); // root url
     }  
     
     /**
-	 * Load Localisation files.
+	 * Load Localization files.
 	 *
      * @since      1.0.0    
 	 * @return void
@@ -100,7 +100,7 @@ class Pgfy_Woo_Product_Recommend {
     }
     
     /**
-	 * Define constant if not already set.
+	 * Define constant if it not already.
 	 *
      * @since      1.0.0   
 	 * @param string      $name  Constant name.
@@ -123,7 +123,6 @@ class Pgfy_Woo_Product_Recommend {
 		return 0 === count( $dependency_errors );
     }
     
-
     /**
 	 * Get an array of dependency error messages.
 	 *
@@ -159,7 +158,7 @@ class Pgfy_Woo_Product_Recommend {
     
 
      /**
-	 * Deactive Plugin
+	 * Deactive Plugin Itself
      * 
      * @since      1.0.0
 	 */
@@ -181,7 +180,7 @@ class Pgfy_Woo_Product_Recommend {
 
 	/**
      * Include all require files.
-     * 
+     * Do nothing now. It will include plugin options later.
      * @since      1.0.0
      */
 	public function includes() {
@@ -203,10 +202,7 @@ class Pgfy_Woo_Product_Recommend {
 		add_action( 'wp_ajax_pr_fetch', array($this, 'fetch_post_meta'));
 		add_action( 'wp_ajax_nopriv_pr_fetch', array($this, 'fetch_post_meta'));
 
-		add_action('woocommerce_after_shop_loop_item', array($this, 'product_archive_modal'));
-		add_action('woocommerce_after_single_product_summary', array($this, 'product_single_modal'), 21);
-		add_filter('woocommerce_blocks_product_grid_item_html', array($this, 'product_gutenberg_block'), 10, 3);
-		
+		add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
 	}
 
 	/**
@@ -315,8 +311,6 @@ class Pgfy_Woo_Product_Recommend {
 			'exclude'     	=> array($post_id),
 		));
 
-
-	
 		// map prodcut id , title, thumbnails and categoris
 		$products = array_map(function($item) {
 			$id = $item->ID;
@@ -329,19 +323,14 @@ class Pgfy_Woo_Product_Recommend {
 				return $category->name;
 			}, $categories);
 	
-	
 			return compact('id','title','thumbnail_image', 'categories');
 		}, $post_data);
-
-
-
 
 		// remove product itself from it list
 		$products = array_filter($products, function($product) use($post_id) {
 			return  $product['id'] != $post_id;
 		});
 	
-
 		// Get product recommend data.
 		$pr_data = get_post_meta($post_id,'pgfy_pr_data', true);
 
@@ -360,6 +349,27 @@ class Pgfy_Woo_Product_Recommend {
 		// Parse arry to json string
 		echo json_encode(compact("products", "selectedProducts", "heading"));
 		die;
+	}
+
+	/**
+	 * Include modal templates
+     * @since      1.0.0
+	 */
+	public function include_templates() {
+		// modal in shop / archives page
+		if(apply_filters('wc_pr_show_in_product_archives', true)) {
+			add_action('woocommerce_after_shop_loop_item', array($this, 'product_archive_modal'));
+		}
+
+		// modal in single product page
+		if(apply_filters('wc_pr_show_in_singe_product', true)) {
+			add_action('woocommerce_after_single_product_summary', array($this, 'product_single_modal'), 21);
+		}
+		
+		// modal in WooCommerce Gutenberg products block
+		if(apply_filters('wc_pr_show_in_gutenberg_product_block', true)) {
+			add_filter('woocommerce_blocks_product_grid_item_html', array($this, 'product_gutenberg_block'), 10, 3);
+		}
 	}
 
 	/**
