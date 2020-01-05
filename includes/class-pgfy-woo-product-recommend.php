@@ -3,7 +3,7 @@
  * The core plugin class
  *
  * @since      1.0.0
- * @author     Md Hasanuzzaman <webhasan24@gmail.com>
+ * @author     Pluginsify <info@pluginsify.com>
  */
 
 class Pgfy_Woo_Product_Recommend {
