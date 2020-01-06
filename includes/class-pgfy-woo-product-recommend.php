@@ -381,6 +381,7 @@ class Pgfy_Woo_Product_Recommend {
 		$product_id = $product->id;
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
 		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
 		if(!empty( $selected_products_id )) {
 			include($this->get_path('templates/template-modal.php'));
@@ -398,6 +399,7 @@ class Pgfy_Woo_Product_Recommend {
 
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
 		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
 		if(!empty($selected_products_id)) {
 			include($this->get_path('templates/template-modal.php'));
@@ -413,6 +415,7 @@ class Pgfy_Woo_Product_Recommend {
 		$product_id = $product->id;
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
 		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
 		if(empty($selected_products_id)) 
 			return $html;

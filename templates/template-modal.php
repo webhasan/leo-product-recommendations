@@ -1,4 +1,8 @@
 <?php 
+    // global
+    // $selected_products_id
+    // $modal_heading;
+
     $total_rc_products = count($selected_products_id);
 
     $modal_rows = 'wpr-modal-4';
@@ -11,6 +15,16 @@
         $modal_rows = 'wpr-modal-2';
     }
 
+    $common_heading = apply_filters(
+        'wpr_common_heading',
+        sprintf(
+            __('<h2 class="modal-heading">You may purchase following product with "%s"</h2>'), 
+            get_the_title($product_id)
+        )
+    );
+
+    $modal_heading  = trim($modal_heading) ? sprintf('<h2>%s</h2>', $modal_heading) : $common_heading;
+
 ?>
 
 <div class="wpr-modal <?php echo $modal_rows; ?>" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
@@ -21,16 +35,7 @@
                 “<?php echo get_the_title($product_id); ?>” <?php _e('has been added to your cart.','woocommerce-product-recommend'); ?>
                 <a href="<?php echo wc_get_cart_url(); ?>" class="button wc-forward"><?php _e('View cart', 'woocommerce-product-recommend');?></a> 
                 </div>
-
-                <?php 
-                    $modal_heading = apply_filters('pgfy_modal_heading', sprintf(
-                        __('<h2 class="modal-heading">You may purchase following product with "%s"</h2>','woocommerce-product-recommend'), 
-                        get_the_title($product_id)
-                    ));
-
-                    echo $modal_heading;
-                ?>
-                
+                <?php echo $modal_heading; ?>
                 <span aria-hidden="true" class="wpr-modal-close">×</span>
             </div>
             <div class="wpr-modal-body">
@@ -52,7 +57,7 @@
             </div>
 
             <div class="wpr-modal-footer">
-                <a href="#" class="wpr-button wpr-button-blue">Shop More</a>
+                <a href="#" class="wpr-button wpr-button-blue wpr-close-modal">Shop More</a>
                 <a href="<?php echo wc_get_cart_url(); ?>" class="wpr-button wpr-button-green"><?php _e('View cart', 'woocommerce-product-recommend');?></a>
             </div>
         </div>

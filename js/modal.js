@@ -63,8 +63,9 @@
         	closeModal();
         }
 
-        that.find('.wpr-modal-close').click(function() {
-			closeModal();
+        that.find('.wpr-modal-close, .wpr-close-modal').click(function(e) {
+            closeModal();
+            return false;
         });
 
         $('.wpr-modal').click(function(e) {
