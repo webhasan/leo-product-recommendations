@@ -111,6 +111,7 @@
 			 text-align: center;
 			 font-size: 22px;
 			 margin-bottom: 10px;
+			 margin-top: 10px;
 		 }
 	 }
  
@@ -167,7 +168,7 @@
 		 padding: 7px 20px;
 		 min-width: 130px;
 		 text-decoration: none;
-		 font-size: 1rem;
+		 font-size: 16px;
 		 line-height: 1.5;
 		 text-decoration: none !important;
 	 }
@@ -184,13 +185,14 @@
 		 margin: 0 10px;
 	 } 
  
-	 .recommended-product-list {
+	 ul.recommended-product-list {
 		 overflow: hidden;
 		 margin-left: -10px;
 		 margin-right: -10px;
 		 display: flex;
 		 flex-wrap: wrap;
 		 justify-content: center;
+		 list-style: none;
 	 }
  
 	.wpr-modal-dialog {
@@ -198,11 +200,46 @@
 		margin: 1.75rem auto;
 	}
 
-	.recommended-product-list .single-wpr {
+	ul.recommended-product-list li.single-wpr {
 		 padding: 0 10px;
+		 list-style: none;
 		 text-align: center;
+		 display: block;
 		 float: none !important;
 		 margin-right: 0 !important;
+		 margin-left: 0 !important;
+		 box-sizing: border-box;
+		 text-align: center;
+		 margin-bottom: 40px;
+		 font-size: 14px;
+		 line-height: 22.5px;
+
+		&>a {
+			text-decoration: none;
+			&:hover {
+				text-decoration: none;
+			}
+		}
+
+		h2.woocommerce-loop-product__title {
+			font-size: 16px;
+			font-weight: 400;
+    		margin-bottom: 0.5407911001em;
+		}
+
+		.price {
+			display: block;
+			color: #43454b;
+			font-weight: 400;
+			margin-bottom: 16px;
+		}
+
+		.onsale {
+	
+			padding: 0.202em 0.6180469716em;
+			font-size: 0.875em;
+			text-transform: uppercase;
+		}
 	}
 
 	 .wpr-message {
@@ -277,29 +314,29 @@
 	.#{$base_class} {
 		&.wpr-modal-4 {
 			.wpr-modal-dialog {
-				max-width: 720px;
+				width: 720px;
 			}
 
 			.recommended-product-list .single-wpr {
 				flex: 0 0 33.33333%;
-				max-width: 33.33333%;
+				width: 33.33333%;
 			}
 		}
 
 		&.wpr-modal-3 {
 			.wpr-modal-dialog {
-				max-width: 720px;
+				width: 720px;
 			}
 
 			.recommended-product-list .single-wpr {
 				flex: 0 0 33.33333%;
-				max-width: 33.33333%;
+				width: 33.33333%;
 			}
 		}
 
 		&.wpr-modal-2 {
 			.wpr-modal-dialog {
-				max-width: $small_modal;
+				width: $small_modal;
 			}
 		}
 	}
@@ -309,19 +346,19 @@
 	.#{$base_class} {
 		&.wpr-modal-4 {
 			.wpr-modal-dialog {
-				max-width: 960px;
+				width: 960px;
 			}
 		}
 
 		&.wpr-modal-3 {
 			.wpr-modal-dialog {
-				max-width: $medium_modal;
+				width: $medium_modal;
 			}
 		}
 
 		&.wpr-modal-2 {
 			.wpr-modal-dialog {
-				max-width: $small_modal;
+				width: $small_modal;
 			}
 		}
 	}
@@ -331,12 +368,12 @@
 	 .#{$base_class} {
 		 &.wpr-modal-4 {
 			 .wpr-modal-dialog {
-				 max-width: $large_modal;
+				 width: $large_modal;
 			 }
 
 			 .recommended-product-list .single-wpr {
 				flex: 0 0 25%;
-				max-width: 25%;
+				width: 25%;
 			}
 		 }
  
@@ -347,18 +384,18 @@
 
 			 .recommended-product-list .single-wpr {
 				flex: 0 0 33.33333%;
-				max-width: 33.33333%;
+				width: 33.33333%;
 			}
 		 }
  
 		 &.wpr-modal-2 {
 			 .wpr-modal-dialog {
-				 max-width: $small_modal;
+				 width: $small_modal;
 			 }
 
 			 .recommended-product-list .single-wpr {
 				flex: 0 0 50%;
-				max-width: 50%;
+				width: 50%;
 			}
 		 }
 	 }

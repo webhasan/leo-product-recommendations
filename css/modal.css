@@ -87,6 +87,7 @@ body.wpr-modal-opened {
   text-align: center;
   font-size: 22px;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 .wpr-modal .wpr-modal-close {
   font-size: 16px;
@@ -137,7 +138,7 @@ body.wpr-modal-opened {
   padding: 7px 20px;
   min-width: 130px;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 16px;
   line-height: 1.5;
   text-decoration: none !important;
 }
@@ -151,23 +152,54 @@ body.wpr-modal-opened {
   color: #fff;
   margin: 0 10px;
 }
-.wpr-modal .recommended-product-list {
+.wpr-modal ul.recommended-product-list {
   overflow: hidden;
   margin-left: -10px;
   margin-right: -10px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  list-style: none;
 }
 .wpr-modal .wpr-modal-dialog {
   max-height: calc(100% - 3.5rem);
   margin: 1.75rem auto;
 }
-.wpr-modal .recommended-product-list .single-wpr {
+.wpr-modal ul.recommended-product-list li.single-wpr {
   padding: 0 10px;
+  list-style: none;
   text-align: center;
+  display: block;
   float: none !important;
   margin-right: 0 !important;
+  margin-left: 0 !important;
+  box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 14px;
+  line-height: 22.5px;
+}
+.wpr-modal ul.recommended-product-list li.single-wpr > a {
+  text-decoration: none;
+}
+.wpr-modal ul.recommended-product-list li.single-wpr > a:hover {
+  text-decoration: none;
+}
+.wpr-modal ul.recommended-product-list li.single-wpr h2.woocommerce-loop-product__title {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 0.5407911001em;
+}
+.wpr-modal ul.recommended-product-list li.single-wpr .price {
+  display: block;
+  color: #43454b;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+.wpr-modal ul.recommended-product-list li.single-wpr .onsale {
+  padding: 0.202em 0.6180469716em;
+  font-size: 0.875em;
+  text-transform: uppercase;
 }
 .wpr-modal .wpr-message {
   padding: 10px 15px;
@@ -229,55 +261,55 @@ body.wpr-modal-opened {
 }
 @media (min-width: 768px) {
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
-    max-width: 720px;
+    width: 720px;
   }
   .wpr-modal.wpr-modal-4 .recommended-product-list .single-wpr {
     flex: 0 0 33.33333%;
-    max-width: 33.33333%;
+    width: 33.33333%;
   }
   .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
-    max-width: 720px;
+    width: 720px;
   }
   .wpr-modal.wpr-modal-3 .recommended-product-list .single-wpr {
     flex: 0 0 33.33333%;
-    max-width: 33.33333%;
+    width: 33.33333%;
   }
   .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
-    max-width: 500px;
+    width: 500px;
   }
 }
 @media (min-width: 992px) {
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
-    max-width: 960px;
+    width: 960px;
   }
   .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
-    max-width: 750px;
+    width: 750px;
   }
   .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
-    max-width: 500px;
+    width: 500px;
   }
 }
 @media (min-width: 1200px) {
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
-    max-width: 1000px;
+    width: 1000px;
   }
   .wpr-modal.wpr-modal-4 .recommended-product-list .single-wpr {
     flex: 0 0 25%;
-    max-width: 25%;
+    width: 25%;
   }
   .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
     max-width: 750px;
   }
   .wpr-modal.wpr-modal-3 .recommended-product-list .single-wpr {
     flex: 0 0 33.33333%;
-    max-width: 33.33333%;
+    width: 33.33333%;
   }
   .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
-    max-width: 500px;
+    width: 500px;
   }
   .wpr-modal.wpr-modal-2 .recommended-product-list .single-wpr {
     flex: 0 0 50%;
-    max-width: 50%;
+    width: 50%;
   }
 }
 
