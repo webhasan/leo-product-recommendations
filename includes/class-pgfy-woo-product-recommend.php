@@ -339,11 +339,11 @@ class Pgfy_Woo_Product_Recommend {
 		$heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
 		// Get selected recommended products id
-		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 
 		// Get selected prodcuts by id
-		$selectedProducts = array_values(array_filter($products, function($product) use($selected_products_id) {
-			return in_array($product['id'], $selected_products_id);
+		$selectedProducts = array_values(array_filter($products, function($product) use($recommended_products_ids) {
+			return in_array($product['id'], $recommended_products_ids);
 		}));
 	
 		// Parse arry to json string
@@ -380,10 +380,10 @@ class Pgfy_Woo_Product_Recommend {
 		global $product;
 		$product_id = $product->id;
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
-		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
-		if(!empty( $selected_products_id )) {
+		if(!empty( $recommended_products_ids )) {
 			include($this->get_path('templates/template-modal.php'));
 		}
 	}
@@ -398,10 +398,10 @@ class Pgfy_Woo_Product_Recommend {
 		$product_id = $product->id;
 
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
-		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
-		if(!empty($selected_products_id)) {
+		if(!empty($recommended_products_ids)) {
 			include($this->get_path('templates/template-modal.php'));
 		}
 	}
@@ -414,10 +414,10 @@ class Pgfy_Woo_Product_Recommend {
 
 		$product_id = $product->id;
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
-		$selected_products_id = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
-		if(empty($selected_products_id)) 
+		if(empty($recommended_products_ids)) 
 			return $html;
 
 
