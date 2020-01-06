@@ -421,7 +421,6 @@ class Pgfy_Woo_Product_Recommend {
 		ob_start();
 			include($this->get_path('templates/template-modal.php'));
 		$modalHtml = ob_get_clean();
-
 		$output = str_replace('</li>', '',$html);
 		$output .= $modalHtml;
 		$output .= "</li>";
