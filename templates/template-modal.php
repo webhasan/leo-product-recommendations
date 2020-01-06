@@ -83,7 +83,7 @@
             </div>
         </div>
 
-        <?php do_action('wpr_after_modal_content', $recommended_products_ids); ?>
+        <?php do_action('wpr_after_modal_content', $product_id, $recommended_products_ids); ?>
 
     </div>
 </div>
