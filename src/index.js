@@ -1,6 +1,6 @@
 import Reorder from 'react-reorder';
 
-(function(React, $, app, Reorder) {
+(function(React, __, $, app, Reorder) {
 
 	if(!app) return;
 	const postId = parseInt(app.getAttribute('data-id'));
@@ -110,24 +110,24 @@ import Reorder from 'react-reorder';
 
 		return (
 			<div className="pgfy-recommend-product">
-				{!facedDate && <span className="pgfy-recommend-product-prelaoder">Loading...</span> }
+				{!facedDate && <span className="pgfy-recommend-product-prelaoder">{__('Loading...','woocommerce-product-recommend')}</span> }
 				
 				<div className="recommend-prodcut-options-wrap" style = {opacity}>
 					<div className="pr-field">
-						<div className="rp-panel-title">Recommend Product Heading</div>
+						<div className="rp-panel-title">{__('Recommend Product Heading','woocommerce-product-recommend')}</div>
 						<p><input type="text" name="pgfy_pr_data[heading]" value = {heading} onChange = {onChangeHeading}/></p>
 					</div>
 
 					<div className="pr-field">
-							<div className="rp-panel-title">Select Product</div>
+							<div className="rp-panel-title">{__('Select Product')}</div>
 							<div className="product-selection-panel">
 							<div className="product-filter">
 								<div className="search">
-									<input type="text" onChange = {onChangeQuery} placeholder="Search..." value = {query}/>
+									<input type="text" onChange = {onChangeQuery} placeholder= {__('Search...','woocommerce-product-recommend')} value = {query}/>
 								</div>
 								<div className="category-filter">
 									<select name="category" onChange = {onChangeCat} value = {selectedCategory}>
-										<option value="">Select Category</option>
+										<option value="">{__('Select Category','woocommerce-product-recommend')}</option>
 										{categories.map(cateory => <option key={cateory} value={cateory}>{cateory}</option>)}
 									</select>
 								</div>
@@ -197,7 +197,6 @@ import Reorder from 'react-reorder';
 			</div>									
 		)
 	}
-
-
+	
 	React.render(<SelectProduct/>, app)
-})(wp.element, jQuery, document.getElementById('pr-app'), Reorder);
+})(wp.element, wp.i18n.__, jQuery, document.getElementById('pr-app'), Reorder);

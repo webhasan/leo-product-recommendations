@@ -3429,7 +3429,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-(function (React, $, app, Reorder) {
+(function (React, __, $, app, Reorder) {
   if (!app) return;
   var postId = parseInt(app.getAttribute('data-id'));
   var reorder = Reorder.reorder;
@@ -3571,14 +3571,14 @@ __webpack_require__.r(__webpack_exports__);
       className: "pgfy-recommend-product"
     }, !facedDate && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("span", {
       className: "pgfy-recommend-product-prelaoder"
-    }, "Loading..."), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
+    }, __('Loading...', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "recommend-prodcut-options-wrap",
       style: opacity
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "pr-field"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "rp-panel-title"
-    }, "Recommend Product Heading"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("input", {
+    }, __('Recommend Product Heading', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("input", {
       type: "text",
       name: "pgfy_pr_data[heading]",
       value: heading,
@@ -3587,7 +3587,7 @@ __webpack_require__.r(__webpack_exports__);
       className: "pr-field"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "rp-panel-title"
-    }, "Select Product"), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
+    }, __('Select Product')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "product-selection-panel"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "product-filter"
@@ -3596,7 +3596,7 @@ __webpack_require__.r(__webpack_exports__);
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("input", {
       type: "text",
       onChange: onChangeQuery,
-      placeholder: "Search...",
+      placeholder: __('Search...', 'woocommerce-product-recommend'),
       value: query
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "category-filter"
@@ -3606,7 +3606,7 @@ __webpack_require__.r(__webpack_exports__);
       value: selectedCategory
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("option", {
       value: ""
-    }, "Select Category"), categories.map(function (cateory) {
+    }, __('Select Category', 'woocommerce-product-recommend')), categories.map(function (cateory) {
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("option", {
         key: cateory,
         value: cateory
@@ -3672,7 +3672,7 @@ __webpack_require__.r(__webpack_exports__);
   };
 
   React.render(Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])(SelectProduct, null), app);
-})(wp.element, jQuery, document.getElementById('pr-app'), react_reorder__WEBPACK_IMPORTED_MODULE_3___default.a);
+})(wp.element, wp.i18n.__, jQuery, document.getElementById('pr-app'), react_reorder__WEBPACK_IMPORTED_MODULE_3___default.a);
 
 /***/ }),
 
