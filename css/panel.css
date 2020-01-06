@@ -13,6 +13,10 @@
   transform: translate(-50%, -50%);
 }
 
+.pgfy-recommend-product .recommend-prodcut-options-wrap {
+  transition: opacity 0.4s;
+}
+
 .recommend-product-options {
   padding: 15px 0;
 }

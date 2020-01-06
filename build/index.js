@@ -3431,6 +3431,83 @@ __webpack_require__.r(__webpack_exports__);
 
 (function (React, __, $, app, Reorder) {
   if (!app) return;
+
+  var LoadingIcon = function LoadingIcon() {
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("svg", {
+      version: "1.1",
+      id: "Layer_1",
+      x: "0px",
+      y: "0px",
+      viewBox: "0 0 100 100",
+      "enable-background": "new 0 0 100 100",
+      width: "80",
+      height: "80"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("rect", {
+      fill: "#0073aa",
+      width: "3",
+      height: "45.2018",
+      transform: "translate(0) rotate(180 3 50)"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("animate", {
+      attributeName: "height",
+      attributeType: "XML",
+      dur: "1s",
+      values: "30; 100; 30",
+      repeatCount: "indefinite"
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("rect", {
+      x: "17",
+      fill: "#0073aa",
+      width: "3",
+      height: "31.2018",
+      transform: "translate(0) rotate(180 20 50)"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("animate", {
+      attributeName: "height",
+      attributeType: "XML",
+      dur: "1s",
+      values: "30; 100; 30",
+      repeatCount: "indefinite",
+      begin: "0.1s"
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("rect", {
+      x: "40",
+      fill: "#0073aa",
+      width: "3",
+      height: "56.7982",
+      transform: "translate(0) rotate(180 40 50)"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("animate", {
+      attributeName: "height",
+      attributeType: "XML",
+      dur: "1s",
+      values: "30; 100; 30",
+      repeatCount: "indefinite",
+      begin: "0.3s"
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("rect", {
+      x: "60",
+      fill: "#0073aa",
+      width: "3",
+      height: "84.7982",
+      transform: "translate(0) rotate(180 58 50)"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("animate", {
+      attributeName: "height",
+      attributeType: "XML",
+      dur: "1s",
+      values: "30; 100; 30",
+      repeatCount: "indefinite",
+      begin: "0.5s"
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("rect", {
+      x: "80",
+      fill: "#0073aa",
+      width: "3",
+      height: "31.2018",
+      transform: "translate(0) rotate(180 76 50)"
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("animate", {
+      attributeName: "height",
+      attributeType: "XML",
+      dur: "1s",
+      values: "30; 100; 30",
+      repeatCount: "indefinite",
+      begin: "0.1s"
+    })));
+  };
+
   var postId = parseInt(app.getAttribute('data-id'));
   var reorder = Reorder.reorder;
   var apiEndPoint = ajax_url;
@@ -3571,7 +3648,7 @@ __webpack_require__.r(__webpack_exports__);
       className: "pgfy-recommend-product"
     }, !facedDate && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("span", {
       className: "pgfy-recommend-product-prelaoder"
-    }, __('Loading...', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])(LoadingIcon, null)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "recommend-prodcut-options-wrap",
       style: opacity
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
