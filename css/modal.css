@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /**
  * stylesheet for front end modal
  * modal class ".wpr-modal"
@@ -83,10 +82,10 @@ body.wpr-modal-opened {
   border-top-left-radius: calc(.3rem - 1px);
   border-top-right-radius: calc(.3rem - 1px);
 }
-.wpr-modal .wpr-modal-head h2.modal-heading {
+.wpr-modal .wpr-modal-head h2 {
   text-align: center;
-  font-size: 22px;
-  margin-bottom: 10px;
+  font-size: 2.5rem;
+  margin: 0.5rem 0 0.5rem;
 }
 .wpr-modal .wpr-modal-close {
   font-size: 16px;
@@ -116,6 +115,7 @@ body.wpr-modal-opened {
 .wpr-modal .recommended-product-list .single-wpr {
   flex: 0 0 50%;
   max-width: 50%;
+  margin-bottom: 15px !important;
 }
 .wpr-modal .wpr-modal-footer {
   padding: 0.75rem;
@@ -170,47 +170,27 @@ body.wpr-modal-opened {
   margin-right: 0 !important;
 }
 .wpr-modal .wpr-message {
-  padding: 10px 15px;
+  padding: 5px 5px;
   margin-bottom: 20px;
   background-color: #0f834d;
-  background-color: #eeeeee;
   margin-left: 0;
-  border-radius: 2px;
-  color: #000;
+  border-radius: 5px;
+  color: #fff;
   clear: both;
   border-left: 0.6180469716em solid rgba(0, 0, 0, 0.15);
-  font-size: 18px;
+  font-size: 12px;
   text-align: left;
+  margin-top: 2.33rem;
 }
 .wpr-modal .wpr-message a.button {
   float: right;
-  padding: 0;
+  padding: 0 5px;
   background: none;
-  color: #000;
   box-shadow: none;
-  line-height: 1.618;
   margin-left: 1em;
   padding-left: 1em;
-  border-width: 0;
-  border-left-width: 1px;
-  border-left-style: solid;
-  border-left-color: rgba(255, 255, 255, 0.25) !important;
-  border-radius: 0;
-}
-.wpr-modal .wpr-message a.button:after {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  display: inline-block;
-  font-style: normal;
-  font-variant: normal;
-  font-weight: normal;
-  line-height: 1;
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  line-height: inherit;
-  vertical-align: baseline;
-  content: "";
-  margin-left: 0.5407911001em;
+  font-size: 100%;
+  line-height: 1.5;
 }
 
 @media (max-width: 421px) {
