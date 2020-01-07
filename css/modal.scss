@@ -103,6 +103,7 @@
 			text-align: center;
 			display: block;
 			float: none !important;
+			position: relative;
 			margin-left: 0 !important;
 			margin-right: 0 !important;
 			width: 100%;
@@ -152,35 +153,36 @@
 	 .wpr-modal-head {
 		 display: -ms-flexbox;
 		 padding: 1rem 1rem;
-		 border-bottom: 1px solid #dee2e6;
+		 border-bottom: 1px solid #f2f2f2;
 		 border-top-left-radius: calc(.3rem - 1px);
 		 border-top-right-radius: calc(.3rem - 1px);
  
 		 h2.modal-heading {
 			 text-align: center;
-			 font-size: 22px;
+			 font-size: 18px;
+			 line-height: 1.5em;
 			 margin-bottom: 10px;
 			 margin-top: 10px;
+			 font-weight: normal;
 		 }
 	 }
  
 	 .wpr-modal-close {
-		 font-size: 16px;
-		 font-weight: 700;
-		 text-shadow: 0 1px 0 #fff;
-		 opacity: 0.8;
-		 cursor: pointer;
-		 text-transform: none;
-		 position: absolute;
-		 top: 4px;
-		 right: 1px;
-		 width: 25px;
-		 height: 25px;
-		 line-height: 25px;
-		 background: #000;
-		 border-radius: 50%;
-		 color: #fff;
-		 text-align: center;
+		font-size: 26px;
+		opacity: 0.8;
+		cursor: pointer;
+		text-transform: none;
+		position: absolute;
+		top: -3px;
+		right: 3px;
+		border-radius: 50%;
+		color: #000;
+		text-align: center;
+		line-height: 1em;
+	 }
+
+	 .wpr-modal-close:before {
+		content: "×";
 	 }
  
 	 .wpr-modal-body {
@@ -189,6 +191,11 @@
 		 -ms-flex: 1 1 auto;
 		 flex: 1 1 auto;
 		 padding: 40px;
+
+		ul  li img {
+			border: 1px solid #e6e6e6;
+		 }
+
 	 }
 
 	 .recommended-product-list .single-wpr {
@@ -197,7 +204,7 @@
 	}
 	 
 	 .wpr-modal-footer {
-		 padding: .75rem;
+		 padding: 7px 5px;
 		 text-align: center;
 		 border-top: 1px solid #dee2e6;
 		 border-bottom-right-radius: calc(.3rem - 1px);
@@ -208,7 +215,7 @@
 		 display: inline-block;
 		 font-weight: 400;
 		 border-radius: 2px;
-		 color: #212529;
+		 color: #fff;
 		 text-align: center;
 		 -webkit-user-select: none;
 		 -moz-user-select: none;
@@ -220,18 +227,34 @@
 		 font-size: 16px;
 		 line-height: 1.5;
 		 text-decoration: none !important;
+		 transition: all .2s;
 	 }
 	 
 	 .wpr-button-blue {
-		 background-color: blue;
-		 color: #fff;
-		 margin: 0 10px;
+		background-color: #337ab7;
+		border-color: #2e6da4;
+		 margin: 10px;
+
+		 &:hover {
+			background-color: #286090;
+			border-color: #204d74;
+			color: #fff;
+			text-decoration: none;
+		 }
+		
 	 }
 	 
 	 .wpr-button-green {
-		 background-color: green;
-		 color: #fff;
-		 margin: 0 10px;
+		color: #fff;
+		background-color: #5cb85c;
+		border-color: #4cae4c;
+		 margin: 10px;
+		&:hover {
+			color: #fff;
+			background-color: #449d44;
+			border-color: #398439;
+			text-decoration: none;
+		}
 	 } 
  
 	 ul.recommended-product-list {
@@ -240,7 +263,7 @@
 		 margin-right: -20px;
 		 display: flex;
 		 flex-wrap: wrap;
-		 justify-content: center;
+		 justify-content: center !important;
 		 list-style: none;
 	 }
  
@@ -250,51 +273,48 @@
 	}
 
 	 .wpr-message {
-		 padding: 10px 15px;
+		 padding: 10px 35px;
 		 margin-bottom: 20px;
-		 background-color: $wpr_message_bg;
-		 background-color: #eeeeee;
 		 margin-left: 0;
 		 border-radius: 2px;
-		 color: #000;
 		 clear: both;
-		 border-left: $wpr_message_border_left;
-		 font-size: 18px;
+		 font-size: 16px;
 		 text-align: left;
+		 background: #fcfcfc;
+		 border: 1px solid #e6e6e6;
+		 color: #808080;
+		 font-weight: bold;
+		 position: relative;
+		 line-height: 1.6em;
+
+		 &:before {
+			content: "✓";
+			color: #8fae1b;
+			display: inline-block;
+			position: absolute;
+			top: .6em;
+			left: 7px;
+		 }
  
-		 a.button {
+		 a.wpr-cart-button {
 			 float: right;
 			 padding: 0;
 			 background: none;
-			 color: #000;
 			 box-shadow: none;
-			 line-height: 1.618;
 			 text-decoration: none;
 			 margin-left: 1em;
 			 padding-left: 1em;
-			 border-width: 0;
-			 border-left-width: 1px;
-			 border-left-style: solid;
-			 border-left-color: rgba(255, 255, 255, 0.25) !important;
 			 border-radius: 0;
- 
-			 &:after {
-				 -webkit-font-smoothing: antialiased;
-				 -moz-osx-font-smoothing: grayscale;
-				 display: inline-block;
-				 font-style: normal;
-				 font-variant: normal;
-				 font-weight: normal;
-				 line-height: 1;
-				 font-family: 'Font Awesome 5 Free';
-				 font-weight: 900;
-				 line-height: inherit;
-				 vertical-align: baseline;
-				 content: "\f30b";
-				 margin-left: 0.5407911001em;
-			 }
 		 }
 	 }
+ }
+
+ @media (max-width:  700px) {
+	.wpr-modal .wpr-message a.wpr-cart-button {
+		float: none;
+		padding-left: 0;
+		margin-left: 0;
+	}
  }
 
  @media (min-width:   $xm-media) {
