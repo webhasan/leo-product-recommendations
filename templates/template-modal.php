@@ -45,10 +45,10 @@
 
                 <div class="wpr-message" role="alert">
                 “<?php echo get_the_title($product_id); ?>” <?php _e('has been added to your cart.','woocommerce-product-recommend'); ?>
-                <a href="<?php echo wc_get_cart_url(); ?>" class="button wc-forward"><?php _e('View cart', 'woocommerce-product-recommend');?></a> 
+                <a href="<?php echo wc_get_cart_url(); ?>" class="wpr-cart-button"><?php _e('View cart', 'woocommerce-product-recommend');?> &rarr; </a> 
                 </div>
                 <?php echo $modal_heading; ?>
-                <span aria-hidden="true" class="wpr-modal-close">×</span>
+                <span aria-hidden="true" class="wpr-modal-close"></span>
 
                 <?php do_action('wpr_end_modal_head', $product_id, $recommended_products_ids); ?>
             </div>
