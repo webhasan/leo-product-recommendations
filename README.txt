@@ -28,6 +28,7 @@ to Woocommerce Product option.
 ## Key Feature Comes with Variation Swatches For WooCommerce Plugin ##
 
 👉 Add specific products you want to recommend your customer
+👉 Reorder the products to serialize those on modal
 👉 Add modal popup for showing recommended products 
 👉 Compatible with any well coded WooCommerce themes and plugins 
 👉 Frequently Updated And Secured Codebase 
