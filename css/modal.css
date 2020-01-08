@@ -269,37 +269,27 @@ body.wpr-modal-opened {
   }
 }
 @media (min-width: 421px) {
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
     flex: 0 0 calc(50% - 10px);
     width: calc(50% - 10px);
     margin-right: 20px !important;
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
     margin-right: 0 !important;
   }
 }
 @media (min-width: 768px) {
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog, .wpr-modal.wpr-modal-3 .wpr-modal-dialog, .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog, .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
     width: 720px;
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
     flex: 0 0 calc(33.333333% - 13.4px);
     width: calc(33.333333% - 13.4px);
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2) {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2) {
     margin-right: 20px !important;
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
-    margin-right: 0 !important;
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
-    width: 720px;
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(33.333333% - 13.4px);
-    width: calc(33.333333% - 13.4px);
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
     margin-right: 0 !important;
   }
 }
@@ -311,7 +301,7 @@ body.wpr-modal-opened {
     flex: 0 0 calc(25% - 15px);
     width: calc(25% - 15px);
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2) {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3) {
     margin-right: 20px !important;
   }
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(4n+4), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
@@ -319,61 +309,11 @@ body.wpr-modal-opened {
   }
   .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
     width: 750px;
-  }
-  .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(33.333333% - 13.3333334px);
-    width: calc(33.333333% - 13.3333334px);
-  }
-  .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
-    margin-right: 0 !important;
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
-    width: 750px;
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(50% - 10px);
-    width: calc(50% - 10px);
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
-    margin-right: 0 !important;
   }
 }
 @media (min-width: 1200px) {
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
     width: 1000px;
-  }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(25% - 15px);
-    width: calc(25% - 15px);
-  }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2) {
-    margin-right: 20px !important;
-  }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(4n+4), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
-    margin-right: 0 !important;
-  }
-  .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
-    width: 750px;
-  }
-  .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(33.333333% - 13.3333334px);
-    width: calc(33.333333% - 13.3333334px);
-  }
-  .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+1) {
-    margin-right: 20px !important;
-  }
-  .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
-    margin-right: 0 !important;
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog {
-    width: 750px;
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(50% - 10px);
-    width: calc(50% - 10px);
-  }
-  .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-2 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
-    margin-right: 0 !important;
   }
 }
 

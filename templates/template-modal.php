@@ -6,18 +6,16 @@
     // modal css class baseed on number of selected prodcuts
     $total_rc_products = count($recommended_products_ids);
     $modal_rows = 'wpr-modal-4';
-    if($total_rc_products === 3) {
+
+    if($total_rc_products <= 3) {
         $modal_rows = 'wpr-modal-3';
-    }
-    if($total_rc_products <= 2) {
-        $modal_rows = 'wpr-modal-2';
     }
 
     // modal heading
     $common_heading = apply_filters(
         'wpr_common_heading',
         sprintf(
-            __('<h2 class="modal-heading">You may purchase following product with "%s"</h2>','woocommerce-product-recommend'), 
+            __('<h2 class="modal-heading">You may purchase following products with "%s"</h2>','woocommerce-product-recommend'), 
             get_the_title($product_id)
         )
     );

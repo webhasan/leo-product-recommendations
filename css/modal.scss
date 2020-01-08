@@ -320,8 +320,7 @@
  @media (min-width:   $xm-media) {
 	.#{$base_class} {
 		&.wpr-modal-4,
-		&.wpr-modal-3,
-		&.wpr-modal-2 {
+		&.wpr-modal-3{
 			.wpr-modal-dialog {
 
 				.wpr-modal-content {
@@ -332,7 +331,7 @@
 						width: calc(50% - 10px);
 						margin-right: 20px !important;
 	   
-						&:nth-child(2n+2),
+						&:nth-child(2n + 2),
 						&:last-child {
 							margin-right: 0 !important;
 						}
@@ -351,8 +350,7 @@
 
 	.#{$base_class} {
 		&.wpr-modal-4,
-		&.wpr-modal-3,
-		&.wpr-modal-2 {
+		&.wpr-modal-3{
 			.wpr-modal-dialog {
 				width: 720px;
 
@@ -362,12 +360,11 @@
 					   
 						flex: 0 0  calc(33.333333% - 13.4px);
 						width: calc(33.333333% - 13.4px);
-
-						&:nth-child(2n+2) {
+						&:nth-child(2n + 2) {
 							margin-right: 20px !important;
 						}
 
-						&:nth-child(3n+3),
+						&:nth-child(3n + 3),
 						&:last-child {
 							margin-right: 0 !important;
 						}
@@ -377,29 +374,10 @@
 			}
 		}	
 		
-		&.wpr-modal-2 {
-			.wpr-modal-dialog {
-				width: 720px;
-
-				.wpr-modal-content {
-					.wpr-modal-body {
-					   ul.recommended-product-list li.single-wpr {
-					   
-						flex: 0 0  calc(33.333333% - 13.4px);
-						width: calc(33.333333% - 13.4px);
-
-						&:last-child {
-							margin-right: 0 !important;
-						}
-					   }
-					}
-				}
-			}
-		}
 	}
 }
 
- @media (min-width:  $lg-media) {
+ @media (min-width:   $lg-media) {
 	.#{$base_class} {
 		&.wpr-modal-4 {
 			.wpr-modal-dialog {
@@ -411,14 +389,14 @@
 						   flex: 0 0 calc(25% - 15px);
 						   width: calc(25% - 15px);
 
-						   &:nth-child(3n+3),
-						   &:nth-child(2n+2) {
+						   &:nth-child(3n + 3) {
 							   margin-right: 20px !important;
 						   }
 
+
 						   &:nth-child(4n+4),
 						   &:last-child { 
-								margin-right: 0 !important;
+							   margin-right: 0 !important;
 						   }
 					   }
 					}
@@ -427,111 +405,19 @@
 		}
 
 		&.wpr-modal-3 {
-		   .wpr-modal-dialog {
-			   width: $medium_modal;
-			   .wpr-modal-content {
-				   .wpr-modal-body {
-					  ul.recommended-product-list li.single-wpr {
-						   flex: 0 0  calc(33.333333% - 13.3333334px);
-						   width: calc(33.333333% - 13.3333334px);
-		  
-						   &:nth-child(3n+3),
-						   &:last-child {
-								margin-right: 0 !important;
-						   }
-					  }
-				   }
-			   }
-		   }
-	   }
-
-	   &.wpr-modal-2 {
-		   .wpr-modal-dialog {
-			   width: $medium_modal;
-			   .wpr-modal-content {
-				   .wpr-modal-body {
-					  ul.recommended-product-list li.single-wpr {
-						   flex: 0 0 calc(50% - 10px);
-						   width: calc(50% - 10px);
-		  
-						   &:nth-child(2n+2),
-						   &:last-child {
-								margin-right: 0 !important;
-						   }
-					  }
-				   }
-			   }
-		   }
-	   }		
+			.wpr-modal-dialog {
+				width: $medium_modal;
+			}
+		}			
 	}
 }
  
- @media (min-width:  $xl-media) {
+ @media (min-width:   $xl-media) {
 	 .#{$base_class} {
 		 &.wpr-modal-4 {
 			 .wpr-modal-dialog {
 				 width: $large_modal;
-				 .wpr-modal-content {
-					 .wpr-modal-body {
-						ul.recommended-product-list li.single-wpr {
-							flex: 0 0 calc(25% - 15px);
-							width: calc(25% - 15px);
-
-							&:nth-child(3n+3),
-							&:nth-child(2n+2){
-								margin-right: 20px !important;
-							}
-			
-							&:nth-child(4n+4),
-							&:last-child { 
-								margin-right: 0 !important;
-							}
-						}
-					 }
-				 }
 			 }
 		 }
-
-		 &.wpr-modal-3 {
-			.wpr-modal-dialog {
-				width: $medium_modal;
-				.wpr-modal-content {
-					.wpr-modal-body {
-					   ul.recommended-product-list li.single-wpr {
-							flex: 0 0  calc(33.333333% - 13.3333334px);
-							width: calc(33.333333% - 13.3333334px);
-
-							&:nth-child(2n+1){
-								margin-right: 20px !important;
-							}
-		   
-							&:nth-child(3n+3),
-							&:last-child {
-								margin-right: 0 !important;
-							}
-					   }
-					}
-				}
-			}
-		}
-
-		&.wpr-modal-2 {
-			.wpr-modal-dialog {
-				width: $medium_modal;
-				.wpr-modal-content {
-					.wpr-modal-body {
-					   ul.recommended-product-list li.single-wpr {
-							flex: 0 0 calc(50% - 10px);
-							width: calc(50% - 10px);
-		   
-							&:nth-child(2n+2),
-							&:last-child {
-								margin-right: 0 !important;
-							}
-					   }
-					}
-				}
-			}
-		}		
 	 }
- }
+}
