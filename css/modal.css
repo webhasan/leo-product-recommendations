@@ -252,6 +252,7 @@ body.wpr-modal-opened {
 }
 .wpr-modal .wpr-message a.wpr-cart-button {
   float: right;
+  white-space: nowrap;
   padding: 0;
   background: none;
   box-shadow: none;
