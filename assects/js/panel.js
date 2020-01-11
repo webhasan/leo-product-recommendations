@@ -3787,4 +3787,4 @@ if (false) {} else {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=panel.build.js.map
+//# sourceMappingURL=panel.js.map
