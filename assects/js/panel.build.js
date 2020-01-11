@@ -81,15 +81,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./js/panel.dev.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assects/js/panel.dev.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./js/panel.dev.js":
-/*!*************************!*\
-  !*** ./js/panel.dev.js ***!
-  \*************************/
+/***/ "./assects/js/panel.dev.js":
+/*!*********************************!*\
+  !*** ./assects/js/panel.dev.js ***!
+  \*********************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 

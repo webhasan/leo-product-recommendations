@@ -271,8 +271,8 @@ body.wpr-modal-opened {
 }
 @media (min-width: 421px) {
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(50% - 10px);
-    width: calc(50% - 10px);
+    flex: 0 0 calc(50% - 11px);
+    width: calc(50% - 11px);
     margin-right: 20px !important;
   }
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
@@ -284,8 +284,8 @@ body.wpr-modal-opened {
     width: 720px;
   }
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(33.333333% - 13.4px);
-    width: calc(33.333333% - 13.4px);
+    flex: 0 0 calc(33.333333% - 14px);
+    width: calc(33.333333% - 14px);
   }
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2) {
     margin-right: 20px !important;
@@ -299,8 +299,8 @@ body.wpr-modal-opened {
     width: 960px;
   }
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
-    flex: 0 0 calc(25% - 15px);
-    width: calc(25% - 15px);
+    flex: 0 0 calc(25% - 16px);
+    width: calc(25% - 16px);
   }
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3) {
     margin-right: 20px !important;
