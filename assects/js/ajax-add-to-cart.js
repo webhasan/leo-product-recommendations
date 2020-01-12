@@ -8,6 +8,7 @@
 
         $('.entry-summary form.cart').on('submit', function (e) {
 
+            var __ = wp.i18n.__;
             var $form = $(this);
             var $submitButton = $form.find('button[type="submit"]');
             var serializedData = $form.serializeArray();
@@ -43,7 +44,8 @@
                     }
 
                     if (response.error && response.product_url) {
-                        alert('Error! Please fill all required fields before adding this product to your cart.')
+                        var alertMessage = __('Error! Please fill all required fields before adding this product to your cart.','woocommerce-product-recommend');
+                        alert(alertMessage);
                         window.location = response.product_url;
                         return; // if error found quite here and reload
                     }

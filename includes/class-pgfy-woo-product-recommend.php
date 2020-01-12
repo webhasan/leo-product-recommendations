@@ -211,7 +211,7 @@ class Pgfy_Woo_Product_Recommend {
 	 * @since      1.0.0
 	 */
 	public function admin_enqueue_scripts() {
-		wp_enqueue_script('wpr-script', $this->get_url('assects/js/panel.js'), array('wp-element','jquery'), false, true);
+		wp_enqueue_script('wpr-script', $this->get_url('assects/js/panel.js'), array('wp-element','wp-i18n','jquery'), false, true);
 		wp_localize_script( 'wpr-script', 'ajax_url', admin_url( 'admin-ajax.php' ));
 		wp_enqueue_style( 'wpr-panel', $this->get_url('assects/css/panel.css'));
 	}
@@ -225,7 +225,7 @@ class Pgfy_Woo_Product_Recommend {
 		wp_enqueue_script('wpr-modal', $this->get_url('assects/js/modal.js'), array('jquery'), false, true);
 
 		if(is_product()) {
-			wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assects/js/ajax-add-to-cart.js'), array('jquery'), false, true);
+			wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assects/js/ajax-add-to-cart.js'), array('jquery','wp-i18n'), false, true);
 		}
 		
 		wp_enqueue_style( 'wpr-modal', $this->get_url('assects/css/modal.css'));
