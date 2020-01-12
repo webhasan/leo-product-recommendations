@@ -135,6 +135,7 @@ body.wpr-modal-opened {
   margin-bottom: 10px;
   margin-top: 10px;
   font-weight: normal;
+  color: #555;
 }
 .wpr-modal .wpr-modal-close {
   font-size: 25px;
@@ -146,10 +147,11 @@ body.wpr-modal-opened {
   right: 0;
   color: #fff;
   text-align: center;
-  background: #cd2653;
+  background: #46C28E;
   width: 28px;
   height: 28px;
-  line-height: 27px;
+  line-height: 24px;
+  border-bottom-left-radius: 0.4em;
 }
 .wpr-modal .wpr-modal-close:before {
   content: "×";
@@ -194,8 +196,8 @@ body.wpr-modal-opened {
   transition: all 0.2s;
 }
 .wpr-modal .wpr-button-blue {
-  background-color: #337ab7;
-  border-color: #2e6da4;
+  background-color: #35a073;
+  border-color: white;
   margin: 10px;
 }
 .wpr-modal .wpr-button-blue:hover {
@@ -230,30 +232,34 @@ body.wpr-modal-opened {
   margin: 1.75rem auto;
 }
 .wpr-modal .wpr-message {
-  padding: 10px 35px;
-  margin-bottom: 20px;
-  margin-left: 0;
+  margin: 2em 2em 1em 2em;
   border-radius: 2px;
   clear: both;
   font-size: 16px;
   text-align: left;
-  background: #fcfcfc;
-  border: 1px solid #e6e6e6;
-  color: #808080;
-  font-weight: bold;
+  color: #555;
+  font-weight: normal;
   position: relative;
   line-height: 1.6em;
+}
+.wpr-modal .wpr-message svg {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  left: -1.3em;
+  top: calc( 50% - 6px );
 }
 .wpr-modal .wpr-message a.wpr-cart-button {
   float: right;
   white-space: nowrap;
-  padding: 0;
+  padding: 0.2em 0.8em;
   background: none;
   box-shadow: none;
   text-decoration: none;
-  margin-left: 1em;
-  padding-left: 1em;
   border-radius: 0;
+  border: 1px solid #46C28E;
+  margin-top: -0.2em;
+  color: #46C28E;
 }
 
 @media (max-width: 700px) {

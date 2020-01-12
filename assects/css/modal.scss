@@ -15,11 +15,10 @@
  $xl-media: 1200px;
 
  
- $wpr_message_bg: #0f834d;
+ $wpr_message_bg: #46C28E;
  $wpr_message_border_left: 0.6180469716em solid rgba(0, 0, 0, 0.15);
  
  
-  
  body.wpr-modal-opened {
 	 overflow: hidden;
  }
@@ -164,6 +163,7 @@
 			 margin-bottom: 10px;
 			 margin-top: 10px;
 			 font-weight: normal;
+			 color: #555;
 		 }
 	 }
  
@@ -177,10 +177,11 @@
     right: 0;
     color: #fff;
     text-align: center;
-    background: #cd2653;
+    background:  $wpr_message_bg;
     width: 28px;
 		height: 28px;
-		line-height: 27px;
+		line-height: 24px;
+		border-bottom-left-radius: .4em;
 	 }
 
 	 .wpr-modal-close:before {
@@ -233,8 +234,8 @@
 	 }
 	 
 	 .wpr-button-blue {
-		background-color: #337ab7;
-		border-color: #2e6da4;
+		background-color: darken($color: $wpr_message_bg, $amount: 10);
+		border-color: lighten($wpr_message_bg, 50%);
 		 margin: 10px;
 
 		 &:hover {
@@ -275,29 +276,33 @@
 	}
 
 	 .wpr-message {
-		 padding: 10px 35px;
-		 margin-bottom: 20px;
-		 margin-left: 0;
-		 border-radius: 2px;
-		 clear: both;
-		 font-size: 16px;
-		 text-align: left;
-		 background: #fcfcfc;
-		 border: 1px solid #e6e6e6;
-		 color: #808080;
-		 font-weight: bold;
-		 position: relative;
-		 line-height: 1.6em; 
+    margin: 2em 2em 1em 2em;;
+    border-radius: 2px;
+    clear: both;
+    font-size: 16px;
+    text-align: left;
+    color: #555;
+    font-weight: normal;
+    position: relative;
+		line-height: 1.6em;
+			svg {
+				width: 16px;
+				height: 16px;
+				position: absolute;
+				left: -1.3em;
+				top: calc( 50% - 6px );
+			}
 		 a.wpr-cart-button {
-			 float: right;
-			 white-space: nowrap;
-			 padding: 0;
-			 background: none;
-			 box-shadow: none;
-			 text-decoration: none;
-			 margin-left: 1em;
-			 padding-left: 1em;
-			 border-radius: 0;
+			  float: right;
+				white-space: nowrap;
+				padding: .2em .8em;
+				background: none;
+				box-shadow: none;
+    		text-decoration: none;
+				border-radius: 0;
+				border: 1px solid  $wpr_message_bg;
+				margin-top: -.2em;
+				color:  $wpr_message_bg;
 		 }
 	 }
  }
