@@ -168,17 +168,19 @@
 	 }
  
 	 .wpr-modal-close {
-		font-size: 26px;
-		opacity: 0.8;
-		cursor: pointer;
-		text-transform: none;
-		position: absolute;
-		top: -3px;
-		right: 3px;
-		border-radius: 50%;
-		color: #000;
-		text-align: center;
-		line-height: 1em;
+		font-size: 25px;
+    opacity: 0.8;
+    cursor: pointer;
+    text-transform: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    text-align: center;
+    background: #cd2653;
+    width: 28px;
+		height: 28px;
+		line-height: 27px;
 	 }
 
 	 .wpr-modal-close:before {
