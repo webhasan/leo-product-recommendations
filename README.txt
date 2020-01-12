@@ -23,16 +23,18 @@ After Successfull installation and activation, the plugin will add a pannel call
 to Woocommerce Product option.
 
 -> Go to Products-> add new or navigate to edit product from all products
--> Go to Recommend Products panel and set Heading and products
+-> Go to Recommend Products panel and set Heading (optional) and products.
 
 ## Key Feature Comes with Variation Swatches For WooCommerce Plugin ##
 
 👉 Add specific products you want to recommend your customer
+👉 Search and filter option availabel to easily find product to select
 👉 Reorder the products to serialize those on modal
 👉 Add modal popup for showing recommended products 
 👉 Compatible with any well coded WooCommerce themes and plugins 
-👉 Frequently Updated And Secured Codebase 
+👉 Available actions and filters hook to modify everything
 👉 Option to use default stylesheet of your theme
+👉 Frequently Updated And Secured Codebase 
  
 == Installation ==
 
