@@ -244,14 +244,6 @@ body.wpr-modal-opened {
   position: relative;
   line-height: 1.6em;
 }
-.wpr-modal .wpr-message:before {
-  content: "✓";
-  color: #8fae1b;
-  display: inline-block;
-  position: absolute;
-  top: 0.6em;
-  left: 7px;
-}
 .wpr-modal .wpr-message a.wpr-cart-button {
   float: right;
   white-space: nowrap;

@@ -287,17 +287,7 @@
 		 color: #808080;
 		 font-weight: bold;
 		 position: relative;
-		 line-height: 1.6em;
-
-		 &:before {
-			content: "✓";
-			color: #8fae1b;
-			display: inline-block;
-			position: absolute;
-			top: .6em;
-			left: 7px;
-		 }
- 
+		 line-height: 1.6em; 
 		 a.wpr-cart-button {
 			 float: right;
 			 white-space: nowrap;

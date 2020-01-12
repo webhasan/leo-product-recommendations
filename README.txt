@@ -1,4 +1,4 @@
-=== Variation Swatches for WooCommerce ===
+=== Woocommerce Product Recommend ===
 Contributors: Pluginsify
 Tags: woocommerce, product attributes, woocommerce products recommend,recommend product
 Requires at least: 4.8
