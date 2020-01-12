@@ -17,7 +17,6 @@
                 if(option.name !== 'add-to-cart') {
                     data[option.name] = option.value;
                 }
-                
             });
 
             if(!data.product_id) {
@@ -27,9 +26,6 @@
             // add product id to button to catch it by modal.
             $submitButton.attr('data-product_id', data.product_id);
 
-
-
-        
             $submitButton.removeClass( 'added' );
             $submitButton.addClass( 'loading' );
 
@@ -41,19 +37,20 @@
                 url: wc_add_to_cart_params.wc_ajax_url.toString().replace( '%%endpoint%%', 'add_to_cart' ),
                 data: data,
 
-                complete: function (response) {
-                    $submitButton.addClass('added').removeClass('loading');
-                },
-
                 success: function( response ) {
                     if ( ! response ) {
                         return;
                     }
 
-                    if (response.error & response.product_url) {
+                    if (response.error && response.product_url) {
+                        alert('Error! Please fill all required fields before adding this product to your cart.')
                         window.location = response.product_url;
-                        return;
+                        return; // if error found quite here and reload
                     }
+
+
+                    $('.woocommerce-error').remove();
+                    $submitButton.addClass('added').removeClass('loading');
 
                     // Trigger event so themes can refresh other areas.
                     $( document.body ).trigger( 'added_to_cart', [ response.fragments, response.cart_hash, $submitButton ] );
