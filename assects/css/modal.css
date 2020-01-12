@@ -267,6 +267,11 @@ body.wpr-modal-opened {
     float: none;
     padding-left: 0;
     margin-left: 0;
+    border: 0;
+  }
+
+  .wpr-modal .wpr-message svg {
+    top: calc( 50% - 18px );
   }
 }
 @media (min-width: 421px) {
