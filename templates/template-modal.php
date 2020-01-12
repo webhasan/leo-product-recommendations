@@ -16,7 +16,7 @@
         'wpr_common_heading',
         sprintf(
             __('<h2 class="modal-heading">You may purchase following %1$s with "%2$s"</h2>','woocommerce-product-recommend'), 
-            _n( 'product', 'products', $total_rc_products, 'woocommerce-product-recommend' ),
+            _n( 'item', 'items', $total_rc_products, 'woocommerce-product-recommend' ),
             get_the_title($product_id)
         )
     );
@@ -51,7 +51,7 @@
                 </div>
 
                 <?php echo $modal_heading; ?>
-                
+
                 <span aria-hidden="true" class="wpr-modal-close"></span>
 
                 <?php do_action('wpr_end_modal_head', $product_id, $recommended_products_ids); ?>
