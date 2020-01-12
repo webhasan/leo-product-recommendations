@@ -1,17 +1,4 @@
-=== Variation Swatches for WooCommerce ===
-Contributors: Pluginsify
-Tags: woocommerce, product attributes, woocommerce products recommend,recommend product
-Requires at least: 4.8
-Tested up to: 5.3
-Requires PHP: 5.6
-Stable tag: trunk
-WC requires at least: 3.2
-WC tested up to: 3.8
-License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
-
-== Description ==
-
+# WooCommerce Product Recommend 
 Woocommerce Product Recommend will promote the most conveninent products which crease sales. For an example, 
 Customer who is buying Motor Bike he/she must be interested in buying helmet, hand gloves, 
 motor bike shoes etc. This plugin will show the recommended products by clicking on add to cart from both
