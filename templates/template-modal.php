@@ -70,21 +70,6 @@
 
                 <?php do_action('wpr_after_products_loop', $product_id, $recommended_products_ids); ?>
             </div>
-
-            <div class="wpr-modal-footer">
-                <?php 
-                    echo apply_filters('wpr_modal_footer_buttons', 
-                        sprintf(
-                            '<a href="#" class="wpr-button wpr-button-blue wpr-close-modal">%1$s</a>
-                            <a href="%2$s" class="wpr-button wpr-button-green">%3$s</a>',
-
-                            __('Shop More','woocommerce-product-recommend'),
-                            wc_get_cart_url(),
-                            __('View cart', 'woocommerce-product-recommend')
-                        )
-                    )
-                ?>
-            </div>
         </div>
 
         <?php do_action('wpr_after_modal_content', $product_id, $recommended_products_ids); ?>
