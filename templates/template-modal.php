@@ -20,7 +20,7 @@
             get_the_title($product_id)
         )
     );
-    $modal_heading  = trim($modal_heading) ? sprintf('<h2>%s</h2>', $modal_heading) : $common_heading;
+    $modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</h2>', $modal_heading) : $common_heading;
 
 
     // recommended prodcuts query
