@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 == Description ==
 
-Woocommerce Product Recommend will promote the most conveninent products which crease sales. For an example, 
+Woocommerce Product Recommend will promote the most conveninent products which increase sales. For an example, 
 Customer who is buying Motor Bike he/she must be interested in buying helmet, hand gloves, 
 motor bike shoes etc. This plugin will show the recommended products by clicking on add to cart from both
 shop page and single product page.
