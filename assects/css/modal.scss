@@ -91,7 +91,6 @@
 		 pointer-events: auto;
 		 background-color: #fff;
 		 background-clip: padding-box;
-		 border: 1px solid rgba(0,0,0,.2);
 		 border-radius: .3rem;
 		 display: flex;
 		 flex-direction: column;
@@ -162,7 +161,7 @@
 			line-height: 1;
 			font-weight: normal;
 			color: #555;
-			margin: 2.3em .8em 0;
+			margin: 2em .8em 1em;
 		 }
 	 }
  
@@ -192,7 +191,7 @@
 		 position: relative;
 		 -ms-flex: 1 1 auto;
 		 flex: 1 1 auto;
-		 padding: 2.5em;
+		 padding: 1em 2.5em 1em;
 
 		ul  li img {
 			border: 1px solid #e6e6e6;

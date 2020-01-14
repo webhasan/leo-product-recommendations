@@ -71,7 +71,6 @@ body.wpr-modal-opened {
   pointer-events: auto;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 0.3rem;
   display: flex;
   flex-direction: column;
@@ -135,7 +134,7 @@ body.wpr-modal-opened {
   line-height: 1;
   font-weight: normal;
   color: #555;
-  margin: 2.3em 0.8em 0;
+  margin: 2em 0.8em 1em;
 }
 .wpr-modal .wpr-modal-close {
   font-size: 25px;
@@ -161,7 +160,7 @@ body.wpr-modal-opened {
   position: relative;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  padding: 2.5em;
+  padding: 1em 2.5em 1em;
 }
 .wpr-modal .wpr-modal-body ul li img {
   border: 1px solid #e6e6e6;
