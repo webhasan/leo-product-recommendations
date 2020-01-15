@@ -74,7 +74,6 @@ class Pgfy_Woo_Product_Recommend {
 		$this->includes();
 
 		$this->hooks();
-
     }
 
     /**
@@ -179,12 +178,64 @@ class Pgfy_Woo_Product_Recommend {
 	}
 
 	/**
-     * Include all require files.
-     * Do nothing now. It will include plugin options later.
+     * Include addon features with this plugin
+	 * 
      * @since      1.0.0
      */
 	public function includes() {
+		$this->deactivation_feedback();
+	}
 
+	/**
+     * Plugin deactivation 
+     * Include addon feature with this plugin
+     * @since      1.0.0
+     */
+	public function deactivation_feedback() {
+		if(!class_exists('Pgfy_Deactivation_Feedback')) {
+			include_once($this->get_path('includes/feedbacks/deactivation-feedback/class-pgfy-deactivation-feedback.php'));
+		}
+
+		new Pgfy_Deactivation_Feedback(array(
+			'plugin_name' => 'WooCommerce Product Recommend',
+			'plugin_slug' => 'woocommerce-product-recommend',
+			'feedback_heading' => 'Quick Feedback',
+			'feedback_description' => 'What is the reason for deactivation',
+
+			'fields' => array(
+				array(
+					'deactivation_reason' => 'Temporary deactivation, I will be back.',
+					'instuction'  => '',
+					'input_field' => '',
+					'placeholder' => '',
+					'default'     => ''
+				),
+
+				array(
+					'deactivation_reason' => 'I need help to setup it.',
+					'instuction'  => 'Pleae share your email address, we do contact you soon.',
+					'input_field' => 'text',
+					'placeholder' => '',
+					'default'     => 'webhasan24@mail.com'
+				),
+
+				array(
+					'deactivation_reason' => 'I have found better plugin.',
+					'instuction'  => 'Plugin name',
+					'input_field' => 'text',
+					'placeholder' => '',
+					'default'     => ''
+				),
+
+				array(
+					'deactivation_reason' => 'Other',
+					'instuction'  => 'Please write details, we will try to solive it.',
+					'input_field' => 'textarea',
+					'placeholder' => 'Some reason I can\'t configure this plugin.',
+					'default'     => ''
+				),
+			)
+		));
 	}
 
 	/**
@@ -238,8 +289,8 @@ class Pgfy_Woo_Product_Recommend {
 	 * @return     URL link of file.
 	 * @param      stirng File name with folder path.
 	 */
-	public function get_url($file_path = '') {
-		return plugin_dir_url( WP_PR_FILE ) . $file_path;
+	public function get_url($file = '') {
+		return plugin_dir_url( WP_PR_FILE ) . $file;
 	}
 
 	/**
