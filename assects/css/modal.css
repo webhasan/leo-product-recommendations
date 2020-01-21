@@ -76,9 +76,6 @@ body.wpr-modal-opened {
   flex-direction: column;
   outline: 0;
 }
-.wpr-modal .wpr-modal-content .star-rating {
-  margin: auto;
-}
 .wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr {
   list-style: none;
   text-align: center;
@@ -94,6 +91,9 @@ body.wpr-modal-opened {
   margin-bottom: 40px;
   font-size: 14px;
   line-height: 22.5px;
+}
+.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr .star-rating {
+  margin: auto auto 1em !important;
 }
 .wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr:last-child {
   margin-right: 0 !important;
