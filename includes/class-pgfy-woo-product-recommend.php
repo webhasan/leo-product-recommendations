@@ -72,7 +72,6 @@ class Pgfy_Woo_Product_Recommend {
 		}
 
 		$this->includes();
-
 		$this->hooks();
     }
 
@@ -183,7 +182,7 @@ class Pgfy_Woo_Product_Recommend {
      * @since      1.0.0
      */
 	public function includes() {
-		$this->deactivation_feedback();
+		// $this->deactivation_feedback();
 	}
 
 	/**
@@ -429,7 +428,7 @@ class Pgfy_Woo_Product_Recommend {
 	 */
 	public function product_archive_modal() {
 		global $product;
-		$product_id = $product->id;
+		$product_id = $product->get_id();
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
 		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
@@ -463,7 +462,7 @@ class Pgfy_Woo_Product_Recommend {
 	 */
 	public function product_gutenberg_block($html, $data, $product) {
 
-		$product_id = $product->id;
+		$product_id = $product->get_id();
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
 		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
