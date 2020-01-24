@@ -28,6 +28,3 @@ if(!class_exists('Pgfy_Woo_Product_Recommend')) {
  */
 
 Pgfy_Woo_Product_Recommend::instance()->init();
-
-
-// print_r($_REQUEST);

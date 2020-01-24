@@ -182,7 +182,7 @@ class Pgfy_Woo_Product_Recommend {
      * @since      1.0.0
      */
 	public function includes() {
-		// $this->deactivation_feedback();
+		$this->deactivation_feedback();
 	}
 
 	/**
@@ -191,50 +191,18 @@ class Pgfy_Woo_Product_Recommend {
      * @since      1.0.0
      */
 	public function deactivation_feedback() {
-		if(!class_exists('Pgfy_Deactivation_Feedback')) {
-			include_once($this->get_path('includes/feedbacks/deactivation-feedback/class-pgfy-deactivation-feedback.php'));
-		}
 
-		new Pgfy_Deactivation_Feedback(array(
-			'plugin_name' => 'WooCommerce Product Recommend',
-			'plugin_slug' => 'woocommerce-product-recommend',
-			'feedback_heading' => 'Quick Feedback',
-			'feedback_description' => 'What is the reason for deactivation',
+		add_action('current_screen', function() {
+			$current_screen = get_current_screen();
 
-			'fields' => array(
-				array(
-					'deactivation_reason' => 'Temporary deactivation, I will be back.',
-					'instuction'  => '',
-					'input_field' => '',
-					'placeholder' => '',
-					'default'     => ''
-				),
+			if($current_screen && in_array( $current_screen->id, array( 'plugins', 'plugins-network' ), true )) {
+				if(!class_exists('Pgfy_Deactivation_Feedback')) {
+					include_once($this->get_path('includes/feedbacks/deactivation-feedback/class-pgfy-deactivation-feedback.php'));
+				}
+				new Pgfy_Deactivation_Feedback($this->deactive_form_fields());
+			}
+		});
 
-				array(
-					'deactivation_reason' => 'I need help to setup it.',
-					'instuction'  => 'Pleae share your email address, we do contact you soon.',
-					'input_field' => 'text',
-					'placeholder' => '',
-					'default'     => 'webhasan24@mail.com'
-				),
-
-				array(
-					'deactivation_reason' => 'I have found better plugin.',
-					'instuction'  => 'Plugin name',
-					'input_field' => 'text',
-					'placeholder' => '',
-					'default'     => ''
-				),
-
-				array(
-					'deactivation_reason' => 'Other',
-					'instuction'  => 'Please write details, we will try to solive it.',
-					'input_field' => 'textarea',
-					'placeholder' => 'Some reason I can\'t configure this plugin.',
-					'default'     => ''
-				),
-			)
-		));
 	}
 
 	/**
@@ -480,6 +448,102 @@ class Pgfy_Woo_Product_Recommend {
 
 		return $output;
 	}
+
+
+	/**
+	 * Feedback Form data
+	 * 
+	 * @return array deactivation form field settings data
+	 */
+	public function deactive_form_fields() {
+		$admin_email = $this->amdin_email();
+
+		$form = array(
+			'api_url' => 'https://pluginsify.com/wp-json/pluginsify/v1/deactivation',
+			'plugin_name' => 'WooCommerce Product Recommend',
+			'plugin_slug' => 'woocommerce-product-recommend',
+			'feedback_heading' => 'Quick Feedback',
+			'form_heading' => 'May we have a little info about why you are deactivating?',
+			'fields' => array(
+				array(
+					'category' => 'temporary_deactivation',
+					'reason' 	  => __('It\'s a temporary deactivation.'),
+					'instuction'  => '',
+					'input_field' => '',
+					'placeholder' => '',
+					'input_default'  => '',
+				),
+
+				array(
+					'category' => 'dont_understand',
+					'reason' 	  => __('I couldn\'t understand how to make it work..'),
+					'instuction'  => '<a href="#">Check instruciton and demo.</a>',
+					'input_field' => '',
+					'placeholder' => '',
+					'input_default' => '',
+				),
+
+				array(
+					'category' => 'dont_need',
+					'reason' 	  => __('Plugin works nice but longer need the plugin.'),
+					'instuction'  => '<a href="#">Incourse us by giving nice feedback.</a>',
+					'input_field' => '',
+					'placeholder' => '',
+					'input_default' => '',
+				),
+
+				array(
+					'category' => 'need_help',
+					'reason' 	  => __('I need some help to configure plugin.'),
+					'instuction'  => 'Please provide your email address we will conact you soon.',
+					'input_field' => 'email',
+					'placeholder' => '',
+					'input_default' => sanitize_email($admin_email)
+				),
+
+				array(
+					'category' => 'another_plugin',
+					'reason' 	  => __('Found better plugin.'),
+					'instuction'  => '',
+					'input_field' => 'text',
+					'placeholder' => 'Please share which plugin',
+					'input_default' => ''
+				),
+
+				array(
+					'category' => 'feature_request',
+					'reason' 	  => __('I need specific feature that you don\'t support.'),
+					'instuction'  => 'Please let us know feature details we will try add it ASAP',
+					'input_field' => 'textarea',
+					'placeholder' => 'Require feature details',
+					'input_default' => ''
+				),
+
+				array(
+					'category' => 'other',
+					'reason' 	  => __('Other'),
+					'instuction'  => '',
+					'input_field' => 'textarea',
+					'placeholder' => 'Please share the reason. We will try to fix / help.',
+					'input_default' => ''
+				),
+			)
+		);
+
+		return $form;
+	}
+
+
+	/**
+	 * Get admin email address
+	 * 
+	 * @return string current user email address
+	 */
+	public function amdin_email() {
+		$admin_email =  wp_get_current_user();
+		return $admin_email->data->user_email;
+	}
+
 
     /**
 	 * Get class instance.
