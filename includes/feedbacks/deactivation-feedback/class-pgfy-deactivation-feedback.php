@@ -19,60 +19,65 @@ class Pgfy_Deactivation_Feedback {
         $form_id = 'feedback-form-'.$this->settings['plugin_slug'];
         $modal_html = '';
 
-        $modal_html .= '<div class="modal" id="'.$modal_id.'"> <div class="modal-background"></div>';
-        $modal_html .=  '<div class="modal-card">';
+        $modal_html .= '<div class="pgfy-feedback-modal" id="'.$modal_id.'">';
+        $modal_html .= ' <div class="pgfy-feedback-modal-background"></div>';
+        $modal_html .=  '<div class="pgfy-feedback-modal-card">';
 
-            $modal_html .=  '<header class="modal-card-head">';
+            $modal_html .=  '<header class="pgfy-feedback-modal-card-head">';
 
                 if($this->settings['feedback_heading']) {
-                    $modal_html .=  '<p class="modal-card-title">'.$this->settings['feedback_heading'].'</p>';  
-                    $modal_html .=  '<button class="delete" aria-label="close"></button>';  
+                    $modal_html .=  '<p class="pgfy-feedback-modal-card-title">'.$this->settings['feedback_heading'].'</p>';  
+                    $modal_html .=  '<button class="pgfy-feedback-modal-close" aria-label="close"></button>';  
                 }
 
             $modal_html .=  '</header>';
 
-                $modal_html .=  '<section class="modal-card-body">';
+                $modal_html .=  '<section class="pgfy-feedback-modal-card-body">';
                 
                     if(isset($this->settings['form_heading']) && $this->settings['form_heading'] !== ''):
-                        $modal_html .= '<h3 class="pgfy-form-heading">'.$this->settings['form_heading'].'</h3>';
+                        $modal_html .= '<h3 class="pgfy-feedback-form-heading">'.$this->settings['form_heading'].'</h3>';
                     endif;
 
-                    $modal_html .= '<div class="pgfy-feedback-body">';
+                    $modal_html .= '<div class="pgfy-feedback-modal-body">';
                     $modal_html .= '<form class="'.$form_id.'">';
 
                     foreach($this->settings['fields'] as $field): 
-                            $reason = isset($field['reason']) ? $field['reason'] : '';
-                            $category = (isset($field['category']) && $field['category'] !== '') ? $field['category'] : 'undefined';
-                            $input_field = (isset($field['input_field']) && $field['input_field'] !== '') ? $field['input_field'] : false;
-                            $placeholder = (isset($field['placehlder']) && $field['placehlder'] !== '') ? $field['placehlder'] : '';
-                            $input_default = (isset($field['input_default']) && $field['input_default'] !== '') ? $field['input_default'] : '';
-                            $instuction = (isset($field['instuction']) && $field['instuction'] !== '') ? $field['instuction'] : false;
+                        $reason = isset($field['reason']) ? $field['reason'] : '';
+                        $category = (isset($field['category']) && $field['category'] !== '') ? $field['category'] : 'undefined';
+                        $input_field = (isset($field['input_field']) && $field['input_field'] !== '') ? $field['input_field'] : false;
+                        $placeholder = (isset($field['placeholder']) && $field['placeholder'] !== '') ? $field['placeholder'] : '';
+                        $input_default = (isset($field['input_default']) && $field['input_default'] !== '') ? $field['input_default'] : '';
+                        $instuction = (isset($field['instuction']) && $field['instuction'] !== '') ? $field['instuction'] : false;
 
+                        $modal_html .= '<fieldset>';
+                            $modal_html .= sprintf('<label><input type="radio" class="reason" name="reason" value="%1$s"/>%2$s</label>', $category, $reason);
 
-                            $modal_html .= '<fieldset>';
-                            
-                                $modal_html .= sprintf('<label><input type="radio" name="reason" value="%1$s"/>%2$s</label>', $category, $reason);
+                            if($input_field || $instuction):
+
+                                $modal_html .= '<div class="pgfy-inner-field">';
 
                                 if($input_field && $input_field === 'textarea'):
-                                    $modal_html .= sprintf('<textarea  name="feedback[%1$s]" placehlder="%2$s" value="%3$s"></textarea>', $category, $placeholder, $input_default);
+                                    $modal_html .= sprintf('<textarea  name="feedback[%1$s]" placeholder="%2$s" value="%3$s"></textarea>', $category, $placeholder, $input_default);
                                 elseif($input_field):
-                                    $modal_html .= sprintf('<input type="%1$s" name="feedback[%2$s]" placehlder="%3$s" value="%4$s" />', $input_field, $category, $placeholder, $input_default);
+                                    $modal_html .= sprintf('<input type="%1$s" name="feedback[%2$s]" placeholder="%3$s" value="%4$s" />', $input_field, $category, $placeholder, $input_default);
                                 endif;
 
                                 if($instuction):
                                     $modal_html .= '<p>'.$field['instuction'].'</p>';
                                 endif;
 
-                            $modal_html .= '</fieldset>';
+                                $modal_html .= '</div>';
+                            endif;
+                        $modal_html .= '</fieldset>';
                     endforeach;
 
                     $modal_html .= '</form>';
                     $modal_html .= '</div>';
                 $modal_html .=  '</section>';
                 
-                $modal_html .=  '<footer class="modal-card-foot">';
-                    $modal_html .=  '<button class="button is-success">Send & Deactive</button>';
-                    $modal_html .=  '<a href="" class="pgfy-deactivation-link">Skip & Deactive</a>';
+                $modal_html .=  '<footer class="pgfy-feedback-modal-card-foot">';
+                    $modal_html .=  '<button class="button button-primary">Send & Deactive</button>';
+                    $modal_html .=  '<a href="" class="pgfy-feedback-deactivation-link">Skip & Deactive</a>';
                 $modal_html .=  '</footer>';
 
         $modal_html .= '</div>';

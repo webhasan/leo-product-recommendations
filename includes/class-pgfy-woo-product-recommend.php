@@ -413,7 +413,7 @@ class Pgfy_Woo_Product_Recommend {
 	public function product_single_modal() {
 		global $product;
 
-		$product_id = $product->id;
+		$product_id = $product->get_id();
 
 		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
 		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();

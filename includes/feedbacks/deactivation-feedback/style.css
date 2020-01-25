@@ -1,17 +1,224 @@
-/* Error: Can't find stylesheet to import.
- *   ,
- * 1 | @import "bulma/utilities/_all.sass"
- *   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
- *   '
- *   style.sass 1:9  root stylesheet */
+.pgfy-feedback-modal-close {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
-body::before {
-  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
-      "Droid Sans Mono", monospace, monospace;
-  white-space: pre;
+.pgfy-feedback-modal-close {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(10, 10, 10, 0.2);
+  border: none;
+  border-radius: 290486px;
+  cursor: pointer;
+  pointer-events: auto;
+  display: inline-block;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-size: 0;
+  height: 20px;
+  max-height: 20px;
+  max-width: 20px;
+  min-height: 20px;
+  min-width: 20px;
+  outline: none;
+  position: relative;
+  vertical-align: top;
+  width: 20px;
+}
+.pgfy-feedback-modal-close::before, .pgfy-feedback-modal-close::after {
+  background-color: white;
+  content: "";
   display: block;
-  padding: 1em;
-  margin-bottom: 1em;
-  border-bottom: 2px solid black;
-  content: "Error: Can't find stylesheet to import.\a   \2577 \a 1 \2502  @import \"bulma/utilities/_all.sass\"\a   \2502          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\a   \2575 \a   style.sass 1:9  root stylesheet";
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  transform-origin: center center;
+}
+.pgfy-feedback-modal-close::before {
+  height: 2px;
+  width: 50%;
+}
+.pgfy-feedback-modal-close::after {
+  height: 50%;
+  width: 2px;
+}
+.pgfy-feedback-modal-close:hover, .pgfy-feedback-modal-close:focus {
+  background-color: rgba(10, 10, 10, 0.3);
+}
+.pgfy-feedback-modal-close:active {
+  background-color: rgba(10, 10, 10, 0.4);
+}
+.is-small.pgfy-feedback-modal-close {
+  height: 16px;
+  max-height: 16px;
+  max-width: 16px;
+  min-height: 16px;
+  min-width: 16px;
+  width: 16px;
+}
+.is-medium.pgfy-feedback-modal-close {
+  height: 24px;
+  max-height: 24px;
+  max-width: 24px;
+  min-height: 24px;
+  min-width: 24px;
+  width: 24px;
+}
+.is-large.pgfy-feedback-modal-close {
+  height: 32px;
+  max-height: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  min-width: 32px;
+  width: 32px;
+}
+
+.pgfy-feedback-modal-background, .pgfy-feedback-modal {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.pgfy-feedback-modal {
+  align-items: center;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  position: fixed;
+  z-index: 99999;
+}
+.pgfy-feedback-modal.is-active {
+  display: flex;
+}
+
+.pgfy-feedback-modal-background {
+  background-color: rgba(10, 10, 10, 0.86);
+}
+
+.modal-content,
+.pgfy-feedback-modal-card {
+  margin: 0 20px;
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+  position: relative;
+  width: 100%;
+}
+@media screen and (min-width: 769px), print {
+  .modal-content,
+.pgfy-feedback-modal-card {
+    margin: 0 auto;
+    max-height: calc(100vh - 40px);
+    width: 640px;
+  }
+}
+
+.pgfy-feedback-modal-card {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+  overflow: hidden;
+  -ms-overflow-y: visible;
+}
+
+.pgfy-feedback-modal-card-head,
+.pgfy-feedback-modal-card-foot {
+  align-items: center;
+  background-color: whitesmoke;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-start;
+  padding: 20px;
+  position: relative;
+}
+
+.pgfy-feedback-modal-card-foot {
+  justify-content: space-between;
+}
+
+.pgfy-feedback-modal-card-head {
+  border-bottom: 1px solid #dbdbdb;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.pgfy-feedback-modal-card-title {
+  color: #363636;
+  flex-grow: 1;
+  flex-shrink: 0;
+  font-size: 18px;
+  line-height: 1;
+  margin: 0 !important;
+}
+
+.pgfy-feedback-modal-card-foot {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-top: 1px solid #dbdbdb;
+}
+.pgfy-feedback-modal-card-foot .button:not(:last-child) {
+  margin-right: 0.5em;
+}
+
+.pgfy-feedback-modal-card-body {
+  -webkit-overflow-scrolling: touch;
+  background-color: white;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: auto;
+  padding: 20px;
+}
+
+.pgfy-feedback-form-heading {
+  font-size: 16px;
+  margin: 0 !important;
+}
+
+.pgfy-feedback-modal-body {
+  padding-top: 20px;
+}
+
+.pgfy-feedback-modal-body fieldset {
+  margin-bottom: 18px;
+}
+
+.pgfy-feedback-modal-body fieldset label {
+  color: #6d7882;
+  font-size: 16px;
+}
+
+.pgfy-feedback-modal-body fieldset label input[type="radio"] {
+  margin-right: 10px;
+}
+
+.pgfy-feedback-modal-body fieldset .pgfy-inner-field {
+  padding-top: 15px;
+  display: none;
+}
+
+.pgfy-feedback-modal-body fieldset .pgfy-inner-field p {
+  margin-bottom: 0;
+}
+
+.pgfy-feedback-modal-body fieldset input[type="text"],
+.pgfy-feedback-modal-body fieldset input[type="email"],
+.pgfy-feedback-modal-body fieldset input[type="tel"],
+.pgfy-feedback-modal-body fieldset textarea {
+  display: block;
+  width: 100%;
+}
+
+.pgfy-feedback-deactivation-link {
+  color: #a4afb7;
+  text-decoration: none;
+}
+
+.pgfy-feedback-deactivation-link:hover {
+  text-decoration: underline;
 }
