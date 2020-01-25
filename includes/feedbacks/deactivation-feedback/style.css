@@ -198,12 +198,19 @@
 }
 
 .pgfy-feedback-modal-body fieldset .pgfy-inner-field {
-  padding-top: 15px;
   display: none;
 }
 
 .pgfy-feedback-modal-body fieldset .pgfy-inner-field p {
   margin-bottom: 0;
+  font-weight: bold;
+  color: #1e8cbe;
+  font-size: 12px;
+}
+
+.pgfy-feedback-modal-body fieldset .pgfy-inner-field p a {
+  font-weight: bold;
+  color: #1e8cbe;
 }
 
 .pgfy-feedback-modal-body fieldset input[type="text"],
@@ -211,6 +218,7 @@
 .pgfy-feedback-modal-body fieldset input[type="tel"],
 .pgfy-feedback-modal-body fieldset textarea {
   display: block;
+  margin-top: 13px;
   width: 100%;
 }
 
