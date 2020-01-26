@@ -8,10 +8,49 @@
 
 class Pgfy_Deactivation_Feedback {
     protected $settings;
+    protected static $has_scripts = false;
     
     public function __construct($settings) {
         $this->settings = $settings;
-        $this->init();
+        $this->init_feedback_form();
+        $this->submit_feedback();
+    }
+
+
+    protected function init_feedback_form() {
+        add_action('current_screen', function() {
+			$current_screen = get_current_screen();
+
+			if($current_screen && in_array( $current_screen->id, array( 'plugins', 'plugins-network' ), true )) {
+                $this->modal_scripts();
+                add_action('admin_footer', array($this, 'add_modal'));
+			}
+		});
+    }
+
+    /**
+     * If used deactivation feedback  in multipule plugins 
+     * scripts should load only one time.
+     *
+     * @return void
+     */
+    public function modal_scripts() {
+        
+        if(!self::$has_scripts) {
+
+            add_action('admin_enqueue_scripts', function() {
+                wp_enqueue_script('pgfy-deactivation-feedback-script', $this->url('script.js'), array('jquery','wp-i18n'), false, true);
+                wp_localize_script( 'pgfy-deactivation-feedback-script', 'ajax_url', admin_url( 'admin-ajax.php'));
+                wp_localize_script( 'pgfy-deactivation-feedback-script', 'security', wp_create_nonce('valid-feedback-submit'));
+                wp_enqueue_style( 'pgfy-deactivation-feedback-style', $this->url('style.css'));
+            });
+
+            self::$has_scripts = true;
+        }
+    }
+
+    public function add_modal() {
+        echo $this->modal();
     }
 
     public function modal() {
@@ -57,9 +96,9 @@ class Pgfy_Deactivation_Feedback {
                                 $modal_html .= '<div class="pgfy-inner-field">';
 
                                 if($input_field && $input_field === 'textarea'):
-                                    $modal_html .= sprintf('<textarea  name="feedback[%1$s]" placeholder="%2$s" value="%3$s"></textarea>', $category, $placeholder, $input_default);
+                                    $modal_html .= sprintf('<textarea  name="%1$s" placeholder="%2$s" value="%3$s"></textarea>', $category, $placeholder, $input_default);
                                 elseif($input_field):
-                                    $modal_html .= sprintf('<input type="%1$s" name="feedback[%2$s]" placeholder="%3$s" value="%4$s" />', $input_field, $category, $placeholder, $input_default);
+                                    $modal_html .= sprintf('<input type="%1$s" name="%2$s" placeholder="%3$s" value="%4$s" />', $input_field, $category, $placeholder, $input_default);
                                 endif;
 
                                 if($instuction):
@@ -76,7 +115,7 @@ class Pgfy_Deactivation_Feedback {
                 $modal_html .=  '</section>';
                 
                 $modal_html .=  '<footer class="pgfy-feedback-modal-card-foot">';
-                    $modal_html .=  '<button class="button button-primary">Send & Deactive</button>';
+                    $modal_html .=  '<div class="pgfy-submit-wrap"><button class="button button-primary">Send & Deactive</button><span class="loading" style="background-image: url('.home_url().'/wp-admin/images/spinner.gif)"></span></div>';
                     $modal_html .=  '<a href="" class="pgfy-feedback-deactivation-link">Skip & Deactive</a>';
                 $modal_html .=  '</footer>';
 
@@ -87,42 +126,32 @@ class Pgfy_Deactivation_Feedback {
     }
 
 
-    protected function init() {
-        add_action('admin_enqueue_scripts', array($this, 'modal_scripts')); 
-        add_action('admin_footer', array($this, 'add_modal'));
+    public function submit_feedback() {
+        add_action( 'wp_ajax_deactivation_feedback', array($this, 'deactivation_feedback') );
     }
 
-    public function modal_scripts() {
-        wp_enqueue_script('pgfy-deactivation-feedback-script', $this->url('script.js'), array('jquery'), false, true);
-        wp_localize_script( 'pgfy-deactivation-feedback-script', 'ajax_url', admin_url( 'admin-ajax.php' ));
-        wp_enqueue_style( 'pgfy-deactivation-feedback-style', $this->url('style.css'));
-    }
-
-    public function add_modal() {
-        echo $this->modal();
-    }
-
-    public function deactivate_feedback() {
-			
-        $deactivate_reasons = $this->deactivate_feedback_reasons();
-        
-        $plugin         = sanitize_title( $_POST[ 'plugin' ] );
-        $reason_id      = sanitize_title( $_POST[ 'reason_type' ] );
-        $reason_title   = $deactivate_reasons[ $reason_id ][ 'title' ];
-        $reason_text    = sanitize_text_field( $_POST[ 'reason_text' ] );
-        $plugin_version = sanitize_text_field( $_POST[ 'version' ] );
-        
-        if ( 'temporary_deactivation' === $reason_id ) {
-            wp_send_json_success( true );
-            
-            return;
+    public function deactivation_feedback() {
+   
+        if((!isset($_POST['formData']) || !wp_verify_nonce( $_POST['security'], 'valid-feedback-submit'))) {
+            wp_send_json_error();
         }
-        
+
+        $form_data = $_POST['formData'];
+        $reason_category = $form_data['reason'];
+        $reason_text = isset($form_data[$reason_category]) ? esc_html($form_data[$reason_category]) : '';
+
+        if ( 'temporary_deactivation' === $reason_category ) {
+            wp_send_json_success( true );
+        }
+
+        $plugin = $this->settings['plugin_name'];
+        $plugin_version = isset($this->settings['plugin_version']) ? $this->settings['plugin_version'] : '1.0.0';
+
         $theme = array(
             'is_child_theme'   => is_child_theme(),
-            'parent_theme'     => $this->get_parent_theme_name(),
-            'theme_name'       => $this->get_theme_name(),
-            'theme_version'    => $this->get_theme_version(),
+            'parent_theme'     => wp_get_theme( get_template() )->get( 'Name' ),
+            'theme_name'       => wp_get_theme()->get( 'Name' ),
+            'theme_version'    => wp_get_theme()->get( 'Version' ),
             'theme_uri'        => wp_get_theme( get_template() )->get( 'ThemeURI' ),
             'theme_author'     => wp_get_theme( get_template() )->get( 'Author' ),
             'theme_author_uri' => wp_get_theme( get_template() )->get( 'AuthorURI' ),
@@ -148,26 +177,30 @@ class Pgfy_Deactivation_Feedback {
             'server_info'          => isset( $_SERVER[ 'SERVER_SOFTWARE' ] ) ? wc_clean( wp_unslash( $_SERVER[ 'SERVER_SOFTWARE' ] ) ) : '',
         );
         
-        $response = wp_remote_post( $api_url, $args = array(
+        $response = wp_remote_post( $this->settings['api_url'], array(
             'sslverify' => false,
             'timeout'   => 60,
             'body'      => array(
                 'plugin'       => $plugin,
                 'version'      => $plugin_version,
-                'reason_title' => $reason_title,
+                'reason_category' => $reason_category,
                 'reason_text'  => $reason_text,
                 'theme'        => $theme,
                 'plugins'      => $active_plugins,
                 'environment'  => $environment
             )
         ) );
+
+
+        $responce_code = wp_remote_retrieve_response_code( $response );
         
-        if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+        if ( ! is_wp_error( $response ) && $responce_code >= 200  &&  $responce_code <= 299) {
             wp_send_json_success( wp_remote_retrieve_body( $response ) );
         } else {
             wp_send_json_error( wp_remote_retrieve_response_message( $response ) );
         }
     }
+
 
     public function url($filte) {
         $dir_url = plugin_dir_url(  __FILE__);

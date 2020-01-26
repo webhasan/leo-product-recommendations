@@ -142,6 +142,35 @@
   justify-content: space-between;
 }
 
+.pgfy-submit-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.pgfy-submit-wrap .loading {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  display: none;
+}
+
+.pgfy-submit-wrap button {
+  min-width: 118px;
+  text-align: center;
+  box-shadow: none !important;
+}
+
+
+.pgfy-submit-wrap button.submiting {
+  pointer-events: none;
+  opacity: .7;
+}
+
+.pgfy-submit-wrap button.submiting ~ .loading {
+  display: inline-block;
+}
+
 .pgfy-feedback-modal-card-head {
   border-bottom: 1px solid #dbdbdb;
   border-top-left-radius: 6px;

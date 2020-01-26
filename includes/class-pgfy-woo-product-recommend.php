@@ -6,16 +6,21 @@
  * @author     Pluginsify
  */
 
+ 
 class Pgfy_Woo_Product_Recommend {
 
 	static protected $instance;
+	static protected $name = 'WooCommerce Product Recommend';
+	static protected $slug = 'woocommerce-product-recommend';
+	static protected $version = '1.0.0';
+	
 
     /**
     * Class constructor
     * 
     * @since      1.0.0
      */
-    public function __construct() {
+    private function __construct() {
 		
     }
 
@@ -192,17 +197,10 @@ class Pgfy_Woo_Product_Recommend {
      */
 	public function deactivation_feedback() {
 
-		add_action('current_screen', function() {
-			$current_screen = get_current_screen();
-
-			if($current_screen && in_array( $current_screen->id, array( 'plugins', 'plugins-network' ), true )) {
-				if(!class_exists('Pgfy_Deactivation_Feedback')) {
-					include_once($this->get_path('includes/feedbacks/deactivation-feedback/class-pgfy-deactivation-feedback.php'));
-				}
-				new Pgfy_Deactivation_Feedback($this->deactive_form_fields());
-			}
-		});
-
+		if(!class_exists('Pgfy_Deactivation_Feedback')) {
+			include_once($this->get_path('includes/feedbacks/deactivation-feedback/class-pgfy-deactivation-feedback.php'));
+		}
+		new Pgfy_Deactivation_Feedback($this->deactive_form_fields());
 	}
 
 	/**
@@ -459,36 +457,39 @@ class Pgfy_Woo_Product_Recommend {
 		$admin_email = $this->amdin_email();
 
 		$form = array(
+			
+			'plugin_name' 		=> self::$name,
+			'plugin_version' 	=> self::$version,
+			'plugin_slug'		=> self::$slug,
+			'feedback_heading'  => 'Quick Feedback',
+			'form_heading'      => 'May we have a little info about why you are deactivating?',
 			'api_url' => 'https://pluginsify.com/wp-json/pluginsify/v1/deactivation',
-			'plugin_name' => 'WooCommerce Product Recommend',
-			'plugin_slug' => 'woocommerce-product-recommend',
-			'feedback_heading' => 'Quick Feedback',
-			'form_heading' => 'May we have a little info about why you are deactivating?',
+
 			'fields' => array(
 				array(
-					'category' => 'temporary_deactivation',
-					'reason' 	  => __('It\'s a temporary deactivation.'),
-					'instuction'  => '',
-					'input_field' => '',
-					'placeholder' => '',
-					'input_default'  => '',
-				),
-
-				array(
-					'category' => 'dont_understand',
-					'reason' 	  => __('I couldn\'t understand how to make it work..'),
-					'instuction'  => '<a href="#">Check instruciton and demo.</a>',
-					'input_field' => '',
-					'placeholder' => '',
+					'category' 		=> 'temporary_deactivation',
+					'reason' 	  	=> __('It\'s a temporary deactivation.'),
+					'instuction'  	=> '',
+					'input_field' 	=> '',
+					'placeholder' 	=> '',
 					'input_default' => '',
 				),
 
 				array(
-					'category' => 'dont_need',
-					'reason' 	  => __('Plugin works nice but longer need the plugin.'),
-					'instuction'  => '<a href="#">Incourse us by giving nice feedback.</a>',
-					'input_field' => '',
-					'placeholder' => '',
+					'category' 		=> 'dont_understand',
+					'reason' 	  	=> __('I couldn\'t understand how to make it work..'),
+					'instuction'  	=> '<a href="#">Check instruciton and demo.</a>',
+					'input_field' 	=> '',
+					'placeholder' 	=> '',
+					'input_default' => '',
+				),
+
+				array(
+					'category' 		=> 'dont_need',
+					'reason' 	  	=> __('Plugin works nice but longer need the plugin.'),
+					'instuction'  	=> '<a href="#">Incourse us by giving nice feedback.</a>',
+					'input_field' 	=> '',
+					'placeholder' 	=> '',
 					'input_default' => '',
 				),
 
@@ -502,29 +503,29 @@ class Pgfy_Woo_Product_Recommend {
 				),
 
 				array(
-					'category' => 'another_plugin',
-					'reason' 	  => __('Found better plugin.'),
-					'instuction'  => '',
-					'input_field' => 'text',
-					'placeholder' => 'Please share which plugin',
+					'category' 		=> 'another_plugin',
+					'reason' 	  	=> __('Found better plugin.'),
+					'instuction'  	=> '',
+					'input_field' 	=> 'text',
+					'placeholder' 	=> 'Please share which plugin',
 					'input_default' => ''
 				),
 
 				array(
-					'category' => 'feature_request',
-					'reason' 	  => __('I need specific feature that you don\'t support.'),
-					'instuction'  => 'Please let us know feature details we will try add it ASAP',
-					'input_field' => 'textarea',
-					'placeholder' => 'Require feature details',
+					'category' 		=> 'feature_request',
+					'reason' 	  	=> __('I need specific feature that you don\'t support.'),
+					'instuction'  	=> 'Please let us know feature details we will try add it ASAP',
+					'input_field' 	=> 'textarea',
+					'placeholder' 	=> 'Require feature details',
 					'input_default' => ''
 				),
 
 				array(
-					'category' => 'other',
-					'reason' 	  => __('Other'),
-					'instuction'  => '',
-					'input_field' => 'textarea',
-					'placeholder' => 'Please share the reason. We will try to fix / help.',
+					'category' 		=> 'other',
+					'reason' 	  	=> __('Other'),
+					'instuction'  	=> '',
+					'input_field' 	=> 'textarea',
+					'placeholder' 	=> 'Please share the reason. We will try to fix / help.',
 					'input_default' => ''
 				),
 			)

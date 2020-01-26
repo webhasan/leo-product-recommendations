@@ -1,14 +1,6 @@
-(function($) {
-    //esc_html 
-    function escHtml(unsafe) {
-        return unsafe.replace(/&/g, "&amp;")
-             .replace(/</g, "&lt;")
-             .replace(/>/g, "&gt;")
-             .replace(/"/g, "&quot;")
-             .replace(/'/g, "&#039;");
-     }
+(function($, __) {
+      $(function() {
 
-    $(function() {
         $deactive_links = $('.wp-list-table.plugins .active').find('.deactivate a');
         
         $deactive_links.each(function() {
@@ -42,32 +34,42 @@
                     $form.submit();
                 });
 
+                
+
                 //form on submission
                 $form.on('submit', function(e) {
-                    $submitButton.css('opacity','.5');
-
+                    
                     e.preventDefault();
 
-                    formData = $(this).serializeArray().map(function(item) {
-                        item.value = escHtml(item.value);
-                        return item;
-                    });
+                    $formData = $(this).serializeArray().reduce(function(obj, item) {
+                        obj[item.name] = item.value;
+                        return obj;
+                    }, {});
+
+                    if(!$formData.reason) {
+                        $modal.removeClass('is-active');
+                        return false;
+                    }
+
+                    
+                    $submitButton.addClass('submiting').text(__('Deactivating...','pgfy_deactivation_plugin'));
 
                     var request =  $.ajax({
                         method: 'POST',
                         url: ajax_url,
                         data: {
-                            formData: formData,
-                            action: 'send_deactivation_feedback'
+                            action: 'deactivation_feedback',
+                            security: security,
+                            formData: $formData
                         }
                     })
                     
-                    request.done(function() {
+                    request.done(function(response) {
                         window.location.href = deactivationLink;
                     });
 
-                    request.fail(function() {
-                        window.location.href = deactivationLink;
+                    request.fail(function(data) {
+                       window.location.href = deactivationLink;
                     });
                 });
             }
@@ -79,5 +81,5 @@
             $(this).closest('.pgfy-feedback-modal').removeClass('is-active');
         });
     });
-})(jQuery);
+})(jQuery, wp.i18n.__);
 
