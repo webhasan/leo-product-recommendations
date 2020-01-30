@@ -185,7 +185,8 @@ __webpack_require__.r(__webpack_exports__);
       repeatCount: "indefinite",
       begin: "0.1s"
     })));
-  };
+  }; // const ThumbnailPlacehlder = 
+
 
   var postId = parseInt(app.getAttribute('data-id'));
   var reorder = Reorder.reorder;
@@ -382,8 +383,8 @@ __webpack_require__.r(__webpack_exports__);
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
         className: "thumb"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("img", {
-        src: product.thumbnail_image,
-        alt: product.title
+        src: !!product.thumbnail_image ? product.thumbnail_image : '',
+        alt: ""
       })), product.title));
     }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "select-item-panel"
@@ -410,8 +411,8 @@ __webpack_require__.r(__webpack_exports__);
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
         className: "thumb"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("img", {
-        src: product.thumbnail_image,
-        alt: product.title
+        src: !!product.thumbnail_image ? product.thumbnail_image : '',
+        alt: ""
       })), product.title, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("span", {
         className: "remove-item",
         onMouseDown: function onMouseDown(e) {

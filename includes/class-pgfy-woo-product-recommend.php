@@ -331,7 +331,7 @@ class Pgfy_Woo_Product_Recommend {
 		$products = array_map(function($item) {
 			$id = $item->ID;
 			$title = $item->post_title;
-			$thumbnail_image = get_the_post_thumbnail_url($id);
+			$thumbnail_image = get_the_post_thumbnail_url($id, array('100','100'));
 	
 			$categories = get_the_terms($id, 'product_cat');
 	

@@ -24,6 +24,8 @@ import Reorder from 'react-reorder';
 		</svg>
 	);
 
+	// const ThumbnailPlacehlder = 
+
 	const postId = parseInt(app.getAttribute('data-id'));
 
 	const { reorder	} = Reorder;
@@ -162,7 +164,7 @@ import Reorder from 'react-reorder';
 											<li key = {product.id} onClick = {() => addProdcut(product.id)}>
 												<span className="single-list">
 													<div className="thumb">
-														<img src={product.thumbnail_image} alt={product.title} />
+														<img src={!!product.thumbnail_image ? product.thumbnail_image : ''} alt="" />
 													</div>
 													{product.title}
 												</span>
@@ -192,7 +194,7 @@ import Reorder from 'react-reorder';
 											<input type="hidden" name = "pgfy_pr_data[products][]" value = {product.id} />
 											<span className="single-list" data-id ="10">
 												<div className="thumb">
-												<img src={product.thumbnail_image} alt={product.title} />
+												<img src={!!product.thumbnail_image ? product.thumbnail_image : ''} alt="" />
 												</div>
 												{product.title}
 												<span  className="remove-item" 
