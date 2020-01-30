@@ -454,8 +454,8 @@ class Pgfy_Woo_Product_Recommend {
 	 * @return array deactivation form field settings data
 	 */
 	public function deactive_form_fields() {
-		$admin_email = $this->amdin_email();
 
+		$admin_email = $this->amdin_email();
 		$form = array(
 			
 			'plugin_name' 		=> self::$name,
@@ -542,7 +542,7 @@ class Pgfy_Woo_Product_Recommend {
 	 */
 	public function amdin_email() {
 		$admin_email =  wp_get_current_user();
-		return $admin_email->data->user_email;
+		return ( 0 !== $admin_email->ID ) ? $admin_email->data->user_email : '';
 	}
 
 
