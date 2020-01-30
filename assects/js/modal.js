@@ -78,9 +78,11 @@
 
     // call modal
     $( document.body).on('added_to_cart', function(e, ...data) {
+        
         const [,,buttonInfo] = data;
         var button =  buttonInfo[0];
 
+        //don't show modal inside modal
         if(! $(button).closest('.recommended-product-list').length) {
 
             var buttonId = $(button).data('product_id');

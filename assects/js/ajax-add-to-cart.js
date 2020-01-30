@@ -8,6 +8,7 @@
 
         $('.entry-summary form.cart').on('submit', function (e) {
 
+
             var __ = wp.i18n.__;
             var $form = $(this);
             var $submitButton = $form.find('button[type="submit"]');
@@ -24,44 +25,50 @@
                 data.product_id = $submitButton.val();
             }
 
-            // add product id to button to catch it by modal.
-            $submitButton.attr('data-product_id', data.product_id);
+            // recommend products mdoal
+            var $targetMdoal = $('#wpr-modal-' + data.product_id);
 
-            $submitButton.removeClass( 'added' );
-            $submitButton.addClass( 'loading' );
+            // only ajax add to cart for availabel recommended products 
+            if($targetMdoal.length) {
+                // add product id to button to catch it by modal.
+                $submitButton.attr('data-product_id', data.product_id);
+                $submitButton.removeClass( 'added' );
+                $submitButton.addClass( 'loading' );
 
-            // Trigger event.
-            $( document.body ).trigger( 'adding_to_cart', [ $submitButton, data ] );
+                // Trigger event.
+                $( document.body ).trigger( 'adding_to_cart', [ $submitButton, data ] );
 
-            $.ajax({
-                type: 'POST',
-                url: wc_add_to_cart_params.wc_ajax_url.toString().replace( '%%endpoint%%', 'add_to_cart' ),
-                data: data,
+                $.ajax({
+                    type: 'POST',
+                    url: wc_add_to_cart_params.wc_ajax_url.toString().replace( '%%endpoint%%', 'add_to_cart' ),
+                    data: data,
 
-                success: function( response ) {
-                    if ( ! response ) {
-                        return;
-                    }
+                    success: function( response ) {
+                        if ( ! response ) {
+                            return;
+                        }
 
-                    if (response.error && response.product_url) {
-                        var alertMessage = __('Error! Please fill all required fields before adding this product to your cart.','woocommerce-product-recommend');
-                        alert(alertMessage);
-                        window.location = response.product_url;
-                        return; // if error found quite here and reload
-                    }
+                        if (response.error && response.product_url) {
+                            var alertMessage = __('Error! Please fill all required fields before adding this product to your cart.','woocommerce-product-recommend');
+                            alert(alertMessage);
+                            window.location = response.product_url;
+                            return; // if error found quite here and reload
+                        }
 
 
-                    $('.woocommerce-error').remove();
-                    $submitButton.addClass('added').removeClass('loading');
+                        $('.woocommerce-error').remove();
+                        $submitButton.addClass('added').removeClass('loading');
 
-                    // Trigger event so themes can refresh other areas.
-                    $( document.body ).trigger( 'added_to_cart', [ response.fragments, response.cart_hash, $submitButton ] );
-                },
+                        // Trigger event so themes can refresh other areas.
+                        $( document.body ).trigger( 'added_to_cart', [ response.fragments, response.cart_hash, $submitButton ] );
+                    },
 
-                dataType: 'json'
-            });
+                    dataType: 'json'
+                });
 
-            return false;
+                return false;
+            }
+            
         });
 
         // storefront sticky add to cart
