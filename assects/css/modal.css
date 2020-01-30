@@ -241,14 +241,15 @@ body.wpr-modal-opened {
   color: #555;
   font-weight: normal;
   position: relative;
-  line-height: 1.6em;
+  line-height: 1;
   background-color: #f5f5f5;
 }
 .wpr-modal .wpr-message svg {
   width: 16px;
   height: 16px;
   position: absolute;
-  left: 1.2em;
+  left: 1.7em;
+  top: calc( 50% - 6px );
 }
 .wpr-modal .wpr-message a.wpr-cart-button {
   white-space: nowrap;
@@ -325,6 +326,9 @@ body.wpr-modal-opened {
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
     width: 1000px;
   }
+}
+.product-modal {
+  margin-right: 0.5em;
 }
 
 /*# sourceMappingURL=modal.css.map */
