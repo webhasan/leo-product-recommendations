@@ -283,13 +283,14 @@
 		color: #555;
 		font-weight: normal;
 		position: relative;
-		line-height: 1.6em;
+		line-height: 1;
 		background-color: #f5f5f5;
 			svg {
 				width: 16px;
 				height: 16px;
 				position: absolute;
-				left: 1.2em;
+				left: 1.7em;
+				top: calc( 50% - 6px );
 			}
 		 a.wpr-cart-button {
 				white-space: nowrap;
@@ -422,4 +423,8 @@
 			 }
 		 }
 	 }
+}
+
+.product-modal {
+	margin-right: .5em;
 }
