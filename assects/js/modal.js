@@ -7,6 +7,7 @@
 // $('#modalId').wprModal({action: 'close'});
 
 (function ( $ ) {
+    // return false;
     $.fn.wprModal = function(options) {
 
         var settings = $.extend({
@@ -78,9 +79,11 @@
 
     // call modal
     $( document.body).on('added_to_cart', function(e, ...data) {
-        
+ 
         const [,,buttonInfo] = data;
         var button =  buttonInfo[0];
+
+        console.log(button);
 
         //don't show modal inside modal
         if(! $(button).closest('.recommended-product-list').length) {

@@ -21,7 +21,7 @@ class Pgfy_Woo_Product_Recommend {
     * @since      1.0.0
      */
     private function __construct() {
-		
+
     }
 
 	/**
@@ -218,6 +218,9 @@ class Pgfy_Woo_Product_Recommend {
 		add_action( 'wp_ajax_pr_fetch', array($this, 'fetch_post_meta'));
 		add_action( 'wp_ajax_nopriv_pr_fetch', array($this, 'fetch_post_meta'));
 
+		add_action( 'wp_ajax_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
+		add_action( 'wp_ajax_nopriv_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
+
 		add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
 	}
 
@@ -242,6 +245,10 @@ class Pgfy_Woo_Product_Recommend {
 
 		if(is_product()) {
 			wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assects/js/ajax-add-to-cart.js'), array('jquery','wp-i18n'), false, true);
+			wp_localize_script( 'wpr-ajax-add-to-cart', 'pgfy_ajax', array(
+				'url' => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('pgfy-add-to-cart')
+			));
 		}
 		
 		wp_enqueue_style( 'wpr-modal', $this->get_url('assects/css/modal.css'));
@@ -279,11 +286,7 @@ class Pgfy_Woo_Product_Recommend {
 	 */
 
 	public function product_selection($post) {
-		$path = $this->get_path('includes/option-select-products.php');
-
-		if($path) {
-			include_once($path);
-		}
+		include_once($this->get_path('includes/option-select-products.php'));
 	}
 
 	/**
@@ -294,11 +297,7 @@ class Pgfy_Woo_Product_Recommend {
 	 * @return     string Full path of file.
 	 */
 	public function get_path($file_path) {
-		$file = plugin_dir_path( WP_PR_FILE ) . $file_path;
-
-		if(file_exists($file)) {
-			return $file;
-		}
+		return plugin_dir_path( WP_PR_FILE ) . $file_path;
 	}
 
 	/**
@@ -365,6 +364,26 @@ class Pgfy_Woo_Product_Recommend {
 		// Parse arry to json string
 		echo json_encode(compact("products", "selectedProducts", "heading"));
 		die;
+	}
+
+
+	/**
+	 * Ajax call back to add to cart for singe product page
+	 * 
+	 * @since      1.0.0
+	 */
+	public function ajax_add_to_cart() {
+		// wp_die($this->get_path('includes/class-pgfy-ajax-add-to-cart.php'));
+
+		if(!class_exists('Pgfy_Ajax_Add_To_Cart')) {
+			include($this->get_path('includes/class-pgfy-ajax-add-to-cart.php'));
+		}
+
+		if($_REQUEST['data'] && $_REQUEST['nonce'] && wp_verify_nonce($_REQUEST['nonce'], 'pgfy-add-to-cart')) {
+			new Pgfy_Ajax_Add_To_Cart($_REQUEST['data']);
+		}else {
+			wp_send_json_error(array('message' => 'Bad request'), 400 );
+		}
 	}
 
 	/**

@@ -176,7 +176,7 @@ class Pgfy_Deactivation_Feedback {
             'wp_version'           => get_bloginfo( 'version' ),
             'server_info'          => isset( $_SERVER[ 'SERVER_SOFTWARE' ] ) ? wc_clean( wp_unslash( $_SERVER[ 'SERVER_SOFTWARE' ] ) ) : '',
         );
-        
+
         $response = wp_remote_post( $this->settings['api_url'], array(
             'sslverify' => false,
             'timeout'   => 60,
