@@ -4,8 +4,8 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "start": "wp-scripts start & sass --watch assects/css/",
-    "build": "sass assects/css/ & wp-scripts build"
+    "start": "wp-scripts start & sass --watch assets/css/",
+    "build": "sass assets/css/ & wp-scripts build"
   },
   "author": "",
   "license": "ISC",

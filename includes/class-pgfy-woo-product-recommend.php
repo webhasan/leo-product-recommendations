@@ -360,10 +360,8 @@ class Pgfy_Woo_Product_Recommend {
 		$selectedProducts = array_values(array_filter($products, function($product) use($recommended_products_ids) {
 			return in_array($product['id'], $recommended_products_ids);
 		}));
-	
-		// Parse arry to json string
-		echo json_encode(compact("products", "selectedProducts", "heading"));
-		die;
+
+		wp_send_json(compact("products", "selectedProducts", "heading"));
 	}
 
 
