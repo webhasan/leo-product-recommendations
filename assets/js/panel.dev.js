@@ -118,7 +118,9 @@ import Reorder from 'react-reorder';
 				},
 		
 				success: function(data) {
-					let {products, selectedProducts, heading} = JSON.parse(data);
+					console.log(data);
+
+					let {products, selectedProducts, heading} = data;
 
 					setHeading(heading);
 					setProducts(products);

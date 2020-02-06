@@ -311,11 +311,10 @@ __webpack_require__.r(__webpack_exports__);
           post_id: postId
         },
         success: function success(data) {
-          var _JSON$parse = JSON.parse(data),
-              products = _JSON$parse.products,
-              selectedProducts = _JSON$parse.selectedProducts,
-              heading = _JSON$parse.heading;
-
+          console.log(data);
+          var products = data.products,
+              selectedProducts = data.selectedProducts,
+              heading = data.heading;
           setHeading(heading);
           setProducts(products);
           setSelectedProducts(selectedProducts);
