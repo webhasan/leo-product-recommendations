@@ -249,7 +249,6 @@ body.wpr-modal-opened {
   height: 16px;
   position: absolute;
   left: 1.7em;
-  top: calc( 50% - 6px );
 }
 .wpr-modal .wpr-message a.wpr-cart-button {
   white-space: nowrap;
