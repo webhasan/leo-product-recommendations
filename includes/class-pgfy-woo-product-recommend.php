@@ -11,30 +11,26 @@ class Pgfy_Woo_Product_Recommend {
 
 	static protected $instance;
 	static protected $name = 'WooCommerce Product Recommend';
-	static protected $slug = 'woocommerce-product-recommend';
 	static protected $version = '1.0.0';
-	
+
+	/**
+	 * Plugin root file, equivalent to __FILE__ of pluign root file.
+	 *
+	 * @var string
+	 */
+	static protected $__FILE__;
 
     /**
     * Class constructor
-    * 
+    * Run all plugin code
     * @since      1.0.0
      */
-    private function __construct() {
+    private function __construct($__FILE__) {
 
-    }
+		self::$__FILE__ = $__FILE__;
 
-	/**
-	 * initialize the plugin
-     * 
-     * @since      1.0.0
-     * @return     void
-	 */
-    public function init() {
-        $this->define_constant();
-		register_activation_hook( WP_PR_FILE, array( $this, 'on_activation' ) );
-		register_deactivation_hook( WP_PR_FILE, array( $this, 'on_deactivation' ) );
-
+		register_activation_hook( self::$__FILE__, array( $this, 'on_activation' ) );
+		register_deactivation_hook( self::$__FILE__, array( $this, 'on_deactivation' ) );
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
     }
 
@@ -45,9 +41,20 @@ class Pgfy_Woo_Product_Recommend {
 	 * @since      1.0.0
 	 */
 	public function on_activation() {
-		update_option('woocommerce_enable_ajax_add_to_cart', 'yes');
-		update_option('woocommerce_cart_redirect_after_add', 'no');
-    }
+		if($this->has_pro_version() && class_exists( 'WooCommerce' )) {
+			update_option('woocommerce_enable_ajax_add_to_cart', 'yes');
+			update_option('woocommerce_cart_redirect_after_add', 'no');
+		}
+	}
+	
+	/**
+	 * Check Pro version of the plugin already installed or not 
+     * 
+	 * @since      1.0.0
+	 */
+	public function has_pro_version() {
+		return class_exists('Pgfy_Woo_Product_Recommend_Pro');
+	}
     
     /**
 	 * Action after plugin deactive
@@ -67,31 +74,23 @@ class Pgfy_Woo_Product_Recommend {
      */
     public function on_plugins_loaded() {
 
+		if(!$this->has_pro_version()){
 
-		$this->load_textdomain();
-		
-        if ( ! $this->has_satisfied_dependencies() ) {
+			$this->load_textdomain();
+			if ( ! $this->has_satisfied_dependencies() ) {
+				add_action( 'admin_notices', array( $this, 'render_dependencies_notice' ) );
+				return;
+			}
+
+			$this->includes();
+			$this->hooks();
+
+		}else {
 			add_action( 'admin_init', array( $this, 'deactivate_self' ) );
-			add_action( 'admin_notices', array( $this, 'render_dependencies_notice' ) );
-			return;
+			add_action( 'admin_notices', array( $this, 'render_has_pro_notice' ) );
 		}
-
-		$this->includes();
-		$this->hooks();
-    }
-
-    /**
-	 * Define Constances
-	 *
-     * @since      1.0.0    
-	 * @return void
-	 */
-	protected function define_constant() {
-        $this->define( 'WC_PR_PATH', dirname( __DIR__ ) . '/' ); // root directory path
-        $this->define('WP_PR_FILE', WC_PR_PATH.'woocommerce-product-recommend.php'); // root file
-		$this->define('WC_PR_URL', plugin_dir_url(WP_PR_FILE)); // root url
-    }  
-    
+	}
+	
     /**
 	 * Load Localization files.
 	 *
@@ -99,21 +98,9 @@ class Pgfy_Woo_Product_Recommend {
 	 * @return void
 	 */
     public function load_textdomain() {
-        load_plugin_textdomain( 'woocommerce-product-recommend', false, dirname( plugin_basename( WP_PR_FILE ) ) . '/languages' );
+        load_plugin_textdomain( 'woocommerce-product-recommend', false, dirname( plugin_basename( self::$__FILE__ ) ) . '/languages' );
     }
-    
-    /**
-	 * Define constant if it not already.
-	 *
-     * @since      1.0.0   
-	 * @param string      $name  Constant name.
-	 * @param string|bool $value Constant value.
-	 */
-	protected function define( $name, $value ) {
-		if ( ! defined( $name ) ) {
-			define( $name, $value );
-		}
-    }
+ 
     
     /**
 	 * Returns true if all dependencies for the plugin are loaded.
@@ -142,7 +129,7 @@ class Pgfy_Woo_Product_Recommend {
 
 		if ( ! $woocommerce_minimum_met ) {
 			$errors[] = sprintf(
-				__( 'The WooCommerce Product Recommond  plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'woocommrece-product-recommend' ),
+				__( 'The WooCommerce Product Recommond Pro plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'woocommrece-product-recommend' ),
 				'https://wordpress.org/plugins/woocommerce/',
 				$minimum_woocommerce_version
 			);
@@ -150,7 +137,7 @@ class Pgfy_Woo_Product_Recommend {
 
 		if ( ! $wordpress_minimum_met ) {
 			$errors[] = sprintf(
-				__( 'The WooCommerce Product Recommond  plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'woocommrece-product-recommend' ),
+				__( 'The WooCommerce Product Recommond Pro plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'woocommrece-product-recommend' ),
 				'https://wordpress.org/',
 				$minimum_wordpress_version
 			);
@@ -167,7 +154,7 @@ class Pgfy_Woo_Product_Recommend {
 	 */
 
 	public function deactivate_self() {
-		deactivate_plugins( plugin_basename( WP_PR_FILE ) );
+		deactivate_plugins( plugin_basename( self::$__FILE__ ) );
 		unset( $_GET['activate'] );
     }
     
@@ -179,6 +166,19 @@ class Pgfy_Woo_Product_Recommend {
 	public function render_dependencies_notice() {
 		$message = $this->get_dependency_errors();
 		printf( '<div class="error"><p>%s</p></div>', implode( ' ', $message ) );
+	}
+
+
+ 	/**
+     * Nofication if try to install free version
+	 * if already pro version activated
+     * 
+     * @since      1.0.0
+     */
+
+	public function render_has_pro_notice() {
+		$message = __('Pro version already activated, no need free version.','woocommerce-product-recommend');
+		printf( '<div class="notice notice-error is-dismissible"><p>%s</p></div>', $message);
 	}
 
 	/**
@@ -254,16 +254,6 @@ class Pgfy_Woo_Product_Recommend {
 		wp_enqueue_style( 'wpr-modal', $this->get_url('assets/css/modal.css'));
 	}
 	
-	/**
-	 * Plugin file URL
-	 * 
-	 * @since      1.0.0
-	 * @return     URL link of file.
-	 * @param      stirng File name with folder path.
-	 */
-	public function get_url($file = '') {
-		return plugin_dir_url( WP_PR_FILE ) . $file;
-	}
 
 	/**
 	 * Add Meta Box
@@ -290,6 +280,17 @@ class Pgfy_Woo_Product_Recommend {
 	}
 
 	/**
+	 * Plugin file URL
+	 * 
+	 * @since      1.0.0
+	 * @return     URL link of file.
+	 * @param      stirng File name with folder path.
+	 */
+	public function get_url($file = '') {
+		return plugin_dir_url( self::$__FILE__ ) . $file;
+	}
+
+	/**
 	 * Get file path from abspath
 	 * 
 	 * @since      1.0.0
@@ -297,7 +298,17 @@ class Pgfy_Woo_Product_Recommend {
 	 * @return     string Full path of file.
 	 */
 	public function get_path($file_path) {
-		return plugin_dir_path( WP_PR_FILE ) . $file_path;
+		return plugin_dir_path( self::$__FILE__ ) . $file_path;
+	}
+
+	/**
+	 * Get plugin slug
+	 * 
+	 * @since      1.0.0
+	 * @return     string plugin slug
+	 */
+	public function get_slug() {
+		return basename( self::$__FILE__, '.php');
 	}
 
 	/**
@@ -477,7 +488,7 @@ class Pgfy_Woo_Product_Recommend {
 			
 			'plugin_name' 		=> self::$name,
 			'plugin_version' 	=> self::$version,
-			'plugin_slug'		=> self::$slug,
+			'plugin_slug'		=> $this->get_slug(),
 			'feedback_heading'  => 'Quick Feedback',
 			'form_heading'      => 'May we have a little info about why you are deactivating?',
 			'api_url' => 'http://localhost/feedback/wp-json/pluginsify/v1/deactivation-feedback',
@@ -568,9 +579,9 @@ class Pgfy_Woo_Product_Recommend {
      * @since      1.0.0
 	 * @return object Instance.
 	 */
-    public static function instance() {
+    public static function init($__FILE__) {
         if(is_null(self::$instance)) 
-            self::$instance = new self;
+            self::$instance = new self($__FILE__);
 
         return self::$instance;
     }

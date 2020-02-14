@@ -27,4 +27,4 @@ if(!class_exists('Pgfy_Woo_Product_Recommend')) {
  * @since    1.0.0
  */
 
-Pgfy_Woo_Product_Recommend::instance()->init();
+Pgfy_Woo_Product_Recommend::init(__FILE__);
