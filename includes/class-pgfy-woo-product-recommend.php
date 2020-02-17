@@ -317,8 +317,8 @@ class Pgfy_Woo_Product_Recommend {
 	 * @since      1.0.0
 	 */
 	public function on_save_post($id) {
-		$selected = isset($_POST['pgfy_pr_data']) ? $_POST['pgfy_pr_data'] : array();
-		update_post_meta($id, 'pgfy_pr_data', $selected);
+		$selected = isset($_POST['_pgfy_pr_data']) ? $_POST['_pgfy_pr_data'] : array();
+		update_post_meta($id, '_pgfy_pr_data', $selected);
 	}
 
 	/**
@@ -358,10 +358,11 @@ class Pgfy_Woo_Product_Recommend {
 		});
 	
 		// Get product recommend data.
-		$pr_data = get_post_meta($post_id,'pgfy_pr_data', true);
+		$pr_data = get_post_meta($post_id,'_pgfy_pr_data', true);
+
+		$type = (!!$pr_data && isset($pr_data['type'])) ? $pr_data['type'] : 'menual-selection';
 
 		// Get product recommend heading
-
 		$heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
 		// Get selected recommended products id
@@ -372,7 +373,7 @@ class Pgfy_Woo_Product_Recommend {
 			return in_array($product['id'], $recommended_products_ids);
 		}));
 
-		wp_send_json(compact("products", "selectedProducts", "heading"));
+		wp_send_json(compact("products", "selectedProducts", "type", "heading"));
 	}
 
 
@@ -423,13 +424,18 @@ class Pgfy_Woo_Product_Recommend {
 	public function product_archive_modal() {
 		global $product;
 		$product_id = $product->get_id();
-		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
-		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
-		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
-		if(!empty( $recommended_products_ids )) {
-			include($this->get_path('templates/template-modal.php'));
-		}
+		$pr_data = get_post_meta($product_id, '_pgfy_pr_data', true);
+		$product_type =  isset($pr_data['type']) ? $pr_data['type'] : null;
+
+		if($product_type === 'menual-selection'): // free version only support menu selection
+			$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
+			$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+			
+			if(!empty( $recommended_products_ids )) {
+				include($this->get_path('templates/template-modal.php'));
+			}
+		endif;
 	}
 
 	/**
@@ -441,13 +447,17 @@ class Pgfy_Woo_Product_Recommend {
 
 		$product_id = $product->get_id();
 
-		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
+		$pr_data = get_post_meta($product_id, '_pgfy_pr_data', true);
 		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
-		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 
-		if(!empty($recommended_products_ids)) {
-			include($this->get_path('templates/template-modal.php'));
-		}
+		$product_type =  isset($pr_data['type']) ? $pr_data['type'] : null;
+
+		if($product_type === 'menual-selection'): // free version only support menu selection
+			$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
+			if(!empty($recommended_products_ids)) {
+				include($this->get_path('templates/template-modal.php'));
+			}
+		endif;
 	}
 
 	/**
@@ -457,21 +467,20 @@ class Pgfy_Woo_Product_Recommend {
 	public function product_gutenberg_block($html, $data, $product) {
 
 		$product_id = $product->get_id();
-		$pr_data = get_post_meta($product_id, 'pgfy_pr_data', true);
+		$pr_data = get_post_meta($product_id, '_pgfy_pr_data', true);
 		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
+		$product_type =  isset($pr_data['type']) ? $pr_data['type'] : null;
 
-		if(empty($recommended_products_ids)) 
+		if(empty($recommended_products_ids) || $product_type !== 'menual-selection') 
 			return $html;
-
 
 		ob_start();
 			include($this->get_path('templates/template-modal.php'));
-		$modalHtml = ob_get_clean();
-		$output = str_replace('</li>', '',$html);
-		$output .= $modalHtml;
-		$output .= "</li>";
-
+			$modalHtml = ob_get_clean();
+			$output = str_replace('</li>', '',$html);
+			$output .= $modalHtml;
+			$output .= "</li>";
 		return $output;
 	}
 

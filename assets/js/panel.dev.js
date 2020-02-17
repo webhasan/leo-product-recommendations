@@ -39,6 +39,8 @@ import Reorder from 'react-reorder';
 
 		const [facedDate, setFacedDate] = useState(false);
 
+		const [type, setType] = useState('menual-selection');
+
 		const [heading, setHeading] = useState([]);
 		const [products, setProducts] = useState([]);
 		const [selectedProducts, setSelectedProducts] = useState([]);
@@ -116,18 +118,17 @@ import Reorder from 'react-reorder';
 					action: 'pr_fetch',
 					post_id: postId
 				},
-		
-				success: function(data) {
-					console.log(data);
 
-					let {products, selectedProducts, heading} = data;
+				success: function(data) {
+
+					let {products, selectedProducts,type,heading} = data;
 
 					setHeading(heading);
 					setProducts(products);
 					setSelectedProducts(selectedProducts);
+					setType(type);
 
 					setCategories(mergeCategory(products));
-
 					setFacedDate(true);
 				}
 			});
@@ -139,10 +140,13 @@ import Reorder from 'react-reorder';
 				
 				<div className="recommend-prodcut-options-wrap" style = {opacity}>
 					<div className="pr-field">
+						<input type="hidden" name="_pgfy_pr_data[type]" value = {type} onChange = {onChangeHeading}/>
+
 						<div className="rp-panel-title">{__('Recommend Product Heading','woocommerce-product-recommend')}</div>
-						<p><input type="text" name="pgfy_pr_data[heading]" value = {heading} onChange = {onChangeHeading}/></p>
+						<p><input type="text" name="_pgfy_pr_data[heading]" value = {heading} onChange = {onChangeHeading}/></p>
 					</div>
 
+					{ type === 'menual-selection' &&
 					<div className="pr-field">
 							<div className="rp-panel-title">{__('Select Product')}</div>
 							<div className="product-selection-panel">
@@ -193,7 +197,7 @@ import Reorder from 'react-reorder';
 								>
 									{selectedProducts.map(product => (
 										<li>
-											<input type="hidden" name = "pgfy_pr_data[products][]" value = {product.id} />
+											<input type="hidden" name = "_pgfy_pr_data[products][]" value = {product.id} />
 											<span className="single-list" data-id ="10">
 												<div className="thumb">
 												<img src={!!product.thumbnail_image ? product.thumbnail_image : ''} alt="" />
@@ -218,6 +222,7 @@ import Reorder from 'react-reorder';
 							</div>
 						</div>
 					</div>
+					}
 				</div>
 			</div>									
 		)

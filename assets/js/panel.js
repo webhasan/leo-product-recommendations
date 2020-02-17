@@ -200,35 +200,40 @@ __webpack_require__.r(__webpack_exports__);
         facedDate = _useState2[0],
         setFacedDate = _useState2[1];
 
-    var _useState3 = useState([]),
+    var _useState3 = useState('menual-selection'),
         _useState4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState3, 2),
-        heading = _useState4[0],
-        setHeading = _useState4[1];
+        type = _useState4[0],
+        setType = _useState4[1];
 
     var _useState5 = useState([]),
         _useState6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState5, 2),
-        products = _useState6[0],
-        setProducts = _useState6[1];
+        heading = _useState6[0],
+        setHeading = _useState6[1];
 
     var _useState7 = useState([]),
         _useState8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState7, 2),
-        selectedProducts = _useState8[0],
-        setSelectedProducts = _useState8[1];
+        products = _useState8[0],
+        setProducts = _useState8[1];
 
     var _useState9 = useState([]),
         _useState10 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState9, 2),
-        categories = _useState10[0],
-        setCategories = _useState10[1];
+        selectedProducts = _useState10[0],
+        setSelectedProducts = _useState10[1];
 
-    var _useState11 = useState(''),
+    var _useState11 = useState([]),
         _useState12 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState11, 2),
-        selectedCategory = _useState12[0],
-        setSelectedCategory = _useState12[1];
+        categories = _useState12[0],
+        setCategories = _useState12[1];
 
     var _useState13 = useState(''),
         _useState14 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState13, 2),
-        query = _useState14[0],
-        setQuery = _useState14[1];
+        selectedCategory = _useState14[0],
+        setSelectedCategory = _useState14[1];
+
+    var _useState15 = useState(''),
+        _useState16 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState15, 2),
+        query = _useState16[0],
+        setQuery = _useState16[1];
 
     var onChangeHeading = function onChangeHeading(e) {
       setHeading(e.target.value);
@@ -311,13 +316,14 @@ __webpack_require__.r(__webpack_exports__);
           post_id: postId
         },
         success: function success(data) {
-          console.log(data);
           var products = data.products,
               selectedProducts = data.selectedProducts,
+              type = data.type,
               heading = data.heading;
           setHeading(heading);
           setProducts(products);
           setSelectedProducts(selectedProducts);
+          setType(type);
           setCategories(mergeCategory(products));
           setFacedDate(true);
         }
@@ -332,14 +338,19 @@ __webpack_require__.r(__webpack_exports__);
       style: opacity
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "pr-field"
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("input", {
+      type: "hidden",
+      name: "_pgfy_pr_data[type]",
+      value: type,
+      onChange: onChangeHeading
+    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "rp-panel-title"
     }, __('Recommend Product Heading', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("input", {
       type: "text",
-      name: "pgfy_pr_data[heading]",
+      name: "_pgfy_pr_data[heading]",
       value: heading,
       onChange: onChangeHeading
-    }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
+    }))), type === 'menual-selection' && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "pr-field"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("div", {
       className: "rp-panel-title"
@@ -402,7 +413,7 @@ __webpack_require__.r(__webpack_exports__);
     }, selectedProducts.map(function (product) {
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("li", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("input", {
         type: "hidden",
-        name: "pgfy_pr_data[products][]",
+        name: "_pgfy_pr_data[products][]",
         value: product.id
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["createElement"])("span", {
         className: "single-list",
