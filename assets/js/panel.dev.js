@@ -1,4 +1,6 @@
 import Reorder from 'react-reorder';
+import { buildTermsTree } from './panel/tree';
+import { TreeSelect } from '@wordpress/components';
 
 (function(React, __, $, app, Reorder) {
 
@@ -24,22 +26,25 @@ import Reorder from 'react-reorder';
 		</svg>
 	);
 
-	// const ThumbnailPlacehlder = 
-
 	const postId = parseInt(app.getAttribute('data-id'));
 
 	const { reorder	} = Reorder;
-
 	const apiEndPoint = ajax_url; 
-
 	const {useState, useEffect} = React;
 
 
 	const SelectProduct = () => {
+		// free version only support menual selection
+		const type = 'menual-selection';
 
 		const [facedDate, setFacedDate] = useState(false);
 
-		const [type, setType] = useState('menual-selection');
+		const [initialData, setInitialData] = useState({
+			heading: '',
+			products: []
+		});
+
+		const [page, setPage] = useState(1);
 
 		const [heading, setHeading] = useState([]);
 		const [products, setProducts] = useState([]);
@@ -58,81 +63,81 @@ import Reorder from 'react-reorder';
 			setQuery(e.target.value);
 		}
 
-		const reOrderItem = (event, previousIndex, nextIndex) => {
-			setSelectedProducts(reorder(selectedProducts, previousIndex, nextIndex));
+		const reorderProduct = (event, previousIndex, nextIndex) => {
+			let reorderProducts = reorder(initialData.products, previousIndex, nextIndex);
+			setInitialData({...initialData, products: reorderProducts});
 		}
 
-		const visible = () => {
-			let visibleProduct = products.filter(product => !selectedProducts.find(item => item.id === product.id))
-			let queryString = query.trim();
-
-			const searchProduct = (product) => product.title.toLowerCase().indexOf(queryString.toLowerCase()) !== -1;
-			const filterCategory = (prodcut) => prodcut.categories.includes(selectedCategory);
-
-			if(queryString) {
-				visibleProduct = visibleProduct.filter(product => searchProduct(product));
-			}
-
-			if(selectedCategory) {
-				visibleProduct = visibleProduct.filter(product => filterCategory(product));
-			}
-
-			return visibleProduct;
-		}
-
-		const addProdcut = (id) => {
-			let addedItem = products.find(product => product.id === id);
-			setSelectedProducts([...selectedProducts, addedItem]);
+		const addProdcut = (product) => {
+			let products = [product, ...initialData.products];
+			setInitialData({...initialData, products});
 		}
 
 		const removeProduct = (id) => {
-			
-			let restProducst = selectedProducts.filter(product => product.id !== id);
-			setSelectedProducts(restProducst);
-
-			// return false;
+			let existsProducs = initialData.products.filter(product => product.id !== id);
+			setInitialData({...initialData, products: existsProducs});
 		}
 
-		const mergeCategory = (products) => {
-
-			 let _categories  = products.reduce((total, current) => {
-				return [...total, ...current.categories];
-			 }, []);
-
-			return [...new Set(_categories)].sort();
-		}
-
-		const onChangeCat = (e) => {
-			setSelectedCategory(e.target.value)
-		}
+		const selectAble = (producs) => {
+			return producs.filter(product => {
+				return !initialData.products.find(selectedProduct => selectedProduct.id === product.id );
+			});
+		};
 
 		const opacity = {
 			opacity: facedDate ? 1 : 0
 		}
 
-		useEffect(function() {
+		useEffect(() => {
 			$.ajax({
 				url: apiEndPoint,
-				method: 'POST',
+				method: 'GET',
 				data: {
-					action: 'pr_fetch',
+					action: 'wpr_initial_data',
 					post_id: postId
 				},
 
 				success: function(data) {
+					let products = data.products ? data.products : [];
+					let heading = data.heading ? data.heading: '';
 
-					let {products, selectedProducts,type,heading} = data;
-
-					setHeading(heading);
-					setProducts(products);
-					setSelectedProducts(selectedProducts);
-					setType(type);
-
-					setCategories(mergeCategory(products));
+					setInitialData({...initialData, products, heading });
 					setFacedDate(true);
 				}
 			});
 		}, []);
+
+		useEffect(() => {
+			$.ajax({
+				url: apiEndPoint,
+				method: 'GET',
+				data: {
+					action: 'wpr_fetch_categores'
+				},
+				success: function(data) {
+					if(data.length) {
+						setCategories(data);
+					}
+				}
+			});
+		},[]);
+
+		useEffect(() => {
+			$.ajax({
+				url: apiEndPoint,
+				method: 'GET',
+				data: {
+					action: 'wpr_fetch_products',
+					post_id: postId,
+					page,
+					category: selectedCategory,
+					query
+				},
+				success: function(data) {
+					setProducts(data);
+				}
+			});
+		}, [page, selectedCategory, query]); 
 
 		return (
 			<div className="pgfy-recommend-product">
@@ -140,13 +145,12 @@ import Reorder from 'react-reorder';
 				
 				<div className="recommend-prodcut-options-wrap" style = {opacity}>
 					<div className="pr-field">
-						<input type="hidden" name="_pgfy_pr_data[type]" value = {type} onChange = {onChangeHeading}/>
+						<input type="hidden" name="_pgfy_pr_data[type]" value = {type} />
 
 						<div className="rp-panel-title">{__('Recommend Product Heading','woocommerce-product-recommend')}</div>
-						<p><input type="text" name="_pgfy_pr_data[heading]" value = {heading} onChange = {onChangeHeading}/></p>
+						<p><input type="text" name="_pgfy_pr_data[heading]" value = {initialData.heading} onChange = {(e) => setInitialData({...initialData, heading: e.target.value})}/></p>
 					</div>
 
-					{ type === 'menual-selection' &&
 					<div className="pr-field">
 							<div className="rp-panel-title">{__('Select Product')}</div>
 							<div className="product-selection-panel">
@@ -154,23 +158,28 @@ import Reorder from 'react-reorder';
 								<div className="search">
 									<input type="text" onChange = {onChangeQuery} placeholder= {__('Search...','woocommerce-product-recommend')} value = {query}/>
 								</div>
+
 								<div className="category-filter">
-									<select name="category" onChange = {onChangeCat} value = {selectedCategory}>
-										<option value="">{__('Select Category','woocommerce-product-recommend')}</option>
-										{categories.map(cateory => <option key={cateory} value={cateory}>{cateory}</option>)}
-									</select>
+									<TreeSelect
+										// label="All Category"
+										noOptionLabel="All Categories"
+										onChange={ ( value ) => setSelectedCategory( value ) }
+										selectedId={ selectedCategory }
+										tree = {buildTermsTree(categories)}
+									/>
 								</div>
+
 							</div>
 						
 							<div className="product-selection">
 							<div className="list-panel">
 								{!!products.length && 
 									<ul>
-										{visible(products).map(product => (
-											<li key = {product.id} onClick = {() => addProdcut(product.id)}>
+										{selectAble(products).map(product => (
+											<li key = {product.id} onClick = {() => addProdcut(product)}>
 												<span className="single-list">
 													<div className="thumb">
-														<img src={!!product.thumbnail_image ? product.thumbnail_image : ''} alt="" />
+														<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
 													</div>
 													{product.title}
 												</span>
@@ -189,18 +198,18 @@ import Reorder from 'react-reorder';
 									// lock="horizontal"
 									holdTime={50}
 									touchHoldTime={50}
-									onReorder={reOrderItem}
+									onReorder={reorderProduct}
 									autoScroll={false}
 									placeholder={
 										<li className="custom-placeholder" />
 									}
 								>
-									{selectedProducts.map(product => (
-										<li>
+									{initialData.products.map(product => (
+										<li key={product.id}>
 											<input type="hidden" name = "_pgfy_pr_data[products][]" value = {product.id} />
 											<span className="single-list" data-id ="10">
 												<div className="thumb">
-												<img src={!!product.thumbnail_image ? product.thumbnail_image : ''} alt="" />
+												<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
 												</div>
 												{product.title}
 												<span  className="remove-item" 
@@ -222,7 +231,6 @@ import Reorder from 'react-reorder';
 							</div>
 						</div>
 					</div>
-					}
 				</div>
 			</div>									
 		)

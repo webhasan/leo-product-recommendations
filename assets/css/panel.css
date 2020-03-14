@@ -166,6 +166,9 @@
   width: 25%;
   float: right;
 }
+.recommend-product-options .category-filter .components-base-control .components-base-control__field {
+  margin-bottom: 0;
+}
 .recommend-product-options .category-filter select {
   width: 100%;
 }

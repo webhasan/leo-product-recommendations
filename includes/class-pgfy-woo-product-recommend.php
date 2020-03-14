@@ -187,6 +187,10 @@ class Pgfy_Woo_Product_Recommend {
      * @since      1.0.0
      */
 	public function includes() {
+		// handle all admin ajax request
+		$this->admin_ajax();
+
+		// deactivation feedback 
 		$this->deactivation_feedback();
 	}
 
@@ -204,6 +208,18 @@ class Pgfy_Woo_Product_Recommend {
 	}
 
 	/**
+     * Handle All Panel Ajax Request and Response
+     * @since      1.0.0
+     */
+
+	public function admin_ajax() {
+		if(!class_exists('Pgfy_Wpr_Admin_Ajax')) {
+			include_once($this->get_path('includes/class-pgfy-wpr-admin-ajax.php'));
+		}
+		new Pgfy_Wpr_Admin_Ajax();
+	}
+
+	/**
      * Add all actions hook.
      * 
      * @since      1.0.0
@@ -215,8 +231,6 @@ class Pgfy_Woo_Product_Recommend {
 
 		add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
 		add_action('save_post', array($this, 'on_save_post'));
-		add_action( 'wp_ajax_pr_fetch', array($this, 'fetch_post_meta'));
-		add_action( 'wp_ajax_nopriv_pr_fetch', array($this, 'fetch_post_meta'));
 
 		add_action( 'wp_ajax_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 		add_action( 'wp_ajax_nopriv_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
@@ -230,7 +244,7 @@ class Pgfy_Woo_Product_Recommend {
 	 * @since      1.0.0
 	 */
 	public function admin_enqueue_scripts() {
-		wp_enqueue_script('wpr-script', $this->get_url('assets/js/panel.js'), array('wp-element','wp-i18n','jquery'), false, true);
+		wp_enqueue_script('wpr-script', $this->get_url('assets/js/panel.js'), array('lodash', 'wp-element','wp-components', 'wp-polyfill','wp-i18n','jquery'), false, true);
 		wp_localize_script( 'wpr-script', 'ajax_url', admin_url( 'admin-ajax.php' ));
 		wp_enqueue_style( 'wpr-panel', $this->get_url('assets/css/panel.css'));
 	}
@@ -320,62 +334,6 @@ class Pgfy_Woo_Product_Recommend {
 		$selected = isset($_POST['_pgfy_pr_data']) ? $_POST['_pgfy_pr_data'] : array();
 		update_post_meta($id, '_pgfy_pr_data', $selected);
 	}
-
-	/**
-	 * Fetch Product Meta and Recommend Products, etc 
-	 * 
-	 * @since      1.0.0
-	 */
-	public function fetch_post_meta() {
-		// post ID 
-		$post_id = $_POST['post_id'];
-
-		// Get all prodcuts
-		$post_data = get_posts(array(
-			'post_type' 	=> 'product',
-			'numberposts' 	=> -1,
-			'exclude'     	=> array($post_id),
-		));
-
-		// map prodcut id , title, thumbnails and categoris
-		$products = array_map(function($item) {
-			$id = $item->ID;
-			$title = $item->post_title;
-			$thumbnail_image = get_the_post_thumbnail_url($id, array('100','100'));
-	
-			$categories = get_the_terms($id, 'product_cat');
-	
-			$categories = array_map(function($category) {
-				return $category->name;
-			}, $categories);
-	
-			return compact('id','title','thumbnail_image', 'categories');
-		}, $post_data);
-
-		// remove product itself from it list
-		$products = array_filter($products, function($product) use($post_id) {
-			return  $product['id'] != $post_id;
-		});
-	
-		// Get product recommend data.
-		$pr_data = get_post_meta($post_id,'_pgfy_pr_data', true);
-
-		$type = (!!$pr_data && isset($pr_data['type'])) ? $pr_data['type'] : 'menual-selection';
-
-		// Get product recommend heading
-		$heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
-
-		// Get selected recommended products id
-		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
-
-		// Get selected prodcuts by id
-		$selectedProducts = array_values(array_filter($products, function($product) use($recommended_products_ids) {
-			return in_array($product['id'], $recommended_products_ids);
-		}));
-
-		wp_send_json(compact("products", "selectedProducts", "type", "heading"));
-	}
-
 
 	/**
 	 * Ajax call back to add to cart for singe product page
