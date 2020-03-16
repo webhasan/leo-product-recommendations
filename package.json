@@ -12,5 +12,8 @@
   "devDependencies": {
     "@wordpress/scripts": "^6.1.1",
     "react-reorder": "^3.0.0-alpha.7"
+  },
+  "dependencies": {
+    "react-debounce-input": "^3.2.2"
   }
 }

@@ -25,7 +25,7 @@ export function buildTermsTree( flatTerms ) {
 	}
 	const fillWithChildren = ( terms ) => {
 		return terms.map( ( term ) => {
-			const children = termsByParent[ term.term_id ];
+			const children = termsByParent[ term.id ];
 			return {
 				...term,
 				children:

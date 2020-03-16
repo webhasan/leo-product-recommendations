@@ -64,8 +64,17 @@ class Pgfy_Wpr_Admin_Ajax {
 
         $product_categoreis = get_terms(array(
             'taxonomy'   => "product_cat",
-            'orderby'    => 'name'
+            'orderby'    => 'name',
+            'hide_empty' => false
         ));
+
+        $product_categoreis = array_map(function($category){
+            $id = $category->term_id;
+            $name = $category->name;
+            $parent = $category->parent;
+
+            return compact('id','name','parent');
+        }, $product_categoreis);
 
         wp_send_json($product_categoreis);
     }
@@ -77,7 +86,7 @@ class Pgfy_Wpr_Admin_Ajax {
      */
     public function fetch_prodcuts() {
         // post ID 
-        $post_id = $_GET['post_id'];
+        $post_id = (int) $_GET['post_id'];
 
         // page
         $paged = !empty($_GET['page']) ? (int) $_GET['page'] : 1;
@@ -90,7 +99,17 @@ class Pgfy_Wpr_Admin_Ajax {
         );
 
         if(!empty($_GET['category'])) {
-            $args['category'] = $_GET['category'];
+            $args['tax_query'] = array(
+                array(
+                    'taxonomy' => 'product_cat',
+                    'field'    => 'term_id',
+                    'terms'    => (int) $_GET['category']
+                )
+            );
+        }
+
+        if(!empty($_GET['query'])) {
+            $args['s'] = $_GET['query'];
         }
 
         $products = get_posts( $args );

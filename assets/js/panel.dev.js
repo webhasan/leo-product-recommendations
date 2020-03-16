@@ -1,6 +1,7 @@
 import Reorder from 'react-reorder';
 import { buildTermsTree } from './panel/tree';
 import { TreeSelect } from '@wordpress/components';
+import { DebounceInput } from 'react-debounce-input';
 
 (function(React, __, $, app, Reorder) {
 
@@ -134,7 +135,12 @@ import { TreeSelect } from '@wordpress/components';
 					query
 				},
 				success: function(data) {
-					setProducts(data);
+					if(page === 1) {
+						setProducts(data);
+					}else {
+						setProducts([...producs, ...data]);
+					}
+					
 				}
 			});
 		}, [page, selectedCategory, query]); 
@@ -156,14 +162,25 @@ import { TreeSelect } from '@wordpress/components';
 							<div className="product-selection-panel">
 							<div className="product-filter">
 								<div className="search">
-									<input type="text" onChange = {onChangeQuery} placeholder= {__('Search...','woocommerce-product-recommend')} value = {query}/>
+									<DebounceInput
+										minLength={2}
+										debounceTimeout={300}
+										onChange={event => {
+											setQuery(event.target.value);
+											setPage(1);
+										}} 
+										placeholder= {__('Search...','woocommerce-product-recommend')}
+									/>
 								</div>
 
 								<div className="category-filter">
 									<TreeSelect
 										// label="All Category"
 										noOptionLabel="All Categories"
-										onChange={ ( value ) => setSelectedCategory( value ) }
+										onChange={ value  => {
+											setSelectedCategory( value );
+											setPage(1);
+										}}
 										selectedId={ selectedCategory }
 										tree = {buildTermsTree(categories)}
 									/>
@@ -172,62 +189,61 @@ import { TreeSelect } from '@wordpress/components';
 							</div>
 						
 							<div className="product-selection">
-							<div className="list-panel">
-								{!!products.length && 
+								<div className="list-panel">
 									<ul>
-										{selectAble(products).map(product => (
-											<li key = {product.id} onClick = {() => addProdcut(product)}>
-												<span className="single-list">
+										{!!products.length && 
+											selectAble(products).map(product => (
+												<li key = {product.id} onClick = {() => addProdcut(product)}>
+													<span className="single-list">
+														<div className="thumb">
+															<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
+														</div>
+														{product.title}
+													</span>
+												</li>
+											))
+										}
+									</ul>
+								</div>
+
+								<div className="select-item-panel">
+									<Reorder
+										component="ul"
+										reorderId="my-list"
+										placeholderClassName="placeholder"
+										// lock="horizontal"
+										holdTime={50}
+										touchHoldTime={50}
+										onReorder={reorderProduct}
+										autoScroll={false}
+										placeholder={
+											<li className="custom-placeholder" />
+										}
+									>
+										{initialData.products.map(product => (
+											<li key={product.id}>
+												<input type="hidden" name = "_pgfy_pr_data[products][]" value = {product.id} />
+												<span className="single-list" data-id ="10">
 													<div className="thumb">
-														<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
+													<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
 													</div>
 													{product.title}
+													<span  className="remove-item" 
+													onMouseDown = {(e) => {
+														e.preventDefault();
+														e.stopPropagation();
+														removeProduct(product.id)
+													}}
+													onClick = { (e) => {
+														e.stopPropagation();
+														e.preventDefault();
+													}}
+													>-</span>
 												</span>
 											</li>
 										))}
-
-									</ul>
-								}
-							</div>
-
-							<div className="select-item-panel">
-								<Reorder
-									component="ul"
-									reorderId="my-list"
-									placeholderClassName="placeholder"
-									// lock="horizontal"
-									holdTime={50}
-									touchHoldTime={50}
-									onReorder={reorderProduct}
-									autoScroll={false}
-									placeholder={
-										<li className="custom-placeholder" />
-									}
-								>
-									{initialData.products.map(product => (
-										<li key={product.id}>
-											<input type="hidden" name = "_pgfy_pr_data[products][]" value = {product.id} />
-											<span className="single-list" data-id ="10">
-												<div className="thumb">
-												<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
-												</div>
-												{product.title}
-												<span  className="remove-item" 
-												onMouseDown = {(e) => {
-													e.preventDefault();
-													e.stopPropagation();
-													removeProduct(product.id)
-												}}
-												onClick = { (e) => {
-													e.stopPropagation();
-													e.preventDefault();
-												}}
-												>-</span>
-											</span>
-										</li>
-									))}
-								</Reorder>
-							</div>
+									</Reorder>
+								</div>
 							</div>
 						</div>
 					</div>
