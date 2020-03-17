@@ -119,10 +119,12 @@ import  classNames  from 'classnames';
 				},
 
 				success: function(data) {
-					let products = data.products ? data.products : [];
-					let heading = data.heading ? data.heading: '';
-
-					setInitialData({...initialData, products, heading });
+					if(data) {
+						let products = data.products ? data.products : [];
+						let heading = data.heading ? data.heading: '';
+						setInitialData({...initialData, products, heading });
+					}
+					
 					setFacedDate(true);
 				}
 			});
@@ -160,7 +162,6 @@ import  classNames  from 'classnames';
 					query
 				},
 				success: function(data) {
-					console.log('data:', data);
 
 					let { products: newProducts, max_page: maxPage } = data;
 

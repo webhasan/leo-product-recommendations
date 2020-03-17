@@ -343,12 +343,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           post_id: postId
         },
         success: function success(data) {
-          var products = data.products ? data.products : [];
-          var heading = data.heading ? data.heading : '';
-          setInitialData(_objectSpread({}, initialData, {
-            products: products,
-            heading: heading
-          }));
+          if (data) {
+            var _products = data.products ? data.products : [];
+
+            var _heading = data.heading ? data.heading : '';
+
+            setInitialData(_objectSpread({}, initialData, {
+              products: _products,
+              heading: _heading
+            }));
+          }
+
           setFacedDate(true);
         }
       });
@@ -385,7 +390,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           query: query
         },
         success: function success(data) {
-          console.log('data:', data);
           var newProducts = data.products,
               maxPage = data.max_page;
 
