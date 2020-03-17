@@ -39,7 +39,7 @@ import  classNames  from 'classnames';
 		// free version only support menual selection
 		const type = 'menual-selection';
 
-		const [facedDate, setFacedDate] = useState(false);
+		const [facedData, setFacedData] = useState(false);
 		const [fetchingPosts, setFetchingPosts] = useState(true);
 
 		const [initialData, setInitialData] = useState({
@@ -106,7 +106,7 @@ import  classNames  from 'classnames';
 		};
 
 		const opacity = {
-			opacity: facedDate ? 1 : 0
+			opacity: facedData ? 1 : 0
 		}
 
 		useEffect(() => {
@@ -125,7 +125,7 @@ import  classNames  from 'classnames';
 						setInitialData({...initialData, products, heading });
 					}
 					
-					setFacedDate(true);
+					setFacedData(true);
 				}
 			});
 		}, []);
@@ -179,7 +179,7 @@ import  classNames  from 'classnames';
 
 		return (
 			<div className="pgfy-recommend-product">
-				{!facedDate && <span className="pgfy-recommend-product-prelaoder">{<LoadingIcon />}</span> }
+				{!facedData && <span className="pgfy-recommend-product-prelaoder">{<LoadingIcon />}</span> }
 				
 				<div className="recommend-prodcut-options-wrap" style = {opacity}>
 					<div className="pr-field">

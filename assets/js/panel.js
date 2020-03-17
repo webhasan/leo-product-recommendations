@@ -218,8 +218,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
     var _useState = useState(false),
         _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState, 2),
-        facedDate = _useState2[0],
-        setFacedDate = _useState2[1];
+        facedData = _useState2[0],
+        setFacedData = _useState2[1];
 
     var _useState3 = useState(true),
         _useState4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState3, 2),
@@ -332,7 +332,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     };
 
     var opacity = {
-      opacity: facedDate ? 1 : 0
+      opacity: facedData ? 1 : 0
     };
     useEffect(function () {
       $.ajax({
@@ -354,7 +354,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
             }));
           }
 
-          setFacedDate(true);
+          setFacedData(true);
         }
       });
     }, []);
@@ -406,7 +406,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     }, [page, selectedCategory, query]);
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "pgfy-recommend-product"
-    }, !facedDate && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("span", {
+    }, !facedData && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("span", {
       className: "pgfy-recommend-product-prelaoder"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(LoadingIcon, null)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "recommend-prodcut-options-wrap",
