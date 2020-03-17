@@ -59,7 +59,7 @@
 
             <div class="wpr-modal-body">
                 <?php do_action('wpr_before_products_loop', $product_id, $recommended_products_ids); ?>
-
+                
                 <ul class="products recommended-product-list">
                     <?php
                         if ( $loop->have_posts() ): while ( $loop->have_posts() ) : $loop->the_post();

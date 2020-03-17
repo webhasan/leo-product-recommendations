@@ -2,6 +2,7 @@ import Reorder from 'react-reorder';
 import { buildTermsTree } from './panel/tree';
 import { TreeSelect } from '@wordpress/components';
 import { DebounceInput } from 'react-debounce-input';
+import  classNames  from 'classnames';
 
 (function(React, __, $, app, Reorder) {
 
@@ -39,6 +40,7 @@ import { DebounceInput } from 'react-debounce-input';
 		const type = 'menual-selection';
 
 		const [facedDate, setFacedDate] = useState(false);
+		const [fetchingPosts, setFetchingPosts] = useState(true);
 
 		const [initialData, setInitialData] = useState({
 			heading: '',
@@ -46,6 +48,7 @@ import { DebounceInput } from 'react-debounce-input';
 		});
 
 		const [page, setPage] = useState(1);
+		const [maxPage, setMaxPage] = useState(1);
 
 		const [heading, setHeading] = useState([]);
 		const [products, setProducts] = useState([]);
@@ -79,9 +82,26 @@ import { DebounceInput } from 'react-debounce-input';
 			setInitialData({...initialData, products: existsProducs});
 		}
 
+		const handleScroll = (event) => {
+			if(!fetchingPosts) {
+				const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
+				if(bottom && page < maxPage) {
+					setPage(page + 1);
+				}
+			}
+		}
+
 		const selectAble = (producs) => {
-			return producs.filter(product => {
-				return !initialData.products.find(selectedProduct => selectedProduct.id === product.id );
+			return producs.map(product => {
+				let isSelected = initialData.products.find(selectedProduct => selectedProduct.id === product.id );
+
+				if(isSelected) {
+					product['selcted'] = true;
+				} else {
+					product['selcted'] = false;
+				}
+
+				return product;
 			});
 		};
 
@@ -124,6 +144,11 @@ import { DebounceInput } from 'react-debounce-input';
 		},[]);
 
 		useEffect(() => {
+			setFetchingPosts(true);
+			if(page === 1) {
+				setProducts([]);
+			}
+
 			$.ajax({
 				url: apiEndPoint,
 				method: 'GET',
@@ -135,12 +160,18 @@ import { DebounceInput } from 'react-debounce-input';
 					query
 				},
 				success: function(data) {
+					console.log('data:', data);
+
+					let { products: newProducts, max_page: maxPage } = data;
+
 					if(page === 1) {
-						setProducts(data);
+						setProducts(newProducts);
 					}else {
-						setProducts([...producs, ...data]);
+						
+						setProducts([...products, ...newProducts]);
 					}
-					
+					setMaxPage(maxPage);
+					setFetchingPosts(false);
 				}
 			});
 		}, [page, selectedCategory, query]); 
@@ -190,10 +221,16 @@ import { DebounceInput } from 'react-debounce-input';
 						
 							<div className="product-selection">
 								<div className="list-panel">
-									<ul>
+									<ul onScroll = { handleScroll }>
+										{!fetchingPosts && !selectAble(products).length &&
+											<li className="disabled">
+												<span className="single-list"> { __('Not found selectable product')}</span>
+											</li>
+										}
+										
 										{!!products.length && 
 											selectAble(products).map(product => (
-												<li key = {product.id} onClick = {() => addProdcut(product)}>
+												<li key = {product.id} className = {classNames({ 'selected-product': product.selcted })} onClick = {() => addProdcut(product)}>
 													<span className="single-list">
 														<div className="thumb">
 															<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
@@ -202,6 +239,12 @@ import { DebounceInput } from 'react-debounce-input';
 													</span>
 												</li>
 											))
+										}
+
+										{
+											<li className={ classNames('disabled', {invisible: !fetchingPosts} )}>
+												<span className="wpr-loading-posts"></span>
+											</li>
 										}
 									</ul>
 								</div>

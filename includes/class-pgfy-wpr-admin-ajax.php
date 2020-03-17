@@ -93,7 +93,7 @@ class Pgfy_Wpr_Admin_Ajax {
 
         $args = array(
             'post_type' 	=> 'product',
-            'numberposts' 	=> 10,
+            'numberposts' 	=> 9,
             'exclude'     	=> array($post_id),
             'paged'         => $paged        
         );
@@ -113,6 +113,7 @@ class Pgfy_Wpr_Admin_Ajax {
         }
 
         $products = get_posts( $args );
+        $prodcut_query = new WP_Query( $args );
         
         // map prodcut id , title, thumbnails and categoris
 		$products = array_map(function($item) {
@@ -122,7 +123,11 @@ class Pgfy_Wpr_Admin_Ajax {
             
 			return compact('id','title','feature_image');
         }, $products);
+
+        $max_page = $prodcut_query->max_num_pages;
+
+
         
-        wp_send_json($products);
+        wp_send_json(compact('products', 'max_page'));
     }
 }

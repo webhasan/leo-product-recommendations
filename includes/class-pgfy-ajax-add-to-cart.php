@@ -15,7 +15,6 @@ class Pgfy_Ajax_Add_To_Cart {
 
     public function add_to_cart_init() {
 		
-		
         if ( ! isset( $this->data['add-to-cart'] ) || ! is_numeric( wp_unslash( $this->data['add-to-cart'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$this->response_add_to_cart_fail('Bad request.', 400);
 		}
