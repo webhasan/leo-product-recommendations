@@ -83,8 +83,7 @@
         const [,,buttonInfo] = data;
         var button =  buttonInfo[0];
 
-        console.log(button);
-
+      
         //don't show modal inside modal
         if(! $(button).closest('.recommended-product-list').length) {
 
@@ -94,6 +93,21 @@
             if($(modalId).length) 
                 $(modalId).wprModal();
 
+                var $recommendProductsWrapper = $(modalId).find('.recommend-products-wrapper');
+                var recommendProducts = $recommendProductsWrapper.data('recommend-ids');
+            
+            $.ajax({
+                method: 'GET',
+                url: pgfy_ajax_modal.url,
+                data: {
+                    action: 'fetch_modal_products',
+                    nonce: pgfy_ajax_modal.nonce,
+                    recommended_items: recommendProducts
+                }
+            }).done(function(data) {
+                console.log(data);
+                $recommendProductsWrapper.html(data);
+            });
         }
     });
 

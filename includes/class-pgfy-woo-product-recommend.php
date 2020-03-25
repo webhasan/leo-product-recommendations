@@ -232,6 +232,11 @@ class Pgfy_Woo_Product_Recommend {
 		add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
 		add_action('save_post', array($this, 'on_save_post'));
 
+		
+
+		add_action( 'wp_ajax_fetch_modal_products', array($this, 'fetch_modal_products'));
+		add_action( 'wp_ajax_nopriv_fetch_modal_products', array($this, 'fetch_modal_products'));
+
 		add_action( 'wp_ajax_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 		add_action( 'wp_ajax_nopriv_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 
@@ -256,6 +261,10 @@ class Pgfy_Woo_Product_Recommend {
 	 */
 	public function wp_enqueue_scripts() {
 		wp_enqueue_script('wpr-modal', $this->get_url('assets/js/modal.js'), array('jquery'), false, true);
+		wp_localize_script( 'wpr-modal', 'pgfy_ajax_modal', array(
+			'url' => admin_url('admin-ajax.php'),
+			'nonce' => wp_create_nonce('pgfy-ajax-modal')
+		));
 
 		if(is_product()) {
 			wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.js'), array('jquery','wp-i18n'), false, true);
@@ -334,6 +343,18 @@ class Pgfy_Woo_Product_Recommend {
 		$selected = isset($_POST['_pgfy_pr_data']) ? $_POST['_pgfy_pr_data'] : array();
 		update_post_meta($id, '_pgfy_pr_data', $selected);
 	}
+
+
+	/**
+	 * Ajax call back to query modal products
+	 * 
+	 * @since      1.0.0
+	 */
+
+	public function fetch_modal_products() {
+		include($this->get_path('templates/template-recommend-products.php'));
+	}
+
 
 	/**
 	 * Ajax call back to add to cart for singe product page

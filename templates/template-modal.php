@@ -21,15 +21,6 @@
         )
     );
     $modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</h2>', $modal_heading) : $common_heading;
-
-
-    // recommended prodcuts query
-    $args = array(
-        'post_type' => 'product',
-        'posts_per_page' => -1,
-        'post__in' => $recommended_products_ids,
-    );
-    $loop = new WP_Query( $args );
 ?>
 
 <div class="wpr-modal <?php echo $modal_rows; ?>" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
@@ -60,12 +51,10 @@
             <div class="wpr-modal-body">
                 <?php do_action('wpr_before_products_loop', $product_id, $recommended_products_ids); ?>
                 
-                <ul class="products recommended-product-list">
-                    <?php
-                        if ( $loop->have_posts() ): while ( $loop->have_posts() ) : $loop->the_post();
-                            include($this->get_path('templates/template-single-product.php'));
-                        endwhile;  wp_reset_postdata(); endif; 
-                    ?>
+                <ul class="products recommended-product-list recommend-products-wrapper" 
+                    data-recommend-ids="<?php echo implode(',', $recommended_products_ids); ?>"
+                >
+                    Loadings Products
                 </ul>
 
                 <?php do_action('wpr_after_products_loop', $product_id, $recommended_products_ids); ?>
