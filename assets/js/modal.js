@@ -2,12 +2,31 @@
  * jQuery wpr Modal
  */
 
-// Use Example
-// $('#modalId').wprModal();
-// $('#modalId').wprModal({action: 'close'});
 
-(function ( $ ) {
-    // return false;
+
+;(function ( $ ) {
+    //setup cart items in localstorage to exclude from recommendation
+    function wpr_cart_items() {
+        $.ajax({
+            method: 'GET',
+            url: pgfy_ajax_modal.url,
+            data: {
+                action: 'pgfy_get_cart_items',
+                nonce: pgfy_ajax_modal.nonce
+            }
+        }).done(function(data) {
+            localStorage.setItem('wpr_cart_items', data);
+        });
+    }
+
+    wpr_cart_items();
+
+    $( document.body ).on( 'added_to_cart removed_from_cart wc_fragments_refreshed', function() {
+        wpr_cart_items();
+    });
+    
+
+    //modal plugin
     $.fn.wprModal = function(options) {
 
         var settings = $.extend({
@@ -90,24 +109,43 @@
             var buttonId = $(button).data('product_id');
             var modalId = '#wpr-modal-' + buttonId;
     
-            if($(modalId).length) 
-                $(modalId).wprModal();
-
+            if($(modalId).length) {
                 var $recommendProductsWrapper = $(modalId).find('.recommend-products-wrapper');
+
                 var recommendProducts = $recommendProductsWrapper.data('recommend-ids');
-            
-            $.ajax({
-                method: 'GET',
-                url: pgfy_ajax_modal.url,
-                data: {
-                    action: 'fetch_modal_products',
-                    nonce: pgfy_ajax_modal.nonce,
-                    recommended_items: recommendProducts
+                if(recommendProducts) {
+                    recommendProducts = recommendProducts.split(',').map(Number);
                 }
-            }).done(function(data) {
-                console.log(data);
-                $recommendProductsWrapper.html(data);
-            });
+
+                var addedProducts = localStorage.getItem('wpr_cart_items');
+                if(addedProducts) {
+                    addedProducts = addedProducts.split(',').map(Number);
+                    recommendProducts = recommendProducts.filter(function(id) {
+                        return addedProducts.indexOf( id ) < 0;
+                    });
+                }
+
+                console.log('Cart Products', addedProducts);
+                console.log('Recommend Products', recommendProducts);
+
+
+                // return if all recommend product are already in cart
+                if(!recommendProducts.length) return;
+                $(modalId).wprModal();
+            
+                $.ajax({
+                    method: 'GET',
+                    url: pgfy_ajax_modal.url,
+                    data: {
+                        action: 'fetch_modal_products',
+                        nonce: pgfy_ajax_modal.nonce,
+                        recommended_items: recommendProducts
+                    }
+                }).done(function(data) {
+                    console.log(data);
+                    $recommendProductsWrapper.html(data);
+                });
+            }
         }
     });
 

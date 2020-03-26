@@ -1,19 +1,13 @@
 <?php 
     $nonce = $_GET['nonce'];
-    $recommended_items_ids = $_GET['recommended_items'];
+    $recommenede_products = $_GET['recommended_items'];
 
-    if(!isset($nonce) || !wp_verify_nonce($nonce, 'pgfy-ajax-modal') || !isset($recommended_items_ids)) {
+    if(!isset($nonce) || !wp_verify_nonce($nonce, 'pgfy-ajax-modal') || !isset($recommenede_products)) {
         wp_send_json_error(array('message' => 'Bad request'), 400 );
     }
 
-   
 
-    $recommenede_products = explode(',', $recommended_items_ids);
 
-    // foreach( WC()->cart->get_cart() as $cart_item ){
-    //     $products_ids_array[] = $cart_item['product_id'];
-    // }
-    
     // recommended prodcuts query
     $args = array(
         'post_type' => 'product',

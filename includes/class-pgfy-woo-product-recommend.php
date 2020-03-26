@@ -5,7 +5,6 @@
  * @since      1.0.0
  * @author     Pluginsify
  */
-
  
 class Pgfy_Woo_Product_Recommend {
 
@@ -240,6 +239,9 @@ class Pgfy_Woo_Product_Recommend {
 		add_action( 'wp_ajax_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 		add_action( 'wp_ajax_nopriv_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 
+		add_action( 'wp_ajax_pgfy_get_cart_items', array($this, 'get_cart_items'));
+		add_action( 'wp_ajax_nopriv_pgfy_get_cart_items', array($this, 'get_cart_items'));
+
 		add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
 	}
 
@@ -357,7 +359,7 @@ class Pgfy_Woo_Product_Recommend {
 
 
 	/**
-	 * Ajax call back to add to cart for singe product page
+	 * Ajax callback to add to cart for singe product page
 	 * 
 	 * @since      1.0.0
 	 */
@@ -374,6 +376,29 @@ class Pgfy_Woo_Product_Recommend {
 			wp_send_json_error(array('message' => 'Bad request'), 400 );
 		}
 	}
+
+	/**
+	 * Ajax callback to get items already added to cart
+	 * 
+	 * @since      1.0.0
+	 */
+	public function get_cart_items() {
+		
+		$nonce = $_GET['nonce'];
+	
+		if(!isset($nonce) || !wp_verify_nonce($nonce, 'pgfy-ajax-modal')) {
+			wp_send_json_error(array('message' => 'Bad request'), 400 );
+		}
+	
+
+		$products_ids_array = array();
+		foreach( WC()->cart->get_cart() as $cart_item ){
+			$products_ids_array[] = $cart_item['product_id'];
+		}
+
+		wp_send_json($products_ids_array);
+	}
+
 
 	/**
 	 * Include modal templates
