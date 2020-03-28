@@ -25,13 +25,12 @@ class Pgfy_Woo_Product_Recommend {
     * @since      1.0.0
      */
     private function __construct($__FILE__) {
-
 		self::$__FILE__ = $__FILE__;
-
 		register_activation_hook( self::$__FILE__, array( $this, 'on_activation' ) );
 		register_deactivation_hook( self::$__FILE__, array( $this, 'on_deactivation' ) );
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
-    }
+	}
+
 
     /**
 	 * Action after plugin active.
@@ -243,6 +242,8 @@ class Pgfy_Woo_Product_Recommend {
 		add_action( 'wp_ajax_nopriv_pgfy_get_cart_items', array($this, 'get_cart_items'));
 
 		add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
+
+		add_filter('nonce_user_logged_out', array($this, 'nonce_fix'), 100, 2);
 	}
 
 	/**
@@ -383,19 +384,10 @@ class Pgfy_Woo_Product_Recommend {
 	 * @since      1.0.0
 	 */
 	public function get_cart_items() {
-		
-		$nonce = $_GET['nonce'];
-	
-		if(!isset($nonce) || !wp_verify_nonce($nonce, 'pgfy-ajax-modal')) {
-			wp_send_json_error(array('message' => 'Bad request'), 400 );
-		}
-	
-
 		$products_ids_array = array();
 		foreach( WC()->cart->get_cart() as $cart_item ){
 			$products_ids_array[] = $cart_item['product_id'];
 		}
-
 		wp_send_json($products_ids_array);
 	}
 
@@ -486,6 +478,15 @@ class Pgfy_Woo_Product_Recommend {
 			$output .= $modalHtml;
 			$output .= "</li>";
 		return $output;
+	}
+
+	public function nonce_fix($uid = 0, $action = '') {
+		$nonce_actions = array('pgfy-ajax-modal','pgfy-add-to-cart');
+		if(in_array($action, $nonce_actions)) {
+			return 0;
+		}
+
+		return $uid;
 	}
 
 
