@@ -330,4 +330,90 @@ body.wpr-modal-opened {
   margin-right: 0.5em;
 }
 
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+.loading-products {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  text-align: center;
+}
+.loading-products .single-loading-product {
+  width: 100%;
+}
+.loading-products .single-loading-product .loading-thumb {
+  width: 100%;
+  height: 200px;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 800px 104px;
+  margin-bottom: 30px;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+}
+.loading-products .single-loading-product .loading-title {
+  width: 70%;
+  height: 15px;
+  display: inline-block;
+  background: #f6f7f8;
+  margin-bottom: 10px;
+}
+.loading-products .single-loading-product .loading-price {
+  height: 15px;
+  width: 50px;
+}
+.loading-products .single-loading-product .loading-price,
+.loading-products .single-loading-product .loading-button {
+  background: #f6f7f8;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.loading-products .single-loading-product .loading-button {
+  width: 100px;
+  height: 30px;
+}
+
+.single-loading-product:nth-child(2),
+.single-loading-product:nth-child(3),
+.single-loading-product:nth-child(4) {
+  display: none;
+}
+
+@media (min-width: 421px) {
+  .loading-products .single-loading-product {
+    width: 47%;
+  }
+
+  .single-loading-product:nth-child(2) {
+    display: block;
+  }
+}
+@media (min-width: 768px) {
+  .loading-products .single-loading-product {
+    width: 30%;
+  }
+
+  .single-loading-product:nth-child(3) {
+    display: block;
+  }
+}
+@media (min-width: 1200px) {
+  .loading-products .single-loading-product {
+    width: 23%;
+  }
+
+  .single-loading-product:nth-child(4) {
+    display: block;
+  }
+}
+
 /*# sourceMappingURL=modal.css.map */

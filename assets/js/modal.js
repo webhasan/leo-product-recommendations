@@ -142,7 +142,6 @@
                         recommended_items: recommendProducts
                     }
                 }).done(function(data) {
-                    console.log(data);
                     $recommendProductsWrapper.html(data);
                 });
             }

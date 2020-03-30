@@ -166,16 +166,16 @@
  
 	 .wpr-modal-close {
 		font-size: 25px;
-    opacity: 0.8;
-    cursor: pointer;
-    text-transform: none;
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: #fff;
-    text-align: center;
-    background:  $wpr_message_bg;
-    width: 28px;
+		opacity: 0.8;
+		cursor: pointer;
+		text-transform: none;
+		position: absolute;
+		top: 0;
+		right: 0;
+		color: #fff;
+		text-align: center;
+		background:  $wpr_message_bg;
+		width: 28px;
 		height: 28px;
 		line-height: 24px;
 		border-bottom-left-radius: .4em;
@@ -426,4 +426,94 @@
 
 .product-modal {
 	margin-right: .5em;
+}
+
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -468px 0
+    }
+    100%{
+        background-position: 468px 0
+    }
+}
+
+.loading-products  {
+	display: flex;
+	width:100%;
+	justify-content: space-between;
+	text-align: center;
+	.single-loading-product {
+		width: 100%;
+		.loading-thumb {
+			width: 100%;
+			height: 200px;
+			background: #f6f7f8;
+			 background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+			 background-size: 800px 104px;
+			margin-bottom: 30px;
+			animation-duration: 2s;
+			animation-fill-mode: forwards;
+			animation-iteration-count: infinite;
+			animation-name: placeHolderShimmer;
+			animation-timing-function: linear;
+		}
+
+		.loading-title {
+			width: 70%;
+			height: 15px;
+			display: inline-block;
+			background: #f6f7f8;
+			margin-bottom: 10px;
+		}
+
+		.loading-price {
+			height: 15px;
+			width: 50px;
+		}
+
+		.loading-price,
+		.loading-button {
+			background: #f6f7f8;
+			display: inline-block;			
+			margin-bottom: 10px;
+		}
+
+		.loading-button {
+			width: 100px;
+			height: 30px;
+		}
+	}
+}
+
+.single-loading-product:nth-child(2),
+.single-loading-product:nth-child(3),
+.single-loading-product:nth-child(4) {
+	display: none;
+}
+
+@media (min-width:   $xm-media) {
+	.loading-products .single-loading-product {
+		width: 47%;
+	}
+	.single-loading-product:nth-child(2) {
+		display: block;
+	}
+}
+
+@media (min-width:  $md-media) {
+	.loading-products .single-loading-product {
+		width: 30%;
+	}
+	.single-loading-product:nth-child(3) {
+		display: block;
+	}
+}
+
+@media (min-width: $xl-media) {
+	.loading-products .single-loading-product {
+		width: 23%;
+	}
+	.single-loading-product:nth-child(4) {
+		display: block;
+	}
 }

@@ -6,13 +6,10 @@
         wp_send_json_error(array('message' => 'Bad request'), 400 );
     }
 
-
-
     // recommended prodcuts query
     $args = array(
         'post_type' => 'product',
         'posts_per_page' => -1,
-        // 'post__not_in' => 
         'post__in' =>  $recommenede_products,
     );
     $loop = new WP_Query( $args );
@@ -40,5 +37,5 @@
     <?php do_action('wpr_after_recommended_prodcut', get_the_ID()); ?>
 </li>
 <?php  endwhile;  wp_reset_postdata(); endif;  
+
 wp_die();
-?>

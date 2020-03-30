@@ -54,7 +54,35 @@
                 <ul class="products recommended-product-list recommend-products-wrapper" 
                     data-recommend-ids="<?php echo implode(',', $recommended_products_ids); ?>"
                 >
-                    Loadings Products
+                   <div class="loading-products">
+                        <div class="single-loading-product">
+                            <div class="loading-thumb"></div>
+                            <div class="loading-title"></div><br>
+                            <div class="loading-price"></div><br>
+                            <div class="loading-button"></div>
+                        </div>
+
+                        <div class="single-loading-product">
+                            <div class="loading-thumb"></div>
+                            <div class="loading-title"></div><br>
+                            <div class="loading-price"></div><br>
+                            <div class="loading-button"></div>
+                        </div>
+
+                        <div class="single-loading-product">
+                            <div class="loading-thumb"></div>
+                            <div class="loading-title"></div><br>
+                            <div class="loading-price"></div><br>
+                            <div class="loading-button"></div>
+                        </div>
+
+                        <div class="single-loading-product">
+                            <div class="loading-thumb"></div>
+                            <div class="loading-title"></div><br>
+                            <div class="loading-price"></div><br>
+                            <div class="loading-button"></div>
+                        </div>
+                   </div>
                 </ul>
 
                 <?php do_action('wpr_after_products_loop', $product_id, $recommended_products_ids); ?>
