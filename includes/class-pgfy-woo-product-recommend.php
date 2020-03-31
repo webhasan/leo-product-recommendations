@@ -8,8 +8,25 @@
  
 class Pgfy_Woo_Product_Recommend {
 
+	/**
+	 * Inctance of class
+	 *
+	 * @var instance
+	 */
 	static protected $instance;
+
+	/**
+	 * Name of the plugin.
+	 *
+	 * @var string
+	 */
 	static protected $name = 'WooCommerce Product Recommend';
+
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
 	static protected $version = '1.0.0';
 
 	/**
@@ -20,8 +37,7 @@ class Pgfy_Woo_Product_Recommend {
 	static protected $__FILE__;
 
     /**
-    * Class constructor
-    * Run all plugin code
+    * Class constructor, initialize everything
     * @since      1.0.0
      */
     private function __construct($__FILE__) {
@@ -332,7 +348,7 @@ class Pgfy_Woo_Product_Recommend {
 	 * 
 	 * @since      1.0.0
 	 * @return     string plugin slug
-	 */
+	*/
 	public function get_slug() {
 		return basename( self::$__FILE__, '.php');
 	}
@@ -347,7 +363,6 @@ class Pgfy_Woo_Product_Recommend {
 		update_post_meta($id, '_pgfy_pr_data', $selected);
 	}
 
-
 	/**
 	 * Ajax call back to query modal products
 	 * 
@@ -357,7 +372,6 @@ class Pgfy_Woo_Product_Recommend {
 	public function fetch_modal_products() {
 		include($this->get_path('templates/template-recommend-products.php'));
 	}
-
 
 	/**
 	 * Ajax callback to add to cart for singe product page
@@ -390,7 +404,6 @@ class Pgfy_Woo_Product_Recommend {
 		}
 		wp_send_json($products_ids_array);
 	}
-
 
 	/**
 	 * Include modal templates
@@ -489,7 +502,6 @@ class Pgfy_Woo_Product_Recommend {
 		return $uid;
 	}
 
-
 	/**
 	 * Feedback Form data
 	 * 
@@ -576,7 +588,6 @@ class Pgfy_Woo_Product_Recommend {
 		return $form;
 	}
 
-
 	/**
 	 * Get admin email address
 	 * 
@@ -586,7 +597,6 @@ class Pgfy_Woo_Product_Recommend {
 		$admin_email =  wp_get_current_user();
 		return ( 0 !== $admin_email->ID ) ? $admin_email->data->user_email : '';
 	}
-
 
     /**
 	 * Get class instance.

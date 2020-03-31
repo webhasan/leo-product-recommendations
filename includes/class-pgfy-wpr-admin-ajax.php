@@ -54,7 +54,6 @@ class Pgfy_Wpr_Admin_Ajax {
         wp_send_json($data);
     }
 
-
     /**
      * Fetch posts
      *
@@ -126,8 +125,6 @@ class Pgfy_Wpr_Admin_Ajax {
 
         $max_page = $prodcut_query->max_num_pages;
 
-
-        
         wp_send_json(compact('products', 'max_page'));
     }
 }
