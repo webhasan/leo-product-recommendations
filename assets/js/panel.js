@@ -274,14 +274,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         query = _useState22[0],
         setQuery = _useState22[1];
 
-    var onChangeHeading = function onChangeHeading(e) {
-      setHeading(e.target.value);
-    };
-
-    var onChangeQuery = function onChangeQuery(e) {
-      setQuery(e.target.value);
-    };
-
     var reorderProduct = function reorderProduct(event, previousIndex, nextIndex) {
       var reorderProducts = reorder(initialData.products, previousIndex, nextIndex);
       setInitialData(_objectSpread({}, initialData, {

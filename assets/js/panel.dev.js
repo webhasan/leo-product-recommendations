@@ -59,14 +59,6 @@ import  classNames  from 'classnames';
 
 		const [query, setQuery] = useState('');
 
-		const onChangeHeading = (e) => {
-			setHeading(e.target.value);
-		}
-
-		const onChangeQuery = (e) => {
-			setQuery(e.target.value);
-		}
-
 		const reorderProduct = (event, previousIndex, nextIndex) => {
 			let reorderProducts = reorder(initialData.products, previousIndex, nextIndex);
 			setInitialData({...initialData, products: reorderProducts});
