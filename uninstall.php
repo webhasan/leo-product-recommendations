@@ -7,4 +7,11 @@
 
 if( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit; // Exit if accessed directly
 
-delete_post_meta_by_key( '_pgfy_pr_data' );  // remove all data 
+add_action('admin_init', function() {
+	$all_plugins = get_plugins();
+    $check_free_version = array_key_exists('woocommerce-product-recommend-pro/woocommerce-product-recommend-pro.php', $all_plugins);
+    
+    if(!$check_free_version) {
+        delete_post_meta_by_key( '_pgfy_pr_data' );  // remove all data 
+    }
+});
