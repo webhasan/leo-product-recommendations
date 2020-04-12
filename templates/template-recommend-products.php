@@ -11,6 +11,7 @@
         'post_type' => 'product',
         'posts_per_page' => -1,
         'post__in' =>  $recommenede_products,
+        'orderby'   => 'post__in'
     );
     $loop = new WP_Query( $args );
 
