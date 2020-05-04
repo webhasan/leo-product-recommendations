@@ -14,7 +14,6 @@ body.wpr-modal-opened {
   position: fixed;
   top: 0;
   left: 0;
-  /* display: none; */
   width: 100%;
   height: 100%;
   outline: 0;
@@ -181,58 +180,11 @@ body.wpr-modal-opened {
 }
 .wpr-modal .wpr-modal-body ul li img {
   border: 1px solid #e6e6e6;
+  margin-bottom: 22px;
 }
 .wpr-modal .recommended-product-list .single-wpr {
   flex: 0 0 50%;
   width: 50%;
-}
-.wpr-modal .wpr-modal-footer {
-  padding: 7px 5px;
-  text-align: center;
-  border-top: 1px solid #dee2e6;
-  border-bottom-right-radius: calc(.3rem - 1px);
-  border-bottom-left-radius: calc(.3rem - 1px);
-}
-.wpr-modal .wpr-button {
-  display: inline-block;
-  font-weight: 400;
-  border-radius: 2px;
-  color: #fff;
-  text-align: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  padding: 7px 20px;
-  min-width: 130px;
-  text-decoration: none;
-  font-size: 16px;
-  line-height: 1.5;
-  text-decoration: none !important;
-  transition: all 0.2s;
-}
-.wpr-modal .wpr-button-blue {
-  background-color: #35a073;
-  border-color: white;
-  margin: 10px;
-}
-.wpr-modal .wpr-button-blue:hover {
-  background-color: #286090;
-  border-color: #204d74;
-  color: #fff;
-  text-decoration: none;
-}
-.wpr-modal .wpr-button-green {
-  color: #fff;
-  background-color: #5cb85c;
-  border-color: #4cae4c;
-  margin: 10px;
-}
-.wpr-modal .wpr-button-green:hover {
-  color: #fff;
-  background-color: #449d44;
-  border-color: #398439;
-  text-decoration: none;
 }
 .wpr-modal ul.recommended-product-list {
   overflow: hidden;
