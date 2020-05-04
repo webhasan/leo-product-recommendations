@@ -9,7 +9,7 @@ import  classNames  from 'classnames';
 	if(!app) return;
 
 	const LoadingIcon = () => (
-		<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" width="80" height="80">
+		<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 100 100" enableBackground="new 0 0 100 100" width="80" height="80">
 		<rect fill="#0073aa" width="3" height="45.2018" transform="translate(0) rotate(180 3 50)">
 			<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite"></animate>
 		</rect>
@@ -177,12 +177,12 @@ import  classNames  from 'classnames';
 					<div className="pr-field">
 						<input type="hidden" name="_pgfy_pr_data[type]" value = {type} />
 
-						<div className="rp-panel-title">{__('Recommend Product Heading','woocommerce-product-recommend')}</div>
+						<div className="rp-panel-title">{__('Recommend Products Heading','woocommerce-product-recommend')}</div>
 						<p><input type="text" name="_pgfy_pr_data[heading]" value = {initialData.heading} onChange = {(e) => setInitialData({...initialData, heading: e.target.value})}/></p>
 					</div>
 
 					<div className="pr-field">
-							<div className="rp-panel-title">{__('Select Product')}</div>
+							<div className="rp-panel-title">{__('Select Products','woocommerce-product-recommend')}</div>
 							<div className="product-selection-panel">
 							<div className="product-filter">
 								<div className="search">
@@ -200,7 +200,7 @@ import  classNames  from 'classnames';
 								<div className="category-filter">
 									<TreeSelect
 										// label="All Category"
-										noOptionLabel="All Categories"
+										noOptionLabel={__('All Categories','woocommerce-product-recommend')}
 										onChange={ value  => {
 											setSelectedCategory( value );
 											setPage(1);
@@ -217,7 +217,7 @@ import  classNames  from 'classnames';
 									<ul onScroll = { handleScroll }>
 										{!fetchingPosts && !selectAble(products).length &&
 											<li className="disabled">
-												<span className="single-list"> { __('Not found selectable product')}</span>
+												<span className="single-list"> { __('Not found selectable product','woocommerce-product-recommend')}</span>
 											</li>
 										}
 										

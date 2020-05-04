@@ -137,7 +137,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       x: "0px",
       y: "0px",
       viewBox: "0 0 100 100",
-      "enable-background": "new 0 0 100 100",
+      enableBackground: "new 0 0 100 100",
       width: "80",
       height: "80"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("rect", {
@@ -411,7 +411,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       value: type
     }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "rp-panel-title"
-    }, __('Recommend Product Heading', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("input", {
+    }, __('Recommend Products Heading', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("input", {
       type: "text",
       name: "_pgfy_pr_data[heading]",
       value: initialData.heading,
@@ -424,7 +424,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       className: "pr-field"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "rp-panel-title"
-    }, __('Select Product')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
+    }, __('Select Products', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "product-selection-panel"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "product-filter"
@@ -442,7 +442,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       className: "category-filter"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__["TreeSelect"] // label="All Category"
     , {
-      noOptionLabel: "All Categories",
+      noOptionLabel: __('All Categories', 'woocommerce-product-recommend'),
       onChange: function onChange(value) {
         setSelectedCategory(value);
         setPage(1);
@@ -459,7 +459,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       className: "disabled"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("span", {
       className: "single-list"
-    }, " ", __('Not found selectable product'))), !!products.length && selectAble(products).map(function (product) {
+    }, " ", __('Not found selectable product', 'woocommerce-product-recommend'))), !!products.length && selectAble(products).map(function (product) {
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("li", {
         key: product.id,
         className: classnames__WEBPACK_IMPORTED_MODULE_8___default()({

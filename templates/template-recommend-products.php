@@ -13,6 +13,7 @@
         'post__in' =>  $recommenede_products,
         'orderby'   => 'post__in'
     );
+    
     $loop = new WP_Query( $args );
 
     if ( $loop->have_posts() ): while ( $loop->have_posts() ) : $loop->the_post();

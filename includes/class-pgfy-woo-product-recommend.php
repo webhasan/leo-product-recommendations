@@ -305,7 +305,7 @@ class Pgfy_Woo_Product_Recommend {
 	public function add_meta_boxes() {
 		add_meta_box( 
 			'plfy_prodcut_selection', 
-			__('Recommended Products','woocommerce-product-recommend'), 
+			__('Recommend Products','woocommerce-product-recommend'), 
 			array($this, 'product_selection'),
 			array('product')
 		);
