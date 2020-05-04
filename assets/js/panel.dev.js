@@ -2,37 +2,37 @@ import Reorder from 'react-reorder';
 import { buildTermsTree } from './panel/tree';
 import { TreeSelect } from '@wordpress/components';
 import { DebounceInput } from 'react-debounce-input';
-import  classNames  from 'classnames';
+import classNames from 'classnames';
 
-(function(React, __, $, app, Reorder) {
+(function (React, __, $, app, Reorder) {
 
-	if(!app) return;
+	if (!app) return;
 
 	const LoadingIcon = () => (
 		<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 100 100" enableBackground="new 0 0 100 100" width="80" height="80">
-		<rect fill="#0073aa" width="3" height="45.2018" transform="translate(0) rotate(180 3 50)">
-			<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite"></animate>
-		</rect>
-		<rect x="17" fill="#0073aa" width="3" height="31.2018" transform="translate(0) rotate(180 20 50)">
-			<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.1s"></animate>
-		</rect>
-		<rect x="40" fill="#0073aa" width="3" height="56.7982" transform="translate(0) rotate(180 40 50)">
-			<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.3s"></animate>
-		</rect>
-		<rect x="60" fill="#0073aa" width="3" height="84.7982" transform="translate(0) rotate(180 58 50)">
-			<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.5s"></animate>
-		</rect>
-		<rect x="80" fill="#0073aa" width="3" height="31.2018" transform="translate(0) rotate(180 76 50)">
-			<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.1s"></animate>
-		</rect>
+			<rect fill="#0073aa" width="3" height="45.2018" transform="translate(0) rotate(180 3 50)">
+				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite"></animate>
+			</rect>
+			<rect x="17" fill="#0073aa" width="3" height="31.2018" transform="translate(0) rotate(180 20 50)">
+				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.1s"></animate>
+			</rect>
+			<rect x="40" fill="#0073aa" width="3" height="56.7982" transform="translate(0) rotate(180 40 50)">
+				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.3s"></animate>
+			</rect>
+			<rect x="60" fill="#0073aa" width="3" height="84.7982" transform="translate(0) rotate(180 58 50)">
+				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.5s"></animate>
+			</rect>
+			<rect x="80" fill="#0073aa" width="3" height="31.2018" transform="translate(0) rotate(180 76 50)">
+				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.1s"></animate>
+			</rect>
 		</svg>
 	);
 
 	const postId = parseInt(app.getAttribute('data-id'));
 
-	const { reorder	} = Reorder;
-	const apiEndPoint = ajax_url; 
-	const {useState, useEffect} = React;
+	const { reorder } = Reorder;
+	const apiEndPoint = ajax_url;
+	const { useState, useEffect } = React;
 
 
 	const SelectProduct = () => {
@@ -61,23 +61,23 @@ import  classNames  from 'classnames';
 
 		const reorderProduct = (event, previousIndex, nextIndex) => {
 			let reorderProducts = reorder(initialData.products, previousIndex, nextIndex);
-			setInitialData({...initialData, products: reorderProducts});
+			setInitialData({ ...initialData, products: reorderProducts });
 		}
 
 		const addProdcut = (product) => {
 			let products = [product, ...initialData.products];
-			setInitialData({...initialData, products});
+			setInitialData({ ...initialData, products });
 		}
 
 		const removeProduct = (id) => {
 			let existsProducs = initialData.products.filter(product => product.id !== id);
-			setInitialData({...initialData, products: existsProducs});
+			setInitialData({ ...initialData, products: existsProducs });
 		}
 
 		const handleScroll = (event) => {
-			if(!fetchingPosts) {
+			if (!fetchingPosts) {
 				const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-				if(bottom && page < maxPage) {
+				if (bottom && page < maxPage) {
 					setPage(page + 1);
 				}
 			}
@@ -85,9 +85,9 @@ import  classNames  from 'classnames';
 
 		const selectAble = (producs) => {
 			return producs.map(product => {
-				let isSelected = initialData.products.find(selectedProduct => selectedProduct.id === product.id );
+				let isSelected = initialData.products.find(selectedProduct => selectedProduct.id === product.id);
 
-				if(isSelected) {
+				if (isSelected) {
 					product['selcted'] = true;
 				} else {
 					product['selcted'] = false;
@@ -110,13 +110,13 @@ import  classNames  from 'classnames';
 					post_id: postId
 				},
 
-				success: function(data) {
-					if(data) {
+				success: function (data) {
+					if (data) {
 						let products = data.products ? data.products : [];
-						let heading = data.heading ? data.heading: '';
-						setInitialData({...initialData, products, heading });
+						let heading = data.heading ? data.heading : '';
+						setInitialData({ ...initialData, products, heading });
 					}
-					
+
 					setFacedData(true);
 				}
 			});
@@ -129,17 +129,17 @@ import  classNames  from 'classnames';
 				data: {
 					action: 'wpr_fetch_categores'
 				},
-				success: function(data) {
-					if(data.length) {
+				success: function (data) {
+					if (data.length) {
 						setCategories(data);
 					}
 				}
 			});
-		},[]);
+		}, []);
 
 		useEffect(() => {
 			setFetchingPosts(true);
-			if(page === 1) {
+			if (page === 1) {
 				setProducts([]);
 			}
 
@@ -153,37 +153,37 @@ import  classNames  from 'classnames';
 					category: selectedCategory,
 					query
 				},
-				success: function(data) {
+				success: function (data) {
 
 					let { products: newProducts, max_page: maxPage } = data;
 
-					if(page === 1) {
+					if (page === 1) {
 						setProducts(newProducts);
-					}else {
-						
+					} else {
+
 						setProducts([...products, ...newProducts]);
 					}
 					setMaxPage(maxPage);
 					setFetchingPosts(false);
 				}
 			});
-		}, [page, selectedCategory, query]); 
+		}, [page, selectedCategory, query]);
 
 		return (
 			<div className="pgfy-recommend-product">
-				{!facedData && <span className="pgfy-recommend-product-prelaoder">{<LoadingIcon />}</span> }
-				
-				<div className="recommend-prodcut-options-wrap" style = {opacity}>
-					<div className="pr-field">
-						<input type="hidden" name="_pgfy_pr_data[type]" value = {type} />
+				{!facedData && <span className="pgfy-recommend-product-prelaoder">{<LoadingIcon />}</span>}
 
-						<div className="rp-panel-title">{__('Recommend Products Heading','woocommerce-product-recommend')}</div>
-						<p><input type="text" name="_pgfy_pr_data[heading]" value = {initialData.heading} onChange = {(e) => setInitialData({...initialData, heading: e.target.value})}/></p>
+				<div className="recommend-prodcut-options-wrap" style={opacity}>
+					<div className="pr-field">
+						<input type="hidden" name="_pgfy_pr_data[type]" value={type} />
+
+						<div className="rp-panel-title">{__('Recommend Products Heading', 'woocommerce-product-recommend')}</div>
+						<p><input type="text" name="_pgfy_pr_data[heading]" value={initialData.heading} onChange={(e) => setInitialData({ ...initialData, heading: e.target.value })} /></p>
 					</div>
 
 					<div className="pr-field">
-							<div className="rp-panel-title">{__('Select Products','woocommerce-product-recommend')}</div>
-							<div className="product-selection-panel">
+						<div className="rp-panel-title">{__('Select Products', 'woocommerce-product-recommend')}</div>
+						<div className="product-selection-panel">
 							<div className="product-filter">
 								<div className="search">
 									<DebounceInput
@@ -192,38 +192,38 @@ import  classNames  from 'classnames';
 										onChange={event => {
 											setQuery(event.target.value);
 											setPage(1);
-										}} 
-										placeholder= {__('Search...','woocommerce-product-recommend')}
+										}}
+										placeholder={__('Search...', 'woocommerce-product-recommend')}
 									/>
 								</div>
 
 								<div className="category-filter">
 									<TreeSelect
 										// label="All Category"
-										noOptionLabel={__('All Categories','woocommerce-product-recommend')}
-										onChange={ value  => {
-											setSelectedCategory( value );
+										noOptionLabel={__('All Categories', 'woocommerce-product-recommend')}
+										onChange={value => {
+											setSelectedCategory(value);
 											setPage(1);
 										}}
-										selectedId={ selectedCategory }
-										tree = {buildTermsTree(categories)}
+										selectedId={selectedCategory}
+										tree={buildTermsTree(categories)}
 									/>
 								</div>
 
 							</div>
-						
+
 							<div className="product-selection">
 								<div className="list-panel">
-									<ul onScroll = { handleScroll }>
+									<ul onScroll={handleScroll}>
 										{!fetchingPosts && !selectAble(products).length &&
 											<li className="disabled">
-												<span className="single-list"> { __('Not found selectable product','woocommerce-product-recommend')}</span>
+												<span className="single-list"> {__('Not found selectable product', 'woocommerce-product-recommend')}</span>
 											</li>
 										}
-										
-										{!!products.length && 
+
+										{!!products.length &&
 											selectAble(products).map(product => (
-												<li key = {product.id} className = {classNames({ 'selected-product': product.selcted })} onClick = {() => addProdcut(product)}>
+												<li key={product.id} className={classNames({ 'selected-product': product.selcted })} onClick={() => addProdcut(product)}>
 													<span className="single-list">
 														<div className="thumb">
 															<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
@@ -235,7 +235,7 @@ import  classNames  from 'classnames';
 										}
 
 										{
-											<li className={ classNames('disabled', {invisible: !fetchingPosts} )}>
+											<li className={classNames('disabled', { invisible: !fetchingPosts })}>
 												<span className="wpr-loading-posts"></span>
 											</li>
 										}
@@ -258,22 +258,22 @@ import  classNames  from 'classnames';
 									>
 										{initialData.products.map(product => (
 											<li key={product.id}>
-												<input type="hidden" name = "_pgfy_pr_data[products][]" value = {product.id} />
-												<span className="single-list" data-id ="10">
+												<input type="hidden" name="_pgfy_pr_data[products][]" value={product.id} />
+												<span className="single-list" data-id="10">
 													<div className="thumb">
-													<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
+														<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
 													</div>
 													{product.title}
-													<span  className="remove-item" 
-													onMouseDown = {(e) => {
-														e.preventDefault();
-														e.stopPropagation();
-														removeProduct(product.id)
-													}}
-													onClick = { (e) => {
-														e.stopPropagation();
-														e.preventDefault();
-													}}
+													<span className="remove-item"
+														onMouseDown={(e) => {
+															e.preventDefault();
+															e.stopPropagation();
+															removeProduct(product.id)
+														}}
+														onClick={(e) => {
+															e.stopPropagation();
+															e.preventDefault();
+														}}
 													>-</span>
 												</span>
 											</li>
@@ -284,10 +284,9 @@ import  classNames  from 'classnames';
 						</div>
 					</div>
 				</div>
-			</div>									
+			</div>
 		)
 	}
 
-	React.render(<SelectProduct/>, app)
+	React.render(<SelectProduct />, app)
 })(wp.element, wp.i18n.__, jQuery, document.getElementById('pr-app'), Reorder);
-  

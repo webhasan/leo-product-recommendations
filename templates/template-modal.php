@@ -20,7 +20,7 @@
             get_the_title($product_id)
         )
     );
-    $modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</h2>', $modal_heading) : $common_heading;
+    $modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</h2>', esc_html($modal_heading)) : $common_heading;
 ?>
 
 <div class="wpr-modal <?php echo $modal_rows; ?>" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
