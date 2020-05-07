@@ -344,6 +344,24 @@ class Pgfy_Woo_Product_Recommend {
 	}
 
 	/**
+	 * Get template path from theme or plugin
+	 * 
+	 * @since      1.0.0
+	 * @param      stirng File name with folder path.
+	 * @return     string Full of template from theme or plugin.
+	 */
+		public function get_templates_path($file_path) {
+			//from theme
+			$theme_templ = get_stylesheet_directory() . '/wpr/' . $file_path;
+			if(file_exists($theme_templ)) {
+				return $theme_templ;
+			}
+
+			//from plugin
+			return plugin_dir_path( self::$__FILE__ ) . $file_path;
+		}
+
+	/**
 	 * Get plugin slug
 	 * 
 	 * @since      1.0.0
@@ -370,7 +388,7 @@ class Pgfy_Woo_Product_Recommend {
 	 */
 
 	public function fetch_modal_products() {
-		include($this->get_path('templates/template-recommend-products.php'));
+		include($this->get_templates_path('templates/template-recommend-products.php'));
 	}
 
 	/**
@@ -442,7 +460,7 @@ class Pgfy_Woo_Product_Recommend {
 			$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 			
 			if(!empty( $recommended_products_ids )) {
-				include($this->get_path('templates/template-modal.php'));
+				include($this->get_templates_path('templates/template-modal.php'));
 			}
 		endif;
 	}
@@ -464,7 +482,7 @@ class Pgfy_Woo_Product_Recommend {
 		if($product_type === 'menual-selection'): // free version only support menu selection
 			$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 			if(!empty($recommended_products_ids)) {
-				include($this->get_path('templates/template-modal.php'));
+				include($this->get_templates_path('templates/template-modal.php'));
 			}
 		endif;
 	}
@@ -485,7 +503,7 @@ class Pgfy_Woo_Product_Recommend {
 			return $html;
 
 		ob_start();
-			include($this->get_path('templates/template-modal.php'));
+			include($this->get_templates_path('templates/template-modal.php'));
 			$modalHtml = ob_get_clean();
 			$output = str_replace('</li>', '',$html);
 			$output .= $modalHtml;
