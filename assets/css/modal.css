@@ -127,6 +127,10 @@ body.wpr-modal-opened {
   font-size: 14px;
   font-weight: bold;
 }
+.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr a.button:before,
+.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr a.button:after {
+  font-size: 14px;
+}
 .wpr-modal .wpr-modal-head {
   display: -ms-flexbox;
   border-top-left-radius: calc(.3rem - 1px);
@@ -190,10 +194,10 @@ body.wpr-modal-opened {
   overflow: hidden;
   margin-left: -20px;
   margin-right: -20px;
-  display: flex;
-  flex-wrap: wrap;
+  display: flex !important;
+  flex-wrap: wrap !important;
   justify-content: center !important;
-  list-style: none;
+  list-style: none !important;
 }
 .wpr-modal .wpr-modal-dialog {
   max-height: calc(100% - 3.5rem);

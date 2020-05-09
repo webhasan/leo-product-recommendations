@@ -377,8 +377,9 @@ class Pgfy_Woo_Product_Recommend {
 	 * @since      1.0.0
 	 */
 	public function on_save_post($id) {
-		$selected = isset($_POST['_pgfy_pr_data']) ? $_POST['_pgfy_pr_data'] : array();
-		update_post_meta($id, '_pgfy_pr_data', $selected);
+		if(isset($_POST['_pgfy_pr_data'])) {
+			update_post_meta($id, '_pgfy_pr_data', $_POST['_pgfy_pr_data']);
+		}
 	}
 
 	/**
@@ -433,9 +434,10 @@ class Pgfy_Woo_Product_Recommend {
 			add_action('woocommerce_after_shop_loop_item', array($this, 'product_archive_modal'));
 		}
 
+
 		// modal in single product page
 		if(apply_filters('wc_pr_show_in_singe_product', true)) {
-			add_action('woocommerce_after_single_product_summary', array($this, 'product_single_modal'), 21);
+			add_action('wp_footer', array($this, 'product_single_modal'));
 		}
 		
 		// modal in WooCommerce Gutenberg products block
@@ -460,7 +462,9 @@ class Pgfy_Woo_Product_Recommend {
 			$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 			
 			if(!empty( $recommended_products_ids )) {
-				include($this->get_templates_path('templates/template-modal.php'));
+				add_action('wp_footer', function() use($product_id, $modal_heading, $recommended_products_ids){
+					include($this->get_templates_path('templates/template-modal.php'));
+				});
 			}
 		endif;
 	}
@@ -470,6 +474,10 @@ class Pgfy_Woo_Product_Recommend {
      * @since      1.0.0
 	 */
 	public function product_single_modal() {
+		if(!is_product()) {
+			return false;
+		}
+
 		global $product;
 
 		$product_id = $product->get_id();
@@ -494,21 +502,20 @@ class Pgfy_Woo_Product_Recommend {
 	public function product_gutenberg_block($html, $data, $product) {
 
 		$product_id = $product->get_id();
+
 		$pr_data = get_post_meta($product_id, '_pgfy_pr_data', true);
 		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 		$product_type =  isset($pr_data['type']) ? $pr_data['type'] : null;
 
-		if(empty($recommended_products_ids) || $product_type !== 'menual-selection') 
-			return $html;
 
-		ob_start();
-			include($this->get_templates_path('templates/template-modal.php'));
-			$modalHtml = ob_get_clean();
-			$output = str_replace('</li>', '',$html);
-			$output .= $modalHtml;
-			$output .= "</li>";
-		return $output;
+		if(!empty($recommended_products_ids) || $product_type === 'menual-selection') {
+			add_action('wp_footer', function() use($product_id, $modal_heading, $recommended_products_ids){
+				include($this->get_templates_path('templates/template-modal.php'));
+			});
+		}
+		
+		return $html;
 	}
 
 	public function nonce_fix($uid = 0, $action = '') {

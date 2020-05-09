@@ -11,7 +11,7 @@
             return returnArray;
         }
 
-        $('.entry-summary form.cart').on('submit', function (e) {            
+        $('body.single-product form.cart').on('submit', function (e) {            
             var $form = $(this);
             var $submitButton = $form.find('button[type="submit"]');
             var data = $form.serialize();
@@ -36,7 +36,6 @@
             if(data.search('add-to-cart') === -1) {
                 data += '&add-to-cart=' + dataObject.product_id;
             }
-
 
             // recommend products mdoal
             var $targetMdoal = $('#wpr-modal-' + dataObject.product_id);

@@ -171,6 +171,7 @@ import classNames from 'classnames';
 
 		return (
 			<div className="pgfy-recommend-product">
+				
 				{!facedData && <span className="pgfy-recommend-product-prelaoder">{<LoadingIcon />}</span>}
 
 				<div className="recommend-prodcut-options-wrap" style={opacity}>

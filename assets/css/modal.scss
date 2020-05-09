@@ -153,6 +153,11 @@ body.wpr-modal-opened {
                 font-size: 14px;
                 font-weight: bold;
             }
+
+            a.button:before,
+            a.button:after {
+                font-size: 14px;
+            }
         }
     }
 
@@ -231,10 +236,10 @@ body.wpr-modal-opened {
         overflow: hidden;
         margin-left: -20px;
         margin-right: -20px;
-        display: flex;
-        flex-wrap: wrap;
+        display: flex !important;
+        flex-wrap: wrap !important;
         justify-content: center !important;
-        list-style: none;
+        list-style: none !important;
     }
 
     .wpr-modal-dialog {
