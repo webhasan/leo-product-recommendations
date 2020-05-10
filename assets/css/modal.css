@@ -373,5 +373,9 @@ body.wpr-modal-opened {
     display: block;
   }
 }
+/** divi fix **/
+body.theme-Divi .wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr a.button:after {
+  line-height: 1.7em;
+}
 
 /*# sourceMappingURL=modal.css.map */

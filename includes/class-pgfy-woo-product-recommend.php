@@ -16,6 +16,13 @@ class Pgfy_Woo_Product_Recommend {
 	static protected $instance;
 
 	/**
+	 * Array of all products recomemnd data.
+	 *
+	 * @var instance
+	 */
+	static protected $pr_meta = array();
+
+	/**
 	 * Name of the plugin.
 	 *
 	 * @var string
@@ -447,6 +454,46 @@ class Pgfy_Woo_Product_Recommend {
 	}
 
 	/**
+	 * Get recommend product heading
+	 *
+	 * @param int $product_id
+	 * @return string heading of recommend product
+	 * @since   1.0.0
+	 */
+	public function get_recommend_products_heading($product_id) {
+		$pr_data = $this->get_pr_data($product_id);
+		$heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
+		return $heading;
+	}
+
+	/**
+	 * Check selection method menual or not 
+	 * @return bool menually selected or not / free or paid plugin
+	 * @since   1.0.0
+	 */
+	public function is_menually_selection($product_id) {
+		$pr_data = $this->get_pr_data($product_id);
+		$selection_type =  isset($pr_data['type']) ? $pr_data['type'] : null;
+
+		return ($selection_type === 'menual-selection');
+	}	
+
+	/**
+	 * Array of recommend product ids
+	 *
+	 * @param int $product_id
+	 * @return array array of recommend products ids
+	 * @since      1.0.0
+	 */
+	public function get_recommend_products_id($product_id) {
+		$pr_data = $this->get_pr_data($product_id);
+		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		return $recommended_products_ids;
+	}
+
+
+
+	/**
 	 * Add modal to archive / shop page prodcuts
      * @since      1.0.0
 	 */
@@ -454,12 +501,9 @@ class Pgfy_Woo_Product_Recommend {
 		global $product;
 		$product_id = $product->get_id();
 
-		$pr_data = get_post_meta($product_id, '_pgfy_pr_data', true);
-		$product_type =  isset($pr_data['type']) ? $pr_data['type'] : null;
-
-		if($product_type === 'menual-selection'): // free version only support menu selection
-			$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
-			$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
+		if($this->is_menually_selection($product_id)): // free version only support menu selection
+			$modal_heading = $this->get_recommend_products_heading($product_id);
+			$recommended_products_ids = $this->get_recommend_products_id($product_id);
 			
 			if(!empty( $recommended_products_ids )) {
 				add_action('wp_footer', function() use($product_id, $modal_heading, $recommended_products_ids){
@@ -479,16 +523,13 @@ class Pgfy_Woo_Product_Recommend {
 		}
 
 		global $product;
-
 		$product_id = $product->get_id();
 
-		$pr_data = get_post_meta($product_id, '_pgfy_pr_data', true);
-		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
 
-		$product_type =  isset($pr_data['type']) ? $pr_data['type'] : null;
+		if($this->is_menually_selection($product_id)): // free version only support menu selection
+			$modal_heading = $this->get_recommend_products_heading($product_id);
+			$recommended_products_ids = $this->get_recommend_products_id($product_id);
 
-		if($product_type === 'menual-selection'): // free version only support menu selection
-			$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 			if(!empty($recommended_products_ids)) {
 				include($this->get_templates_path('templates/template-modal.php'));
 			}
@@ -500,20 +541,18 @@ class Pgfy_Woo_Product_Recommend {
      * @since      1.0.0
 	 */
 	public function product_gutenberg_block($html, $data, $product) {
-
 		$product_id = $product->get_id();
 
-		$pr_data = get_post_meta($product_id, '_pgfy_pr_data', true);
-		$recommended_products_ids = (!!$pr_data && isset($pr_data['products'])) ? $pr_data['products'] : array();
-		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
-		$product_type =  isset($pr_data['type']) ? $pr_data['type'] : null;
-
-
-		if(!empty($recommended_products_ids) || $product_type === 'menual-selection') {
-			add_action('wp_footer', function() use($product_id, $modal_heading, $recommended_products_ids){
-				include($this->get_templates_path('templates/template-modal.php'));
-			});
-		}
+		if($this->is_menually_selection($product_id)): // free version only support menu selection
+			$modal_heading = $this->get_recommend_products_heading($product_id);
+			$recommended_products_ids = $this->get_recommend_products_id($product_id);
+			
+			if(!empty( $recommended_products_ids )) {
+				add_action('wp_footer', function() use($product_id, $modal_heading, $recommended_products_ids){
+					include($this->get_templates_path('templates/template-modal.php'));
+				});
+			}
+		endif;
 		
 		return $html;
 	}
@@ -621,6 +660,20 @@ class Pgfy_Woo_Product_Recommend {
 	public function amdin_email() {
 		$admin_email =  wp_get_current_user();
 		return ( 0 !== $admin_email->ID ) ? $admin_email->data->user_email : '';
+	}
+
+
+	/**
+	* Get prodcut recomemnd meta
+     * @since      1.0.0
+	 * @return object post meta of _pgfy_pr_data
+	*/
+	public static function get_pr_data($id) {
+		if(!isset(self::$pr_meta[$id])) {
+			self::$pr_meta[$id] = get_post_meta( $id, '_pgfy_pr_data', true );
+		}
+
+		return self::$pr_meta[$id];
 	}
 
     /**

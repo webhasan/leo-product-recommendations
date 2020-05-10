@@ -20,10 +20,11 @@
             get_the_title($product_id)
         )
     );
+
     $modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</h2>', esc_html($modal_heading)) : $common_heading;
 ?>
 
-<div class="wpr-modal <?php echo $modal_rows; ?>" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
+<div class="wpr-modal woocommerce <?php echo $modal_rows; ?>" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
     <div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
 
         <?php do_action('wpr_before_modal_content', $product_id, $recommended_products_ids); ?>
