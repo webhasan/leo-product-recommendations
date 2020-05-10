@@ -16,18 +16,18 @@ class Pgfy_Woo_Product_Recommend {
 	static protected $instance;
 
 	/**
-	 * Array of all products recomemnd data.
-	 *
-	 * @var instance
-	 */
-	static protected $pr_meta = array();
-
-	/**
 	 * Name of the plugin.
 	 *
 	 * @var string
 	 */
 	static protected $name = 'WooCommerce Product Recommend';
+
+	/**
+	 * Array of all products recomemnd data.
+	 *
+	 * @var instance
+	 */
+	static protected $pr_meta = array();
 
 	/**
 	 * Plugin version.
@@ -198,8 +198,8 @@ class Pgfy_Woo_Product_Recommend {
      */
 
 	public function render_has_pro_notice() {
-		$message = __('Pro version already activated, no need free version.','woocommerce-product-recommend');
-		printf( '<div class="notice notice-error is-dismissible"><p>%s</p></div>', $message);
+		$message = __('Pro version activated, no need free version.','woocommerce-product-recommend');
+		printf( '<div class="notice notice-info is-dismissible"><p>%s</p></div>', $message);
 	}
 
 	/**
