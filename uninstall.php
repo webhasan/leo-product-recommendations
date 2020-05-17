@@ -1,6 +1,6 @@
 <?php 
 /**
- * Accomplish Uninstall / Delete woocommerce prodcut recommend data
+ * Delete woocommerce prodcut recommend data
  * 
  * @since      1.0.0
 */

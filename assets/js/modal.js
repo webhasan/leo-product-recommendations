@@ -2,147 +2,161 @@
  * jQuery wpr Modal
  */
 
-; (function ($) {
+(function ($) {
   //setup cart items in localstorage to exclude from recommendation
   function wpr_cart_items() {
     $.ajax({
-      method: 'GET',
+      method: "GET",
       url: pgfy_ajax_modal.url,
       data: {
-        action: 'pgfy_get_cart_items',
-        nonce: pgfy_ajax_modal.nonce
-      }
+        action: "pgfy_get_cart_items",
+        nonce: pgfy_ajax_modal.nonce,
+      },
     }).done(function (data) {
-      localStorage.setItem('wpr_cart_items', data);
+      localStorage.setItem("wpr_cart_items", data);
     });
   }
 
   wpr_cart_items();
 
-  $(document.body).on('added_to_cart removed_from_cart wc_fragments_refreshed', function () {
-    wpr_cart_items();
-  });
-
+  $(document.body).on(
+    "added_to_cart removed_from_cart wc_fragments_refreshed",
+    function () {
+      wpr_cart_items();
+    }
+  );
 
   //modal plugin
   $.fn.wprModal = function (options) {
-
-    var settings = $.extend({
-      action: 'open' // opton for modal open or close default: open
-    }, options);
+    var settings = $.extend(
+      {
+        action: "open", // opton for modal open or close default: open
+      },
+      options
+    );
 
     var that = this;
-
 
     // modal overlay
     var overlay = $('<div class="wpr-modal-overlay show"></div>');
 
     // opne modal
     function opneModal() {
-      var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      var scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
 
-      that.addClass('show');
+      that.addClass("show");
 
-      $('body').css('paddingRight', scrollbarWidth);
+      $("body").css("paddingRight", scrollbarWidth);
 
-      $('body').addClass('wpr-modal-opened').prepend(overlay);
+      $("body").addClass("wpr-modal-opened").prepend(overlay);
 
       setTimeout(function () {
-        that.addClass('fadeIn');
-        overlay.addClass('fadeIn');
+        that.addClass("fadeIn");
+        overlay.addClass("fadeIn");
       }, 10);
 
       return false;
     }
 
-
     // close modal
     function closeModal() {
-      that.removeClass('fadeIn');
-      $('.wpr-modal-overlay').addClass('fadeIn');
+      that.removeClass("fadeIn");
+      $(".wpr-modal-overlay").addClass("fadeIn");
 
       setTimeout(function () {
-        that.removeClass('show');
-        $('.wpr-modal-overlay').remove();
-        $('body').css('paddingRight', 0);
-        $('body').removeClass('wpr-modal-opened');
-
+        that.removeClass("show");
+        $(".wpr-modal-overlay").remove();
+        $("body").css("paddingRight", 0);
+        $("body").removeClass("wpr-modal-opened");
       }, 200);
     }
 
-
     // call modal open
-    if (settings.action === 'open') {
+    if (settings.action === "open") {
       opneModal();
     }
 
     // call modal close
-    if (settings.action === 'close') {
+    if (settings.action === "close") {
       closeModal();
     }
 
-    that.find('.wpr-modal-close, .wpr-close-modal').click(function (e) {
+    that.find(".wpr-modal-close, .wpr-close-modal").click(function (e) {
       closeModal();
       return false;
     });
 
-    $('.wpr-modal').click(function (e) {
+    $(".wpr-modal").click(function (e) {
       if (this === e.target) {
         closeModal();
       }
     });
-
   };
 
-  // call modal
-  $(document.body).on('added_to_cart', function (e, ...data) {
+  $(function () {
+    // call modal
+    $(document.body).on("added_to_cart", function (e, ...data) {
+      const [, , buttonInfo] = data;
+      var button = buttonInfo[0];
 
-    const [, , buttonInfo] = data;
-    var button = buttonInfo[0];
+      //don't show modal inside modal
+      if (!$(button).closest(".recommended-product-list").length) {
+        var buttonId = $(button).data("product_id");
+        var modalId = "#wpr-modal-" + buttonId;
+        var $modal = $(modalId);
 
+        if ($modal.length) {
+          var $preloader = $modal.find(".loading-products");
+          var $recommendProductsWrapper = $modal.find(
+            ".recommend-products-wrapper"
+          );
 
-    //don't show modal inside modal
-    if (!$(button).closest('.recommended-product-list').length) {
+          var recommendProducts = $recommendProductsWrapper.data(
+            "recommend-ids"
+          );
+          if (recommendProducts) {
+            recommendProducts = recommendProducts.toString();
+            recommendProducts = recommendProducts.split(",").map(Number);
+          }
 
-      var buttonId = $(button).data('product_id');
-      var modalId = '#wpr-modal-' + buttonId;
+          var addedProducts = localStorage.getItem("wpr_cart_items");
 
-      console.log(modalId);
+          if (addedProducts) {
+            addedProducts = addedProducts.split(",").map(Number);
+            recommendProducts = recommendProducts.filter(function (id) {
+              return addedProducts.indexOf(id) < 0;
+            });
+          }
 
-      if ($(modalId).length) {
-        var $recommendProductsWrapper = $(modalId).find('.recommend-products-wrapper');
+          // return if all recommend product are already in cart
+          if (!recommendProducts.length) return;
 
-        var recommendProducts = $recommendProductsWrapper.data('recommend-ids');
-        if (recommendProducts) {
-          recommendProducts = recommendProducts.split(',').map(Number);
-        }
+          $modal.wprModal();
+          $preloader.show();
 
-        var addedProducts = localStorage.getItem('wpr_cart_items');
-        if (addedProducts) {
-          addedProducts = addedProducts.split(',').map(Number);
-          recommendProducts = recommendProducts.filter(function (id) {
-            return addedProducts.indexOf(id) < 0;
+          $.ajax({
+            method: "GET",
+            url: pgfy_ajax_modal.url,
+            data: {
+              action: "fetch_modal_products",
+              nonce: pgfy_ajax_modal.nonce,
+              recommended_items: recommendProducts,
+              display_type: pgfy_ajax_modal.display_type,
+            },
+          }).done(function (data) {
+            $preloader.hide();
+
+            if (pgfy_ajax_modal.display_type === "slider") {
+              $(".recommended-product-slider")
+                .trigger("replace.owl.carousel", data)
+                .trigger("refresh.owl.carousel");
+            } else {
+              $recommendProductsWrapper.html(data);
+            }
           });
         }
-
-        // return if all recommend product are already in cart
-        if (!recommendProducts.length) return;
-        $(modalId).wprModal();
-
-        $.ajax({
-          method: 'GET',
-          url: pgfy_ajax_modal.url,
-          data: {
-            action: 'fetch_modal_products',
-            nonce: pgfy_ajax_modal.nonce,
-            recommended_items: recommendProducts
-          }
-        }).done(function (data) {
-          $recommendProductsWrapper.html(data);
-        });
       }
-    }
+    });
   });
-
-}(jQuery));
-
+})(jQuery);

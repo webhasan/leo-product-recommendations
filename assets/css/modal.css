@@ -110,7 +110,8 @@ body.wpr-modal-opened {
 .wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr h2.woocommerce-loop-product__title {
   font-size: 16px;
   font-weight: 400;
-  margin-bottom: 0.5407911001em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
   font-family: Arial, Helvetica, sans-serif;
 }
 .wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr .price {

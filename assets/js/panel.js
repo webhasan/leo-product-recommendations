@@ -246,33 +246,23 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
     var _useState11 = useState([]),
         _useState12 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState11, 2),
-        heading = _useState12[0],
-        setHeading = _useState12[1];
+        products = _useState12[0],
+        setProducts = _useState12[1];
 
     var _useState13 = useState([]),
         _useState14 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState13, 2),
-        products = _useState14[0],
-        setProducts = _useState14[1];
+        categories = _useState14[0],
+        setCategories = _useState14[1];
 
-    var _useState15 = useState([]),
+    var _useState15 = useState(''),
         _useState16 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState15, 2),
-        selectedProducts = _useState16[0],
-        setSelectedProducts = _useState16[1];
+        selectedCategory = _useState16[0],
+        setSelectedCategory = _useState16[1];
 
-    var _useState17 = useState([]),
+    var _useState17 = useState(''),
         _useState18 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState17, 2),
-        categories = _useState18[0],
-        setCategories = _useState18[1];
-
-    var _useState19 = useState(''),
-        _useState20 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState19, 2),
-        selectedCategory = _useState20[0],
-        setSelectedCategory = _useState20[1];
-
-    var _useState21 = useState(''),
-        _useState22 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState21, 2),
-        query = _useState22[0],
-        setQuery = _useState22[1];
+        query = _useState18[0],
+        setQuery = _useState18[1];
 
     var reorderProduct = function reorderProduct(event, previousIndex, nextIndex) {
       var reorderProducts = reorder(initialData.products, previousIndex, nextIndex);
@@ -338,11 +328,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           if (data) {
             var _products = data.products ? data.products : [];
 
-            var _heading = data.heading ? data.heading : '';
-
+            var heading = data.heading ? data.heading : '';
             setInitialData(_objectSpread({}, initialData, {
               products: _products,
-              heading: _heading
+              heading: heading
             }));
           }
 
@@ -355,7 +344,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         url: apiEndPoint,
         method: 'GET',
         data: {
-          action: 'wpr_fetch_categores'
+          action: 'wpr_fetch_categories'
         },
         success: function success(data) {
           if (data.length) {

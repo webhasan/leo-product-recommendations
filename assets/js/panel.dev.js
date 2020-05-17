@@ -50,9 +50,8 @@ import classNames from 'classnames';
 		const [page, setPage] = useState(1);
 		const [maxPage, setMaxPage] = useState(1);
 
-		const [heading, setHeading] = useState([]);
 		const [products, setProducts] = useState([]);
-		const [selectedProducts, setSelectedProducts] = useState([]);
+
 
 		const [categories, setCategories] = useState([]);
 		const [selectedCategory, setSelectedCategory] = useState('');
@@ -110,7 +109,7 @@ import classNames from 'classnames';
 					post_id: postId
 				},
 
-				success: function (data) {
+				success: function (data) {					
 					if (data) {
 						let products = data.products ? data.products : [];
 						let heading = data.heading ? data.heading : '';
@@ -127,7 +126,7 @@ import classNames from 'classnames';
 				url: apiEndPoint,
 				method: 'GET',
 				data: {
-					action: 'wpr_fetch_categores'
+					action: 'wpr_fetch_categories'
 				},
 				success: function (data) {
 					if (data.length) {
