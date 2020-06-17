@@ -3,10 +3,10 @@
  * The core plugin class
  *
  * @since      1.0.0
- * @author     Pluginsify
+ * @author     LeoCoder
  */
 
-class Pgfy_Woo_Product_Recommend
+class LC_Woo_Product_Recommendations
 {
 	/**
 	 * Inctance of class
@@ -16,7 +16,7 @@ class Pgfy_Woo_Product_Recommend
 	static protected $instance;
 
 	/**
-	 * Array of all products recommend data.
+	 * Array of all products recommendations data.
 	 *
 	 * @var instance
 	 */
@@ -35,15 +35,15 @@ class Pgfy_Woo_Product_Recommend
 	 * @var string
 	 * @since      1.0.0
 	 */
-	static protected $__FILE__PRO__ = WP_PLUGIN_DIR . '/woocommerce-product-recommend-pro/woocommerce-product-recommend-pro.php';
+	static protected $__FILE__PRO__ = WP_PLUGIN_DIR . '/woocommerce-product-recommendations-pro/woocommerce-product-recommendations-pro.php';
 
 	/**
-	 * Plugin setting id used to save setting data in option table
+	 * Plugin setting id used to save setting data
 	 *
 	 * @var string
 	 * @since      1.0.0
 	 */
-	static protected $setting_id = 'pgfy_wpr_settings';
+	static protected $setting_id = 'lc_wpr_settings';
 
 	/**
 	 * Class constructor, initialize everything
@@ -112,7 +112,7 @@ class Pgfy_Woo_Product_Recommend
 	 */
 	public function load_textdomain()
 	{
-		load_plugin_textdomain('woocommerce-product-recommend', false, dirname(plugin_basename(self::$__FILE__)) . '/languages');
+		load_plugin_textdomain('woocommerce-product-recommendations', false, dirname(plugin_basename(self::$__FILE__)) . '/languages');
 	}
 
 
@@ -144,13 +144,13 @@ class Pgfy_Woo_Product_Recommend
 
 		$wordpress_minimum_met       = version_compare($wordpress_version, $minimum_wordpress_version, '>=');
 		$woocommerce_minimum_met     = class_exists('WooCommerce') && version_compare(WC_VERSION, $minimum_woocommerce_version, '>=');
-		$php_minimum_met     = version_compare(phpversion(), $minium_php_verion, '>=');
+		$php_minimum_met     		 = version_compare(phpversion(), $minium_php_verion, '>=');
 
 		if (!$woocommerce_minimum_met) {
 			
 			$errors[] = sprintf(
 				/* translators: 1. link of plugin, 2. plugin version. */
-				__('The WooCommerce Product Recommond Pro plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'woocommerce-product-recommend'),
+				__('The WooCommerce Product Recommendations plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'woocommerce-product-recommendations'),
 				'https://wordpress.org/plugins/woocommerce/',
 				$minimum_woocommerce_version
 			);
@@ -159,7 +159,7 @@ class Pgfy_Woo_Product_Recommend
 		if (!$wordpress_minimum_met) {
 			$errors[] = sprintf(
 				/* translators: 1. link of wordpress, 2. version of WordPress. */
-				__('The WooCommerce Product Recommond Pro plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'woocommerce-product-recommend'),
+				__('The WooCommerce Product Recommendations plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'woocommerce-product-recommendations'),
 				'https://wordpress.org/',
 				$minimum_wordpress_version
 			);
@@ -168,7 +168,7 @@ class Pgfy_Woo_Product_Recommend
 		if (!$php_minimum_met) {
 			$errors[] = sprintf(
 				/* translators: 1. version of php */
-				__('The WooCommerce Product Recommond Pro plugin requires <strong>php verion %s</strong> or greater. Please update your server php version.', 'woocommerce-product-recommend'),
+				__('The WooCommerce Product Recommendations plugin requires <strong>php verion %s</strong> or greater. Please update your server php version.', 'woocommerce-product-recommendations'),
 				$minium_php_verion
 			);
 		}
@@ -207,10 +207,10 @@ class Pgfy_Woo_Product_Recommend
 	 */
 	public function admin_ajax()
 	{
-		if (!class_exists('Pgfy_Wpr_Admin_Ajax')) {
-			include_once($this->get_path('includes/class-pgfy-wpr-admin-ajax.php'));
+		if (!class_exists('LC_Wpr_Admin_Ajax')) {
+			include_once($this->get_path('includes/class-lc-wpr-admin-ajax.php'));
 		}
-		new Pgfy_Wpr_Admin_Ajax();
+		new LC_Wpr_Admin_Ajax();
 	}
 
 	/**
@@ -230,11 +230,11 @@ class Pgfy_Woo_Product_Recommend
 		add_action('wp_ajax_fetch_modal_products', array($this, 'fetch_modal_products'));
 		add_action('wp_ajax_nopriv_fetch_modal_products', array($this, 'fetch_modal_products'));
 
-		add_action('wp_ajax_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
-		add_action('wp_ajax_nopriv_pgfy_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
+		add_action('wp_ajax_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
+		add_action('wp_ajax_nopriv_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 
-		add_action('wp_ajax_pgfy_get_cart_items', array($this, 'get_cart_items'));
-		add_action('wp_ajax_nopriv_pgfy_get_cart_items', array($this, 'get_cart_items'));
+		add_action('wp_ajax_lc_get_cart_items', array($this, 'get_cart_items'));
+		add_action('wp_ajax_nopriv_lc_get_cart_items', array($this, 'get_cart_items'));
 
 		add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
 
@@ -269,17 +269,17 @@ class Pgfy_Woo_Product_Recommend
 		$display_type = ($this->is_pro_activated() && !empty($settings['display_type'])) ? $settings['display_type'] : 'grid';
 
 		wp_enqueue_script('wpr-modal', $this->get_url('assets/js/modal.js'), array('jquery'), false, true);
-		wp_localize_script('wpr-modal', 'pgfy_ajax_modal', array(
+		wp_localize_script('wpr-modal', 'lc_ajax_modal', array(
 			'url' => admin_url('admin-ajax.php'),
-			'nonce' => wp_create_nonce('pgfy-ajax-modal'),
+			'nonce' => wp_create_nonce('lc-ajax-modal'),
 			'display_type' => $display_type
 		));
 
 		if (is_product()) {
 			wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.js'), array('jquery', 'wp-i18n'), false, true);
-			wp_localize_script('wpr-ajax-add-to-cart', 'pgfy_ajax', array(
+			wp_localize_script('wpr-ajax-add-to-cart', 'lc_ajax', array(
 				'url' => admin_url('admin-ajax.php'),
-				'nonce' => wp_create_nonce('pgfy-add-to-cart')
+				'nonce' => wp_create_nonce('lc-add-to-cart')
 			));
 		}
 
@@ -298,15 +298,15 @@ class Pgfy_Woo_Product_Recommend
 	public function add_meta_boxes()
 	{
 		add_meta_box(
-			'plfy_prodcut_selection',
-			__('Recommend Products', 'woocommerce-product-recommend'),
+			'lc_pr_prodcut_selection',
+			__('Product Recommendations', 'woocommerce-product-recommendations'),
 			array($this, 'product_selection'),
 			array('product')
 		);
 	}
 
 	/**
-	 * Include Products Recommend Panel
+	 * Include Products Recommendations Panel
 	 * 
 	 * @since      1.0.0
 	 * @return void
@@ -384,8 +384,8 @@ class Pgfy_Woo_Product_Recommend
 	 */
 	public function on_save_post($id)
 	{
-		if (isset($_POST['_pgfy_pr_data'])) {
-			update_post_meta($id, '_pgfy_pr_data', $_POST['_pgfy_pr_data']);
+		if (isset($_POST['_lc_wpr_data'])) {
+			update_post_meta($id, '_lc_wpr_data', $_POST['_lc_wpr_data']);
 		}
 	}
 
@@ -398,7 +398,7 @@ class Pgfy_Woo_Product_Recommend
 
 	public function fetch_modal_products()
 	{
-		include($this->get_templates_path('templates/template-recommend-products.php'));
+		include($this->get_templates_path('templates/template-recommendations-products.php'));
 	}
 
 	/**
@@ -410,12 +410,12 @@ class Pgfy_Woo_Product_Recommend
 	public function ajax_add_to_cart()
 	{
 
-		if ($_REQUEST['data'] && $_REQUEST['nonce'] && wp_verify_nonce($_REQUEST['nonce'], 'pgfy-add-to-cart')) {
-			if (!class_exists('Pgfy_Ajax_Add_To_Cart')) {
-				include($this->get_path('includes/class-pgfy-ajax-add-to-cart.php'));
+		if ($_REQUEST['data'] && $_REQUEST['nonce'] && wp_verify_nonce($_REQUEST['nonce'], 'lc-add-to-cart')) {
+			if (!class_exists('LC_Ajax_Add_To_Cart')) {
+				include($this->get_path('includes/class-lc-ajax-add-to-cart.php'));
 			}
 
-			new Pgfy_Ajax_Add_To_Cart($_REQUEST['data']);
+			new LC_Ajax_Add_To_Cart($_REQUEST['data']);
 		} else {
 			wp_send_json_error(array('message' => 'Bad request'), 400);
 		}
@@ -460,13 +460,13 @@ class Pgfy_Woo_Product_Recommend
 	}
 
 	/**
-	 * Get recommend product heading
+	 * Get recommendation products modal heading
 	 *
 	 * @param int $product_id
-	 * @return string heading of recommend product
+	 * @return string heading of recommendation products
 	 * @since   1.0.0
 	 */
-	public function get_recommend_products_heading($product_id)
+	public function get_recommendation_products_heading($product_id)
 	{
 		$pr_data = $this->get_pr_data($product_id);
 		$heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
@@ -496,13 +496,13 @@ class Pgfy_Woo_Product_Recommend
 	}
 
 	/**
-	 * Array of recommend product ids
+	 * Array of recommendation product ids
 	 *
 	 * @param int $product_id
-	 * @return array array of recommend products ids
+	 * @return array array of recommendation products ids
 	 * @since      1.0.0
 	 */
-	public function get_recommend_products_id($product_id)
+	public function get_recommendation_products_id($product_id)
 	{
 		$data = $this->get_pr_data($product_id);
 		$recommended_products_ids = array();
@@ -668,11 +668,11 @@ class Pgfy_Woo_Product_Recommend
 
 		if ($this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version only support menual selection
 
-			$modal_heading = $this->get_recommend_products_heading($product_id);
-			$recommended_products_ids = $this->get_recommend_products_id($product_id);
+			$modal_heading = $this->get_recommendation_products_heading($product_id);
+			$recommendation_products_ids = $this->get_recommendation_products_id($product_id);
 
-			if (!empty($recommended_products_ids)) {
-				add_action('wp_footer', function () use ($product_id, $modal_heading, $recommended_products_ids) {
+			if (!empty($recommendation_products_ids)) {
+				add_action('wp_footer', function () use ($product_id, $modal_heading, $recommendation_products_ids) {
 					include($this->get_templates_path('templates/template-modal.php'));
 				});
 			}
@@ -695,10 +695,10 @@ class Pgfy_Woo_Product_Recommend
 
 
 		if ($this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version only support menual selection
-			$modal_heading = $this->get_recommend_products_heading($product_id);
-			$recommended_products_ids = $this->get_recommend_products_id($product_id);
+			$modal_heading = $this->get_recommendation_products_heading($product_id);
+			$recommendation_products_ids = $this->get_recommendation_products_id($product_id);
 
-			if (!empty($recommended_products_ids)) {
+			if (!empty($recommendation_products_ids)) {
 				include($this->get_templates_path('templates/template-modal.php'));
 			}
 		endif;
@@ -713,11 +713,11 @@ class Pgfy_Woo_Product_Recommend
 		$product_id = $product->get_id();
 
 		if ($this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version only support menu selection
-			$modal_heading = $this->get_recommend_products_heading($product_id);
-			$recommended_products_ids = $this->get_recommend_products_id($product_id);
+			$modal_heading = $this->get_recommendation_products_heading($product_id);
+			$recommendation_products_ids = $this->get_recommendation_products_id($product_id);
 
-			if (!empty($recommended_products_ids)) {
-				add_action('wp_footer', function () use ($product_id, $modal_heading, $recommended_products_ids) {
+			if (!empty($recommendation_products_ids)) {
+				add_action('wp_footer', function () use ($product_id, $modal_heading, $recommendation_products_ids) {
 					include($this->get_templates_path('templates/template-modal.php'));
 				});
 			}
@@ -728,7 +728,7 @@ class Pgfy_Woo_Product_Recommend
 
 	public function nonce_fix($uid = 0, $action = '')
 	{
-		$nonce_actions = array('pgfy-ajax-modal', 'pgfy-add-to-cart');
+		$nonce_actions = array('lc-ajax-modal', 'lc-add-to-cart');
 		if (in_array($action, $nonce_actions)) {
 			return 0;
 		}
@@ -808,18 +808,18 @@ class Pgfy_Woo_Product_Recommend
 	 */
 	public function is_pro_activated()
 	{
-		return class_exists('Pgfy_Woo_Product_Recommend_Pro');
+		return class_exists('LC_Woo_Product_Recommendations_Pro');
 	}
 
 	/**
-	 * Get prodcut recomemnd meta
+	 * Get prodcut recommendation meta data
 	 * @since      1.0.0
-	 * @return object post meta of _pgfy_pr_data
+	 * @return object post meta of _lc_wpr_data
 	 */
 	public static function get_pr_data($id)
 	{
 		if (!isset(self::$pr_meta[$id])) {
-			self::$pr_meta[$id] = get_post_meta($id, '_pgfy_pr_data', true);
+			self::$pr_meta[$id] = get_post_meta($id, '_lc_wpr_data', true);
 		}
 
 		return self::$pr_meta[$id];

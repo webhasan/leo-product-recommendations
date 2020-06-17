@@ -98,7 +98,7 @@ body.wpr-modal-opened {
         flex-direction: column;
         outline: 0;
 
-        ul.recommended-product-list li.single-wpr {
+        ul.recommendation-product-list li.single-wpr {
             list-style: none;
             text-align: center;
             display: block;
@@ -228,12 +228,12 @@ body.wpr-modal-opened {
 
     }
 
-    .recommended-product-list .single-wpr {
+    .recommendation-product-list .single-wpr {
         flex: 0 0 50%;
         width: 50%;
     }
 
-    ul.recommended-product-list {
+    ul.recommendation-product-list {
         overflow: hidden;
         margin-left: -20px;
         margin-right: -20px;
@@ -261,11 +261,13 @@ body.wpr-modal-opened {
         background-color: #f5f5f5;
 
         svg {
+            fill: #46C28E;
+            color: #46C28E;
             width: 16px;
             height: 16px;
             display: inline-block;
-            margin-left: -23px;
-            vertical-align: middle;
+            margin-left: -25px;
+            vertical-align: text-top;
         }
 
         .wpr-notification-text {
@@ -279,7 +281,6 @@ body.wpr-modal-opened {
             box-shadow: none;
             text-decoration: none;
             border-radius: 0;
-            color: $wpr_message_bg;
             color: $wpr_message_bg;
             transition: .4s ease-in;
 
@@ -299,7 +300,7 @@ body.wpr-modal-opened {
 
                 .wpr-modal-content {
                     .wpr-modal-body {
-                        ul.recommended-product-list li.single-wpr {
+                        ul.recommendation-product-list li.single-wpr {
 
                             flex: 0 0 calc(50% - 11px);
                             width: calc(50% - 11px);
@@ -331,7 +332,7 @@ body.wpr-modal-opened {
 
                 .wpr-modal-content {
                     .wpr-modal-body {
-                        ul.recommended-product-list li.single-wpr {
+                        ul.recommendation-product-list li.single-wpr {
 
                             flex: 0 0 calc(33.333333% - 14px);
                             width: calc(33.333333% - 14px);
@@ -361,7 +362,7 @@ body.wpr-modal-opened {
 
                 .wpr-modal-content {
                     .wpr-modal-body {
-                        ul.recommended-product-list li.single-wpr {
+                        ul.recommendation-product-list li.single-wpr {
                             flex: 0 0 calc(25% - 16px);
                             width: calc(25% - 16px);
 
@@ -495,6 +496,6 @@ body.wpr-modal-opened {
 
 
 /** divi fix **/
-body.theme-Divi .wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr a.button:after {
+body.theme-Divi .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:after {
     line-height: 1.7em;
 }

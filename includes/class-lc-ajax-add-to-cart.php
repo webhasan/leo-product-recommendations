@@ -3,7 +3,7 @@
 /**
  * Class for handeling single page ajax add to cart product
  */
-class Pgfy_Ajax_Add_To_Cart
+class LC_Ajax_Add_To_Cart
 {
 
 	private $data = array();

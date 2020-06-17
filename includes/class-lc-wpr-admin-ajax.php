@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Class for handeling all admin ajax related task
+ * Class for handeling all admin ajax request
  */
 
-class Pgfy_Wpr_Admin_Ajax
+class LC_Wpr_Admin_Ajax
 {
     /**
      * Class constructor
@@ -27,7 +27,7 @@ class Pgfy_Wpr_Admin_Ajax
     }
 
     /**
-     * Fetch Product Meta and Recommend Products, etc 
+     * Fetch Product meta, recommendation products, etc 
      * 
      * @since      1.0.0
      */
@@ -37,11 +37,24 @@ class Pgfy_Wpr_Admin_Ajax
         // post ID 
         $post_id = $_GET['post_id'];
 
-        if (!metadata_exists('post', $post_id, '_pgfy_pr_data')) {
+        if (!metadata_exists('post', $post_id, '_lc_wpr_data')) {
             wp_send_json(null);
         }
 
-        $data = get_post_meta($post_id, '_pgfy_pr_data', true);
+        $data = get_post_meta($post_id, '_lc_wpr_data', true);
+
+        if (!empty($data['heading'])) {
+
+            $html_permission = array(
+                'span' => array('class'),
+                'b'    => array(),
+                'strong' => array(),
+                'i'    => array(),
+                'br'   => array(),
+            );
+            
+            $data['heading'] = wp_kses($data['heading'], $html_permission);
+        }
 
 
         if (!empty($data['products'])) {

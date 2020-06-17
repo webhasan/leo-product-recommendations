@@ -7,10 +7,10 @@
   function wpr_cart_items() {
     $.ajax({
       method: "GET",
-      url: pgfy_ajax_modal.url,
+      url: lc_ajax_modal.url,
       data: {
-        action: "pgfy_get_cart_items",
-        nonce: pgfy_ajax_modal.nonce,
+        action: "lc_get_cart_items",
+        nonce: lc_ajax_modal.nonce,
       },
     }).done(function (data) {
       localStorage.setItem("wpr_cart_items", data);
@@ -101,58 +101,58 @@
       var button = buttonInfo[0];
 
       //don't show modal inside modal
-      if (!$(button).closest(".recommended-product-list").length) {
+      if (!$(button).closest(".recommendation-product-list").length) {
         var buttonId = $(button).data("product_id");
         var modalId = "#wpr-modal-" + buttonId;
         var $modal = $(modalId);
 
         if ($modal.length) {
           var $preloader = $modal.find(".loading-products");
-          var $recommendProductsWrapper = $modal.find(
-            ".recommend-products-wrapper"
+          var $recommendationProductsWrapper = $modal.find(
+            ".recommendation-products-wrapper"
           );
 
-          var recommendProducts = $recommendProductsWrapper.data(
-            "recommend-ids"
-          );
-          if (recommendProducts) {
-            recommendProducts = recommendProducts.toString();
-            recommendProducts = recommendProducts.split(",").map(Number);
+          var recommendationProducts = $recommendationProductsWrapper.data("recommendation-ids");
+
+
+          if (recommendationProducts) {
+            recommendationProducts = recommendationProducts.toString();
+            recommendationProducts = recommendationProducts.split(",").map(Number);
           }
 
           var addedProducts = localStorage.getItem("wpr_cart_items");
 
           if (addedProducts) {
             addedProducts = addedProducts.split(",").map(Number);
-            recommendProducts = recommendProducts.filter(function (id) {
+            recommendationProducts = recommendationProducts.filter(function (id) {
               return addedProducts.indexOf(id) < 0;
             });
           }
 
-          // return if all recommend product are already in cart
-          if (!recommendProducts.length) return;
+          // return if all recommendation product are already in cart
+          if (!recommendationProducts.length) return;
 
           $modal.wprModal();
           $preloader.show();
 
           $.ajax({
             method: "GET",
-            url: pgfy_ajax_modal.url,
+            url: lc_ajax_modal.url,
             data: {
               action: "fetch_modal_products",
-              nonce: pgfy_ajax_modal.nonce,
-              recommended_items: recommendProducts,
-              display_type: pgfy_ajax_modal.display_type,
+              nonce: lc_ajax_modal.nonce,
+              recommendation_items: recommendationProducts,
+              display_type: lc_ajax_modal.display_type,
             },
           }).done(function (data) {
             $preloader.hide();
 
-            if (pgfy_ajax_modal.display_type === "slider") {
-              $(".recommended-product-slider")
+            if (lc_ajax_modal.display_type === "slider") {
+              $(".recommendation-product-slider")
                 .trigger("replace.owl.carousel", data)
                 .trigger("refresh.owl.carousel");
             } else {
-              $recommendProductsWrapper.html(data);
+              $recommendationProductsWrapper.html(data);
             }
           });
         }

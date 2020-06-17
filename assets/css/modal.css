@@ -79,7 +79,7 @@ body.wpr-modal-opened {
   flex-direction: column;
   outline: 0;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
   list-style: none;
   text-align: center;
   display: block;
@@ -95,41 +95,41 @@ body.wpr-modal-opened {
   font-size: 14px;
   line-height: 22.5px;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr .star-rating {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr .star-rating {
   margin: auto auto 1em !important;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr:last-child {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr:last-child {
   margin-right: 0 !important;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr > a {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr > a {
   text-decoration: none;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr > a:hover {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr > a:hover {
   text-decoration: none;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr h2.woocommerce-loop-product__title {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr h2.woocommerce-loop-product__title {
   font-size: 16px;
   font-weight: 400;
   margin-top: 0;
   margin-bottom: 0.5em;
   font-family: Arial, Helvetica, sans-serif;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr .price {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr .price {
   display: block;
   color: #43454b;
   font-weight: 400;
   margin-bottom: 16px;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr .onsale {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr .onsale {
   font-size: 0.875em;
   text-transform: uppercase;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr a.button {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button {
   font-size: 14px;
   font-weight: bold;
 }
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr a.button:before,
-.wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr a.button:after {
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:before,
+.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:after {
   font-size: 14px;
 }
 .wpr-modal .wpr-modal-head {
@@ -187,11 +187,11 @@ body.wpr-modal-opened {
   border: 1px solid #e6e6e6;
   margin-bottom: 22px;
 }
-.wpr-modal .recommended-product-list .single-wpr {
+.wpr-modal .recommendation-product-list .single-wpr {
   flex: 0 0 50%;
   width: 50%;
 }
-.wpr-modal ul.recommended-product-list {
+.wpr-modal ul.recommendation-product-list {
   overflow: hidden;
   margin-left: -20px;
   margin-right: -20px;
@@ -217,11 +217,13 @@ body.wpr-modal-opened {
   background-color: #f5f5f5;
 }
 .wpr-modal .wpr-message svg {
+  fill: #46C28E;
+  color: #46C28E;
   width: 16px;
   height: 16px;
   display: inline-block;
-  margin-left: -23px;
-  vertical-align: middle;
+  margin-left: -25px;
+  vertical-align: text-top;
 }
 .wpr-modal .wpr-message .wpr-notification-text {
   margin-right: 10px;
@@ -234,7 +236,6 @@ body.wpr-modal-opened {
   text-decoration: none;
   border-radius: 0;
   color: #46C28E;
-  color: #46C28E;
   transition: 0.4s ease-in;
 }
 .wpr-modal .wpr-message a.wpr-cart-button:hover {
@@ -242,12 +243,12 @@ body.wpr-modal-opened {
 }
 
 @media (min-width: 421px) {
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr {
     flex: 0 0 calc(50% - 11px);
     width: calc(50% - 11px);
     margin-right: 20px !important;
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:last-child {
     margin-right: 0 !important;
   }
 }
@@ -255,14 +256,14 @@ body.wpr-modal-opened {
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog, .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
     width: 720px;
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr {
     flex: 0 0 calc(33.333333% - 14px);
     width: calc(33.333333% - 14px);
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(2n+2) {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:nth-child(2n+2), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:nth-child(2n+2) {
     margin-right: 20px !important;
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:last-child, .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:nth-child(3n+3), .wpr-modal.wpr-modal-3 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:last-child {
     margin-right: 0 !important;
   }
 }
@@ -270,14 +271,14 @@ body.wpr-modal-opened {
   .wpr-modal.wpr-modal-4 .wpr-modal-dialog {
     width: 960px;
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr {
     flex: 0 0 calc(25% - 16px);
     width: calc(25% - 16px);
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(3n+3) {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:nth-child(3n+3) {
     margin-right: 20px !important;
   }
-  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:nth-child(4n+4), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommended-product-list li.single-wpr:last-child {
+  .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:nth-child(4n+4), .wpr-modal.wpr-modal-4 .wpr-modal-dialog .wpr-modal-content .wpr-modal-body ul.recommendation-product-list li.single-wpr:last-child {
     margin-right: 0 !important;
   }
   .wpr-modal.wpr-modal-3 .wpr-modal-dialog {
@@ -375,7 +376,7 @@ body.wpr-modal-opened {
   }
 }
 /** divi fix **/
-body.theme-Divi .wpr-modal .wpr-modal-content ul.recommended-product-list li.single-wpr a.button:after {
+body.theme-Divi .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:after {
   line-height: 1.7em;
 }
 

@@ -1,8 +1,8 @@
 <?php
 $nonce = $_GET['nonce'];
-$recommenede_products = $_GET['recommended_items'];
+$recommendation_products = $_GET['recommendation_items'];
 
-if (!isset($nonce) || !wp_verify_nonce($nonce, 'pgfy-ajax-modal') || !isset($recommenede_products)) {
+if (!isset($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || !isset($recommendation_products)) {
     wp_send_json_error(array('message' => 'Bad request'), 400);
 }
 
@@ -10,7 +10,7 @@ if (!isset($nonce) || !wp_verify_nonce($nonce, 'pgfy-ajax-modal') || !isset($rec
 $args = array(
     'post_type' => 'product',
     'posts_per_page' => -1,
-    'post__in' =>  $recommenede_products,
+    'post__in' =>  $recommendation_products,
     'orderby'   => 'post__in'
 );
 
@@ -19,7 +19,7 @@ $loop = new WP_Query($args);
 if ($loop->have_posts()) : while ($loop->have_posts()) : $loop->the_post();
 ?>
         <li class="product single-wpr">
-            <?php do_action('wpr_before_recommended_prodcut', get_the_ID()); ?>
+            <?php do_action('wpr_before_recommendation_prodcut', get_the_ID()); ?>
 
             <a href="<?php the_permalink(); ?>">
                 <?php
@@ -36,7 +36,7 @@ if ($loop->have_posts()) : while ($loop->have_posts()) : $loop->the_post();
                 ]');
             ?>
 
-            <?php do_action('wpr_after_recommended_prodcut', get_the_ID()); ?>
+            <?php do_action('wpr_after_recommendation_prodcut', get_the_ID()); ?>
         </li>
 <?php endwhile;
     wp_reset_postdata();

@@ -28,7 +28,7 @@
                 data += '&add-to-cart=' + dataObject.product_id;
             }
 
-            // recommend products mdoal
+            // recommendation products mdoal
             var $targetMdoal = $('#wpr-modal-' + dataObject.product_id);
 
             if($targetMdoal.length) {
@@ -42,19 +42,14 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: pgfy_ajax.url,
+                    url: lc_ajax.url,
                     data: {
-                        action: 'pgfy_ajax_add_to_cart',
-                        nonce: pgfy_ajax.nonce,
+                        action: 'lc_ajax_add_to_cart',
+                        nonce: lc_ajax.nonce,
                         data: data
                     }
                 }).done(function(response) {
                     if(response.success === true) {
-                        // thinking about this
-                        // $modalHeading  = $('<div class="wpr-message">' + icon + response.data.message + '</div>');
-                        // $modalHeading.find('a').removeClass().addClass(' wpr-cart-button').html('View cart →'); 
-                        // $targetMdoal.find('.wpr-message').replaceWith($modalHeading);
-
                         $( document.body ).trigger( 'added_to_cart', [ response.data.fragments, response.data.cart_hash, $submitButton ] );
                         $submitButton.addClass('added').removeClass('loading');
 
@@ -62,7 +57,7 @@
                         alert(response.data.message);
                         $submitButton.removeClass('loading');
                     }else {
-                        alert(__('Something went wrong','woocommerce-product-recommend'));
+                        alert(__('Something went wrong','woocommerce-product-recommendations'));
                         location.reload(); 
                     }
      

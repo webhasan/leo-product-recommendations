@@ -1,5 +1,5 @@
 import Reorder from 'react-reorder';
-import { buildTermsTree } from './panel/tree';
+import { buildTermsTree } from './functions/tree';
 import { TreeSelect } from '@wordpress/components';
 import { DebounceInput } from 'react-debounce-input';
 import classNames from 'classnames';
@@ -169,20 +169,20 @@ import classNames from 'classnames';
 		}, [page, selectedCategory, query]);
 
 		return (
-			<div className="pgfy-recommend-product">
+			<div className="lc-recommendation-product">
 				
-				{!facedData && <span className="pgfy-recommend-product-prelaoder">{<LoadingIcon />}</span>}
+				{!facedData && <span className="lc-recommendation-product-prelaoder">{<LoadingIcon />}</span>}
 
-				<div className="recommend-prodcut-options-wrap" style={opacity}>
+				<div className="recommendation-prodcut-options-wrap" style={opacity}>
 					<div className="pr-field">
-						<input type="hidden" name="_pgfy_pr_data[type]" value={type} />
+						<input type="hidden" name="_lc_wpr_data[type]" value={type} />
 
-						<div className="rp-panel-title">{__('Recommend Products Heading', 'woocommerce-product-recommend')}</div>
-						<p><input type="text" name="_pgfy_pr_data[heading]" value={initialData.heading} onChange={(e) => setInitialData({ ...initialData, heading: e.target.value })} /></p>
+						<div className="rp-panel-title">{__('Recommendation Heading', 'woocommerce-product-recommendation')}</div>
+						<p><input type="text" name="_lc_wpr_data[heading]" value={initialData.heading} onChange={(e) => setInitialData({ ...initialData, heading: e.target.value })} /></p>
 					</div>
 
 					<div className="pr-field">
-						<div className="rp-panel-title">{__('Select Products', 'woocommerce-product-recommend')}</div>
+						<div className="rp-panel-title">{__('Select Products', 'woocommerce-product-recommendation')}</div>
 						<div className="product-selection-panel">
 							<div className="product-filter">
 								<div className="search">
@@ -193,14 +193,14 @@ import classNames from 'classnames';
 											setQuery(event.target.value);
 											setPage(1);
 										}}
-										placeholder={__('Search...', 'woocommerce-product-recommend')}
+										placeholder={__('Search...', 'woocommerce-product-recommendation')}
 									/>
 								</div>
 
 								<div className="category-filter">
 									<TreeSelect
 										// label="All Category"
-										noOptionLabel={__('All Categories', 'woocommerce-product-recommend')}
+										noOptionLabel={__('All Categories', 'woocommerce-product-recommendation')}
 										onChange={value => {
 											setSelectedCategory(value);
 											setPage(1);
@@ -217,7 +217,7 @@ import classNames from 'classnames';
 									<ul onScroll={handleScroll}>
 										{!fetchingPosts && !selectAble(products).length &&
 											<li className="disabled">
-												<span className="single-list"> {__('Not found selectable product', 'woocommerce-product-recommend')}</span>
+												<span className="single-list"> {__('Not found selectable product', 'woocommerce-product-recommendation')}</span>
 											</li>
 										}
 
@@ -258,7 +258,7 @@ import classNames from 'classnames';
 									>
 										{initialData.products.map(product => (
 											<li key={product.id}>
-												<input type="hidden" name="_pgfy_pr_data[products][]" value={product.id} />
+												<input type="hidden" name="_lc_wpr_data[products][]" value={product.id} />
 												<span className="single-list" data-id="10">
 													<div className="thumb">
 														<img src={!!product.feature_image ? product.feature_image : ''} alt="" />

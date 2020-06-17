@@ -86,6 +86,65 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./assets/js/functions/tree.js":
+/*!*************************************!*\
+  !*** ./assets/js/functions/tree.js ***!
+  \*************************************/
+/*! exports provided: buildTermsTree */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildTermsTree", function() { return buildTermsTree; });
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * External dependencies
+ */
+
+/**
+ * Returns terms in a tree form.
+ *
+ * @param {Array} flatTerms  Array of terms in flat format.
+ *
+ * @return {Array} Array of terms in tree format.
+ */
+
+function buildTermsTree(flatTerms) {
+  var flatTermsWithParentAndChildren = flatTerms.map(function (term) {
+    return _objectSpread({
+      children: [],
+      parent: null
+    }, term);
+  });
+  var termsByParent = Object(lodash__WEBPACK_IMPORTED_MODULE_1__["groupBy"])(flatTermsWithParentAndChildren, 'parent');
+
+  if (termsByParent.null && termsByParent.null.length) {
+    return flatTermsWithParentAndChildren;
+  }
+
+  var fillWithChildren = function fillWithChildren(terms) {
+    return terms.map(function (term) {
+      var children = termsByParent[term.id];
+      return _objectSpread({}, term, {
+        children: children && children.length ? fillWithChildren(children) : []
+      });
+    });
+  };
+
+  return fillWithChildren(termsByParent['0'] || []);
+}
+
+/***/ }),
+
 /***/ "./assets/js/panel.dev.js":
 /*!********************************!*\
   !*** ./assets/js/panel.dev.js ***!
@@ -105,7 +164,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var react_reorder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-reorder */ "./node_modules/react-reorder/src/index.js");
 /* harmony import */ var react_reorder__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_reorder__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _panel_tree__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./panel/tree */ "./assets/js/panel/tree.js");
+/* harmony import */ var _functions_tree__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./functions/tree */ "./assets/js/functions/tree.js");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var react_debounce_input__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-debounce-input */ "./node_modules/react-debounce-input/lib/index.js");
@@ -386,23 +445,23 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       });
     }, [page, selectedCategory, query]);
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
-      className: "pgfy-recommend-product"
+      className: "lc-recommendation-product"
     }, !facedData && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("span", {
-      className: "pgfy-recommend-product-prelaoder"
+      className: "lc-recommendation-product-prelaoder"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(LoadingIcon, null)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
-      className: "recommend-prodcut-options-wrap",
+      className: "recommendation-prodcut-options-wrap",
       style: opacity
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "pr-field"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("input", {
       type: "hidden",
-      name: "_pgfy_pr_data[type]",
+      name: "_lc_wpr_data[type]",
       value: type
     }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "rp-panel-title"
-    }, __('Recommend Products Heading', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("input", {
+    }, __('Recommendation Heading', 'woocommerce-product-recommendation')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("input", {
       type: "text",
-      name: "_pgfy_pr_data[heading]",
+      name: "_lc_wpr_data[heading]",
       value: initialData.heading,
       onChange: function onChange(e) {
         return setInitialData(_objectSpread({}, initialData, {
@@ -413,7 +472,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       className: "pr-field"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "rp-panel-title"
-    }, __('Select Products', 'woocommerce-product-recommend')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
+    }, __('Select Products', 'woocommerce-product-recommendation')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "product-selection-panel"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "product-filter"
@@ -426,18 +485,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         setQuery(event.target.value);
         setPage(1);
       },
-      placeholder: __('Search...', 'woocommerce-product-recommend')
+      placeholder: __('Search...', 'woocommerce-product-recommendation')
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "category-filter"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__["TreeSelect"] // label="All Category"
     , {
-      noOptionLabel: __('All Categories', 'woocommerce-product-recommend'),
+      noOptionLabel: __('All Categories', 'woocommerce-product-recommendation'),
       onChange: function onChange(value) {
         setSelectedCategory(value);
         setPage(1);
       },
       selectedId: selectedCategory,
-      tree: Object(_panel_tree__WEBPACK_IMPORTED_MODULE_5__["buildTermsTree"])(categories)
+      tree: Object(_functions_tree__WEBPACK_IMPORTED_MODULE_5__["buildTermsTree"])(categories)
     }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "product-selection"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
@@ -448,7 +507,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       className: "disabled"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("span", {
       className: "single-list"
-    }, " ", __('Not found selectable product', 'woocommerce-product-recommend'))), !!products.length && selectAble(products).map(function (product) {
+    }, " ", __('Not found selectable product', 'woocommerce-product-recommendation'))), !!products.length && selectAble(products).map(function (product) {
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("li", {
         key: product.id,
         className: classnames__WEBPACK_IMPORTED_MODULE_8___default()({
@@ -490,7 +549,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         key: product.id
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("input", {
         type: "hidden",
-        name: "_pgfy_pr_data[products][]",
+        name: "_lc_wpr_data[products][]",
         value: product.id
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("span", {
         className: "single-list",
@@ -517,65 +576,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
   React.render(Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(SelectProduct, null), app);
 })(wp.element, wp.i18n.__, jQuery, document.getElementById('pr-app'), react_reorder__WEBPACK_IMPORTED_MODULE_4___default.a);
-
-/***/ }),
-
-/***/ "./assets/js/panel/tree.js":
-/*!*********************************!*\
-  !*** ./assets/js/panel/tree.js ***!
-  \*********************************/
-/*! exports provided: buildTermsTree */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildTermsTree", function() { return buildTermsTree; });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-/**
- * External dependencies
- */
-
-/**
- * Returns terms in a tree form.
- *
- * @param {Array} flatTerms  Array of terms in flat format.
- *
- * @return {Array} Array of terms in tree format.
- */
-
-function buildTermsTree(flatTerms) {
-  var flatTermsWithParentAndChildren = flatTerms.map(function (term) {
-    return _objectSpread({
-      children: [],
-      parent: null
-    }, term);
-  });
-  var termsByParent = Object(lodash__WEBPACK_IMPORTED_MODULE_1__["groupBy"])(flatTermsWithParentAndChildren, 'parent');
-
-  if (termsByParent.null && termsByParent.null.length) {
-    return flatTermsWithParentAndChildren;
-  }
-
-  var fillWithChildren = function fillWithChildren(terms) {
-    return terms.map(function (term) {
-      var children = termsByParent[term.id];
-      return _objectSpread({}, term, {
-        children: children && children.length ? fillWithChildren(children) : []
-      });
-    });
-  };
-
-  return fillWithChildren(termsByParent['0'] || []);
-}
 
 /***/ }),
 
