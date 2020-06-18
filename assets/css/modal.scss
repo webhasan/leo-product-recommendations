@@ -5,14 +5,14 @@
 $base_class: wpr-modal;
 $overlay_class: wpr-modal-overlay;
 
-$small_modal: 500px;
-$medium_modal: 750px;
-$large_modal: 1000px;
+$sm-modal: 600px;
+$md-modal: 720px;
+$lg-modal: 960px;
+$xl-modal: 1000px;
 
-$xm-media: 421px;
-$md-media: 768px;
-$lg-media: 992px;
-$xl-media: 1200px;
+$sm-media: 767px;
+$md-media: 991px;
+$lg-media: 1199px;
 
 $wpr_message_bg: #46C28E;
 
@@ -78,7 +78,20 @@ body.wpr-modal-opened {
         margin: .5rem;
         margin-top: 0;
         transform: translate(0, -50px);
-        width: calc(100% - 30px);
+        width: $xl-modal;
+        max-width: calc(100% - 30px);
+
+        @media screen and (max-width: $lg-media) {
+            width: $lg-modal;
+        }
+
+        @media screen and (max-width: $md-media) {
+            width: $md-modal;
+        }
+
+        @media screen and (max-width:  $sm-media) {
+            width: $sm-modal;
+        }
     }
 
     &.show.fadeIn .wpr-modal-dialog {
@@ -106,20 +119,51 @@ body.wpr-modal-opened {
             position: relative;
             margin-left: 0 !important;
             margin-right: 0 !important;
-            width: 100%;
-            flex: 0 0 100%;
+            flex: 0 0 calc(25% - 16px);
+            width: calc(25% - 16px);
+            margin-right: 20px !important;
             box-sizing: border-box;
             text-align: center;
             margin-bottom: 40px;
             font-size: 14px;
             line-height: 22.5px;
 
-            .star-rating {
-                margin: auto auto 1em !important;
+            &:nth-child(4n+4) {
+                margin-right: 0 !important;
             }
 
-            &:last-child {
-                margin-right: 0 !important;
+            @media screen and (max-width: $md-media) {
+                flex: 0 0 calc(33.333333% - 14px);
+                width: calc(33.333333% - 14px);
+
+                &:nth-child(4n+4) {
+                    margin-right: 20px !important;
+                }
+
+                &:nth-child(3n+3) {
+                    margin-right: 0 !important;
+                }
+            }
+
+            @media screen and (max-width:  $sm-media) {
+                flex: 0 0 calc(50% - 11px);
+                width: calc(50% - 11px);
+
+                &:nth-child(4n+4) {
+                    margin-right: 20px !important;
+                }
+
+                &:nth-child(3n+3) {
+                    margin-right: 20px !important;
+                }
+
+                &:nth-child(2n+2) {
+                    margin-right: 0 !important;
+                }
+            }
+
+            .star-rating {
+                margin: auto auto 1em !important;
             }
 
             &>a {
@@ -219,7 +263,7 @@ body.wpr-modal-opened {
         position: relative;
         -ms-flex: 1 1 auto;
         flex: 1 1 auto;
-        padding: 1em 2.5em 1em;
+        padding: 16px 20px;
 
         ul li img {
 			border: 1px solid #e6e6e6;
@@ -235,8 +279,6 @@ body.wpr-modal-opened {
 
     ul.recommendation-product-list {
         overflow: hidden;
-        margin-left: -20px;
-        margin-right: -20px;
         display: flex !important;
         flex-wrap: wrap !important;
         justify-content: center !important;
@@ -291,121 +333,13 @@ body.wpr-modal-opened {
     }
 }
 
-@media (min-width: $xm-media) {
-    .#{$base_class} {
-
-        &.wpr-modal-4,
-        &.wpr-modal-3 {
-            .wpr-modal-dialog {
-
-                .wpr-modal-content {
-                    .wpr-modal-body {
-                        ul.recommendation-product-list li.single-wpr {
-
-                            flex: 0 0 calc(50% - 11px);
-                            width: calc(50% - 11px);
-                            margin-right: 20px !important;
-
-                            &:nth-child(2n + 2),
-                            &:last-child {
-                                margin-right: 0 !important;
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
-@media (min-width: $md-media) {
-
-    .#{$base_class} {
-
-        &.wpr-modal-4,
-        &.wpr-modal-3 {
-            .wpr-modal-dialog {
-                width: 720px;
-
-                .wpr-modal-content {
-                    .wpr-modal-body {
-                        ul.recommendation-product-list li.single-wpr {
-
-                            flex: 0 0 calc(33.333333% - 14px);
-                            width: calc(33.333333% - 14px);
-
-                            &:nth-child(2n + 2) {
-                                margin-right: 20px !important;
-                            }
-
-                            &:nth-child(3n + 3),
-                            &:last-child {
-                                margin-right: 0 !important;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-}
-
-@media (min-width: $lg-media) {
-    .#{$base_class} {
-        &.wpr-modal-4 {
-            .wpr-modal-dialog {
-                width: 960px;
-
-                .wpr-modal-content {
-                    .wpr-modal-body {
-                        ul.recommendation-product-list li.single-wpr {
-                            flex: 0 0 calc(25% - 16px);
-                            width: calc(25% - 16px);
-
-                            &:nth-child(3n + 3) {
-                                margin-right: 20px !important;
-                            }
-
-
-                            &:nth-child(4n+4),
-                            &:last-child {
-                                margin-right: 0 !important;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        &.wpr-modal-3 {
-            .wpr-modal-dialog {
-                width: $medium_modal;
-            }
-        }
-    }
-}
-
-@media (min-width: $xl-media) {
-    .#{$base_class} {
-        &.wpr-modal-4 {
-            .wpr-modal-dialog {
-                width: $large_modal;
-            }
-        }
-    }
-}
-
 @keyframes placeHolderShimmer {
     0% {
-        background-position: -468px 0
+        background-position: -468px 0;
     }
 
     100% {
-        background-position: 468px 0
+        background-position: 468px 0;
     }
 }
 
@@ -416,7 +350,24 @@ body.wpr-modal-opened {
     text-align: center;
 
     .single-loading-product {
-        width: 100%;
+        width: calc(25% - 16px);
+        @media screen and (max-width: $md-media) {
+            flex: 0 0 calc(33.333333% - 14px);
+            width: calc(33.333333% - 14px);
+
+            &:last-child {
+                display: none;
+            }
+        }
+
+        @media screen and (max-width:  $sm-media) {
+            flex: 0 0 calc(50% - 11px);
+            width: calc(50% - 11px);
+
+            &:nth-child(3)  {
+                display: none;
+            }
+        }
 
         .loading-thumb {
             width: 100%;
@@ -458,42 +409,6 @@ body.wpr-modal-opened {
         }
     }
 }
-
-.single-loading-product:nth-child(2),
-.single-loading-product:nth-child(3),
-.single-loading-product:nth-child(4) {
-    display: none;
-}
-
-@media (min-width: $xm-media) {
-    .loading-products .single-loading-product {
-        width: 47%;
-    }
-
-    .single-loading-product:nth-child(2) {
-        display: block;
-    }
-}
-
-@media (min-width: $md-media) {
-    .loading-products .single-loading-product {
-        width: 30%;
-    }
-
-    .single-loading-product:nth-child(3) {
-        display: block;
-    }
-}
-
-@media (min-width: $xl-media) {
-    .loading-products .single-loading-product {
-        width: 23%;
-    }
-    .single-loading-product:nth-child(4) {
-        display: block;
-    }
-}
-
 
 /** divi fix **/
 body.theme-Divi .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:after {

@@ -5,11 +5,6 @@
 
 // modal css class baseed on number of selected prodcuts
 $total_rc_products = count($recommendation_products_ids);
-$modal_rows = 'wpr-modal-4';
-
-if ($total_rc_products <= 3) {
-    $modal_rows = 'wpr-modal-3';
-}
 
 // modal heading
 $fallback_heading = apply_filters(
@@ -33,7 +28,7 @@ $html_permission = array(
 $modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</h2>', wp_kses($modal_heading, $html_permission)) : $fallback_heading;
 ?>
 
-<div class="wpr-modal woocommerce <?php echo $modal_rows; ?>" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
+<div class="wpr-modal woocommerce" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
     <div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
 
         <?php do_action('wpr_before_modal_content', $product_id, $recommendation_products_ids); ?>
