@@ -459,7 +459,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       value: type
     }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "rp-panel-title"
-    }, __('Recommendation Heading', 'woocommerce-product-recommendation')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("input", {
+    }, __('Recommendation Heading', 'woocommerce-product-recommendations')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("input", {
       type: "text",
       name: "_lc_wpr_data[heading]",
       value: initialData.heading,
@@ -472,7 +472,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       className: "pr-field"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "rp-panel-title"
-    }, __('Select Products', 'woocommerce-product-recommendation')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
+    }, __('Select Products', 'woocommerce-product-recommendations')), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "product-selection-panel"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "product-filter"
@@ -490,7 +490,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       className: "category-filter"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__["TreeSelect"] // label="All Category"
     , {
-      noOptionLabel: __('All Categories', 'woocommerce-product-recommendation'),
+      noOptionLabel: __('All Categories', 'woocommerce-product-recommendations'),
       onChange: function onChange(value) {
         setSelectedCategory(value);
         setPage(1);
@@ -507,7 +507,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       className: "disabled"
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("span", {
       className: "single-list"
-    }, " ", __('Not found selectable product', 'woocommerce-product-recommendation'))), !!products.length && selectAble(products).map(function (product) {
+    }, " ", __('Not found selectable product', 'woocommerce-product-recommendations'))), !!products.length && selectAble(products).map(function (product) {
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("li", {
         key: product.id,
         className: classnames__WEBPACK_IMPORTED_MODULE_8___default()({

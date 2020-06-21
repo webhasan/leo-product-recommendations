@@ -177,12 +177,12 @@ import classNames from 'classnames';
 					<div className="pr-field">
 						<input type="hidden" name="_lc_wpr_data[type]" value={type} />
 
-						<div className="rp-panel-title">{__('Recommendation Heading', 'woocommerce-product-recommendation')}</div>
+						<div className="rp-panel-title">{__('Recommendation Heading', 'woocommerce-product-recommendations')}</div>
 						<p><input type="text" name="_lc_wpr_data[heading]" value={initialData.heading} onChange={(e) => setInitialData({ ...initialData, heading: e.target.value })} /></p>
 					</div>
 
 					<div className="pr-field">
-						<div className="rp-panel-title">{__('Select Products', 'woocommerce-product-recommendation')}</div>
+						<div className="rp-panel-title">{__('Select Products', 'woocommerce-product-recommendations')}</div>
 						<div className="product-selection-panel">
 							<div className="product-filter">
 								<div className="search">
@@ -200,7 +200,7 @@ import classNames from 'classnames';
 								<div className="category-filter">
 									<TreeSelect
 										// label="All Category"
-										noOptionLabel={__('All Categories', 'woocommerce-product-recommendation')}
+										noOptionLabel={__('All Categories', 'woocommerce-product-recommendations')}
 										onChange={value => {
 											setSelectedCategory(value);
 											setPage(1);
@@ -217,7 +217,7 @@ import classNames from 'classnames';
 									<ul onScroll={handleScroll}>
 										{!fetchingPosts && !selectAble(products).length &&
 											<li className="disabled">
-												<span className="single-list"> {__('Not found selectable product', 'woocommerce-product-recommendation')}</span>
+												<span className="single-list"> {__('Not found selectable product', 'woocommerce-product-recommendations')}</span>
 											</li>
 										}
 

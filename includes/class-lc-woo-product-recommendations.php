@@ -266,13 +266,13 @@ class LC_Woo_Product_Recommendations
 	{
 
 		$settings = $this->get_settings();
-		$display_type = ($this->is_pro_activated() && !empty($settings['display_type'])) ? $settings['display_type'] : 'grid';
+		$layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
 		wp_enqueue_script('wpr-modal', $this->get_url('assets/js/modal.js'), array('jquery'), false, true);
 		wp_localize_script('wpr-modal', 'lc_ajax_modal', array(
 			'url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('lc-ajax-modal'),
-			'display_type' => $display_type
+			'layout_type' => $layout_type
 		));
 
 		if (is_product()) {

@@ -138,12 +138,12 @@
               action: "fetch_modal_products",
               nonce: lc_ajax_modal.nonce,
               recommendation_items: recommendationProducts,
-              display_type: lc_ajax_modal.display_type,
+              layout_type: lc_ajax_modal.layout_type,
             },
           }).done(function (data) {
             $preloader.hide();
 
-            if (lc_ajax_modal.display_type === "slider") {
+            if (lc_ajax_modal.layout_type === "slider") {
                 var owl = $(".recommendation-product-slider").trigger("replace.owl.carousel", data);
 
                 $total_items = owl.data('owl.carousel')._items.length
