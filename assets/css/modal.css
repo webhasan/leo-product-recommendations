@@ -196,6 +196,8 @@ body.wpr-modal-opened {
   flex-wrap: wrap !important;
   justify-content: center !important;
   list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
   list-style: none;
