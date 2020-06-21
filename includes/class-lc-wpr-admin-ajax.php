@@ -166,7 +166,7 @@ class LC_Wpr_Admin_Ajax
 
         $args = array(
             'post_type'     => 'product',
-            'numberposts'     => 9,
+            'numberposts'     => 20,
             'exclude'         => array($post_id),
             'paged'         => $paged
         );

@@ -3,6 +3,14 @@
  * stylesheet for front end modal
  * modal class ".wpr-modal"
  */
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
 body.wpr-modal-opened {
   overflow: hidden;
 }
@@ -55,14 +63,13 @@ body.wpr-modal-opened {
 }
 .wpr-modal .wpr-modal-dialog {
   pointer-events: none;
-  width: auto;
   position: relative;
   transition: transform 0.4s ease-out, -webkit-transform 0.4s ease-out;
-  margin: 0.5rem;
-  margin-top: 0;
   transform: translate(0, -50px);
   width: 1000px;
+  margin: 1.75rem auto;
   max-width: calc(100% - 30px);
+  max-height: calc(100% - 3.5rem);
 }
 @media screen and (max-width: 1199px) {
   .wpr-modal .wpr-modal-dialog {
@@ -94,6 +101,101 @@ body.wpr-modal-opened {
   display: flex;
   flex-direction: column;
   outline: 0;
+}
+.wpr-modal .wpr-modal-content .wpr-modal-close {
+  font-size: 25px;
+  opacity: 0.8;
+  cursor: pointer;
+  text-transform: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #fff;
+  text-align: center;
+  background: #46c28e;
+  width: 28px;
+  height: 28px;
+  line-height: 24px;
+  border-bottom-left-radius: 0.4em;
+}
+.wpr-modal .wpr-modal-content .wpr-modal-close:before {
+  content: "×";
+}
+.wpr-modal .wpr-modal-content .wpr-modal-head {
+  display: -ms-flexbox;
+  border-top-left-radius: calc(0.3rem - 1px);
+  border-top-right-radius: calc(0.3rem - 1px);
+  border-bottom: 1px solid #f1f1f1;
+}
+.wpr-modal .wpr-modal-content .wpr-modal-head .product-modal {
+  display: inline !important;
+}
+.wpr-modal .wpr-modal-content .wpr-modal-head h2.modal-heading {
+  text-align: center;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: normal;
+  color: #555;
+  margin: 20px 10px 20px 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5em;
+}
+.wpr-modal .wpr-modal-content .wpr-modal-head h2.modal-heading strong {
+  white-space: nowrap;
+}
+.wpr-modal .wpr-modal-content .wpr-modal-head h2.modal-heading:before, .wpr-modal .wpr-modal-content .wpr-modal-head h2.modal-heading:after {
+  display: none;
+}
+.wpr-modal .wpr-modal-content .wpr-message {
+  padding: 20px 30px 20px 50px;
+  border-radius: 2px;
+  clear: both;
+  font-size: 16px;
+  text-align: left;
+  color: #555;
+  font-weight: normal;
+  position: relative;
+  line-height: 1.4em;
+  background-color: #f5f5f5;
+}
+.wpr-modal .wpr-modal-content .wpr-message svg {
+  fill: #46c28e;
+  color: #46c28e;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-left: -25px;
+  vertical-align: text-top;
+}
+.wpr-modal .wpr-modal-content .wpr-message .wpr-notification-text {
+  margin-right: 10px;
+}
+.wpr-modal .wpr-modal-content .wpr-message a.wpr-cart-button {
+  white-space: nowrap;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  text-decoration: none;
+  border-radius: 0;
+  color: #46c28e;
+  transition: 0.4s ease-in;
+}
+.wpr-modal .wpr-modal-content .wpr-message a.wpr-cart-button:hover {
+  color: #35a073;
+}
+.wpr-modal .wpr-modal-content .wpr-modal-body {
+  overflow-y: auto;
+  position: relative;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 16px 20px;
+}
+.wpr-modal .wpr-modal-content ul.recommendation-product-list {
+  overflow: hidden;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  list-style: none !important;
 }
 .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
   list-style: none;
@@ -176,150 +278,38 @@ body.wpr-modal-opened {
 .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:after {
   font-size: 14px;
 }
-.wpr-modal .wpr-modal-head {
-  display: -ms-flexbox;
-  border-top-left-radius: calc(.3rem - 1px);
-  border-top-right-radius: calc(.3rem - 1px);
-  border-bottom: 1px solid #f1f1f1;
-}
-.wpr-modal .wpr-modal-head .product-modal {
-  display: inline !important;
-}
-.wpr-modal .wpr-modal-head h2.modal-heading {
-  text-align: center;
-  font-size: 20px;
-  line-height: 1;
-  font-weight: normal;
-  color: #555;
-  margin: 20px 10px 20px 10px;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.5em;
-}
-.wpr-modal .wpr-modal-head h2.modal-heading strong {
-  white-space: nowrap;
-}
-.wpr-modal .wpr-modal-head h2.modal-heading:before, .wpr-modal .wpr-modal-head h2.modal-heading:after {
-  display: none;
-}
-.wpr-modal .wpr-modal-close {
-  font-size: 25px;
-  opacity: 0.8;
-  cursor: pointer;
-  text-transform: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: #fff;
-  text-align: center;
-  background: #46C28E;
-  width: 28px;
-  height: 28px;
-  line-height: 24px;
-  border-bottom-left-radius: 0.4em;
-}
-.wpr-modal .wpr-modal-close:before {
-  content: "×";
-}
-.wpr-modal .wpr-modal-body {
-  overflow-y: auto;
-  position: relative;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  padding: 16px 20px;
-}
-.wpr-modal .wpr-modal-body ul li img {
+.wpr-modal .wpr-modal-content ul li img {
   border: 1px solid #e6e6e6;
   margin-bottom: 22px;
 }
-.wpr-modal .recommendation-product-list .single-wpr {
-  flex: 0 0 50%;
-  width: 50%;
-}
-.wpr-modal ul.recommendation-product-list {
-  overflow: hidden;
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  list-style: none !important;
-}
-.wpr-modal .wpr-modal-dialog {
-  max-height: calc(100% - 3.5rem);
-  margin: 1.75rem auto;
-}
-.wpr-modal .wpr-message {
-  padding: 20px 30px 20px 50px;
-  border-radius: 2px;
-  clear: both;
-  font-size: 16px;
-  text-align: left;
-  color: #555;
-  font-weight: normal;
-  position: relative;
-  line-height: 1.4em;
-  background-color: #f5f5f5;
-}
-.wpr-modal .wpr-message svg {
-  fill: #46C28E;
-  color: #46C28E;
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  margin-left: -25px;
-  vertical-align: text-top;
-}
-.wpr-modal .wpr-message .wpr-notification-text {
-  margin-right: 10px;
-}
-.wpr-modal .wpr-message a.wpr-cart-button {
-  white-space: nowrap;
-  padding: 0;
-  background: none;
-  box-shadow: none;
-  text-decoration: none;
-  border-radius: 0;
-  color: #46C28E;
-  transition: 0.4s ease-in;
-}
-.wpr-modal .wpr-message a.wpr-cart-button:hover {
-  color: #35a073;
-}
-
-@keyframes placeHolderShimmer {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
-  }
-}
-.loading-products {
+.wpr-modal .loading-products {
   display: flex;
   width: 100%;
   justify-content: space-between;
   text-align: center;
 }
-.loading-products .single-loading-product {
+.wpr-modal .loading-products .single-loading-product {
   width: calc(25% - 16px);
 }
 @media screen and (max-width: 991px) {
-  .loading-products .single-loading-product {
+  .wpr-modal .loading-products .single-loading-product {
     flex: 0 0 calc(33.333333% - 14px);
     width: calc(33.333333% - 14px);
   }
-  .loading-products .single-loading-product:last-child {
+  .wpr-modal .loading-products .single-loading-product:last-child {
     display: none;
   }
 }
 @media screen and (max-width: 767px) {
-  .loading-products .single-loading-product {
+  .wpr-modal .loading-products .single-loading-product {
     flex: 0 0 calc(50% - 11px);
     width: calc(50% - 11px);
   }
-  .loading-products .single-loading-product:nth-child(3) {
+  .wpr-modal .loading-products .single-loading-product:nth-child(3) {
     display: none;
   }
 }
-.loading-products .single-loading-product .loading-thumb {
+.wpr-modal .loading-products .single-loading-product .loading-thumb {
   width: 100%;
   height: 200px;
   background: #f6f7f8;
@@ -332,24 +322,24 @@ body.wpr-modal-opened {
   animation-name: placeHolderShimmer;
   animation-timing-function: linear;
 }
-.loading-products .single-loading-product .loading-title {
+.wpr-modal .loading-products .single-loading-product .loading-title {
   width: 70%;
   height: 15px;
   display: inline-block;
   background: #f6f7f8;
   margin-bottom: 10px;
 }
-.loading-products .single-loading-product .loading-price {
+.wpr-modal .loading-products .single-loading-product .loading-price {
   height: 15px;
   width: 50px;
 }
-.loading-products .single-loading-product .loading-price,
-.loading-products .single-loading-product .loading-button {
+.wpr-modal .loading-products .single-loading-product .loading-price,
+.wpr-modal .loading-products .single-loading-product .loading-button {
   background: #f6f7f8;
   display: inline-block;
   margin-bottom: 10px;
 }
-.loading-products .single-loading-product .loading-button {
+.wpr-modal .loading-products .single-loading-product .loading-button {
   width: 100px;
   height: 30px;
 }

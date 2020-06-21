@@ -796,9 +796,8 @@ class LC_Woo_Product_Recommendations
 	 *
 	 * @return  array Value of the plugins settings.
 	 */
-	public function get_settings()
-	{
-		return  get_option($this->get_settings_id(), true);
+	public function get_settings() {
+		return  get_option($this->get_settings_id());
 	}
 
 	/**

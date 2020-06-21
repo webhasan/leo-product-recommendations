@@ -1,7 +1,3 @@
-/**
- * jQuery wpr Modal
- */
-
 (function ($) {
   //setup cart items in localstorage to exclude from recommendation
   function wpr_cart_items() {
@@ -148,9 +144,13 @@
             $preloader.hide();
 
             if (lc_ajax_modal.display_type === "slider") {
-              $(".recommendation-product-slider")
-                .trigger("replace.owl.carousel", data)
-                .trigger("refresh.owl.carousel");
+                var owl = $(".recommendation-product-slider").trigger("replace.owl.carousel", data);
+
+                $total_items = owl.data('owl.carousel')._items.length
+                $visible_items = owl.data('owl.carousel').options.items;
+                owl.data('owl.carousel').options.loop = owl.data('owl.carousel').options.loop && $total_items > $visible_items
+
+                owl.trigger("refresh.owl.carousel");
             } else {
               $recommendationProductsWrapper.html(data);
             }

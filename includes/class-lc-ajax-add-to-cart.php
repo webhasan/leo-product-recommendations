@@ -5,7 +5,6 @@
  */
 class LC_Ajax_Add_To_Cart
 {
-
 	private $data = array();
 
 	public function __construct($request)
