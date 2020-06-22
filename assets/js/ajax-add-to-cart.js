@@ -2,7 +2,8 @@
     $(function() {
         var __ = wp.i18n.__;
 
-        $('body.single-product form.cart').on('submit', function (e) {            
+        $('body').on('submit','form.cart', function (e) {   
+
             var $form = $(this);
             var $submitButton = $form.find('button[type="submit"]');
             var data = $form.serialize();

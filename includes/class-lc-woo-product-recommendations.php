@@ -275,13 +275,13 @@ class LC_Woo_Product_Recommendations
 			'layout_type' => $layout_type
 		));
 
-		if (is_product()) {
+		// if (is_product()) { // disabled condition so that it work for quick view
 			wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.js'), array('jquery', 'wp-i18n'), false, true);
 			wp_localize_script('wpr-ajax-add-to-cart', 'lc_ajax', array(
 				'url' => admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('lc-add-to-cart')
 			));
-		}
+		// }
 
 		if (!$this->is_pro_activated()) {
 			wp_enqueue_style('wpr-modal', $this->get_url('assets/css/modal.css'));
@@ -402,7 +402,7 @@ class LC_Woo_Product_Recommendations
 	}
 
 	/**
-	 * Ajax callback to add to cart for singe product page
+	 * Ajax callback to add to cart
 	 * 
 	 * @since      1.0.0
 	 * @return  json responsve with json data
