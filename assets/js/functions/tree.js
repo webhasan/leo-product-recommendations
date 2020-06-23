@@ -10,14 +10,14 @@ import { groupBy } from 'lodash';
  *
  * @return {Array} Array of terms in tree format.
  */
-export function buildTermsTree( flatTerms ) {
+export default function buildTermsTree( flatTerms ) {
 	const flatTermsWithParentAndChildren = flatTerms.map( ( term ) => {
 		return {
 			children: [],
 			parent: null,
 			...term,
 		};
-	} );
+	});
 
 	const termsByParent = groupBy( flatTermsWithParentAndChildren, 'parent' );
 	if ( termsByParent.null && termsByParent.null.length ) {

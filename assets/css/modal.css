@@ -146,6 +146,15 @@ body.wpr-modal-opened {
 .wpr-modal .wpr-modal-content .wpr-modal-head h2.modal-heading:before, .wpr-modal .wpr-modal-content .wpr-modal-head h2.modal-heading:after {
   display: none;
 }
+.wpr-modal .wpr-modal-content .modal-heading-article {
+  padding: 15px;
+}
+.wpr-modal .wpr-modal-content .modal-heading-article p {
+  margin-bottom: 20px;
+}
+.wpr-modal .wpr-modal-content .modal-heading-article > :last-child {
+  margin-bottom: 0 !important;
+}
 .wpr-modal .wpr-modal-content .wpr-message {
   padding: 20px 30px 20px 50px;
   border-radius: 2px;

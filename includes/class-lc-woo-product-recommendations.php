@@ -247,8 +247,12 @@ class LC_Woo_Product_Recommendations
 	 * @since      1.0.0
 	 * @return void
 	 */
-	public function admin_enqueue_scripts()
-	{
+	public function admin_enqueue_scripts() {
+		if ( ! class_exists( '_WP_Editors', false ) ) {
+    require( ABSPATH . WPINC . '/class-wp-editor.php' );
+}
+add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_editor_scripts' ) );
+		wp_enqueue_editor();
 		if (!$this->is_pro_activated()) {
 			wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), false, true);
 			wp_localize_script('selection-panel-script', 'ajax_url', admin_url('admin-ajax.php'));

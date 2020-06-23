@@ -1,6 +1,7 @@
 import Reorder from 'react-reorder';
-import { buildTermsTree } from './functions/tree';
-import { TreeSelect } from '@wordpress/components';
+import buildTermsTree  from './functions/tree';
+import WPEditor from './functions/wpEditor';
+import { TreeSelect, Toolbar } from '@wordpress/components';
 import { DebounceInput } from 'react-debounce-input';
 import classNames from 'classnames';
 
@@ -29,13 +30,24 @@ import classNames from 'classnames';
 	);
 
 	const postId = parseInt(app.getAttribute('data-id'));
-
 	const { reorder } = Reorder;
 	const apiEndPoint = ajax_url;
 	const { useState, useEffect } = React;
 
 
 	const SelectProduct = () => {
+
+    const headingType = [
+      {
+        id: "heading",
+        title: __("Heading", "woocommerce-product-recommendations"),
+      },
+      {
+        id: "article",
+        title: __("Article", "woocommerce-product-recommendations"),
+      },
+    ];
+
 		// free version only support menual selection
 		const type = 'menual-selection';
 
@@ -43,7 +55,9 @@ import classNames from 'classnames';
 		const [fetchingPosts, setFetchingPosts] = useState(true);
 
 		const [initialData, setInitialData] = useState({
-			heading: '',
+      heading: '',
+      heading_article: '',
+      heading_type: 'heading',
 			products: []
 		});
 
@@ -100,7 +114,7 @@ import classNames from 'classnames';
 			opacity: facedData ? 1 : 0
 		}
 
-		useEffect(() => {
+		useEffect(() => {      
 			$.ajax({
 				url: apiEndPoint,
 				method: 'GET',
@@ -112,8 +126,17 @@ import classNames from 'classnames';
 				success: function (data) {					
 					if (data) {
 						let products = data.products ? data.products : [];
-						let heading = data.heading ? data.heading : '';
-						setInitialData({ ...initialData, products, heading });
+            let heading = data.heading ? data.heading : '';
+            let heading_article = data.heading_article ? data.heading_article : '';
+            let heading_type = data.heading_type ? data.heading_type : 'heading';
+
+						setInitialData({
+              ...initialData,
+              products,
+              heading_type,
+              heading,
+              heading_article,
+            });
 					}
 
 					setFacedData(true);
@@ -169,123 +192,212 @@ import classNames from 'classnames';
 		}, [page, selectedCategory, query]);
 
 		return (
-			<div className="lc-recommendation-product">
-				
-				{!facedData && <span className="lc-recommendation-product-prelaoder">{<LoadingIcon />}</span>}
+      <div className="lc-recommendation-product">
+        {!facedData && (
+          <span className="lc-recommendation-product-prelaoder">
+            {<LoadingIcon />}
+          </span>
+        )}
 
-				<div className="recommendation-prodcut-options-wrap" style={opacity}>
-					<div className="pr-field">
-						<input type="hidden" name="_lc_wpr_data[type]" value={type} />
+        <div className="recommendation-prodcut-options-wrap" style={opacity}>
+          <div className="pr-field">
+            <input type="hidden" name="_lc_wpr_data[type]" value={type} />
 
-						<div className="rp-panel-title">{__('Recommendation Heading', 'woocommerce-product-recommendations')}</div>
-						<p><input type="text" name="_lc_wpr_data[heading]" value={initialData.heading} onChange={(e) => setInitialData({ ...initialData, heading: e.target.value })} /></p>
-					</div>
+            <div className="heading-control">
+              {headingType.map(method => (
+                <label key={method.id}>
+                  <input
+                    type="radio"
+                    name="_lc_wpr_data[heading_type]"
+                    value={method.id}
+                    checked={initialData.heading_type === method.id}
+                    onChange={(e) => setInitialData({ ...initialData, heading_type: e.target.value })}
+                  />
+                  {method.title}
+                </label>
+              ))}
+            </div>
+            <div className="rp-panel-title">
+              {__(
+                `Recommendation ${initialData.heading_type}`,
+                "woocommerce-product-recommendations"
+              )}
+            </div>
 
-					<div className="pr-field">
-						<div className="rp-panel-title">{__('Select Products', 'woocommerce-product-recommendations')}</div>
-						<div className="product-selection-panel">
-							<div className="product-filter">
-								<div className="search">
-									<DebounceInput
-										minLength={2}
-										debounceTimeout={300}
-										onChange={event => {
-											setQuery(event.target.value);
-											setPage(1);
-										}}
-										placeholder={__('Search...', 'woocommerce-product-recommendation')}
-									/>
-								</div>
+            <div style={{ display: initialData.heading_type === 'article' ? 'block': 'none'}}>
+            <WPEditor
+              id="header-description"
+              name={initialData.heading_type === 'article' ? '_lc_wpr_data[heading_article]' : ''}
+              className="heading-article wp-editor-area"
+              value={initialData.heading_article}
+              onChange={(value) => {
+                console.log(value);
+                setInitialData({
+                  ...initialData,
+                  heading_article: value
+                });
+              }}
+            />
+            </div>
 
-								<div className="category-filter">
-									<TreeSelect
-										// label="All Category"
-										noOptionLabel={__('All Categories', 'woocommerce-product-recommendations')}
-										onChange={value => {
-											setSelectedCategory(value);
-											setPage(1);
-										}}
-										selectedId={selectedCategory}
-										tree={buildTermsTree(categories)}
-									/>
-								</div>
+            <p className="heading-input" style={{ display: initialData.heading_type === 'heading' ? 'block' : 'none' }}>
+              <input
+                type="text"
+                name={initialData.heading_type === 'heading' ? '_lc_wpr_data[heading]' : ''}
+                value={initialData.heading}
+                onChange={(e) =>
+                  setInitialData({ ...initialData, heading: e.target.value })
+                }
+              />
+            </p>
+          </div>
 
-							</div>
+          <div className="pr-field">
+            <div className="rp-panel-title">
+              {__("Select Products", "woocommerce-product-recommendations")}
+            </div>
+            <div className="product-selection-panel">
+              <div className="product-filter">
+                <div className="search">
+                  <DebounceInput
+                    minLength={2}
+                    debounceTimeout={300}
+                    onChange={(event) => {
+                      setQuery(event.target.value);
+                      setPage(1);
+                    }}
+                    placeholder={__(
+                      "Search...",
+                      "woocommerce-product-recommendation"
+                    )}
+                  />
+                </div>
 
-							<div className="product-selection">
-								<div className="list-panel">
-									<ul onScroll={handleScroll}>
-										{!fetchingPosts && !selectAble(products).length &&
-											<li className="disabled">
-												<span className="single-list"> {__('Not found selectable product', 'woocommerce-product-recommendations')}</span>
-											</li>
-										}
+                <div className="category-filter">
+                  <TreeSelect
+                    // label="All Category"
+                    noOptionLabel={__(
+                      "All Categories",
+                      "woocommerce-product-recommendations"
+                    )}
+                    onChange={(value) => {
+                      setSelectedCategory(value);
+                      setPage(1);
+                    }}
+                    selectedId={selectedCategory}
+                    tree={buildTermsTree(categories)}
+                  />
+                </div>
+              </div>
 
-										{!!products.length &&
-											selectAble(products).map(product => (
-												<li key={product.id} className={classNames({ 'selected-product': product.selcted })} onClick={() => addProdcut(product)}>
-													<span className="single-list">
-														<div className="thumb">
-															<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
-														</div>
-														{product.title}
-													</span>
-												</li>
-											))
-										}
+              <div className="product-selection">
+                <div className="list-panel">
+                  <ul onScroll={handleScroll}>
+                    {!fetchingPosts && !selectAble(products).length && (
+                      <li className="disabled">
+                        <span className="single-list">
+                          {" "}
+                          {__(
+                            "Not found selectable product",
+                            "woocommerce-product-recommendations"
+                          )}
+                        </span>
+                      </li>
+                    )}
 
-										{
-											<li className={classNames('disabled', { invisible: !fetchingPosts })}>
-												<span className="wpr-loading-posts"></span>
-											</li>
-										}
-									</ul>
-								</div>
+                    {!!products.length &&
+                      selectAble(products).map((product) => (
+                        <li
+                          key={product.id}
+                          className={classNames({
+                            "selected-product": product.selcted,
+                          })}
+                          onClick={() => addProdcut(product)}
+                        >
+                          <span className="single-list">
+                            <div className="thumb">
+                              <img
+                                src={
+                                  !!product.feature_image
+                                    ? product.feature_image
+                                    : ""
+                                }
+                                alt=""
+                              />
+                            </div>
+                            {product.title}
+                          </span>
+                        </li>
+                      ))}
 
-								<div className="select-item-panel">
-									<Reorder
-										component="ul"
-										reorderId="my-list"
-										placeholderClassName="placeholder"
-										// lock="horizontal"
-										holdTime={50}
-										touchHoldTime={50}
-										onReorder={reorderProduct}
-										autoScroll={false}
-										placeholder={
-											<li className="custom-placeholder" />
-										}
-									>
-										{initialData.products.map(product => (
-											<li key={product.id}>
-												<input type="hidden" name="_lc_wpr_data[products][]" value={product.id} />
-												<span className="single-list" data-id="10">
-													<div className="thumb">
-														<img src={!!product.feature_image ? product.feature_image : ''} alt="" />
-													</div>
-													{product.title}
-													<span className="remove-item"
-														onMouseDown={(e) => {
-															e.preventDefault();
-															e.stopPropagation();
-															removeProduct(product.id)
-														}}
-														onClick={(e) => {
-															e.stopPropagation();
-															e.preventDefault();
-														}}
-													>-</span>
-												</span>
-											</li>
-										))}
-									</Reorder>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		)
+                    {
+                      <li
+                        className={classNames("disabled", {
+                          invisible: !fetchingPosts,
+                        })}
+                      >
+                        <span className="wpr-loading-posts"></span>
+                      </li>
+                    }
+                  </ul>
+                </div>
+
+                <div className="select-item-panel">
+                  <Reorder
+                    component="ul"
+                    reorderId="my-list"
+                    placeholderClassName="placeholder"
+                    // lock="horizontal"
+                    holdTime={50}
+                    touchHoldTime={50}
+                    onReorder={reorderProduct}
+                    autoScroll={false}
+                    placeholder={<li className="custom-placeholder" />}
+                  >
+                    {initialData.products.map((product) => (
+                      <li key={product.id}>
+                        <input
+                          type="hidden"
+                          name="_lc_wpr_data[products][]"
+                          value={product.id}
+                        />
+                        <span className="single-list" data-id="10">
+                          <div className="thumb">
+                            <img
+                              src={
+                                !!product.feature_image
+                                  ? product.feature_image
+                                  : ""
+                              }
+                              alt=""
+                            />
+                          </div>
+                          {product.title}
+                          <span
+                            className="remove-item"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              removeProduct(product.id);
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                            }}
+                          >
+                            -
+                          </span>
+                        </span>
+                      </li>
+                    ))}
+                  </Reorder>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
 	}
 
 	React.render(<SelectProduct />, app)

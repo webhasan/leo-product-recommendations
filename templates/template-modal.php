@@ -2,12 +2,15 @@
 // global
 // $recommendation_products_ids
 // $modal_heading;
+// $product_id
 
 // modal css class baseed on number of selected prodcuts
 $total_rc_products = count($recommendation_products_ids);
+$recommendation_data = $this->get_pr_data($product_id);
 
 // modal heading
 $fallback_heading = apply_filters(
+    $template_article = 
     'wpr_common_heading',
     sprintf(
         /* translators: 1. singlular or plural of item, 2. title of product */
@@ -26,6 +29,12 @@ $html_permission = array(
 );
 
 $modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</h2>', wp_kses($modal_heading, $html_permission)) : $fallback_heading;
+
+$heading_type = isset($recommendation_data['heading_type']) ? $recommendation_data['heading_type'] : 'heading';
+$heading_article = isset($recommendation_data['heading_article']) ? $recommendation_data['heading_article'] : '';
+$modal_heading = ($heading_type === 'heading') ? $modal_heading : '<div class="modal-heading-article">'.do_shortcode($heading_article).'</div>';
+
+// Warning: don't edit any data in the top section 
 ?>
 
 <div class="wpr-modal woocommerce" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
@@ -93,8 +102,6 @@ $modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</
                 <?php do_action('wpr_after_products_loop', $product_id, $recommendation_products_ids); ?>
             </div>
         </div>
-
         <?php do_action('wpr_after_modal_content', $product_id, $recommendation_products_ids); ?>
-
     </div>
 </div>

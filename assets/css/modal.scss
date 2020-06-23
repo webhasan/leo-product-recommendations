@@ -170,6 +170,16 @@ body.wpr-modal-opened {
       }
     }
 
+    .modal-heading-article {
+      padding: 15px;
+      p {
+        margin-bottom: 20px;
+      }
+      &>:last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+
     .wpr-message {
       padding: 20px 30px 20px 50px;
       border-radius: 2px;
