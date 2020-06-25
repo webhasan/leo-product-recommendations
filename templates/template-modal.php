@@ -8,6 +8,14 @@
 $total_rc_products = count($recommendation_products_ids);
 $recommendation_data = $this->get_pr_data($product_id);
 
+foreach (WC()->cart->get_cart() as $cart_item) {
+    $cart_products_ids[] = $cart_item['product_id'];
+}
+
+$selectable_products = array_filter($recommendation_products_ids, function ($item) use ($cart_products_ids) {
+    return !in_array($item, $cart_products_ids);
+});
+
 // modal heading
 $fallback_heading = apply_filters(
     $template_article = 
@@ -15,7 +23,7 @@ $fallback_heading = apply_filters(
     sprintf(
         /* translators: 1. singlular or plural of item, 2. title of product */
         __('<h2 class="modal-heading">You may purchase following %1$s with <strong>%2$s</strong> </h2>', 'woocommerce-product-recommendations'),
-        _n('item', 'items', $total_rc_products, 'woocommerce-product-recommendations'),
+        _n('item', 'items', $selectable_products, 'woocommerce-product-recommendations'),
         get_the_title($product_id)
     )
 );
@@ -48,16 +56,32 @@ $modal_heading = ($heading_type === 'heading') ? $modal_heading : '<div class="m
                 <?php do_action('wpr_start_modal_head', $product_id, $recommendation_products_ids); ?>
 
                 <div class="wpr-message" role="alert">
-                    <?php
-                        echo apply_filters('wpr_checked_icon', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path d="M256,0C114.84,0,0,114.84,0,256S114.84,512,256,512,512,397.16,512,256,397.16,0,256,0ZM385.75,201.75,247.08,340.41a21.29,21.29,0,0,1-30.16,0l-69.33-69.33a21.33,21.33,0,0,1,30.16-30.16L232,295.17,355.59,171.59a21.33,21.33,0,0,1,30.16,30.16Z"/></g></g></svg>');
-                    ?>
-                    <span class="wpr-notification-text"><strong class="product-modal"><?php echo get_the_title($product_id); ?></strong> <?php _e('has been added to your cart.', 'woocommerce-product-recommend'); ?></span>
-                    <a href="<?php echo wc_get_cart_url(); ?>" class="wpr-cart-button"><?php _e('View cart', 'woocommerce-product-recommend'); ?> &rarr; </a>
+                    <div class="message-text">
+                        <?php
+                            echo apply_filters('wpr_checked_icon', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path d="M256,0C114.84,0,0,114.84,0,256S114.84,512,256,512,512,397.16,512,256,397.16,0,256,0ZM385.75,201.75,247.08,340.41a21.29,21.29,0,0,1-30.16,0l-69.33-69.33a21.33,21.33,0,0,1,30.16-30.16L232,295.17,355.59,171.59a21.33,21.33,0,0,1,30.16,30.16Z"/></g></g></svg>');
+                        ?>
+                        <span class="wpr-notification-text"><strong class="product-modal"><?php echo get_the_title($product_id); ?></strong> <?php _e('has been added to your cart.', 'woocommerce-product-recommendations'); ?></span>
+                        <a href="<?php echo wc_get_cart_url(); ?>" class="wpr-cart-button"><?php _e('View cart', 'woocommerce-product-recommendations'); ?> &rarr; </a>
+                    </div>
+
+                    <?php if(apply_filters('wpr_show_buttons', true)): ?>
+                    <div class="right-buttons">
+                        <?php if(apply_filters('wpr_show_continue_shopping', true)): ?>
+                        <a href="#" class="wpr-close-modal wpr-button"><?php _e('Contineu Shopping', 'woocommerce-product-recommendations'); ?></a>
+                        <?php endif; ?>
+
+                        <?php if(apply_filters('wpr_go_checkout', true)): ?>
+                        <a href="<?php echo wc_get_checkout_url(); ?>" class="wpr-button"><?php _e('Checkout', 'woocommerce-product-recommendations'); ?></a>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <?php echo $modal_heading; ?>
 
-                <span aria-hidden="true" class="wpr-modal-close"></span>
+                <?php if(apply_filters('wpr_show_close_icon', false)): ?>
+                    <span aria-hidden="true" class="wpr-modal-close"></span>
+                <?php endif; ?>
 
                 <?php do_action('wpr_end_modal_head', $product_id, $recommendation_products_ids); ?>
             </div>

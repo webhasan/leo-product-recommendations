@@ -1,7 +1,7 @@
 import Reorder from 'react-reorder';
 import buildTermsTree  from './functions/tree';
 import WPEditor from './functions/wpEditor';
-import { TreeSelect, Toolbar } from '@wordpress/components';
+import { TreeSelect } from '@wordpress/components';
 import { DebounceInput } from 'react-debounce-input';
 import classNames from 'classnames';
 

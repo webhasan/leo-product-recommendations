@@ -46,7 +46,7 @@ body.wpr-modal-opened {
   z-index: 999998;
   width: 100vw;
   height: 100vh;
-  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .wpr-modal-overlay.show {
@@ -155,17 +155,63 @@ body.wpr-modal-opened {
 .wpr-modal .wpr-modal-content .modal-heading-article > :last-child {
   margin-bottom: 0 !important;
 }
+.wpr-modal .wpr-modal-content .modal-heading-article h1 {
+  font-size: 36px;
+}
+.wpr-modal .wpr-modal-content .modal-heading-article h2 {
+  font-size: 30px;
+}
+.wpr-modal .wpr-modal-content .modal-heading-article h3 {
+  font-size: 24px;
+}
+.wpr-modal .wpr-modal-content .modal-heading-article h4 {
+  font-size: 22px;
+}
+@media screen and (max-width: 991px) {
+  .wpr-modal .wpr-modal-content .modal-heading-article h1 {
+    font-size: 28px;
+  }
+  .wpr-modal .wpr-modal-content .modal-heading-article h2 {
+    font-size: 26px;
+  }
+  .wpr-modal .wpr-modal-content .modal-heading-article h3 {
+    font-size: 20px;
+  }
+  .wpr-modal .wpr-modal-content .modal-heading-article h4 {
+    font-size: 18px;
+  }
+  .wpr-modal .wpr-modal-content .modal-heading-article p {
+    font-size: 14px;
+  }
+}
+.wpr-modal .wpr-modal-content .wpr-button {
+  padding: 6px 12px;
+  display: inline-block;
+  background: #4cc491;
+  color: #fff;
+  margin-right: 3px;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  transition: all 0.3s;
+}
+.wpr-modal .wpr-modal-content .wpr-button:hover {
+  background: #35a073;
+}
 .wpr-modal .wpr-modal-content .wpr-message {
-  padding: 20px 30px 20px 50px;
+  padding: 15px 30px 15px 50px;
   border-radius: 2px;
   clear: both;
   font-size: 16px;
   text-align: left;
-  color: #555;
+  color: #000;
   font-weight: normal;
   position: relative;
   line-height: 1.4em;
   background-color: #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 .wpr-modal .wpr-modal-content .wpr-message svg {
   fill: #46c28e;
@@ -173,7 +219,7 @@ body.wpr-modal-opened {
   width: 16px;
   height: 16px;
   display: inline-block;
-  margin-left: -25px;
+  margin-left: -20px;
   vertical-align: text-top;
 }
 .wpr-modal .wpr-modal-content .wpr-message .wpr-notification-text {
