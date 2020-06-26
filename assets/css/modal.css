@@ -251,7 +251,7 @@ body.wpr-modal-opened {
   flex-wrap: wrap !important;
   justify-content: center !important;
   list-style: none !important;
-  margin: 0 !important;
+  margin: 0 -10px !important;
   padding: 0 !important;
 }
 .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
@@ -260,45 +260,26 @@ body.wpr-modal-opened {
   display: block;
   float: none !important;
   position: relative;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  flex: 0 0 calc(25% - 16px);
-  width: calc(25% - 16px);
-  margin-right: 20px !important;
+  margin-right: 10px !important;
+  margin-left: 10px !important;
+  flex: 0 0 calc(25% - 21px);
+  width: calc(25% - 21px);
   box-sizing: border-box;
   text-align: center;
   margin-bottom: 40px;
   font-size: 14px;
   line-height: 22.5px;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr:nth-child(4n+4) {
-  margin-right: 0 !important;
-}
 @media screen and (max-width: 991px) {
   .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
-    flex: 0 0 calc(33.333333% - 14px);
-    width: calc(33.333333% - 14px);
-  }
-  .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr:nth-child(4n+4) {
-    margin-right: 20px !important;
-  }
-  .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr:nth-child(3n+3) {
-    margin-right: 0 !important;
+    flex: 0 0 calc(33.333333% - 21px);
+    width: calc(33.333333% - 21px);
   }
 }
 @media screen and (max-width: 767px) {
   .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
-    flex: 0 0 calc(50% - 11px);
-    width: calc(50% - 11px);
-  }
-  .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr:nth-child(4n+4) {
-    margin-right: 20px !important;
-  }
-  .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr:nth-child(3n+3) {
-    margin-right: 20px !important;
-  }
-  .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr:nth-child(2n+2) {
-    margin-right: 0 !important;
+    flex: 0 0 calc(50% - 21px);
+    width: calc(50% - 21px);
   }
 }
 .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr .star-rating {

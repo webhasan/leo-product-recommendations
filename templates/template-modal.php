@@ -67,7 +67,7 @@ $modal_heading = ($heading_type === 'heading') ? $modal_heading : '<div class="m
                     <?php if(apply_filters('wpr_show_buttons', true)): ?>
                     <div class="right-buttons">
                         <?php if(apply_filters('wpr_show_continue_shopping', true)): ?>
-                        <a href="#" class="wpr-close-modal wpr-button"><?php _e('Contineu Shopping', 'woocommerce-product-recommendations'); ?></a>
+                        <a href="#" class="wpr-close-modal wpr-button"><?php _e('Continue Shopping', 'woocommerce-product-recommendations'); ?></a>
                         <?php endif; ?>
 
                         <?php if(apply_filters('wpr_go_checkout', true)): ?>

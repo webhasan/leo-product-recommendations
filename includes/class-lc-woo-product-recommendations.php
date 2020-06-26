@@ -506,159 +506,190 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @return array array of recommendation products ids
 	 * @since      1.0.0
 	 */
-	public function get_recommendation_products_id($product_id)
-	{
-		$data = $this->get_pr_data($product_id);
-		$recommended_products_ids = array();
-
-		if ($this->is_menually_selection($product_id)) {
-			$recommended_products_ids = !empty($data['products']) ? $data['products'] : array();
-		} elseif ($this->is_dynamic_selection($product_id)) {
-			$args = array(
-				'post_type' => 'product',
-				'post__not_in' => array($product_id)
-			);
-
-			if (!empty($data['number'])) {
-				$args['posts_per_page'] = (int) $data['number'];
-			}
-
-			if (!empty($data['categories']) && !empty($data['tags'])) {
-
-				$categories = $data['categories'];
-				$categories = array_map(function ($category) {
-					return (int) $category;
-				}, $categories);
-
-				$tags = $data['tags'];
-				$tags = array_map(function ($tag) {
-					return (int) $tag;
-				}, $tags);
-
-				$args['tax_query'] = array(
-					'relation' => 'AND',
-					array(
-						'taxonomy' => 'product_cat',
-						'field'    => 'term_id',
-						'terms'    => $categories
-					),
-					array(
-						'taxonomy' => 'product_tag',
-						'field'    => 'term_id',
-						'terms'    => $tags
-					),
-				);
-			} else if (!empty($data['categories'])) {
-
-				$categories = $data['categories'];
-				$categories = array_map(function ($category) {
-					return (int) $category;
-				}, $categories);
-
-				$args['tax_query'] = array(
-					array(
-						'taxonomy' => 'product_cat',
-						'field'    => 'term_id',
-						'terms'    => $categories
-					)
-				);
-			} else if (!empty($data['tags'])) {
-				$tags = $data['tags'];
-				$tags = array_map(function ($tag) {
-					return (int) $tag;
-				}, $tags);
-
-				$args['tax_query'] = array(
-					array(
-						'taxonomy' => 'product_tag',
-						'field'    => 'term_id',
-						'terms'    => $tags
-					)
-				);
-			}
-
-			$orderby = 'date';
-			$meta_key = '';
-			$order = 'desc';
-
-			switch ($data['orderby']) {
-
-				case 'newest':
-					$orderby = 'date';
-					$meta_key = '';
-					$order = 'desc';
-					break;
-
-				case 'oldest':
-					$orderby = 'date';
-					$meta_key = '';
-					$order = 'asc';
-					break;
-
-				case 'rand':
-					$orderby = 'rand';
-					$meta_key = '';
-					$order = 'desc';
-					break;
-
-				case 'popularity':
-					$orderby = 'meta_value_num';
-					$meta_key = 'total_sales';
-					$order = 'desc';
-					break;
-
-				case 'rating':
-					$orderby = 'meta_value_num';
-					$meta_key = '_wc_average_rating';
-					$order = 'desc';
-					break;
-
-				case 'lowprice':
-					$orderby = 'meta_value_num';
-					$meta_key = '_regular_price';
-					$order = 'asc';
-					break;
-
-				case 'heighprice':
-					$orderby = 'meta_value_num';
-					$meta_key = '_regular_price';
-					$order = 'desc';
-					break;
-
-				case 'title':
-					$orderby = 'title';
-					$meta_key = '';
-					$order = 'asc';
-					break;
-			}
-
-			if (!empty($orderby)) {
-				$args['orderby'] = $orderby;
-			}
-
-			if (!empty($meta_key)) {
-				$args['meta_key'] = $meta_key;
-			}
-
-			if (!empty($order)) {
-				$args['order'] = $order;
-			}
-
-			if (!empty($data['sale'])) {
-				$args['post__in'] = array_merge(array(0), wc_get_product_ids_on_sale());
-			}
-
-			$posts = get_posts($args);
-
-			$recommended_products_ids = array_map(function ($post) {
-				return $post->ID;
-			}, $posts);
+	public function get_recommendation_products_id($product_id) {
+		if($this->is_active_global($product_id)) {
+			return $this->dynamic_query_products($product_id, $this->get_global_pr_data());
 		}
+
+		$data = $this->get_pr_data($product_id);
+		if ($this->is_menually_selection($product_id)) {
+			return $this->menual_query_products($data);
+		} elseif ($this->is_dynamic_selection($product_id)) {
+			return $this->dynamic_query_products($product_id, $data);
+		}
+		return array();
+	}
+
+	/**
+	 * Check localhost selection available or not
+	 * @since      1.0.0
+	 * @return void;
+	 */
+	public function is_active_global($id) {
+
+		$settings = $this->get_settings();
+		$has_global = !empty($settings['active_global_settings']) ? true : false;
+		$disable_overwrite = !empty($settings['disable_global_overwirte']) ? true : false;
+		// active global and not overwirte by local
+		if($has_global && $disable_overwrite) {
+			return true;
+		}
+		// active global and not available local
+		$is_dynamic_selection = $this->is_dynamic_selection($id);
+		$data = $this->get_pr_data($id);
+		$recommended_products = !empty($data['products']) ? $data['products'] : array();
+
+		if($has_global && !$is_dynamic_selection && empty($recommended_products)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function menual_query_products($data) {
+		return !empty($data['products']) ? $data['products'] : array();
+	}
+
+	/**
+	 * Get dynamic data
+	 */
+	public function dynamic_query_products($product_id, $data) {
+		$args = array(
+			'post_type' => 'product',
+			'post__not_in' => array($product_id)
+		);
+
+		if (!empty($data['number'])) {
+			$args['posts_per_page'] = (int) $data['number'];
+		}
+
+		$categories = array();
+
+		if(!empty($data['category_type']) && $data['category_type'] === 'same_categories') {
+			$categories = wc_get_product_term_ids( $product_id, 'product_cat' );
+		}else {
+			$categories = !empty($data['categories']) ? $data['categories'] : $categories;
+		}
+
+		$categories = array_map(function ($category) {
+			return (int) $category;
+		}, $categories);
+
+		$tags = !empty($data['tags']) ? $data['tags'] : array();
+		$tags = array_map(function ($tag) {
+			return (int) $tag;
+		}, $tags);
+
+		if (!empty($categories) && !empty($tags)) {
+			$args['tax_query'] = array(
+				'relation' => 'AND',
+				array(
+					'taxonomy' => 'product_cat',
+					'field'    => 'term_id',
+					'terms'    => $categories
+				),
+				array(
+					'taxonomy' => 'product_tag',
+					'field'    => 'term_id',
+					'terms'    => $tags
+				),
+			);
+		} else if (!empty($categories)) {
+			$args['tax_query'] = array(
+				array(
+					'taxonomy' => 'product_cat',
+					'field'    => 'term_id',
+					'terms'    => $categories
+				)
+			);
+		} else if (!empty($tags)) {
+			$args['tax_query'] = array(
+				array(
+					'taxonomy' => 'product_tag',
+					'field'    => 'term_id',
+					'terms'    => $tags
+				)
+			);
+		}
+
+		$orderby = 'date';
+		$meta_key = '';
+		$order = 'desc';
+
+		switch ($data['orderby']) {
+			case 'newest':
+				$orderby = 'date';
+				$meta_key = '';
+				$order = 'desc';
+				break;
+
+			case 'oldest':
+				$orderby = 'date';
+				$meta_key = '';
+				$order = 'asc';
+				break;
+
+			case 'rand':
+				$orderby = 'rand';
+				$meta_key = '';
+				$order = 'desc';
+				break;
+
+			case 'popularity':
+				$orderby = 'meta_value_num';
+				$meta_key = 'total_sales';
+				$order = 'desc';
+				break;
+
+			case 'rating':
+				$orderby = 'meta_value_num';
+				$meta_key = '_wc_average_rating';
+				$order = 'desc';
+				break;
+
+			case 'lowprice':
+				$orderby = 'meta_value_num';
+				$meta_key = '_regular_price';
+				$order = 'asc';
+				break;
+
+			case 'heighprice':
+				$orderby = 'meta_value_num';
+				$meta_key = '_regular_price';
+				$order = 'desc';
+				break;
+
+			case 'title':
+				$orderby = 'title';
+				$meta_key = '';
+				$order = 'asc';
+				break;
+		}
+
+		if (!empty($orderby)) {
+			$args['orderby'] = $orderby;
+		}
+
+		if (!empty($meta_key)) {
+			$args['meta_key'] = $meta_key;
+		}
+
+		if (!empty($order)) {
+			$args['order'] = $order;
+		}
+
+		if (!empty($data['sale'])) {
+			$args['post__in'] = array_merge(array(0), wc_get_product_ids_on_sale());
+		}
+
+		$posts = get_posts($args);
+
+		$recommended_products_ids = array_map(function ($post) {
+			return $post->ID;
+		}, $posts);
 
 		return $recommended_products_ids;
 	}
-
-
 
 	/**
 	 * Add modal to archive / shop page prodcuts
@@ -736,7 +767,6 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 		if (in_array($action, $nonce_actions)) {
 			return 0;
 		}
-
 		return $uid;
 	}
 
@@ -809,8 +839,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * 
 	 * @since      1.0.0
 	 */
-	public function is_pro_activated()
-	{
+	public function is_pro_activated() {
 		return class_exists('LC_Woo_Product_Recommendations_Pro');
 	}
 
@@ -819,13 +848,35 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return object post meta of _lc_wpr_data
 	 */
-	public static function get_pr_data($id)
+	public function get_pr_data($id)
 	{
 		if (!isset(self::$pr_meta[$id])) {
 			self::$pr_meta[$id] = get_post_meta($id, '_lc_wpr_data', true);
 		}
 
 		return self::$pr_meta[$id];
+	}
+
+	public function get_global_pr_data() {
+		$settings = $this->get_settings();
+		if(empty($settings['active_global_settings'])) 
+			return array();
+		$category_type = !empty($settings['global_categories']) ? $settings['global_categories'] : 'same_categories';
+		$categories = !empty($settings['global_custom_categories']) ? $settings['global_custom_categories'] : array();
+		$tags = !empty($settings['global_tags']) ? $settings['global_tags'] : array();
+		$filtering = !empty($settings['global_filtering']) ? $settings['global_filtering'] : 'rand';
+		$onsale = !empty($settings['global_on_sale']) ? $settings['global_on_sale'] : false;
+		$number_of_posts = !empty($settings['global_products_number']) ? $settings['global_products_number'] : 12;
+
+		$data = array();
+		$data['category_type'] = $category_type;
+		$data['categories'] = $categories;
+		$data['number'] = $number_of_posts;
+		$data['tags'] = $tags;
+		$data['orderby'] = $filtering;
+		$data['sale'] = $onsale;
+
+		return $data;
 	}
 
 	/**
