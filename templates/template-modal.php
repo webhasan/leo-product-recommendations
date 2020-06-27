@@ -1,59 +1,17 @@
 <?php
-// global
-// $recommendation_products_ids
-// $modal_heading;
-// $product_id
-
-// modal css class baseed on number of selected prodcuts
-$total_rc_products = count($recommendation_products_ids);
-$recommendation_data = $this->get_pr_data($product_id);
-
-foreach (WC()->cart->get_cart() as $cart_item) {
-    $cart_products_ids[] = $cart_item['product_id'];
-}
-
-$selectable_products = array_filter($recommendation_products_ids, function ($item) use ($cart_products_ids) {
-    return !in_array($item, $cart_products_ids);
-});
-
-// modal heading
-$fallback_heading = apply_filters(
-    $template_article = 
-    'wpr_common_heading',
-    sprintf(
-        /* translators: 1. singlular or plural of item, 2. title of product */
-        __('<h2 class="modal-heading">You may purchase following %1$s with <strong>%2$s</strong> </h2>', 'woocommerce-product-recommendations'),
-        _n('item', 'items', $selectable_products, 'woocommerce-product-recommendations'),
-        get_the_title($product_id)
-    )
-);
-
-$html_permission = array(
-    'span' => array('class'),
-    'b'    => array(),
-    'strong' => array(),
-    'i'    => array(),
-    'br'   => array(),
-);
-
-$modal_heading  = trim($modal_heading) ? sprintf('<h2 class="modal-heading">%s</h2>', wp_kses($modal_heading, $html_permission)) : $fallback_heading;
-
-$heading_type = isset($recommendation_data['heading_type']) ? $recommendation_data['heading_type'] : 'heading';
-$heading_article = isset($recommendation_data['heading_article']) ? $recommendation_data['heading_article'] : '';
-$modal_heading = ($heading_type === 'heading') ? $modal_heading : '<div class="modal-heading-article">'.do_shortcode($heading_article).'</div>';
-
-// Warning: don't edit any data in the top section 
+// global $data;
+extract($data);
 ?>
 
 <div class="wpr-modal woocommerce" style="display:none;" id="wpr-modal-<?php echo $product_id; ?>">
     <div class="wpr-modal-dialog wpr-modal-dialog-scrollable">
 
-        <?php do_action('wpr_before_modal_content', $product_id, $recommendation_products_ids); ?>
+        <?php do_action('wpr_before_modal_content', $product_id, $recommended_products_id); ?>
 
         <div class="wpr-modal-content">
             <div class="wpr-modal-head">
 
-                <?php do_action('wpr_start_modal_head', $product_id, $recommendation_products_ids); ?>
+                <?php do_action('wpr_start_modal_head', $product_id, $recommended_products_id); ?>
 
                 <div class="wpr-message" role="alert">
                     <div class="message-text">
@@ -83,13 +41,13 @@ $modal_heading = ($heading_type === 'heading') ? $modal_heading : '<div class="m
                     <span aria-hidden="true" class="wpr-modal-close"></span>
                 <?php endif; ?>
 
-                <?php do_action('wpr_end_modal_head', $product_id, $recommendation_products_ids); ?>
+                <?php do_action('wpr_end_modal_head', $product_id, $recommended_products_id); ?>
             </div>
 
             <div class="wpr-modal-body">
-                <?php do_action('wpr_before_products_loop', $product_id, $recommendation_products_ids); ?>
+                <?php do_action('wpr_before_products_loop', $product_id, $recommended_products_id); ?>
 
-                <ul class="products recommendation-products-wrapper recommendation-product-list" data-recommendation-ids="<?php echo implode(',', $recommendation_products_ids); ?>">
+                <ul class="products recommendation-products-wrapper recommendation-product-list" data-recommendation-ids="<?php echo implode(',', $recommended_products_id); ?>">
                     <!-- prodcut will fill by ajax -->
                 </ul>
 
@@ -123,9 +81,9 @@ $modal_heading = ($heading_type === 'heading') ? $modal_heading : '<div class="m
                     </div>
                 </div>
 
-                <?php do_action('wpr_after_products_loop', $product_id, $recommendation_products_ids); ?>
+                <?php do_action('wpr_after_products_loop', $product_id, $recommended_products_id); ?>
             </div>
         </div>
-        <?php do_action('wpr_after_modal_content', $product_id, $recommendation_products_ids); ?>
+        <?php do_action('wpr_after_modal_content', $product_id, $recommended_products_id); ?>
     </div>
 </div>
