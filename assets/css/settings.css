@@ -1,0 +1,144 @@
+.wpr-setting-page .nav-tab-wrapper {
+  margin-bottom: 30px;
+}
+.wpr-setting-page .form-table {
+  background-color: #fff;
+  margin-top: 30px;
+}
+.wpr-setting-page .form-table tr {
+  border-bottom: 1px solid #eee;
+}
+.wpr-setting-page .form-table tr th {
+  padding: 40px 10px 40px 20px;
+}
+.wpr-setting-page .form-table tr th small {
+  font-weight: normal;
+  opacity: 0.8;
+  padding-top: 5px;
+  padding-right: 20px;
+  display: block;
+}
+.wpr-setting-page .form-table tr td {
+  padding: 40px 10px;
+}
+.wpr-setting-page .form-table tr .wpr-field-post_type_checkbox label,
+.wpr-setting-page .form-table tr .wpr-field-checkbox label,
+.wpr-setting-page .form-table tr .wpr-field-wrapper label,
+.wpr-setting-page .form-table tr .wpr-field-radio label {
+  margin-right: 15px !important;
+}
+.wpr-setting-page .form-table tr .wpr-field-text input {
+  max-width: 100%;
+  width: 500px;
+}
+.wpr-setting-page .form-table .CodeMirror {
+  border: 1px solid #ddd;
+}
+.wpr-setting-page .form-table .css-editor {
+  width: 100%;
+  height: 300px;
+}
+.wpr-setting-page .form-table .sp-replacer {
+  padding: 0;
+  border: 1px solid #0071a1;
+  border-radius: 3px;
+}
+.wpr-setting-page .form-table .sp-dd {
+  padding: 0 8px;
+  height: 26px;
+  line-height: 26px;
+  float: left;
+  font-size: 10px;
+  color: #eee;
+}
+.wpr-setting-page .form-table .sp-dd:before {
+  content: "Select Color";
+  color: #000;
+}
+.wpr-setting-page .form-table .sp-preview {
+  height: 26px;
+  width: 30px;
+  border: none;
+  border-right: 1px solid #ddd;
+}
+
+.wpr-field-wrapper_extend .fields-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.wpr-field-wrapper_extend .fields-container > * {
+  width: calc(33% - 30px);
+  margin-right: 30px;
+  margin-bottom: 20px;
+}
+.wpr-field-wrapper_extend .fields-container label {
+  display: block;
+  width: 100%;
+  font-weight: 600;
+}
+.wpr-field-wrapper_extend .fields-container select {
+  width: 100%;
+  max-width: 100%;
+}
+.wpr-field-wrapper_extend .fields-container input[type=number] {
+  width: 80px;
+}
+.wpr-field-wrapper_extend .fields-container .child-checkbox {
+  margin-top: 30px;
+}
+.wpr-field-wrapper_extend .fields-container .select2-selection__rendered {
+  display: block !important;
+}
+.wpr-field-wrapper_extend .fields-container .select2-selection__rendered li {
+  margin-bottom: 0;
+}
+.wpr-field-wrapper_extend .fields-container .select2-container--default .select2-search--inline .select2-search__field {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.wpr-field-wrapper_extend .fields-container .select2-container--default .select2-selection--multiple {
+  border-radius: 4px;
+  border: 1px solid #7e8993;
+  color: #32373c;
+}
+
+.wpr-field-wrapper .fields-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.wpr-field-wrapper .fields-container > * {
+  width: 25%;
+  margin-bottom: 20px;
+}
+.wpr-field-wrapper .fields-container label {
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 0.9em;
+  color: #202020;
+  display: block;
+  width: 100%;
+}
+.wpr-field-wrapper .fields-container .color-selection label {
+  padding-top: 10px;
+}
+.wpr-field-wrapper .fields-container input[type=number] {
+  width: 70px;
+  margin-bottom: 5px;
+}
+.wpr-field-wrapper .fields-container select {
+  margin-bottom: 5px;
+}
+.wpr-field-wrapper .fields-container .reset-colors {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.wpr-field-wrapper .fields-container .reset-colors a {
+  color: #f1310f;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+/*# sourceMappingURL=settings.css.map */

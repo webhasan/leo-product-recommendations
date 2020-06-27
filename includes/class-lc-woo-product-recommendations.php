@@ -6,8 +6,7 @@
  * @author     LeoCoder
  */
 
-class LC_Woo_Product_Recommendations
-{
+class LC_Woo_Product_Recommendations {
 	/**
 	 * Inctance of class
 	 *
@@ -49,10 +48,8 @@ class LC_Woo_Product_Recommendations
 	 * Class constructor, initialize everything
 	 * @since      1.0.0
 	 */
-	private function __construct($__FILE__)
-	{
+	private function __construct($__FILE__) {
 		self::$__FILE__ = $__FILE__;
-
 		register_activation_hook(self::$__FILE__, array($this, 'on_activation'));
 		register_deactivation_hook(self::$__FILE__, array($this, 'on_deactivation'));
 		add_action('plugins_loaded', array($this, 'on_plugins_loaded'));
@@ -64,10 +61,10 @@ class LC_Woo_Product_Recommendations
 	 * 
 	 * @since      1.0.0
 	 */
-	public function on_activation()
-	{
+	public function on_activation() {
 		update_option('woocommerce_enable_ajax_add_to_cart', 'yes');
 		update_option('woocommerce_cart_redirect_after_add', 'no');
+		$this->add_default_settings();
 	}
 
 	/**
@@ -76,9 +73,21 @@ class LC_Woo_Product_Recommendations
 	 * @since      1.0.0
 	 * @return void
 	 */
-	public function on_deactivation()
-	{
+	public function on_deactivation() {
 		// do nothing
+	}
+
+	/**
+	 * Action after plugin deactive
+	 *
+	 * @since      1.0.0
+	 * @return void
+	 */
+	public function add_default_settings() {
+		$settings = $this->get_settings();
+		$settings = !empty($settings) ? $settings : array();
+		$default_settings = $this->get_default_settings();
+		update_option($this->get_settings_id(), array_merge($default_settings, $settings));
 	}
 
 	/**
@@ -87,8 +96,7 @@ class LC_Woo_Product_Recommendations
 	 * @since      1.0.0
 	 * @return void
 	 */
-	public function on_plugins_loaded()
-	{
+	public function on_plugins_loaded() {
 		$this->load_textdomain();
 
 		if (!$this->has_satisfied_dependencies()) {
@@ -110,8 +118,7 @@ class LC_Woo_Product_Recommendations
 	 * @since      1.0.0    
 	 * @return void
 	 */
-	public function load_textdomain()
-	{
+	public function load_textdomain() {
 		load_plugin_textdomain('woocommerce-product-recommendations', false, dirname(plugin_basename(self::$__FILE__)) . '/languages');
 	}
 
@@ -122,8 +129,7 @@ class LC_Woo_Product_Recommendations
 	 * @since      1.0.0   
 	 * @return bool
 	 */
-	protected function has_satisfied_dependencies()
-	{
+	protected function has_satisfied_dependencies() {
 		$dependency_errors = $this->get_dependency_errors();
 		return 0 === count($dependency_errors);
 	}
@@ -134,8 +140,7 @@ class LC_Woo_Product_Recommendations
 	 * @since      1.0.0   
 	 * @return array all dependency error message. 
 	 */
-	protected function get_dependency_errors()
-	{
+	protected function get_dependency_errors() {
 		$errors                      = array();
 		$wordpress_version           = get_bloginfo('version');
 		$minimum_wordpress_version   = $this->get_min_wp();
@@ -194,10 +199,12 @@ class LC_Woo_Product_Recommendations
 	 * @since      1.0.0
 	 * @return void
 	 */
-	public function includes()
-	{
+	public function includes() {
 		// handle all admin ajax request
 		$this->admin_ajax();
+		if(!$this->is_pro_activated()) {
+			$this->plugin_settins();
+		}
 	}
 
 	/**
@@ -214,13 +221,24 @@ class LC_Woo_Product_Recommendations
 	}
 
 	/**
+	 * Handle All selection panel Ajax Request
+	 * @since      1.0.0
+	 * @return void
+	 */
+	public function plugin_settins() {
+		if (!class_exists('LC_Wpr_Settings_Page'))
+			require_once($this->get_path('includes/class-lc-wpr-settings-page.php'));
+
+		new LC_Wpr_Settings_Page($this);
+	}
+
+	/**
 	 * Add all actions hook.
 	 * 
 	 * @since      1.0.0
 	 * @return void
 	 */
-	public function hooks()
-	{
+	public function hooks() {
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts')); // back-end scripts
 		add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts')); // front-end scripts
 
@@ -239,6 +257,10 @@ class LC_Woo_Product_Recommendations
 		add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
 
 		add_filter('nonce_user_logged_out', array($this, 'nonce_fix'), 100, 2);
+
+		if(!$this->is_pro_activated()) {
+			add_action('wp_head', array($this, 'settings_css')); // for custom styling
+		}
 	}
 
 	/**
@@ -248,15 +270,27 @@ class LC_Woo_Product_Recommendations
 	 * @return void
 	 */
 	public function admin_enqueue_scripts() {
-		if ( ! class_exists( '_WP_Editors', false ) ) {
-    require( ABSPATH . WPINC . '/class-wp-editor.php' );
-}
-add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_editor_scripts' ) );
 		wp_enqueue_editor();
 		if (!$this->is_pro_activated()) {
 			wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), false, true);
 			wp_localize_script('selection-panel-script', 'ajax_url', admin_url('admin-ajax.php'));
 			wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'));
+		}
+
+		$screen = get_current_screen();
+		if ($screen->id === 'toplevel_page_wpr-settings') {
+			wp_enqueue_style('wpr-settings', $this->get_url('assets/css/settings.css'));
+			wp_enqueue_script('spectrum', $this->get_url('assets/js/color-picker/spectrum.js'), array('jquery'), false, true);
+			wp_enqueue_script('wpr-settings', $this->get_url('assets/js/settings.js'), array('jquery','spectrum','wp-i18n'), false, true);
+			wp_enqueue_style('wpr-spectrum', $this->get_url('assets/js/color-picker/spectrum.css'));
+
+			wp_enqueue_script('wpr-select2', $this->get_url('assets/js/select2/select2.min.js'), array('spectrum'), false, true);
+			wp_enqueue_style('wpr-select2', $this->get_url('assets/js/select2/select2.min.css'));
+			
+			$cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
+			wp_localize_script('wpr-settings', 'wpr_css_editor', $cm_settings);
+			wp_enqueue_style('wp-codemirror');
+			wp_enqueue_script('wp-theme-plugin-editor');
 		}
 	}
 
@@ -266,9 +300,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return void
 	 */
-	public function wp_enqueue_scripts()
-	{
-
+	public function wp_enqueue_scripts() {
 		$settings = $this->get_settings();
 		$layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
@@ -290,6 +322,56 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 		if (!$this->is_pro_activated()) {
 			wp_enqueue_style('wpr-modal', $this->get_url('assets/css/modal.css'));
 		}
+	}
+
+		/**
+	 * Modal CSS 
+	 * 
+	 * @since      1.0.0
+	 */
+	public function settings_css() {
+		// grid
+		$items_desktop = $this->get_setting('grid_lg_items');
+		$items_tablet = $this->get_setting('grid_md_items');
+		$items_mobile = $this->get_setting('grid_sm_items'); 
+		$grid_column_gap = (int) $this->get_setting('grid_column_gap') + 1;
+		$desktop_item_width = 100/$items_desktop;
+		$tablet_item_width = 100/$items_tablet;
+		$mobile_item_width = 100/$items_mobile;
+
+		// custom css
+		$custom_css = $this->get_setting('custom_style') ? $this->get_setting('custom_style') : '';
+	?>
+		<style id="wpr-settings-css-front-end">
+			.wpr-modal .wpr-modal-content ul.recommendation-product-list {
+				margin: 0 <?php echo -$grid_column_gap/2; ?>px !important;
+			}
+			.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+				flex: 0 0 calc(<?php echo $desktop_item_width.'% - '.$grid_column_gap.'px'; ?>);
+				width: calc(<?php echo $desktop_item_width.'% - '.$grid_column_gap.'px'; ?>);
+				margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
+				margin-right: <?php echo $grid_column_gap / 2; ?>px !important;
+			}
+			@media screen and (max-width: 991px) {
+				.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+					flex: 0 0 calc(<?php echo $tablet_item_width.'% - '.$grid_column_gap.'px'; ?>);
+					width: calc(<?php echo $tablet_item_width.'% - '.$grid_column_gap.'px'; ?>);
+					margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
+					margin-right: <?php echo $grid_column_gap / 2; ?>px !important;
+				}
+			}
+			@media screen and (max-width: 767px) {
+				.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+					flex: 0 0 calc(<?php echo $mobile_item_width.'% - '.$grid_column_gap.'px'; ?>);
+					width: calc(<?php echo $mobile_item_width.'% - '.$grid_column_gap.'px'; ?>);
+					margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
+					margin-right: <?php echo $grid_column_gap / 2; ?>px !important;
+				}
+			}
+			<?php echo $custom_css;  ?>
+		</style>
+	<?php
+
 	}
 
 
@@ -386,8 +468,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return  void;
 	 */
-	public function on_save_post($id)
-	{
+	public function on_save_post($id) {
 		if (isset($_POST['_lc_wpr_data'])) {
 			update_post_meta($id, '_lc_wpr_data', $_POST['_lc_wpr_data']);
 		}
@@ -400,8 +481,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @return  void;
 	 */
 
-	public function fetch_modal_products()
-	{
+	public function fetch_modal_products() {
 		include($this->get_templates_path('templates/template-recommendations-products.php'));
 	}
 
@@ -411,8 +491,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return  json responsve with json data
 	 */
-	public function ajax_add_to_cart()
-	{
+	public function ajax_add_to_cart() {
 
 		if ($_REQUEST['data'] && $_REQUEST['nonce'] && wp_verify_nonce($_REQUEST['nonce'], 'lc-add-to-cart')) {
 			if (!class_exists('LC_Ajax_Add_To_Cart')) {
@@ -431,8 +510,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return  json response with json data of cart products
 	 */
-	public function get_cart_items()
-	{
+	public function get_cart_items() {
 		$products_ids_array = array();
 		foreach (WC()->cart->get_cart() as $cart_item) {
 			$products_ids_array[] = $cart_item['product_id'];
@@ -445,8 +523,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return  void;
 	 */
-	public function include_templates()
-	{
+	public function include_templates() {
 		// modal in shop / archives page
 		if (apply_filters('wc_pr_show_in_product_archives', true)) {
 			add_action('woocommerce_after_shop_loop_item', array($this, 'product_archive_modal'));
@@ -470,8 +547,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @return string heading of recommendation products
 	 * @since   1.0.0
 	 */
-	public function get_recommendation_products_heading($product_id)
-	{
+	public function get_recommendation_products_heading($product_id) {
 		$pr_data = $this->get_pr_data($product_id);
 		$heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
 		return $heading;
@@ -482,8 +558,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @return bool menually selected or not
 	 * @since   1.0.0
 	 */
-	public function is_menually_selection($product_id)
-	{
+	public function is_menually_selection($product_id) {
 		$pr_data = $this->get_pr_data($product_id);
 		return (!empty($pr_data['type']) && $pr_data['type'] === 'menual-selection');
 	}
@@ -493,8 +568,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @return bool dynamic selected or not
 	 * @since   1.0.0
 	 */
-	public function is_dynamic_selection($product_id)
-	{
+	public function is_dynamic_selection($product_id) {
 		$pr_data = $this->get_pr_data($product_id);
 		return (!empty($pr_data['type']) && $pr_data['type'] === 'dynamic-selection');
 	}
@@ -696,12 +770,11 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return void;
 	 */
-	public function product_archive_modal()
-	{
+	public function product_archive_modal() {
 		global $product;
 		$product_id = $product->get_id();
 
-		if ($this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version only support menual selection
+		if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version does not support dynamic selection	
 
 			$modal_heading = $this->get_recommendation_products_heading($product_id);
 			$recommendation_products_ids = $this->get_recommendation_products_id($product_id);
@@ -719,8 +792,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return void;
 	 */
-	public function product_single_modal()
-	{
+	public function product_single_modal() {
 		if (!is_product()) {
 			return false;
 		}
@@ -728,8 +800,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 		global $product;
 		$product_id = $product->get_id();
 
-
-		if ($this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version only support menual selection
+		if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version does not support dynamic selection
 			$modal_heading = $this->get_recommendation_products_heading($product_id);
 			$recommendation_products_ids = $this->get_recommendation_products_id($product_id);
 
@@ -743,11 +814,10 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * Add modal to Guterberg block product
 	 * @since      1.0.0
 	 */
-	public function product_gutenberg_block($html, $data, $product)
-	{
+	public function product_gutenberg_block($html, $data, $product) {
 		$product_id = $product->get_id();
 
-		if ($this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version only support menu selection
+		if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_menually_selection($product_id)) : // free version does not support dynamic selection
 			$modal_heading = $this->get_recommendation_products_heading($product_id);
 			$recommendation_products_ids = $this->get_recommendation_products_id($product_id);
 
@@ -790,8 +860,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return string min require WooCommerce version
 	 */
-	public function get_min_wc()
-	{
+	public function get_min_wc() {
 		$file_info = get_file_data(self::$__FILE__, array(
 			'min_wc' => 'WC requires at least',
 		));
@@ -804,8 +873,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return string min require WordPress version
 	 */
-	public function get_min_wp()
-	{
+	public function get_min_wp() {
 		$file_info = get_file_data(self::$__FILE__, array(
 			'min_wc' => 'Requires at least',
 		));
@@ -818,8 +886,7 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 * @since      1.0.0
 	 * @return string Settings id
 	 */
-	public function get_settings_id()
-	{
+	public function get_settings_id() {
 		return self::$setting_id;
 	}
 
@@ -832,6 +899,43 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 	 */
 	public function get_settings() {
 		return  get_option($this->get_settings_id());
+	}
+
+	/**
+	 * Get default settings
+	 * 
+	 * @since      1.0.0
+	 *
+	 * @return  array of default value of all sertting when default avaiable
+	 */
+	public function get_default_settings() {
+		$default_settings = array();
+		$pages = $this->settings_pages();
+
+		foreach($pages as $page) {
+			if(isset($page['sections']) && !empty($page['sections'])) {
+
+				foreach($page['sections'] as $section) {
+
+					if(isset($section['fields']) && !empty($section['fields'])) {
+
+						foreach($section['fields'] as $field) {
+							if(isset($field['default'])) 
+								$default_settings[$field['id']] =  $field['default'];
+
+							if(!empty($field['childs'])) {
+								foreach($field['childs'] as $child_field) {
+									if(isset($child_field['default'])) 
+										$default_settings[$child_field['id']] =  $child_field['default'];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $default_settings;
 	}
 
 	/**
@@ -877,6 +981,318 @@ add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_e
 		$data['sale'] = $onsale;
 
 		return $data;
+	}
+
+	/**
+	 * Get settings
+	 * 
+	 * @since      1.0.0
+	 * @param id settings field id
+	 * @return  array get single setting value by setting id
+	 */
+	public function get_setting($id) {
+		
+		$settings = $this->get_settings();
+
+		$field_type = $this->get_field_type($id);
+
+		$value = isset($settings[$id]) ? $settings[$id] : $this->get_default_setting($id);
+
+		if($field_type  === 'checkbox' && $settings && !isset($settings[$id])) {
+			$value = null;
+		}
+
+		if(!$value) return $value;
+
+		// text field allowed tag
+		$html_permission = array(
+			'span' => array('class'),
+			'b'    => array(),
+			'strong' => array(),
+			'i'    => array(),
+			'br'   => array(),
+    	);
+		
+		switch ($field_type) {
+			case 'text':
+				$value = wp_kses($value, $html_permission);
+				break;
+
+			case 'color_picker':
+				$value = esc_attr($value);
+				break;
+
+			case 'number':
+				$value = (int) esc_attr($value);
+				break;
+
+			case 'css':
+				$value = sanitize_textarea_field($value);
+				break;
+		}
+		return $value;
+	}
+
+	/**
+	 * Get Default Setting Value
+	 * @param id settings field id
+	 * @since      1.0.0
+	 */
+	 public function get_default_setting($id) {
+		$pages = $this->settings_pages();
+
+		foreach($pages as $page) {
+			if(isset($page['sections']) && !empty($page['sections'])) {
+
+				foreach($page['sections'] as $section) {
+
+					if(isset($section['fields']) && !empty($section['fields'])) {
+
+						foreach($section['fields'] as $field) {
+							if($field['id'] === $id && isset($field['default'])) 
+								return $field['default'];
+
+							if(!empty($field['childs'])) {
+								foreach($field['childs'] as $child_field) {
+
+									if($child_field['id'] === $id && isset($child_field['default'])) 
+										return $child_field['default'];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	 }
+
+	/**
+	 * get setting field type by setting field ID
+	 * @param id setting field ID
+	 * 
+	 * @since      1.0.0
+	 */
+	 public function get_field_type($id) {
+		$pages = $this->settings_pages();
+
+		foreach($pages as $page) {
+			if(isset($page['sections']) && !empty($page['sections'])) {
+
+				foreach($page['sections'] as $section) {
+
+					if(isset($section['fields']) && !empty($section['fields'])) {
+						foreach($section['fields'] as $field) {
+							if($field['id'] === $id) {
+								return isset($field['type']) ? $field['type'] : false;
+							}
+
+							if(!empty($field['childs'])) {
+								foreach($field['childs'] as $child_field) {
+									if($child_field['id'] === $id) {
+										return isset($child_field['type']) ? $child_field['type'] : false;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	 }
+
+	/**
+     * All settings pages including section and fields
+	 * 
+     * @since      1.0.0
+     * @return  array of settings pages
+     */
+	public function settings_pages() {
+		$general_settings_fields = array(
+			array(
+                'id' => 'default_heading',
+                'title' => __('Default Heading', 'woocommerce-product-recommendations'),
+                'type' => 'text',
+                'description' => __('If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. To manage single and multiple items, use  pattern <strong>[item, items]</strong>', 'woocommerce-product-recommendations'),
+                'default' => __('You may purchase following [item, items] with the %title%', 'woocommerce-product-recommendations'),
+            ),
+			
+			array(
+                'id' => 'grid_options',
+                'title' => __('Grid Options', 'woocommerce-product-recommendations'),
+                'type' => 'wrapper',
+                'childs' => array(
+
+                    array(
+                        'id' => 'grid_lg_items',
+                        'title' => __('Desktop Items', 'woocommerce-product-recommendations'),
+						'type' => 'number',
+						'min' => 2,
+						'max' => 5,
+						'default' => 4
+                    ),
+
+                    array(
+                        'id' => 'grid_md_items',
+                        'title' => __('Tablet Items', 'woocommerce-product-recommendations'),
+						'type' => 'number',
+						'min' => 2,
+						'max' => 5,
+						'default' => 3
+                    ),
+
+                    array(
+                        'id' => 'grid_sm_items',
+                        'title' => __('Mobile Items', 'woocommerce-product-recommendations'),
+						'type' => 'number',
+						'min' => 1,
+						'max' => 3,
+						'default' => 2
+					),
+					array(
+                        'id' => 'grid_column_gap',
+                        'title' => __('Column Gap', 'woocommerce-product-recommendations'),
+						'type' => 'number',
+						'sufix' => 'px',
+						'min' => 0,
+						'max' => 60,
+						'default' => 20
+                    ),
+                )
+            )
+		);
+
+		$style_settings = array(			
+			 array(
+                'id' => 'custom_style',
+                'title' => __('Custom CSS', 'woocommerce-product-recommendations'),
+				'type' => 'css',
+                'description'  => __('Write custom css to change style of modal.', 'woocommerce-product-recommendations'),
+            ),
+		);
+
+		$global_settings_fields = array(
+			array(
+				'id' => 'active_global_settings',
+				'title' => __('Active Global Setting', 'woocommerce-product-recommendations'),
+				'type' => 'checkbox',
+				'description' => __('If you don\'t serup recommendation product individually, the global setting work for that product.', 'woocommerce-product-recommendations'),
+			),
+			array(
+				'id' => 'selection_options',
+				'title' => __('Recommendation Options', 'woocommerce-product-recommendations'),
+				'type' => 'wrapper_extend',
+				'childs' => array(
+					array(
+						'id' => 'global_categories',
+						'title' => __('Categories', 'woocommerce-product-recommendations'),
+						'type' => 'radio',
+						'options' => array(
+							'same_categories' => __('Same As Product', 'woocommerce-product-recommendations'),
+							'menual_categories'  => __('Menual', 'woocommerce-product-recommendations'),
+						),
+						'default' => 'same_categories'
+					),
+					array(
+						'id' => 'global_custom_categories',
+						'title' => __('Choose Categories', 'woocommerce-product-recommendations'),
+						'type' => 'categories_select',
+					),
+
+					array(
+						'id' => 'global_tags',
+						'title' => __('Choose Tags', 'woocommerce-product-recommendations'),
+						'type' => 'tags_select',
+					),
+
+					array(
+						'id' => 'global_filtering',
+						'title' => __('Products Filtering', 'woocommerce-product-recommendations'),
+						'type' => 'select',
+						'options' => array(
+							'rand' => 'Random Products',
+							'newest' => 'Newest To Oldest',
+							'oldest' => 'Oldest To Newest',
+							'title'  => 'Order By Name (A->Z)',
+							'lowprice'  => 'Price Low to Height',
+							'heighprice'  => 'Price Heigh To Low',
+							'popularity'  => 'Best Selling',
+							'rating'  => 'Top Rated',
+						)
+					),
+					array(
+						'id' => 'global_on_sale',
+						'title' => __('On-Sale Only', 'woocommerce-product-recommendations'),
+						'type' => 'checkbox',
+					),
+					array(
+						'id' => 'global_products_number',
+						'title' => __('Post Numbers', 'woocommerce-product-recommendations'),
+						'type' => 'number',
+						'default' => 12
+					)
+				)
+			),
+
+			array(
+				'id' => 'disable_global_overwirte',
+				'label' => 'Overwite',
+				'title' => __('Overwrite By Individula', 'woocommerce-product-recommendations'),
+				'type' => 'checkbox',
+				'description' => 'If the is recommendation setting avaiable it will overwirte global setting. But you can disable it. It is helpful for some quick campain.',
+			)
+		);
+
+
+		$setting_pages =  array(
+			array(
+				'id' 			=> $this->get_settings_id(),
+				'page_title' 	=> 'WooCommerce Product Recommendations Settings',
+				'menu_title' 	=> 'WPR Settings',
+				'slug' 			=> 'wpr-settings',
+				'icon'			=> 'dashicons-cart',
+				'position'		=>  60,
+
+				'sections' => array(
+					array(
+						'id' => 'wpr-general-settings',
+						'tab_title' => 'General',
+						'title' => 'General Settings',
+						'descriptions' => 'General Setting of WooCommerce Products Recommendations',
+						'fields' => $general_settings_fields
+					),
+
+					array(
+						'id' => 'wpr-style-settings',
+						'tab_title' => 'Style',
+						'title' => 'Colors & Styles Settings',
+						'descriptions' => 'General Setting of WooCommerce Products Recommendations',
+						'fields' => $style_settings,
+					),
+
+					array(
+						'id' => 'wpr-global-settings',
+						'tab_title' => 'Global',
+						'title' => 'Global Settings',
+						'descriptions' => 'Global Settings',
+						'fields' => $global_settings_fields
+					),
+
+					array(
+						'id' => 'wpr-documentation',
+						'tab_title' => 'Documentation',
+						'title' => 'Tutorial & Documentation',
+						'type'  =>  'article',
+						'descriptions' => 'Global Settings',
+						'template' => $this->get_path('includes/tutorials.php')
+					),
+				)
+			),
+		);
+		
+		return $setting_pages;
 	}
 
 	/**

@@ -1,0 +1,174 @@
+.wpr-setting-page {
+  .nav-tab-wrapper {
+    margin-bottom: 30px;
+  }
+
+  .form-table {
+    background-color: #fff;
+    margin-top: 30px;
+
+    tr {
+      border-bottom: 1px solid #eee;
+
+      th {
+        padding: 40px 10px 40px 20px;
+        small {
+          font-weight: normal;
+          opacity: 0.8;
+          padding-top: 5px;
+          padding-right: 20px;
+          display: block;
+        }
+      }
+
+      td {
+        padding: 40px 10px;
+      }
+
+      .wpr-field-post_type_checkbox,
+      .wpr-field-checkbox,
+      .wpr-field-wrapper,
+      .wpr-field-radio {
+        label {
+          margin-right: 15px !important;
+        }
+      }
+
+      .wpr-field-text input {
+        max-width: 100%;
+        width: 500px;
+      }
+    }
+
+    .CodeMirror {
+      border: 1px solid #ddd;
+    }
+
+    .css-editor {
+      width: 100%;
+      height: 300px;
+    }
+
+    .sp-replacer {
+      padding: 0;
+      border: 1px solid #0071a1;
+      border-radius: 3px;
+    }
+
+    .sp-dd {
+      padding: 0 8px;
+      height: 26px;
+      line-height: 26px;
+      float: left;
+      font-size: 10px;
+      color: #eee;
+    }
+
+    .sp-dd:before {
+      content: "Select Color";
+      color: #000;
+    }
+
+    .sp-preview {
+      height: 26px;
+      width: 30px;
+      border: none;
+      border-right: 1px solid #ddd;
+    }
+  }
+}
+
+.wpr-field-wrapper_extend .fields-container {
+   display: flex;
+  flex-wrap: wrap;
+
+  & > * {
+    width: calc(33% - 30px);
+    margin-right: 30px;
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    width: 100%;
+    font-weight: 600;
+  }
+
+  select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  input[type="number"] {
+    width: 80px;
+  }
+
+  .child-checkbox {
+    margin-top: 30px;
+  }
+
+  .select2-selection__rendered {
+    display: block !important;
+    li {
+      margin-bottom: 0;
+    }
+  } 
+
+  .select2-container--default 
+  .select2-search--inline 
+  .select2-search__field {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .select2-container--default .select2-selection--multiple {
+    border-radius: 4px;
+    border: 1px solid #7e8993;
+    color: #32373c;
+  }
+}
+
+.wpr-field-wrapper .fields-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  & > * {
+    width: 25%;
+    margin-bottom: 20px;
+  }
+
+  label {
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 0.9em;
+    color: #202020;
+    display: block;
+    width: 100%;
+  }
+
+  .color-selection label {
+    padding-top: 10px;
+  }
+
+  input[type="number"] {
+    width: 70px;
+    margin-bottom: 5px;
+  }
+
+  select {
+    margin-bottom: 5px;
+  }
+
+  .reset-colors {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+
+    a {
+      color: #f1310f;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+  }
+}
