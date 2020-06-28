@@ -202,6 +202,7 @@ class LC_Woo_Product_Recommendations {
 	public function includes() {
 		// handle all admin ajax request
 		$this->admin_ajax();
+		$this->plugin_action_links();
 		if(!$this->is_pro_activated()) {
 			$this->plugin_settins();
 		}
@@ -218,6 +219,19 @@ class LC_Woo_Product_Recommendations {
 			include_once($this->get_path('includes/class-lc-wpr-admin-ajax.php'));
 		}
 		new LC_Wpr_Admin_Ajax();
+	}
+
+	/**
+	 * Add plugin action link
+	 * @since      1.0.0
+	 */
+	public function plugin_action_links() {
+		add_action('plugin_action_links_'. plugin_basename(self::$__FILE__), function($links) {
+			$settings = array( 
+				'settings' => '<a href="'.esc_url( get_admin_url(null, 'admin.php?page=wpr-settings') ).'">'.__('Settings','woocommerce-product-recommendations').'</a>',
+			);
+			return array_merge($settings, $links);
+		});
 	}
 
 	/**
