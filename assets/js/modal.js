@@ -97,19 +97,16 @@
       var button = buttonInfo[0];
 
       //don't show modal inside modal
-      if (!$(button).closest(".recommendation-product-list").length) {
+      if (!$(button).closest(".recommended-products-list").length) {
         var buttonId = $(button).data("product_id");
         var modalId = "#wpr-modal-" + buttonId;
         var $modal = $(modalId);
 
         if ($modal.length) {
           var $preloader = $modal.find(".loading-products");
-          var $recommendationProductsWrapper = $modal.find(
-            ".recommendation-products-wrapper"
-          );
+          var $recommendationProductsWrapper = $modal.find(".recommended-products-wrapper");
 
           var recommendationProducts = $recommendationProductsWrapper.data("recommendation-ids");
-
 
           if (recommendationProducts) {
             recommendationProducts = recommendationProducts.toString();
@@ -145,7 +142,7 @@
             $preloader.hide();
 
             if (lc_ajax_modal.layout_type === "slider") {
-                var owl = $(".recommendation-product-slider").trigger("replace.owl.carousel", data);
+              var owl = $modal.find(".recommended-products-slider").trigger("replace.owl.carousel", data);
 
                 $total_items = owl.data('owl.carousel')._items.length
                 $visible_items = owl.data('owl.carousel').options.items;

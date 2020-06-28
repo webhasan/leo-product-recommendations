@@ -283,7 +283,7 @@ body.wpr-modal-opened {
       padding: 16px 20px;
     }
 
-    ul.recommendation-product-list {
+    ul.recommended-products-list {
       overflow: hidden;
       display: flex !important;
       flex-wrap: wrap !important;
@@ -443,11 +443,6 @@ body.wpr-modal-opened {
 }
 
 /** divi fix **/
-body.theme-Divi
-  .wpr-modal
-  .wpr-modal-content
-  ul.recommendation-product-list
-  li.single-wpr
-  a.button:after {
+body.theme-Divi .wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr a.button:after {
   line-height: 1.7em;
 }

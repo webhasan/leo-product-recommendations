@@ -47,7 +47,7 @@ extract($data);
             <div class="wpr-modal-body">
                 <?php do_action('wpr_before_products_loop', $product_id, $recommended_products_id); ?>
 
-                <ul class="products recommendation-products-wrapper recommendation-product-list" data-recommendation-ids="<?php echo implode(',', $recommended_products_id); ?>">
+                <ul class="products recommended-products-wrapper recommended-products-list" data-recommendation-ids="<?php echo implode(',', $recommended_products_id); ?>">
                     <!-- prodcut will fill by ajax -->
                 </ul>
 

@@ -357,17 +357,17 @@ class LC_Woo_Product_Recommendations {
 		$custom_css = $this->get_setting('custom_style') ? $this->get_setting('custom_style') : '';
 	?>
 		<style id="wpr-settings-css-front-end">
-			.wpr-modal .wpr-modal-content ul.recommendation-product-list {
+			.wpr-modal .wpr-modal-content ul.recommended-products-list {
 				margin: 0 <?php echo -$grid_column_gap/2; ?>px !important;
 			}
-			.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+			.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
 				flex: 0 0 calc(<?php echo $desktop_item_width.'% - '.$grid_column_gap.'px'; ?>);
 				width: calc(<?php echo $desktop_item_width.'% - '.$grid_column_gap.'px'; ?>);
 				margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
 				margin-right: <?php echo $grid_column_gap / 2; ?>px !important;
 			}
 			@media screen and (max-width: 991px) {
-				.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+				.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
 					flex: 0 0 calc(<?php echo $tablet_item_width.'% - '.$grid_column_gap.'px'; ?>);
 					width: calc(<?php echo $tablet_item_width.'% - '.$grid_column_gap.'px'; ?>);
 					margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
@@ -375,7 +375,7 @@ class LC_Woo_Product_Recommendations {
 				}
 			}
 			@media screen and (max-width: 767px) {
-				.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+				.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
 					flex: 0 0 calc(<?php echo $mobile_item_width.'% - '.$grid_column_gap.'px'; ?>);
 					width: calc(<?php echo $mobile_item_width.'% - '.$grid_column_gap.'px'; ?>);
 					margin-left: <?php echo $grid_column_gap / 2; ?>px !important;

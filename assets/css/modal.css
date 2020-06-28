@@ -245,7 +245,7 @@ body.wpr-modal-opened {
   flex: 1 1 auto;
   padding: 16px 20px;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list {
+.wpr-modal .wpr-modal-content ul.recommended-products-list {
   overflow: hidden;
   display: flex !important;
   flex-wrap: wrap !important;
@@ -254,7 +254,7 @@ body.wpr-modal-opened {
   margin: 0 -10px !important;
   padding: 0 !important;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
   list-style: none;
   text-align: center;
   display: block;
@@ -271,49 +271,49 @@ body.wpr-modal-opened {
   line-height: 22.5px;
 }
 @media screen and (max-width: 991px) {
-  .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+  .wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
     flex: 0 0 calc(33.333333% - 21px);
     width: calc(33.333333% - 21px);
   }
 }
 @media screen and (max-width: 767px) {
-  .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr {
+  .wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
     flex: 0 0 calc(50% - 21px);
     width: calc(50% - 21px);
   }
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr .star-rating {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr .star-rating {
   margin: auto auto 1em !important;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr > a {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr > a {
   text-decoration: none;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr > a:hover {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr > a:hover {
   text-decoration: none;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr h2.woocommerce-loop-product__title {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr h2.woocommerce-loop-product__title {
   font-size: 16px;
   font-weight: 400;
   margin-top: 0;
   margin-bottom: 0.5em;
   font-family: Arial, Helvetica, sans-serif;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr .price {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr .price {
   display: block;
   color: #43454b;
   font-weight: 400;
   margin-bottom: 16px;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr .onsale {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr .onsale {
   font-size: 0.875em;
   text-transform: uppercase;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr a.button {
   font-size: 14px;
   font-weight: bold;
 }
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:before,
-.wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:after {
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr a.button:before,
+.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr a.button:after {
   font-size: 14px;
 }
 .wpr-modal .wpr-modal-content ul li img {
@@ -383,7 +383,7 @@ body.wpr-modal-opened {
 }
 
 /** divi fix **/
-body.theme-Divi .wpr-modal .wpr-modal-content ul.recommendation-product-list li.single-wpr a.button:after {
+body.theme-Divi .wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr a.button:after {
   line-height: 1.7em;
 }
 
