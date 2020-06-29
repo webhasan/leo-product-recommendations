@@ -58,7 +58,7 @@ msgstr ""
 msgid "Default Heading"
 msgstr ""
 
-#: includes/class-lc-woo-product-recommendations.php:Active Global Setting
+#: includes/class-lc-woo-product-recommendations.php:1205
 msgid "If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. To manage single and multiple items, use  pattern <strong>[item, items]</strong>"
 msgstr ""
 
