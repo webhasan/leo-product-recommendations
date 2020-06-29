@@ -189,7 +189,7 @@ var WPEditor = function WPEditor(_ref) {
       setLoaded = _useState2[1];
 
   useEffect(function () {
-    if (wp.editor.getDefaultSettings && !loaded) {
+    if (wp && wp.editor && wp.editor.getDefaultSettings && !loaded) {
       setLoaded(true);
 
       var _wp$editor$getDefault = wp.editor.getDefaultSettings(),
@@ -555,6 +555,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       name: "_lc_wpr_data[type]",
       value: type
     }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
+      className: "rp-panel-title"
+    }, __("Recommendation ".concat(initialData.heading_type), "woocommerce-product-recommendations")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       className: "heading-control"
     }, headingType.map(function (method) {
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("label", {
@@ -571,8 +573,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         }
       }), method.title);
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
-      className: "rp-panel-title"
-    }, __("Recommendation ".concat(initialData.heading_type), "woocommerce-product-recommendations")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])("div", {
       style: {
         display: initialData.heading_type === 'article' ? 'block' : 'none'
       }

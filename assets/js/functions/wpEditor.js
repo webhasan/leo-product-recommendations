@@ -4,7 +4,7 @@ const WPEditor = ({ onChange, id, ...options}) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(function () {
-    if (wp.editor.getDefaultSettings && !loaded) {
+    if (wp && wp.editor && wp.editor.getDefaultSettings && !loaded) {
       setLoaded(true);
       let {
         tinymce: tinymceObj,

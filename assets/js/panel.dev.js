@@ -202,6 +202,13 @@ import classNames from 'classnames';
         <div className="recommendation-prodcut-options-wrap" style={opacity}>
           <div className="pr-field">
             <input type="hidden" name="_lc_wpr_data[type]" value={type} />
+            
+            <div className="rp-panel-title">
+              {__(
+                `Recommendation ${initialData.heading_type}`,
+                "woocommerce-product-recommendations"
+              )}
+            </div>
 
             <div className="heading-control">
               {headingType.map(method => (
@@ -216,12 +223,6 @@ import classNames from 'classnames';
                   {method.title}
                 </label>
               ))}
-            </div>
-            <div className="rp-panel-title">
-              {__(
-                `Recommendation ${initialData.heading_type}`,
-                "woocommerce-product-recommendations"
-              )}
             </div>
 
             <div style={{ display: initialData.heading_type === 'article' ? 'block': 'none'}}>
