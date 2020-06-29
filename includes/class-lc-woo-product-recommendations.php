@@ -1325,10 +1325,10 @@ class LC_Woo_Product_Recommendations {
 
 			array(
 				'id' => 'disable_global_overwirte',
-				'label' => 'Overwite',
+				'label' => 'Overwrite',
 				'title' => __('Overwrite Individual product\'s recommendation', 'woocommerce-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => 'Check this box to overwirte Individual setting. Global setting will be applied on all products. It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to offer discount on specific category products. Just select category from above setting and check this overrite box.',
+				'description' => 'Check this box to overwrite Individual setting. Global setting will be applied on all products. It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to offer discount on specific category products. Just select category from above setting and check this overwrite box.',
 			)
 		);
 
