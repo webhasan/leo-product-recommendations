@@ -1202,7 +1202,7 @@ class LC_Woo_Product_Recommendations {
                 'id' => 'default_heading',
                 'title' => __('Default Heading', 'woocommerce-product-recommendations'),
                 'type' => 'text',
-                'description' => __('If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. To manage single and multiple items, use  pattern <strong>[item, items]</strong>', 'woocommerce-product-recommendations'),
+                'description' => __('If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'woocommerce-product-recommendations'),
                 'default' => __('You may purchase following [item, items] with the %title%', 'woocommerce-product-recommendations'),
             ),
 			
@@ -1265,7 +1265,7 @@ class LC_Woo_Product_Recommendations {
 				'id' => 'active_global_settings',
 				'title' => __('Active Global Setting', 'woocommerce-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => __('If you don\'t serup recommendation product individually, the global setting work for that product.', 'woocommerce-product-recommendations'),
+				'description' => __('If you don\'t recommend products individually, the global setting will work for that product.', 'woocommerce-product-recommendations'),
 			),
 			array(
 				'id' => 'selection_options',
@@ -1326,9 +1326,9 @@ class LC_Woo_Product_Recommendations {
 			array(
 				'id' => 'disable_global_overwirte',
 				'label' => 'Overwite',
-				'title' => __('Overwrite By Individula', 'woocommerce-product-recommendations'),
+				'title' => __('Overwrite Individual product\'s recommendation', 'woocommerce-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => 'If the is recommendation setting avaiable it will overwirte global setting. But you can disable it. It is helpful for some quick campain.',
+				'description' => 'Check this box to overwirte Individual setting. Global setting will be applied on all products. It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to offer discount on specific category products. Just select category from above setting and check this overrite box.',
 			)
 		);
 
