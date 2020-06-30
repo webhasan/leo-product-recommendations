@@ -97,7 +97,7 @@
       var button = buttonInfo[0];
 
       //don't show modal inside modal
-      if (!$(button).closest(".recommended-products-list").length) {
+      if (!$(button).closest(".recommended-products-wrapper").length) {
         var buttonId = $(button).data("product_id");
         var modalId = "#wpr-modal-" + buttonId;
         var $modal = $(modalId);
