@@ -1265,7 +1265,7 @@ class LC_Woo_Product_Recommendations {
 				'id' => 'active_global_settings',
 				'title' => __('Active Global Setting', 'woocommerce-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => __('If you don\'t recommend products individually, the global setting will work for that product.', 'woocommerce-product-recommendations'),
+				'description' => __('If there are no recommendations available for some products (if you don\'t setup from product editor), the global setting will work for those products as a fallback. This setting is also helpful if you like a bulk recommendation setup for entire shop instead of a different setup for each product.', 'woocommerce-product-recommendations'),
 			),
 			array(
 				'id' => 'selection_options',
@@ -1326,9 +1326,9 @@ class LC_Woo_Product_Recommendations {
 			array(
 				'id' => 'disable_global_overwirte',
 				'label' => 'Overwrite',
-				'title' => __('Overwrite Individual product\'s recommendation', 'woocommerce-product-recommendations'),
+				'title' => __('Overwrite Individual Product\'s Recommendation.', 'woocommerce-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => 'Check this box to overwrite Individual setting. Global setting will be applied on all products. It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to offer discount on specific category products. Just select category from above setting and check this overwrite box.',
+				'description' => 'Check this box to overwrite the individual setting. And apply global recommendations on all products whether individual setting available or not. It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to recommend some specific categories of products. Just select the categories from the above setting and check this overwrite box.',
 			)
 		);
 
