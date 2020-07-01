@@ -1,62 +1,110 @@
 === Woocommerce Product Recommend ===
-Contributors: Pluginsify
-Tags: Woocommerce, product attributes, woocommerce products recommend,recommend product
-Requires at least: 4.8
-Tested up to: 5.3
+Contributors: webhasan, masumbillah
+Tags: woocommerce product recommendations, prodcut recommendations, woocommerce, woocommerce products recommend,recommend product
+Requires at least: 5.0
+Tested up to: 5.4.2
 Requires PHP: 5.6
-Stable tag: trunk
+Stable tag: 1.0
 WC requires at least: 3.2
 WC tested up to: 4.2
 License: GPLv3
 License URI: http://www. gnu. org/licenses/gpl-3.0.html
 
+Recommend products smartly and increase sales by nice-looking add to cart popup
+
 == Description ==
+WooCommerce Prodcut Recommendations is a sale boosting plugin by recommending prodcuts smartly in a fully customizeable and nice looking popup. It shows recommended prodcuts in a heighly focusing popup when customer click add to cart button. In the backend powerful selection panel and settings provide you full flexiablity to assign recommended prodcuts menualy and dynamic way. 
 
-Woocommerce Product Recommend will promote the most convenient products which increase sales. 
-For an example, Customer who is buying Motor Bike, he/she must be interested in buying helmet, 
-hand gloves, motor bike shoes etc. This plugin will show the recommended products by clicking on 
-add to cart from both shop page and single product page. 
+After purchasing a smartphone definitely there is a high possibility the customer will be interested to purchase mobile accessories like a mobile cover, screen paper, headphones, etc. WooCommerce Products Recommendations helps here to recommend that product instantly.
+[GIF IMAGE]
 
-== How to use Woocommerce Product recommend ==
-After successfully installation and activation, the plugin will add a panel called Recommended Products to 
-Woocommerce Product option.
-  
-  1. Go to Products→ add new or navigate to edit product from all products
-  2. Go to Recommend Products panel and set Heading (optional) and products. 
-  
-  ## Key Features ##
-  
-  ☑ Add specific products you want to recommend your customers
-  ☑ Search and filter option available to easily find products from product dashboard
-  ☑ Reorder the products to serialize those on modal☑ Add modal popup for showing recommended products 
-  ☑ Compatible with any well-coded WooCommerce themes and plugins 
-  ☑ Available actions and filters hook 
-  to modify everything
-  ☑ Option to use default stylesheet of your theme
-  ☑ Frequently updated and secured codebase 
-  
-  == Installation ==
-  
-  ### Automatic Install From WordPress Dashboard  ###
-  1. Login to your the admin panel
-  2. Navigate to Plugins → Add New
-  3. Search for "WooCommerce Product recommend"
-  4. Click install and activate respectively. 
+In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of Jeans pant. WooCommerce Product Recommendations helps here to sell T-Shirts with a pair of Jeans pants.
+[GIF IMAGE]
 
-  ### Manual Installation From WordPress Dashboard ###
-  
-  When server is not connected to the Internet, then you can use this method
-  1. Download the plugin by clicking on the red button above. A ZIP file will be downloaded.
-  2. Login to your site's admin panel and navigate to Plugins → Add New → Upload.
-  3. Click choose file, select the plugin file and click install
-  
-  ### Install Using FTP ###
-  
-  1. Download the plugin by clicking on download. A ZIP file will be downloaded.
-  2. Unzip the file.
-  3. Launch your favorite FTP client. Such as FileZilla, FireFTP, CyberDuck etc. If you are a 
-  more advanced user, then you can use SSH too.
-  4. Upload the folder to `wp-content/plugins/`
-  5. Log in to your WordPress dashboard.
-  6. Navigate to Plugins → Installed
-  7. Activate the plugin
+WooCommerce Products Recommendation does everything Ajax way to improve the shopping experience. Customers do not require a lot of page redirect / reload to purchase products. It also reduces the steps and time of shopping and increase the chances of selling. 
+
+## How Setup Product Recommendations ##
+[youtube https://youtu.be/7Rde3rWOwJo]
+[For details documentation:](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+
+## Key Features ##
+* Responsive Popup 
+* Recommended Products Grid Settings
+* Menaul Selection 
+* Global Selection
+* Flexiable Recommendation Heading (Single Heading & Description)
+* Custom CSS 
+* Ajax Ad to Cart
+* Like WooCommerce overrid templates via a theme
+* Single & Product Archive page support. 
+* Gutenberg blocks and page builder (Elementor, Divi, WpBakery)
+
+## Pro Features ##
+Including all free features pro version provide more flexiablity to adjust everything. 
+
+* Slider Layouts
+* Dynamic Selection
+* Modal Color Settings
+* Modal Sizes Settings
+* Recommended Product Color Settings 
+* Items vesiblity 
+* REST API 
+
+## Demos ##
+WooCommerce product recommendations is prefectly feet for all types of shop. Check example bellow: 
+[SMARTPHONE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[ELECTRONICS](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[COMPUTER](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[SHOES](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[FOOD](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[FOOD](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[CLOTHING](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[JEWELLERY](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[LEATHER](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[TRAVEL](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[AUTOMOBILES](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[PET CARE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[SOFTWARE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[TOYS](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[FASHION](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[BEAUTY & HEALTH](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[SPORTS](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[HOME APPLIANCE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+
+== Frequently Asked Questions ==
+= Does it work for product archive single and product single page? =
+Yes, it is working perfectly for a single product page and product archive page.
+
+= Does it work with WooCommerce Products shortcode and  Gutenberg Products Blocks?  =
+Yes, It works for  WooCommerce Products shrotcode and all Gutenberg Products Blocks.
+
+= Does it work with DIVI (WooCommerce Builder), Elementor, WPBakery builder?  =
+Yes, This plugin is compatible with DIVI, WooCommerce Builder for DIVI, Elementor, WPBakery page builder.  
+
+= Beside Simple Product does it work for Variable Product & Grouped Product? =
+Yes, It works all type of product including  Simple Product, Variable Product  & Grouped Product
+
+= Does it work with quick view ? =
+Yes, it works with quick view with all major quick view plugin. It it does not work for your quick view option please contact support to quick fix it.
+
+= How to overrid popup templates via a theme  ? =
+All template files are available in templates folder inside plugin files.
+In the templates fiels there are available filter and action hooks that allow you to add/edit popup template.
+
+You also can overwrite templates files by your theme theme. Create a directory as /wpr/templates/ and copy template file inside the directory.
+Example: To override template-modal.php file by your theme then the file structure should be  wp-content/themes/yourtheme/wpr/templates/template-modal.php
+
+Note: You need some development knowledge to overwrite template files or it may cause an error.
+
+== Screenshots ==
+1. WooCommere Product Recommendation Preview
+2. WooCommere Product Recommendation Selection panel
+3. WooCommere Product Recommendation Selection Settings
+4. WooCommere Product Recommendation Before After Preview 
+
+== Changelog ==
+
+= 1.0.0 =
+* Initial release
+
+== Upgrade Notice ==

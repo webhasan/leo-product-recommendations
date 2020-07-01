@@ -1316,7 +1316,7 @@ class LC_Woo_Product_Recommendations {
 					),
 					array(
 						'id' => 'global_products_number',
-						'title' => __('Post Numbers', 'woocommerce-product-recommendations'),
+						'title' => __('Numbers of Products To Show', 'woocommerce-product-recommendations'),
 						'type' => 'number',
 						'default' => 12
 					)

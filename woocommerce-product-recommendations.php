@@ -3,7 +3,7 @@
 /**
  * Plugin Name: WooCommerce Product Recommendations
  * Plugin URI: https://leocoder.com/
- * Description: WooCommerce Product Recommendations is the best sell boosting plugin by recommending products to the customers based on purchased a product. After adding a product to the cart it will show the recommend products on a popup.
+ * Description: Recommend products smartly and increase sales by nice-looking add to cart popup
  * Version: 1.0.0
  * Requires at least: 5.0
  * Requires PHP: 5.6
