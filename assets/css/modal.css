@@ -156,29 +156,29 @@ body.wpr-modal-opened {
   margin-bottom: 0 !important;
 }
 .wpr-modal .wpr-modal-content .modal-heading-article h1 {
-  font-size: 36px;
-}
-.wpr-modal .wpr-modal-content .modal-heading-article h2 {
   font-size: 30px;
 }
-.wpr-modal .wpr-modal-content .modal-heading-article h3 {
+.wpr-modal .wpr-modal-content .modal-heading-article h2 {
   font-size: 24px;
 }
+.wpr-modal .wpr-modal-content .modal-heading-article h3 {
+  font-size: 20px;
+}
 .wpr-modal .wpr-modal-content .modal-heading-article h4 {
-  font-size: 22px;
+  font-size: 18px;
 }
 @media screen and (max-width: 991px) {
   .wpr-modal .wpr-modal-content .modal-heading-article h1 {
-    font-size: 28px;
+    font-size: 24px;
   }
   .wpr-modal .wpr-modal-content .modal-heading-article h2 {
-    font-size: 26px;
+    font-size: 22px;
   }
   .wpr-modal .wpr-modal-content .modal-heading-article h3 {
-    font-size: 20px;
+    font-size: 18px;
   }
   .wpr-modal .wpr-modal-content .modal-heading-article h4 {
-    font-size: 18px;
+    font-size: 16px;
   }
   .wpr-modal .wpr-modal-content .modal-heading-article p {
     font-size: 14px;
