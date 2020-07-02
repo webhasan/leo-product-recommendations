@@ -35,7 +35,7 @@
       // global selction 
       if(!$('input[name="lc_wpr_settings[active_global_settings]"]').is(':checked')) {
         $(
-          "#wpr-field-selection_options, #wpr-field-disable_global_overwirte"
+          "#wpr-field-selection_options, #wpr-field-disable_global_override"
         ).css({
           opacity: 0.3,
           pointerEvents: "none",
@@ -45,14 +45,14 @@
       $('input[name="lc_wpr_settings[active_global_settings]"]').on('change', function() {
         if(this.checked) {
           $(
-            "#wpr-field-selection_options, #wpr-field-disable_global_overwirte"
+            "#wpr-field-selection_options, #wpr-field-disable_global_override"
           ).css({
             opacity: 1,
             pointerEvents: "inherit",
           });
         }else {
           $(
-            "#wpr-field-selection_options, #wpr-field-disable_global_overwirte"
+            "#wpr-field-selection_options, #wpr-field-disable_global_override"
           ).css({
             opacity: 0.3,
             pointerEvents: "none",

@@ -1,12 +1,12 @@
 === Woocommerce Product Recommendations ===
 Contributors: webhasan, masumbillah
-Tags: woocommerce product recommendations, prodcut recommendations, woocommerce, woocommerce products recommend,recommend product
+Tags: woocommerce product recommendations, woocommerce, ajax add to cart, woocommerce products suggestion, add to cart popup, cross sell, up sell, woocommerce popup, woocommerce boost sales, increase sale, related products suggestion, quick checkout
 Requires at least: 5.0
 Tested up to: 5.4.2
 Requires PHP: 5.6
-Stable tag: 1.0
-WC requires at least: 3.2
-WC tested up to: 4.2
+Stable tag: 1.0.0
+WC requires at least: 3.5
+WC tested up to: 4.2.2
 License: GPLv3
 License URI: http://www. gnu. org/licenses/gpl-3.0.html
 

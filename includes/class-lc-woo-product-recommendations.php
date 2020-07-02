@@ -688,7 +688,7 @@ class LC_Woo_Product_Recommendations {
 
 		$settings = $this->get_settings();
 		$has_global = !empty($settings['active_global_settings']) ? true : false;
-		$disable_overwrite = !empty($settings['disable_global_overwirte']) ? true : false;
+		$disable_overwrite = !empty($settings['disable_global_override']) ? true : false;
 		// active global and not overwirte by local
 		if($has_global && $disable_overwrite) {
 			return true;
@@ -1324,7 +1324,7 @@ class LC_Woo_Product_Recommendations {
 			),
 
 			array(
-				'id' => 'disable_global_overwirte',
+				'id' => 'disable_global_override',
 				'label' => 'Override',
 				'title' => __('Override Individual Product\'s Recommendation.', 'woocommerce-product-recommendations'),
 				'type' => 'checkbox',

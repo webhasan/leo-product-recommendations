@@ -14,7 +14,7 @@
  * Text Domain: woocommerce-product-recommendations
  * Domain Path: /languages
  * WC requires at least: 3.5
- * WC tested up to: 4.2.0
+ * WC tested up to: 4.2.2
  */
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
