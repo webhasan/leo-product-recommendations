@@ -268,10 +268,12 @@ class LC_Woo_Product_Recommendations {
 		add_action('wp_ajax_lc_get_cart_items', array($this, 'get_cart_items'));
 		add_action('wp_ajax_nopriv_lc_get_cart_items', array($this, 'get_cart_items'));
 
-		add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
-
 		add_filter('nonce_user_logged_out', array($this, 'nonce_fix'), 100, 2);
 
+		if(!is_admin()) {
+			add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
+		}
+	
 		if(!$this->is_pro_activated()) {
 			add_action('wp_head', array($this, 'settings_css')); // for custom styling
 		}
