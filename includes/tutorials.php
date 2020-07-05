@@ -1,4 +1,4 @@
-ear`l<div class="tutorials">
+<div class="tutorials">
     <h2>How To Setup</h2>
     <div class="tutorials-wrapper">
         <h3>Basic Setup:</h3>

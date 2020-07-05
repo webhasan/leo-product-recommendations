@@ -17,15 +17,17 @@
  * WC tested up to: 4.2.2
  */
 
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+}
 
+// Exit if accessed directly
 if (!class_exists('LC_Woo_Product_Recommendations')) {
-	require plugin_dir_path(__FILE__) . 'includes/class-lc-woo-product-recommendations.php';
+    require plugin_dir_path(__FILE__) . 'includes/class-lc-woo-product-recommendations.php';
 }
 
 /**
  * Begins execution of the plugin.
  * @since    1.0.0
  */
-
 LC_Woo_Product_Recommendations::init(__FILE__);

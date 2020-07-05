@@ -356,8 +356,7 @@ function wrapper_extend($field, $base, $setting_id) {
  * 
  * @since 1.0.0
  */
-function radio($field, $base, $setting_id)
-{
+function radio($field, $base, $setting_id) {
     
     extract($field);
     $value = $base->get_setting($id);
@@ -393,7 +392,7 @@ function radio($field, $base, $setting_id)
  * 
  * @since 1.0.0
  */
-function checkbox($field, $base, $setting_id){
+function checkbox($field, $base, $setting_id) {
     extract($field);
     $value = $base->get_setting($id);
     $field_name = $setting_id . '[' . $id . ']';

@@ -4,15 +4,13 @@
  * Class for handeling all admin ajax request
  */
 
-class LC_Wpr_Admin_Ajax
-{
+class LC_Wpr_Admin_Ajax {
     /**
      * Class constructor
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
         add_action('wp_ajax_wpr_initial_data', array($this, 'initial_data'));
         add_action('wp_ajax_nopriv_wpr_initial_data', array($this, 'initial_data'));
 
@@ -27,14 +25,13 @@ class LC_Wpr_Admin_Ajax
     }
 
     /**
-     * Fetch Product meta, recommendation products, etc 
-     * 
+     * Fetch Product meta, recommendation products, etc
+     *
      * @since      1.0.0
      */
-    public function initial_data()
-    {
+    public function initial_data() {
 
-        // post ID 
+        // post ID
         $post_id = $_GET['post_id'];
 
         if (!metadata_exists('post', $post_id, '_lc_wpr_data')) {
@@ -46,21 +43,20 @@ class LC_Wpr_Admin_Ajax
         if (!empty($data['heading'])) {
 
             $html_permission = array(
-                'span' => array('class'),
-                'b'    => array(),
+                'span'   => array('class'),
+                'b'      => array(),
                 'strong' => array(),
-                'i'    => array(),
-                'br'   => array(),
+                'i'      => array(),
+                'br'     => array(),
             );
-            
+
             $data['heading'] = wp_kses($data['heading'], $html_permission);
         }
-
 
         if (!empty($data['products'])) {
             $products = $data['products'];
             $products = array_map(function ($prodcut) {
-                $id = (int) $prodcut;
+                $id    = (int) $prodcut;
                 $title = get_the_title($id);
 
                 $feature_image = get_the_post_thumbnail_url($id, array('100', '100'));
@@ -70,7 +66,6 @@ class LC_Wpr_Admin_Ajax
 
             $data['products'] = $products;
         }
-
 
         if (!empty($data['categories'])) {
             $categories = $data['categories'];
@@ -106,18 +101,17 @@ class LC_Wpr_Admin_Ajax
      *
      * @return void
      */
-    public function fetch_categories()
-    {
+    public function fetch_categories() {
 
         $product_categoreis = get_terms(array(
             'taxonomy'   => "product_cat",
             'orderby'    => 'name',
-            'hide_empty' => false
+            'hide_empty' => false,
         ));
 
         $product_categoreis = array_map(function ($category) {
-            $id = $category->term_id;
-            $name = $category->name;
+            $id     = $category->term_id;
+            $name   = $category->name;
             $parent = $category->parent;
 
             return compact('id', 'name', 'parent');
@@ -131,13 +125,12 @@ class LC_Wpr_Admin_Ajax
      *
      * @return void
      */
-    public function fetch_tags()
-    {
+    public function fetch_tags() {
 
         $product_tags = get_terms(array(
             'taxonomy'   => "product_tag",
             'orderby'    => 'name',
-            'hide_empty' => false
+            'hide_empty' => false,
         ));
 
         $product_tags = array_map(function ($category) {
@@ -150,25 +143,23 @@ class LC_Wpr_Admin_Ajax
         wp_send_json($product_tags);
     }
 
-
     /**
      * Fetch posts
      *
      * @return void
      */
-    public function fetch_prodcuts()
-    {
-        // post ID 
+    public function fetch_prodcuts() {
+        // post ID
         $post_id = (int) $_GET['post_id'];
 
         // page
         $paged = !empty($_GET['page']) ? (int) $_GET['page'] : 1;
 
         $args = array(
-            'post_type'     => 'product',
-            'numberposts'     => 20,
-            'exclude'         => array($post_id),
-            'paged'         => $paged
+            'post_type'   => 'product',
+            'numberposts' => 20,
+            'exclude'     => array($post_id),
+            'paged'       => $paged,
         );
 
         if (!empty($_GET['category'])) {
@@ -176,8 +167,8 @@ class LC_Wpr_Admin_Ajax
                 array(
                     'taxonomy' => 'product_cat',
                     'field'    => 'term_id',
-                    'terms'    => (int) $_GET['category']
-                )
+                    'terms'    => (int) $_GET['category'],
+                ),
             );
         }
 
@@ -185,13 +176,13 @@ class LC_Wpr_Admin_Ajax
             $args['s'] = $_GET['query'];
         }
 
-        $products = get_posts($args);
+        $products      = get_posts($args);
         $prodcut_query = new WP_Query($args);
 
         // map prodcut id , title, thumbnails and categoris
         $products = array_map(function ($item) {
-            $id = $item->ID;
-            $title = $item->post_title;
+            $id            = $item->ID;
+            $title         = $item->post_title;
             $feature_image = get_the_post_thumbnail_url($id, array('100', '100'));
 
             return compact('id', 'title', 'feature_image');
