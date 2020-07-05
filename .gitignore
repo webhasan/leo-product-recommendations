@@ -1,5 +1,5 @@
 .DS_Store
-/*.DS_Store
+*.DS_Store
 node_modules
 assets/js/settings.min.asset.php
 assets/js/panel.min.asset.php
