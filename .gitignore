@@ -1,5 +1,12 @@
 .DS_Store
 /*.DS_Store
 node_modules
+assets/js/settings.min.asset.php
+assets/js/panel.min.asset.php
+assets/js/modal.min.asset.php
+assets/js/ajax-add-to-cart.min.asset.php
+css/settings.css.map
+css/panel.css.map
+css/modal.css.map
 /*.log
 *.lock
