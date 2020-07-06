@@ -284,22 +284,23 @@ class LC_Woo_Product_Recommendations {
      * @return void
      */
     public function admin_enqueue_scripts() {
+        $version = $this->script_version();
         wp_enqueue_editor();
         if (!$this->is_pro_activated()) {
-            wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), false, true);
+            wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
             wp_localize_script('selection-panel-script', 'ajax_url', admin_url('admin-ajax.php'));
-            wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'));
+            wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
         }
 
         $screen = get_current_screen();
         if ($screen->id === 'toplevel_page_wpr-settings') {
-            wp_enqueue_style('wpr-settings', $this->get_url('assets/css/settings.css'));
-            wp_enqueue_script('spectrum', $this->get_url('assets/js/color-picker/spectrum.js'), array('jquery'), false, true);
-            wp_enqueue_script('wpr-settings', $this->get_url('assets/js/settings.min.js'), array('jquery', 'spectrum', 'wp-i18n'), false, true);
-            wp_enqueue_style('wpr-spectrum', $this->get_url('assets/js/color-picker/spectrum.css'));
+            wp_enqueue_style('wpr-settings', $this->get_url('assets/css/settings.css'), array(), $version);
+            wp_enqueue_script('spectrum', $this->get_url('assets/js/color-picker/spectrum.js'), array('jquery'), $version, true);
+            wp_enqueue_script('wpr-settings', $this->get_url('assets/js/settings.min.js'), array('jquery', 'spectrum', 'wp-i18n'), $version, true);
+            wp_enqueue_style('wpr-spectrum', $this->get_url('assets/js/color-picker/spectrum.css'), array(), $version);
 
-            wp_enqueue_script('wpr-select2', $this->get_url('assets/js/select2/select2.min.js'), array('spectrum'), false, true);
-            wp_enqueue_style('wpr-select2', $this->get_url('assets/js/select2/select2.min.css'));
+            wp_enqueue_script('wpr-select2', $this->get_url('assets/js/select2/select2.min.js'), array('spectrum'), $version, true);
+            wp_enqueue_style('wpr-select2', $this->get_url('assets/js/select2/select2.min.css'), array(), $version);
 
             $cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
             wp_localize_script('wpr-settings', 'wpr_css_editor', $cm_settings);
@@ -315,10 +316,11 @@ class LC_Woo_Product_Recommendations {
      * @return void
      */
     public function wp_enqueue_scripts() {
+        $version = $this->script_version();
         $settings    = $this->get_settings();
         $layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
-        wp_enqueue_script('wpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery'), false, true);
+        wp_enqueue_script('wpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery'), $version, true);
         wp_localize_script('wpr-modal', 'lc_ajax_modal', array(
             'url'         => admin_url('admin-ajax.php'),
             'nonce'       => wp_create_nonce('lc-ajax-modal'),
@@ -326,7 +328,7 @@ class LC_Woo_Product_Recommendations {
         ));
 
         // if (is_product()) { // disabled condition so that it work for quick view
-        wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), array('jquery', 'wp-i18n'), false, true);
+        wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), array('jquery', 'wp-i18n'), $version, true);
         wp_localize_script('wpr-ajax-add-to-cart', 'lc_ajax', array(
             'url'   => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('lc-add-to-cart'),
@@ -334,7 +336,7 @@ class LC_Woo_Product_Recommendations {
         // }
 
         if (!$this->is_pro_activated()) {
-            wp_enqueue_style('wpr-modal', $this->get_url('assets/css/modal.css'));
+            wp_enqueue_style('wpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
         }
     }
 
@@ -1377,6 +1379,34 @@ class LC_Woo_Product_Recommendations {
         );
 
         return $setting_pages;
+    }
+
+    /**
+     * Get enqueue script version
+     *
+     * @since      1.0.0
+     * @return string version of script base on development or production
+     */
+    public function script_version() {
+        if (WP_DEBUG) {
+            return time();
+        }
+        return $this->plugin_version();
+    }
+
+
+    /**
+     * Ger plugin version 
+     *
+     * @since      1.0.0
+     * @return string current version of plugin
+     */
+    public function plugin_version() {
+        $plugin_data = get_file_data(self::$__FILE__, array(
+            'Version' => 'Version',
+        ));
+
+        return $plugin_data['Version'];
     }
 
     /**

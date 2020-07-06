@@ -5,6 +5,10 @@ assets/js/settings.min.asset.php
 assets/js/panel.min.asset.php
 assets/js/modal.min.asset.php
 assets/js/ajax-add-to-cart.min.asset.php
+assets/js/ajax-add-to-cart.min.js.map
+assets/js/modal.min.js.map
+ assets/js/panel.min.js.map
+ assets/js/settings.min.js.map
 css/settings.css.map
 css/panel.css.map
 css/modal.css.map
