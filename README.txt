@@ -13,7 +13,7 @@ License URI: http://www. gnu. org/licenses/gpl-3.0.html
 Recommend products smartly and increase sales by nice-looking add to cart popup
 
 == Description ==
-WooCommerce Prodcut Recommendations (WPR) is a sale boosting plugin by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in a highly focusing popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
+**WooCommerce Prodcut Recommendations** is a sale boosting plugin by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in a eye catching popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
 
 Harvard professor Gerald Zaltman says "95% of purchasing decisions are subconscious". So You have to just display the right product in front of the right customer, at the right time. Let me explain, how to make more Sale using this awesome plugin.
 
@@ -27,14 +27,14 @@ WooCommerce Products Recommendation does everything Ajax way to improve the shop
 
 ## How To Set up WooCommerce Product Recommendations ##
 [youtube https://youtu.be/RjwgUEKOEV8]
-[For details documentation:](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[For details documentation:] (http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
 
 ## Key Features ##
 * Responsive Popup 
 * Recommended Products Grid Settings
-* Menaul Selection 
+* Manual Selection 
 * Global Selection
-* Flexiable Recommendation Heading (Single Heading & Description)
+* Flexible Recommendation Heading (Single Heading & Description)
 * Custom CSS 
 * Ajax Add to Cart
 * Like WooCommerce override templates via a theme
@@ -54,6 +54,7 @@ Including all free features, Pro version provides more flexibility to adjust eve
 
 ## Demos ##
 WooCommerce product recommendations is prefectly feet for all types of shop. Check example bellow: 
+
 [SMARTPHONE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
 [ELECTRONICS](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
 [COMPUTER](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
@@ -83,28 +84,28 @@ WooCommerce product recommendations is prefectly feet for all types of shop. Che
 
 ### Automatic Installation ##
 
-1. From dashboard Navigate to `Plugins > Add New`
-2. Search `WooCommerce Product Recommendations`
-5. Click on `Install Now` button
-5. When the installation is complete, click `Activate` button activate plugin.
+1. From dashboard Navigate to **Plugins > Add New**
+2. Search **WooCommerce Product Recommendations**
+5. Click on **Install Now** button
+5. When the installation is complete, click **Activate** button activate plugin.
 
 ### Menual Installation ###
 
 #### Install From WordPress Dashboard: ####
-1. From dashboard Navigate to `Plugins > Add New`
-2. Click on `Upload Plugin` button at the top of the screen
+1. From dashboard Navigate to **Plugins > Add New**
+2. Click on **Upload Plugin** button at the top of the screen
 3. Select the zip file from your local filesystem
-4. Click on `Install Now` button
-5. When the installation is complete, you’ll see “Plugin installed successfully.” Click on `Activate Plugin` button at the bottom of the page.
+4. Click on **Install Now** button
+5. When the installation is complete, you’ll see “Plugin installed successfully.” Click on **Activate Plugin** button at the bottom of the page.
 
 #### Insall Using FTP/SFTP: ####
 If you are unable to install the plugin from your WordPress dashboard you can install the plugin following method using FTP / SFTP
 
 1. Unzip plugin file
 2. Connect to your WordPress server with your FTP / SFTP client (Fileziall, Cyberduck, etc)
-3. Copy the plugin folder to the `wp-content/plugins` folder in your WordPress directory. This installs the plugin to your WordPress site.
+3. Copy the plugin folder to the **wp-content/plugins** folder in your WordPress directory. This installs the plugin to your WordPress site.
 4. Navigate to your Plugins admin screen from WordPress dashboard and locate the newly uploaded plugin in the list.
-5. Click the plugin’s `Activate` link.
+5. Click the plugin’s **Activate** link.
 
 <sub>Note: After activating the plugin it will automatically enable “Enable AJAX add to cart buttons on archives” setting and disable “Redirect to the cart page after successful addition” setting. It is required setting to work the plugin properly.</sub>
 
