@@ -1,8 +1,13 @@
 <?php
-
 /**
- * Class for handeling all admin ajax request
+ * Class to handle Ajax add To Cart
+ * @since      1.0.0
+ * @author     LeoCoder
  */
+
+ if (!defined('ABSPATH')) {
+    exit;
+}
 
 class LC_Wpr_Admin_Ajax {
     /**

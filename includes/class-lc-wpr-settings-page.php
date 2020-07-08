@@ -1,13 +1,14 @@
 <?php
-
 /**
  * Plugin Setting page
  *
  * @since      1.0.0
- * @author     Pluginsify
+ * @author     LeoCoder
  */
 
-defined('ABSPATH') || exit; // Exit if direct file access
+ if (!defined('ABSPATH')) {
+    exit;
+}
 
 class LC_Wpr_Settings_Page {
 

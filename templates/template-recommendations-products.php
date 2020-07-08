@@ -1,3 +1,15 @@
+<?php 
+/**
+ * Single Product Template
+ *
+ * @since      1.0.0
+ * @author     LeoCoder
+ */
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
+
 <li class="product single-wpr">
     <?php do_action('wpr_before_recommended_prodcut', get_the_ID()); ?>
 

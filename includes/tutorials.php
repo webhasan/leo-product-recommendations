@@ -1,3 +1,15 @@
+<?php 
+/**
+ * Tutorial Page
+ *
+ * @since      1.0.0
+ * @author     LeoCoder
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
 <div class="tutorials">
     <h2>How To Setup</h2>
     <div class="tutorials-wrapper">

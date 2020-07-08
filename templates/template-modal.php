@@ -1,5 +1,14 @@
 <?php
-// global $data;
+/**
+ * Recommendations Modal Template
+ *
+ * @since      1.0.0
+ * @author     LeoCoder
+ */
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 extract($data);
 ?>
 

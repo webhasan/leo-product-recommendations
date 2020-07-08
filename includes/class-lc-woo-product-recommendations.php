@@ -1,10 +1,14 @@
 <?php
 /**
- * The core plugin class
+ * The Plugin Base Class
  *
  * @since      1.0.0
  * @author     LeoCoder
  */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 class LC_Woo_Product_Recommendations {
     /**

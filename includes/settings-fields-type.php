@@ -1,13 +1,14 @@
 <?php
-
 /**
- * Plugin Setting page
+ * Settins Fields
  *
  * @since      1.0.0
  * @author     LeoCoder
  */
 
-defined('ABSPATH') || exit; // Exit if direct file access
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 /**
  * Wrapper input

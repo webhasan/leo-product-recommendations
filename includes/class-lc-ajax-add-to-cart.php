@@ -1,8 +1,16 @@
 <?php
-
 /**
- * Class for handeling single page ajax add to cart product
+ * Clsas For Ajax Add To Cart 
+ * For Single Page
+ * 
+ * @since      1.0.0
+ * @author     LeoCoder
  */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 class LC_Ajax_Add_To_Cart {
     private $data = array();
 
