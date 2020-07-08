@@ -1,5 +1,5 @@
 === Woocommerce Product Recommendations ===
-Contributors: webhasan, masumbillah
+Contributors: webhasan
 Tags: woocommerce product recommendations, woocommerce, ajax add to cart, woocommerce products suggestion, add to cart popup, cross sell, up sell, woocommerce popup, woocommerce boost sales, increase sale, related products suggestion, quick checkout
 Requires at least: 5.0
 Tested up to: 5.4.2
@@ -7,8 +7,8 @@ Requires PHP: 5.6
 Stable tag: 1.0.0
 WC requires at least: 3.5
 WC tested up to: 4.2.2
-License: GPLv3
-License URI: http://www. gnu. org/licenses/gpl-3.0.html
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Recommend products smartly and increase sales by nice-looking add to cart popup
 
@@ -26,8 +26,7 @@ In another scenario, customers usually search for the best matching T-Shirt afte
 WooCommerce Products Recommendation does everything Ajax way to improve the shopping experience. Customers do not require to browse a lot of pages to purchase products. It also reduces the steps and time of shopping and increases the chances of selling. 
 
 ## How To Set up WooCommerce Product Recommendations ##
-[youtube https://youtu.be/RjwgUEKOEV8]
-[For details documentation:] (http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
+[youtube https://youtu.be/rQOoBsNzTC0]
 
 ## Key Features ##
 * Responsive Popup 
@@ -40,39 +39,6 @@ WooCommerce Products Recommendation does everything Ajax way to improve the shop
 * Like WooCommerce override templates via a theme
 * Single & Product Archive page support. 
 * Gutenberg blocks and page builder (Elementor, Divi, WpBakery)
-
-## Pro Features ##
-Including all free features, Pro version provides more flexibility to adjust everything. 
-
-* Slider Layouts
-* Dynamic Selection
-* Modal Color Settings
-* Modal Sizes Settings
-* Recommended Product Color Settings 
-* Items visibility 
-* REST API 
-
-## Demos ##
-WooCommerce product recommendations is prefectly feet for all types of shop. Check example bellow: 
-
-[SMARTPHONE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[ELECTRONICS](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[COMPUTER](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[SHOES](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[FOOD](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[FOOD](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[CLOTHING](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[JEWELLERY](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[LEATHER](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[TRAVEL](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[AUTOMOBILES](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[PET CARE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[SOFTWARE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[TOYS](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[FASHION](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[BEAUTY & HEALTH](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[SPORTS](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
-[HOME APPLIANCE](http://pluginsify.com/woocommerce-prodcut-recommendations/demo)
 
 == Installation ==
 

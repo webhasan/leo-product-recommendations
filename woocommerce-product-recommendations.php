@@ -27,7 +27,7 @@ if (!class_exists('LC_Woo_Product_Recommendations')) {
 }
 
 /**
- * Begins execution of the plugin.
+ * Plugin execution
  * @since    1.0.0
  */
 LC_Woo_Product_Recommendations::init(__FILE__);

@@ -44,7 +44,7 @@ import classNames from 'classnames';
       },
       {
         id: "article",
-        title: __("Article", "woocommerce-product-recommendations"),
+        title: __("Heading & Description", "woocommerce-product-recommendations"),
       },
     ];
 
@@ -205,7 +205,7 @@ import classNames from 'classnames';
             
             <div className="rp-panel-title">
               {__(
-                `Recommendation ${initialData.heading_type}`,
+                'Popup Heading',
                 "woocommerce-product-recommendations"
               )}
             </div>

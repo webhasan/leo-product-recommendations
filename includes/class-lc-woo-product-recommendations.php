@@ -808,7 +808,7 @@ class LC_Woo_Product_Recommendations {
             $order    = 'asc';
             break;
 
-        case 'heighprice':
+        case 'highprice':
             $orderby  = 'meta_value_num';
             $meta_key = '_regular_price';
             $order    = 'desc';
@@ -1277,7 +1277,7 @@ class LC_Woo_Product_Recommendations {
                         'title'   => __('Categories', 'woocommerce-product-recommendations'),
                         'type'    => 'radio',
                         'options' => array(
-                            'same_categories'   => __('Same As Product', 'woocommerce-product-recommendations'),
+                            'same_categories'   => __('Product Related Category', 'woocommerce-product-recommendations'),
                             'menual_categories' => __('Menual', 'woocommerce-product-recommendations'),
                         ),
                         'default' => 'same_categories',
@@ -1300,13 +1300,12 @@ class LC_Woo_Product_Recommendations {
                         'type'    => 'select',
                         'options' => array(
                             'rand'       => 'Random Products',
-                            'newest'     => 'Newest To Oldest',
-                            'oldest'     => 'Oldest To Newest',
-                            'title'      => 'Order By Name (A->Z)',
-                            'lowprice'   => 'Price Low to Height',
-                            'heighprice' => 'Price Heigh To Low',
-                            'popularity' => 'Best Selling',
-                            'rating'     => 'Top Rated',
+                            'newest'     => 'Newest Products',
+                            'oldest'     => 'Oldest Products',
+                            'lowprice'   => 'Low Price Products',
+                            'highprice' => 'High Price Products',
+                            'popularity' => 'Best Selling Products',
+                            'rating'     => 'Top Rated Products',
                         ),
                     ),
                     array(
@@ -1316,19 +1315,18 @@ class LC_Woo_Product_Recommendations {
                     ),
                     array(
                         'id'      => 'global_products_number',
-                        'title'   => __('Numbers of Products To Show', 'woocommerce-product-recommendations'),
+                        'title'   => __('Numbers of Products', 'woocommerce-product-recommendations'),
                         'type'    => 'number',
                         'default' => 12,
                     ),
                 ),
             ),
-
             array(
                 'id'          => 'disable_global_override',
-                'label'       => 'Override',
-                'title'       => __('Override Individual Product\'s Recommendation.', 'woocommerce-product-recommendations'),
+                'label'       => 'Skip',
+                'title'       => __('Skip Manual Selection', 'woocommerce-product-recommendations'),
                 'type'        => 'checkbox',
-                'description' => 'Check this box to override the individual setting. And apply global recommendations on all products whether individual setting available or not. It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to recommend some specific categories of products. Just select the categories from the above setting and check this override box.',
+                'description' => 'It will skip individual recommendations what you have done from product edit page using WPR setting panel. <br> It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to temporary skip individual product specific recommendations. And recommend some specific categories of products. Just select the categories from the above setting and check this <strong>Skip</strong> checkbox.',
             ),
         );
 
@@ -1368,7 +1366,7 @@ class LC_Woo_Product_Recommendations {
 
                     array(
                         'id'           => 'wpr-documentation',
-                        'tab_title'    => 'Documentation',
+                        'tab_title'    => 'Tutorials',
                         'title'        => 'Tutorial & Documentation',
                         'type'         => 'article',
                         'descriptions' => 'Global Settings',
