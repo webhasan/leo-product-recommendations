@@ -1,0 +1,271 @@
+# Copyright (C) 2020 LeoCoder
+# This file is distributed under the same license as the Woo Product Recommendations plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Woo Product Recommendations 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-product-recommendations\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-07-10T12:57:56+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.4.0\n"
+"X-Domain: woo-product-recommendations\n"
+
+#. Plugin Name of the plugin
+msgid "Woo Product Recommendations"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://leocoder.com/woo-product-recommendations"
+msgstr ""
+
+#. Description of the plugin
+msgid "Recommend products smartly and increase sales by nice-looking add to cart popup"
+msgstr ""
+
+#. Author of the plugin
+msgid "LeoCoder"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://leocoder.com/"
+msgstr ""
+
+#. translators: 1. link of plugin, 2. plugin version.
+#: includes/class-lc-woo-product-recommendations.php:161
+msgid "The Woo Product Recommendations plugin requires <a href=\"%1$s\">WooCommerce</a> %2$s or greater to be installed and active."
+msgstr ""
+
+#. translators: 1. link of wordpress, 2. version of WordPress.
+#: includes/class-lc-woo-product-recommendations.php:170
+msgid "The Woo Product Recommendations plugin requires <a href=\"%1$s\">WordPress</a> %2$s or greater to be installed and active."
+msgstr ""
+
+#. translators: 1. version of php
+#: includes/class-lc-woo-product-recommendations.php:179
+msgid "The Woo Product Recommendations plugin requires <strong>php verion %s</strong> or greater. Please update your server php version."
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:231
+msgid "Settings"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:405
+msgid "Product Recommendations"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1216
+msgid "Default Heading"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1218
+msgid "If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products."
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1219
+msgid "You may purchase following [item, items] with the %title%"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1224
+msgid "Grid Options"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1230
+msgid "Desktop Items"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1239
+msgid "Tablet Items"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1248
+msgid "Mobile Items"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1256
+msgid "Column Gap"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1270
+msgid "Custom CSS"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1272
+msgid "Write custom css to change style of modal."
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1279
+msgid "Active Global Setting"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1281
+msgid "If there are no recommendations available for some products (if you don't setup from product editor), the global setting will work for those products as a fallback. This setting is also helpful if you like a bulk recommendation setup for entire shop instead of a different setup for each product."
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1285
+msgid "Recommendation Options"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1290
+msgid "Categories"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1293
+msgid "Product Related Category"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1294
+msgid "Menual"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1300
+msgid "Choose Categories"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1306
+msgid "Choose Tags"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1312
+msgid "Products Filtering"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1315
+msgid "Random Products"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1316
+msgid "Newest Products"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1317
+msgid "Oldest Products"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1318
+msgid "Low Price Products"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1319
+msgid "High Price Products"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1320
+msgid "Best Selling Products"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1321
+msgid "Top Rated Products"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1326
+msgid "On-Sale Only"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1331
+msgid "Numbers of Products"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1339
+msgid "Skip"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1340
+msgid "Skip Manual Selection"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1349
+msgid "Woo Product Recommendations Settings"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1350
+msgid "WPR Settings"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1358
+msgid "General"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1359
+msgid "General Settings"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1365
+msgid "Style"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1366
+msgid "Colors & Styles Settings"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1372
+msgid "Global"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1373
+msgid "Global Settings"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1379
+msgid "Tutorials"
+msgstr ""
+
+#: includes/class-lc-woo-product-recommendations.php:1380
+msgid "Tutorial & Documentation"
+msgstr ""
+
+#: includes/class-lc-wpr-settings-page.php:120
+msgid "Save Settings"
+msgstr ""
+
+#: templates/template-modal.php:30
+msgid "has been added to your cart."
+msgstr ""
+
+#: templates/template-modal.php:31
+msgid "View cart"
+msgstr ""
+
+#: templates/template-modal.php:37
+msgid "Continue Shopping"
+msgstr ""
+
+#: templates/template-modal.php:41
+msgid "Checkout"
+msgstr ""
+
+#: assets/js/ajax-add-to-cart.js:61
+msgid "Something went wrong"
+msgstr ""
+
+#: assets/js/panel.js:43
+msgid "Heading"
+msgstr ""
+
+#: assets/js/panel.js:47
+msgid "Heading & Description"
+msgstr ""
+
+#: assets/js/panel.js:207
+msgid "Popup Heading"
+msgstr ""
+
+#: assets/js/panel.js:258
+msgid "Select Products"
+msgstr ""
+
+#: assets/js/panel.js:280
+#: assets/js/settings.js:94
+msgid "All Categories"
+msgstr ""
+
+#: assets/js/panel.js:301
+msgid "Not found selectable product"
+msgstr ""
+
+#: assets/js/settings.js:98
+msgid "All Tags"
+msgstr ""
