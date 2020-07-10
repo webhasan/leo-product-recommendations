@@ -1,6 +1,8 @@
 <?php
 /**
- * Class to handle Ajax add To Cart
+ * Class to handle ajax request 
+ * send from admin side
+ * 
  * @since      1.0.0
  * @author     LeoCoder
  */

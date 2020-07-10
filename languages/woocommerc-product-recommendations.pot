@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Product Recommendations 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-product-recommendations\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-product-recommendations\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "POT-Creation-Date: 2020-06-29T06:18:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
-"X-Domain: woocommerce-product-recommendations\n"
+"X-Domain: woo-product-recommendations\n"
 
 #. Plugin Name of the plugin
 msgid "WooCommerce Product Recommendations"

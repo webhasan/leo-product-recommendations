@@ -19,9 +19,9 @@ class LC_Woo_Product_Recommendations {
     static protected $instance;
 
     /**
-     * Array of all products recommendations data.
+     * Array of all products recommendations data
      *
-     * @var instance
+     * @var array
      */
     static protected $pr_meta = array();
 
@@ -38,7 +38,7 @@ class LC_Woo_Product_Recommendations {
      * @var string
      * @since      1.0.0
      */
-    static protected $__FILE__PRO__ = WP_PLUGIN_DIR . '/woocommerce-product-recommendations-pro/woocommerce-product-recommendations-pro.php';
+    static protected $__FILE__PRO__ = WP_PLUGIN_DIR . '/woo-product-recommendations-pro/woo-product-recommendations-pro.php';
 
     /**
      * Plugin setting id used to save setting data
@@ -60,8 +60,8 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Action after plugin active.
-     * enable ajax add to cart and disabel redirec to cart page.
+     * Action after plugin activate
+     * Enable ajax add to cart and disabel redirec to cart page.
      *
      * @since      1.0.0
      */
@@ -72,7 +72,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Action after plugin deactive
+     * Action after plugin deactivate
      *
      * @since      1.0.0
      * @return void
@@ -82,7 +82,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Action after plugin deactive
+     * Action after plugin deactivate
      *
      * @since      1.0.0
      * @return void
@@ -95,7 +95,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Setup plugin once all other plugins are loaded.
+     * Setup plugin once all other plugins are loaded
      *
      * @since      1.0.0
      * @return void
@@ -117,17 +117,17 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Load Localization files.
+     * Load Localization files
      *
      * @since      1.0.0
      * @return void
      */
     public function load_textdomain() {
-        load_plugin_textdomain('woocommerce-product-recommendations', false, dirname(plugin_basename(self::$__FILE__)) . '/languages');
+        load_plugin_textdomain('woo-product-recommendations', false, dirname(plugin_basename(self::$__FILE__)) . '/languages');
     }
 
     /**
-     * Returns true if all dependencies for the plugin are loaded.
+     * Returns true if all dependencies for the plugin are loaded
      *
      * @since      1.0.0
      * @return bool
@@ -138,7 +138,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Get an array of dependency error messages.
+     * Get an array of dependency error messages
      *
      * @since      1.0.0
      * @return array all dependency error message.
@@ -158,7 +158,7 @@ class LC_Woo_Product_Recommendations {
 
             $errors[] = sprintf(
                 /* translators: 1. link of plugin, 2. plugin version. */
-                __('The WooCommerce Product Recommendations plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'woocommerce-product-recommendations'),
+                __('The Woo Product Recommendations plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'woo-product-recommendations'),
                 'https://wordpress.org/plugins/woocommerce/',
                 $minimum_woocommerce_version
             );
@@ -167,7 +167,7 @@ class LC_Woo_Product_Recommendations {
         if (!$wordpress_minimum_met) {
             $errors[] = sprintf(
                 /* translators: 1. link of wordpress, 2. version of WordPress. */
-                __('The WooCommerce Product Recommendations plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'woocommerce-product-recommendations'),
+                __('The Woo Product Recommendations plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'woo-product-recommendations'),
                 'https://wordpress.org/',
                 $minimum_wordpress_version
             );
@@ -176,7 +176,7 @@ class LC_Woo_Product_Recommendations {
         if (!$php_minimum_met) {
             $errors[] = sprintf(
                 /* translators: 1. version of php */
-                __('The WooCommerce Product Recommendations plugin requires <strong>php verion %s</strong> or greater. Please update your server php version.', 'woocommerce-product-recommendations'),
+                __('The Woo Product Recommendations plugin requires <strong>php verion %s</strong> or greater. Please update your server php version.', 'woo-product-recommendations'),
                 $minium_php_verion
             );
         }
@@ -185,7 +185,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Notify users about plugin dependency
+     * Notify about plugin dependency
      *
      * @since      1.0.0
      * @return void
@@ -196,22 +196,21 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Include addon features with this plugin
+     * Include add-on features with this plugin
      *
      * @since      1.0.0
      * @return void
      */
     public function includes() {
-        // handle all admin ajax request
-        $this->admin_ajax();
-        $this->plugin_action_links();
-        if (!$this->is_pro_activated()) {
-            $this->plugin_settins();
+        $this->admin_ajax(); // handle all admin ajax request 
+        $this->plugin_action_links(); // add Settings link
+        if (!$this->is_pro_activated()) { 
+            $this->plugin_settins(); // plugin Settings Page
         }
     }
 
     /**
-     * Handle All selection panel Ajax Request
+     * Handle ajax request from selection panel
      * @since      1.0.0
      * @return void
      */
@@ -229,14 +228,14 @@ class LC_Woo_Product_Recommendations {
     public function plugin_action_links() {
         add_action('plugin_action_links_' . plugin_basename(self::$__FILE__), function ($links) {
             $settings = array(
-                'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=wpr-settings')) . '">' . __('Settings', 'woocommerce-product-recommendations') . '</a>',
+                'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=wpr-settings')) . '">' . __('Settings', 'woo-product-recommendations') . '</a>',
             );
             return array_merge($settings, $links);
         });
     }
 
     /**
-     * Handle All selection panel Ajax Request
+     * Plugin settings page
      * @since      1.0.0
      * @return void
      */
@@ -249,7 +248,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Add all actions hook.
+     * Added all action hooks
      *
      * @since      1.0.0
      * @return void
@@ -282,7 +281,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Enqueue all admin scripts and styles
+     * Enqueue all backend admin related scripts and styles
      *
      * @since      1.0.0
      * @return void
@@ -314,7 +313,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Enqueue all front end scripts and styles
+     * Enqueue all front end related scripts and styles
      *
      * @since      1.0.0
      * @return void
@@ -403,7 +402,7 @@ class LC_Woo_Product_Recommendations {
     public function add_meta_boxes() {
         add_meta_box(
             'lc_pr_prodcut_selection',
-            __('Product Recommendations', 'woocommerce-product-recommendations'),
+            __('Product Recommendations', 'woo-product-recommendations'),
             array($this, 'product_selection'),
             array('product')
         );
@@ -415,7 +414,6 @@ class LC_Woo_Product_Recommendations {
      * @since      1.0.0
      * @return void
      */
-
     public function product_selection($post) {
         include_once $this->get_path('includes/option-select-products.php');
     }
@@ -476,7 +474,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Save post callback function
+     * Save recommended data to the product 
      *
      * @since      1.0.0
      * @return  void;
@@ -488,7 +486,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Ajax call back to query modal products
+     * Ajax callback to query modal products
      *
      * @since      1.0.0
      * @return  void;
@@ -523,7 +521,7 @@ class LC_Woo_Product_Recommendations {
      * Ajax callback to add to cart
      *
      * @since      1.0.0
-     * @return  json responsve with json data
+     * @return  json
      */
     public function ajax_add_to_cart() {
 
@@ -539,10 +537,10 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Ajax callback to get items already added to cart
+     * Ajax callback to get cart items 
      *
      * @since      1.0.0
-     * @return  json response with json data of cart products
+     * @return  json with cart items
      */
     public function get_cart_items() {
         $products_ids_array = array();
@@ -639,7 +637,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Check selection method menual or not
+     * Check menual selection or not
      * @return bool menually selected or not
      * @since   1.0.0
      */
@@ -649,7 +647,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Check selection method dynamic or not
+     * Check dynamic selection or not
      * @return bool dynamic selected or not
      * @since   1.0.0
      */
@@ -659,10 +657,10 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Array of recommendation product ids
+     * Array of recommended product ids
      *
      * @param int $product_id
-     * @return array array of recommendation products ids
+     * @return array of recommended products ids
      * @since      1.0.0
      */
     public function get_recommended_products_id($product_id) {
@@ -672,7 +670,7 @@ class LC_Woo_Product_Recommendations {
 
         $data = $this->get_pr_data($product_id);
         if ($this->is_menually_selection($product_id)) {
-            return $this->menual_query_products($data);
+            return $this->manual_query_products($data);
         } elseif ($this->is_dynamic_selection($product_id)) {
             return $this->dynamic_query_products($product_id, $data);
         }
@@ -680,19 +678,21 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Check localhost selection available or not
+     * Check global selection applicable or not 
      * @since      1.0.0
-     * @return void;
+     * @return bool global selection applicable or not
      */
     public function is_active_global($id) {
 
         $settings          = $this->get_settings();
         $has_global        = !empty($settings['active_global_settings']) ? true : false;
         $disable_overwrite = !empty($settings['disable_global_override']) ? true : false;
+        
         // active global and not overwirte by local
         if ($has_global && $disable_overwrite) {
             return true;
         }
+
         // active global and not available local
         $is_dynamic_selection = $this->is_dynamic_selection($id);
         $data                 = $this->get_pr_data($id);
@@ -705,12 +705,19 @@ class LC_Woo_Product_Recommendations {
         return false;
     }
 
-    public function menual_query_products($data) {
+    /**
+     * Get manual selection data
+     * @since      1.0.0
+     * @return array of manually selection data 
+     */
+    public function manual_query_products($data) {
         return !empty($data['products']) ? $data['products'] : array();
     }
 
     /**
-     * Get dynamic data
+     * Get manual selection data
+     * @since      1.0.0
+     * @return array of dynamically selection data
      */
     public function dynamic_query_products($product_id, $data) {
         $args = array(
@@ -851,7 +858,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Add modal to archive / shop page prodcuts
+     * Add modal in the archive / shop page prodcuts
      * @since      1.0.0
      * @return void;
      */
@@ -873,7 +880,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Add modal to single product page
+     * Add modal in the single product pages
      * @since      1.0.0
      * @return void;
      */
@@ -895,7 +902,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Add modal to Guterberg block product
+     * Add modal in the Guterberg blocks product
      * @since      1.0.0
      */
     public function product_gutenberg_block($html, $data, $product) {
@@ -939,7 +946,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Require WooCommerce Version
+     * Require WooCommerce version
      *
      * @since      1.0.0
      * @return string min require WooCommerce version
@@ -952,7 +959,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Require WordPress Version
+     * Require WordPress version
      *
      * @since      1.0.0
      * @return string min require WordPress version
@@ -978,8 +985,7 @@ class LC_Woo_Product_Recommendations {
      * Get settings
      *
      * @since      1.0.0
-     *
-     * @return  array Value of the plugins settings.
+     * @return  array of the plugins settings
      */
     public function get_settings() {
         return get_option($this->get_settings_id());
@@ -989,7 +995,6 @@ class LC_Woo_Product_Recommendations {
      * Get default settings
      *
      * @since      1.0.0
-     *
      * @return  array of default value of all sertting when default avaiable
      */
     public function get_default_settings() {
@@ -1026,7 +1031,7 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Check Pro version of the plugin already installed or not
+     * Check Pro version of the plugin is installed or not
      *
      * @since      1.0.0
      */
@@ -1035,9 +1040,10 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Get prodcut recommendation meta data
+     * Get prodcut recommendations meta data
+     * 
      * @since      1.0.0
-     * @return object post meta of _lc_wpr_data
+     * @return object of post meta _lc_wpr_data
      */
     public function get_pr_data($id) {
         if (!isset(self::$pr_meta[$id])) {
@@ -1072,11 +1078,11 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Get settings
+     * Get settings by ID
      *
      * @since      1.0.0
      * @param id settings field id
-     * @return  array get single setting value by setting id
+     * @return  mixed value of setting by setting id
      */
     public function get_setting($id) {
 		
@@ -1122,9 +1128,11 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Get Default Setting Value
-     * @param id settings field id
+     * Get default setting by ID
+     * 
      * @since      1.0.0
+     * @param id settings field id
+     * @return mixed value of default setting
      */
     public function get_default_setting($id) {
         $pages = $this->settings_pages();
@@ -1159,10 +1167,11 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * get setting field type by setting field ID
-     * @param id setting field ID
-     *
+     * Get setting field type by setting ID
+     * 
      * @since      1.0.0
+     * @param id setting field ID
+     * @return mixed value of setting field type
      */
     public function get_field_type($id) {
         $pages = $this->settings_pages();
@@ -1195,30 +1204,30 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * All settings pages including section and fields
+     * All settings pages including sections and fields
      *
      * @since      1.0.0
-     * @return  array of settings pages
+     * @return  array of settings pages data
      */
     public function settings_pages() {
         $general_settings_fields = array(
             array(
                 'id'          => 'default_heading',
-                'title'       => __('Default Heading', 'woocommerce-product-recommendations'),
+                'title'       => __('Default Heading', 'woo-product-recommendations'),
                 'type'        => 'text',
-                'description' => __('If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'woocommerce-product-recommendations'),
-                'default'     => __('You may purchase following [item, items] with the %title%', 'woocommerce-product-recommendations'),
+                'description' => __('If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'woo-product-recommendations'),
+                'default'     => __('You may purchase following [item, items] with the %title%', 'woo-product-recommendations'),
             ),
 
             array(
                 'id'     => 'grid_options',
-                'title'  => __('Grid Options', 'woocommerce-product-recommendations'),
+                'title'  => __('Grid Options', 'woo-product-recommendations'),
                 'type'   => 'wrapper',
                 'childs' => array(
 
                     array(
                         'id'      => 'grid_lg_items',
-                        'title'   => __('Desktop Items', 'woocommerce-product-recommendations'),
+                        'title'   => __('Desktop Items', 'woo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 2,
                         'max'     => 5,
@@ -1227,7 +1236,7 @@ class LC_Woo_Product_Recommendations {
 
                     array(
                         'id'      => 'grid_md_items',
-                        'title'   => __('Tablet Items', 'woocommerce-product-recommendations'),
+                        'title'   => __('Tablet Items', 'woo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 2,
                         'max'     => 5,
@@ -1236,7 +1245,7 @@ class LC_Woo_Product_Recommendations {
 
                     array(
                         'id'      => 'grid_sm_items',
-                        'title'   => __('Mobile Items', 'woocommerce-product-recommendations'),
+                        'title'   => __('Mobile Items', 'woo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 1,
                         'max'     => 3,
@@ -1244,7 +1253,7 @@ class LC_Woo_Product_Recommendations {
                     ),
                     array(
                         'id'      => 'grid_column_gap',
-                        'title'   => __('Column Gap', 'woocommerce-product-recommendations'),
+                        'title'   => __('Column Gap', 'woo-product-recommendations'),
                         'type'    => 'number',
                         'sufix'   => 'px',
                         'min'     => 0,
@@ -1258,68 +1267,68 @@ class LC_Woo_Product_Recommendations {
         $style_settings = array(
             array(
                 'id'          => 'custom_style',
-                'title'       => __('Custom CSS', 'woocommerce-product-recommendations'),
+                'title'       => __('Custom CSS', 'woo-product-recommendations'),
                 'type'        => 'css',
-                'description' => __('Write custom css to change style of modal.', 'woocommerce-product-recommendations'),
+                'description' => __('Write custom css to change style of modal.', 'woo-product-recommendations'),
             ),
         );
 
         $global_settings_fields = array(
             array(
                 'id'          => 'active_global_settings',
-                'title'       => __('Active Global Setting', 'woocommerce-product-recommendations'),
+                'title'       => __('Active Global Setting', 'woo-product-recommendations'),
                 'type'        => 'checkbox',
-                'description' => __('If there are no recommendations available for some products (if you don\'t setup from product editor), the global setting will work for those products as a fallback. This setting is also helpful if you like a bulk recommendation setup for entire shop instead of a different setup for each product.', 'woocommerce-product-recommendations'),
+                'description' => __('If there are no recommendations available for some products (if you don\'t setup from product editor), the global setting will work for those products as a fallback. This setting is also helpful if you like a bulk recommendation setup for entire shop instead of a different setup for each product.', 'woo-product-recommendations'),
             ),
             array(
                 'id'     => 'selection_options',
-                'title'  => __('Recommendation Options', 'woocommerce-product-recommendations'),
+                'title'  => __('Recommendation Options', 'woo-product-recommendations'),
                 'type'   => 'wrapper_extend',
                 'childs' => array(
                     array(
                         'id'      => 'global_categories',
-                        'title'   => __('Categories', 'woocommerce-product-recommendations'),
+                        'title'   => __('Categories', 'woo-product-recommendations'),
                         'type'    => 'radio',
                         'options' => array(
-                            'same_categories'   => __('Product Related Category', 'woocommerce-product-recommendations'),
-                            'menual_categories' => __('Menual', 'woocommerce-product-recommendations'),
+                            'same_categories'   => __('Product Related Category', 'woo-product-recommendations'),
+                            'menual_categories' => __('Menual', 'woo-product-recommendations'),
                         ),
                         'default' => 'same_categories',
                     ),
                     array(
                         'id'    => 'global_custom_categories',
-                        'title' => __('Choose Categories', 'woocommerce-product-recommendations'),
+                        'title' => __('Choose Categories', 'woo-product-recommendations'),
                         'type'  => 'categories_select',
                     ),
 
                     array(
                         'id'    => 'global_tags',
-                        'title' => __('Choose Tags', 'woocommerce-product-recommendations'),
+                        'title' => __('Choose Tags', 'woo-product-recommendations'),
                         'type'  => 'tags_select',
                     ),
 
                     array(
                         'id'      => 'global_filtering',
-                        'title'   => __('Products Filtering', 'woocommerce-product-recommendations'),
+                        'title'   => __('Products Filtering', 'woo-product-recommendations'),
                         'type'    => 'select',
                         'options' => array(
-                            'rand'       => 'Random Products',
-                            'newest'     => 'Newest Products',
-                            'oldest'     => 'Oldest Products',
-                            'lowprice'   => 'Low Price Products',
-                            'highprice' => 'High Price Products',
-                            'popularity' => 'Best Selling Products',
-                            'rating'     => 'Top Rated Products',
+                            'rand'       => __('Random Products','woo-product-recommendations'),
+                            'newest'     => __('Newest Products','woo-product-recommendations'),
+                            'oldest'     => __('Oldest Products','woo-product-recommendations'),
+                            'lowprice'   => __('Low Price Products','woo-product-recommendations'),
+                            'highprice' => __('High Price Products','woo-product-recommendations'),
+                            'popularity' => __('Best Selling Products','woo-product-recommendations'),
+                            'rating'     => __('Top Rated Products','woo-product-recommendations'),
                         ),
                     ),
                     array(
                         'id'    => 'global_on_sale',
-                        'title' => __('On-Sale Only', 'woocommerce-product-recommendations'),
+                        'title' => __('On-Sale Only', 'woo-product-recommendations'),
                         'type'  => 'checkbox',
                     ),
                     array(
                         'id'      => 'global_products_number',
-                        'title'   => __('Numbers of Products', 'woocommerce-product-recommendations'),
+                        'title'   => __('Numbers of Products', 'woo-product-recommendations'),
                         'type'    => 'number',
                         'default' => 12,
                     ),
@@ -1327,8 +1336,8 @@ class LC_Woo_Product_Recommendations {
             ),
             array(
                 'id'          => 'disable_global_override',
-                'label'       => 'Skip',
-                'title'       => __('Skip Manual Selection', 'woocommerce-product-recommendations'),
+                'label'       => __('Skip','woo-product-recommendations'),
+                'title'       => __('Skip Manual Selection', 'woo-product-recommendations'),
                 'type'        => 'checkbox',
                 'description' => 'It will skip individual recommendations what you have done from product edit page using WPR setting panel. <br> It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to temporary skip individual product specific recommendations. And recommend some specific categories of products. Just select the categories from the above setting and check this <strong>Skip</strong> checkbox.',
             ),
@@ -1337,8 +1346,8 @@ class LC_Woo_Product_Recommendations {
         $setting_pages = array(
             array(
                 'id'         => $this->get_settings_id(),
-                'page_title' => 'WooCommerce Product Recommendations Settings',
-                'menu_title' => 'WPR Settings',
+                'page_title' => __('Woo Product Recommendations Settings', 'woo-product-recommendations'),
+                'menu_title' => __('WPR Settings','woo-product-recommendations'),
                 'slug'       => 'wpr-settings',
                 'icon'       => 'dashicons-cart',
                 'position'   => 60,
@@ -1346,34 +1355,30 @@ class LC_Woo_Product_Recommendations {
                 'sections'   => array(
                     array(
                         'id'           => 'wpr-general-settings',
-                        'tab_title'    => 'General',
-                        'title'        => 'General Settings',
-                        'descriptions' => 'General Setting of WooCommerce Products Recommendations',
+                        'tab_title'    => __('General','woo-product-recommendations'),
+                        'title'        => __('General Settings','woo-product-recommendations'),
                         'fields'       => $general_settings_fields,
                     ),
 
                     array(
                         'id'           => 'wpr-style-settings',
-                        'tab_title'    => 'Style',
-                        'title'        => 'Colors & Styles Settings',
-                        'descriptions' => 'General Setting of WooCommerce Products Recommendations',
+                        'tab_title'    => __('Style','woo-product-recommendations'),
+                        'title'        => __('Colors & Styles Settings','woo-product-recommendations'),
                         'fields'       => $style_settings,
                     ),
 
                     array(
                         'id'           => 'wpr-global-settings',
-                        'tab_title'    => 'Global',
-                        'title'        => 'Global Settings',
-                        'descriptions' => 'Global Settings',
+                        'tab_title'    => __('Global','woo-product-recommendations'),
+                        'title'        => __('Global Settings','woo-product-recommendations'),
                         'fields'       => $global_settings_fields,
                     ),
 
                     array(
                         'id'           => 'wpr-documentation',
-                        'tab_title'    => 'Tutorials',
-                        'title'        => 'Tutorial & Documentation',
+                        'tab_title'    => __('Tutorials','woo-product-recommendations'),
+                        'title'        => __('Tutorial & Documentation','woo-product-recommendations'),
                         'type'         => 'article',
-                        'descriptions' => 'Global Settings',
                         'template'     => $this->get_path('includes/tutorials.php'),
                     ),
                 ),
@@ -1387,7 +1392,7 @@ class LC_Woo_Product_Recommendations {
      * Get enqueue script version
      *
      * @since      1.0.0
-     * @return string version of script base on development or production
+     * @return string version of script base on development or production server
      */
     public function script_version() {
         if (WP_DEBUG) {
@@ -1412,9 +1417,9 @@ class LC_Woo_Product_Recommendations {
     }
 
     /**
-     * Get class instance.
+     * Get class instance
      * @since      1.0.0
-     * @return instance of base class.
+     * @return instance of plugin base class
      */
     public static function init($__FILE__) {
         if (is_null(self::$instance)) {

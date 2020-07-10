@@ -1,20 +1,19 @@
 <?php
-
 /**
- * Plugin Name: WooCommerce Product Recommendations
- * Plugin URI: https://leocoder.com/
+ * Plugin Name: Woo Product Recommendations
+ * Plugin URI: https://leocoder.com/woo-product-recommendations
  * Description: Recommend products smartly and increase sales by nice-looking add to cart popup
  * Version: 1.0.0
  * Requires at least: 5.0
  * Requires PHP: 5.6
  * Author: LeoCoder
  * Author URI: https://leocoder.com/
- * License: GPLv2 or later
- * License URI: http://www.opensource.org/licenses/gpl-license.php
- * Text Domain: woocommerce-product-recommendations
+ * Text Domain: woo-product-recommendations
  * Domain Path: /languages
  * WC requires at least: 3.5
- * WC tested up to: 4.2.2
+ * WC tested up to: 4.3
+ * License: GPLv3 or later License
+ * URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 if (!defined('ABSPATH')) {

@@ -1,7 +1,6 @@
 <?php
 /**
- * Clsas For Ajax Add To Cart 
- * For Single Page
+ * Class for single page ajax add to cart 
  * 
  * @since      1.0.0
  * @author     LeoCoder

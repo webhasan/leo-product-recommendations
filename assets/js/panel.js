@@ -40,11 +40,11 @@ import classNames from 'classnames';
     const headingType = [
       {
         id: "heading",
-        title: __("Heading", "woocommerce-product-recommendations"),
+        title: __("Heading", "woo-product-recommendations"),
       },
       {
         id: "article",
-        title: __("Heading & Description", "woocommerce-product-recommendations"),
+        title: __("Heading & Description", "woo-product-recommendations"),
       },
     ];
 
@@ -206,7 +206,7 @@ import classNames from 'classnames';
             <div className="rp-panel-title">
               {__(
                 'Popup Heading',
-                "woocommerce-product-recommendations"
+                "woo-product-recommendations"
               )}
             </div>
 
@@ -255,7 +255,7 @@ import classNames from 'classnames';
 
           <div className="pr-field">
             <div className="rp-panel-title">
-              {__("Select Products", "woocommerce-product-recommendations")}
+              {__("Select Products", "woo-product-recommendations")}
             </div>
             <div className="product-selection-panel">
               <div className="product-filter">
@@ -279,7 +279,7 @@ import classNames from 'classnames';
                     // label="All Category"
                     noOptionLabel={__(
                       "All Categories",
-                      "woocommerce-product-recommendations"
+                      "woo-product-recommendations"
                     )}
                     onChange={(value) => {
                       setSelectedCategory(value);
@@ -300,7 +300,7 @@ import classNames from 'classnames';
                           {" "}
                           {__(
                             "Not found selectable product",
-                            "woocommerce-product-recommendations"
+                            "woo-product-recommendations"
                           )}
                         </span>
                       </li>

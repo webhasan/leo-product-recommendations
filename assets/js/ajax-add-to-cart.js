@@ -58,7 +58,7 @@
                         alert(response.data.message);
                         $submitButton.removeClass('loading');
                     }else {
-                        alert(__('Something went wrong','woocommerce-product-recommendations'));
+                        alert(__('Something went wrong','woo-product-recommendations'));
                         location.reload(); 
                     }
      

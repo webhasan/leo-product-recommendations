@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Wrapper input
+ * Wrapper field
  * 
  * @since 1.0.0
  */

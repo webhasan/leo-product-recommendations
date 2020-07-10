@@ -91,11 +91,11 @@
 
     select2: function() {
       $(".wpr-setting-page .category-selector select").select2({
-        placeholder: __("All Categories", "WooCommerce Product Recommendations"),
+        placeholder: __("All Categories", "woo-product-recommendations"),
       });
 
       $(".wpr-setting-page .tags-selector select").select2({
-        placeholder: __("All Tags","WooCommerce Product Recommendations"),
+        placeholder: __("All Tags","woo-product-recommendations"),
       });
     }
   }

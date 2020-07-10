@@ -11,13 +11,18 @@
 }
 
 class LC_Wpr_Settings_Page {
-
     /**
      * Copy of plugins base class
      * @var LC_Woo_Product_Recommendations_Pro
      */
     private $base;
+
+    /**
+     * pages setting array
+     * @var array
+     */
     private $pages;
+
     private $hook = array();
 
     /**
@@ -79,7 +84,7 @@ class LC_Wpr_Settings_Page {
     }
 
     /**
-     * Display Pages
+     * Display pages
      *
      * @since      1.0.0
      */
@@ -112,7 +117,7 @@ class LC_Wpr_Settings_Page {
                             settings_fields($page['id']);
                         ?>
                         <p class="submit">
-                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save Settings', 'woocommerce-product-recommendations')?>">
+                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save Settings', 'woo-product-recommendations')?>">
                         </p>
 					</form>
 				</div>
@@ -253,9 +258,9 @@ class LC_Wpr_Settings_Page {
     }
 
     /**
-     * Get sections under pages
+     * Get sections of all pages
      *
-     * @return array array of sections
+     * @return array array contains all sections
      */
     public function get_sections($page) {
 
@@ -269,7 +274,7 @@ class LC_Wpr_Settings_Page {
     /**
      * Get settings fiels
      *
-     * @return array  of settings field
+     * @return array of settings field
      */
     public function get_fields($page) {
 
@@ -303,7 +308,6 @@ class LC_Wpr_Settings_Page {
      * Remove specific settings from database
      *
      * @param array $fiels
-     * @return void
      */
     public function remove_settings($fiels = array()) {
         if (!empty($fiels)) {
