@@ -11,24 +11,24 @@
     exit;
 }
 
-class LC_Wpr_Admin_Ajax {
+class LC_Lpr_Admin_Ajax {
     /**
      * Class constructor
      *
      * @return void
      */
     public function __construct() {
-        add_action('wp_ajax_wpr_initial_data', array($this, 'initial_data'));
-        add_action('wp_ajax_nopriv_wpr_initial_data', array($this, 'initial_data'));
+        add_action('wp_ajax_lpr_initial_data', array($this, 'initial_data'));
+        add_action('wp_ajax_nopriv_lpr_initial_data', array($this, 'initial_data'));
 
-        add_action('wp_ajax_wpr_fetch_categories', array($this, 'fetch_categories'));
-        add_action('wp_ajax_nopriv_wpr_fetch_categories', array($this, 'fetch_categories'));
+        add_action('wp_ajax_lpr_fetch_categories', array($this, 'fetch_categories'));
+        add_action('wp_ajax_nopriv_lpr_fetch_categories', array($this, 'fetch_categories'));
 
         add_action('wp_ajax_wpr_fetch_tags', array($this, 'fetch_tags'));
         add_action('wp_ajax_nopriv_wpr_fetch_tags', array($this, 'fetch_tags'));
 
-        add_action('wp_ajax_wpr_fetch_products', array($this, 'fetch_prodcuts'));
-        add_action('wp_ajax_nopriv_wpr_fetch_products', array($this, 'fetch_prodcuts'));
+        add_action('wp_ajax_lpr_fetch_products', array($this, 'fetch_prodcuts'));
+        add_action('wp_ajax_nopriv_lpr_fetch_products', array($this, 'fetch_prodcuts'));
     }
 
     /**
@@ -41,11 +41,11 @@ class LC_Wpr_Admin_Ajax {
         // post ID
         $post_id = $_GET['post_id'];
 
-        if (!metadata_exists('post', $post_id, '_lc_wpr_data')) {
+        if (!metadata_exists('post', $post_id, '_lc_lpr_data')) {
             wp_send_json(null);
         }
 
-        $data = get_post_meta($post_id, '_lc_wpr_data', true);
+        $data = get_post_meta($post_id, '_lc_lpr_data', true);
 
         if (!empty($data['heading'])) {
 

@@ -1,4 +1,4 @@
-@keyframes wpr-spin {
+@keyframes lpr-spin {
     0% {
         transform: rotateZ(0);
     }
@@ -195,14 +195,14 @@
                     color: #fff;
                 }
 
-                .wpr-loading-posts {
+                .lpr-loading-posts {
                     position: relative;
                     width: 15px;
                     height: 15px;
                     display: inline-block;
                     background-color: gray;
                     border-radius: 50%;
-                    animation: wpr-spin 1s linear infinite;
+                    animation: lpr-spin 1s linear infinite;
 
                     &:before {
                         content: '';

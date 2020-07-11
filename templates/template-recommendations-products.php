@@ -10,8 +10,8 @@ if (!defined('ABSPATH')) {
 }
 ?>
 
-<li class="product single-wpr">
-    <?php do_action('wpr_before_recommended_prodcut', get_the_ID()); ?>
+<li class="product single-lpr">
+    <?php do_action('lpr_before_recommended_prodcut', get_the_ID()); ?>
 
     <a href="<?php the_permalink(); ?>">
         <?php
@@ -28,6 +28,6 @@ if (!defined('ABSPATH')) {
         ]');
     ?>
 
-    <?php do_action('wpr_after_recommended_prodcut', get_the_ID()); ?>
+    <?php do_action('lpr_after_recommended_prodcut', get_the_ID()); ?>
 </li>
 

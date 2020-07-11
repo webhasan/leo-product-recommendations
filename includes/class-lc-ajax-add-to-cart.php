@@ -63,7 +63,7 @@ class LC_Ajax_Add_To_Cart {
                 $adding_to_cart = wc_get_product($product_id);
 
                 if (!$adding_to_cart) {
-                    $this->response_add_to_cart_fail('Product not found', 404);
+                    $this->response_add_to_cart_fail(__('Product not found','leo-product-recommendations'), 404);
                 }
             }
 
@@ -147,7 +147,7 @@ class LC_Ajax_Add_To_Cart {
             $this->response_add_to_cart_success(wc_add_to_cart_message(array($product_id => $quantity), true, true));
         }
 
-        $this->response_add_to_cart_fail(__('Unable to add to cart. Something went wrong.', 'woocommerce-product-recommend'));
+        $this->response_add_to_cart_fail(__('Unable to add to cart. Something went wrong.', 'leo-product-recommendations'));
     }
 
     public function add_to_cart_grouped_product($product_id) {

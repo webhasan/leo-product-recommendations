@@ -1,6 +1,6 @@
 (function ($) {
   //setup cart items in localstorage to exclude from recommendation
-  function wpr_cart_items() {
+  function lpr_cart_items() {
     $.ajax({
       method: "GET",
       url: lc_ajax_modal.url,
@@ -9,21 +9,21 @@
         nonce: lc_ajax_modal.nonce,
       },
     }).done(function (data) {
-      localStorage.setItem("wpr_cart_items", data);
+      localStorage.setItem("lpr_cart_items", data);
     });
   }
 
-  wpr_cart_items();
+  lpr_cart_items();
 
   $(document.body).on(
     "added_to_cart removed_from_cart wc_fragments_refreshed",
     function () {
-      wpr_cart_items();
+      lpr_cart_items();
     }
   );
 
   //modal plugin
-  $.fn.wprModal = function (options) {
+  $.fn.lprModal = function (options) {
     var settings = $.extend(
       {
         action: "open", // opton for modal open or close default: open
@@ -34,18 +34,19 @@
     var that = this;
 
     // modal overlay
-    var overlay = $('<div class="wpr-modal-overlay show"></div>');
+    var overlay = $('<div class="lpr-modal-overlay show"></div>');
 
     // opne modal
     function opneModal() {
-      var scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
+      $('body').trigger('before_open_lpr_modal'); // event before modal open
+
+      var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
       that.addClass("show");
 
       $("body").css("paddingRight", scrollbarWidth);
 
-      $("body").addClass("wpr-modal-opened").prepend(overlay);
+      $("body").addClass("lpr-modal-opened").prepend(overlay);
 
       setTimeout(function () {
         that.addClass("fadeIn");
@@ -58,14 +59,16 @@
     // close modal
     function closeModal() {
       that.removeClass("fadeIn");
-      $(".wpr-modal-overlay").addClass("fadeIn");
+      $(".lpr-modal-overlay").addClass("fadeIn");
 
       setTimeout(function () {
         that.removeClass("show");
-        $(".wpr-modal-overlay").remove();
+        $(".lpr-modal-overlay").remove();
         $("body").css("paddingRight", 0);
-        $("body").removeClass("wpr-modal-opened");
+        $("body").removeClass("lpr-modal-opened");
       }, 200);
+
+      $('body').trigger('after_close_lpr_modal'); //event after modal close
     }
 
     // call modal open
@@ -78,12 +81,12 @@
       closeModal();
     }
 
-    that.find(".wpr-modal-close, .wpr-close-modal").click(function (e) {
+    that.find(".lpr-modal-close, .lpr-close-modal").click(function (e) {
       closeModal();
       return false;
     });
 
-    $(".wpr-modal").click(function (e) {
+    $(".lpr-modal").click(function (e) {
       if (this === e.target) {
         closeModal();
       }
@@ -99,7 +102,7 @@
       //don't show modal inside modal
       if (!$(button).closest(".recommended-products-wrapper").length) {
         var buttonId = $(button).data("product_id");
-        var modalId = "#wpr-modal-" + buttonId;
+        var modalId = "#lpr-modal-" + buttonId;
         var $modal = $(modalId);
 
         if ($modal.length) {
@@ -113,7 +116,7 @@
             recommendationProducts = recommendationProducts.split(",").map(Number);
           }
 
-          var addedProducts = localStorage.getItem("wpr_cart_items");
+          var addedProducts = localStorage.getItem("lpr_cart_items");
 
           if (addedProducts) {
             addedProducts = addedProducts.split(",").map(Number);
@@ -126,7 +129,7 @@
           if (!recommendationProducts.length) return;
 
           $('body, .yith-quick-view-overlay, .mfp-wrap').click(); // to hide existing popup, quick view, etc
-          $modal.wprModal();
+          $modal.lprModal();
           $preloader.show();
 
           $.ajax({
@@ -146,6 +149,7 @@
 
                 $total_items = owl.data('owl.carousel')._items.length
                 $visible_items = owl.data('owl.carousel').options.items;
+                
                 owl.data('owl.carousel').options.loop = owl.data('owl.carousel').options.loop && $total_items > $visible_items
 
                 owl.trigger("refresh.owl.carousel");

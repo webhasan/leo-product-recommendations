@@ -10,10 +10,10 @@
     exit;
 }
 
-class LC_Wpr_Settings_Page {
+class lc_lpr_settings_Page {
     /**
      * Copy of plugins base class
-     * @var LC_Woo_Product_Recommendations_Pro
+     * @var LC_Leo_Product_Recommendations_Pro
      */
     private $base;
 
@@ -102,11 +102,11 @@ class LC_Wpr_Settings_Page {
                 if (isset($_GET['action']) && $_GET['action'] === 'rest_color' && $_GET['color_ids']) {
                     $color_fields = $this->get_sub_field($_GET['color_ids']);
                     $this->remove_settings($color_fields);
-                    wp_redirect(get_admin_url(null, 'admin.php?page=wpr-settings&sec=wpr-style-settings'));
+                    wp_redirect(get_admin_url(null, 'admin.php?page=lpr-settings&sec=lpr-style-settings'));
                 }
                 ?>
 
-				<div class="wrap wpr-setting-page">
+				<div class="wrap lpr-setting-page">
 					<h2><?php echo $page['page_title']; ?></h2>
 					<?php settings_errors();?>
 
@@ -117,7 +117,7 @@ class LC_Wpr_Settings_Page {
                             settings_fields($page['id']);
                         ?>
                         <p class="submit">
-                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save Settings', 'woo-product-recommendations')?>">
+                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save Settings', 'leo-product-recommendations')?>">
                         </p>
 					</form>
 				</div>
@@ -223,7 +223,7 @@ class LC_Wpr_Settings_Page {
         if (function_exists($field_type)) {
             $field_type($field, $this->base, $this->base->get_settings_id());
         } else {
-            printf('<strong>%s</strong> field type not found!', $field_type);
+            printf(__('<strong>%s</strong> field type not found!','leo-product-recommendations'), $field_type);
         }
     }
 

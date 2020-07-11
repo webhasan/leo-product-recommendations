@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class LC_Woo_Product_Recommendations {
+class LC_Leo_Product_Recommendations {
     /**
      * Inctance of class
      *
@@ -38,7 +38,7 @@ class LC_Woo_Product_Recommendations {
      * @var string
      * @since      1.0.0
      */
-    static protected $__FILE__PRO__ = WP_PLUGIN_DIR . '/woo-product-recommendations-pro/woo-product-recommendations-pro.php';
+    static protected $__FILE__PRO__ = WP_PLUGIN_DIR . '/leo-product-recommendations-pro/leo-product-recommendations-pro.php';
 
     /**
      * Plugin setting id used to save setting data
@@ -46,7 +46,7 @@ class LC_Woo_Product_Recommendations {
      * @var string
      * @since      1.0.0
      */
-    static protected $setting_id = 'lc_wpr_settings';
+    static protected $setting_id = 'lc_lpr_settings';
 
     /**
      * Class constructor, initialize everything
@@ -110,7 +110,7 @@ class LC_Woo_Product_Recommendations {
 
         // before going to action
         // used this hook in pro plugin
-        do_action('wpr_before_action');
+        do_action('lpr_before_action');
 
         $this->includes();
         $this->hooks();
@@ -123,7 +123,7 @@ class LC_Woo_Product_Recommendations {
      * @return void
      */
     public function load_textdomain() {
-        load_plugin_textdomain('woo-product-recommendations', false, dirname(plugin_basename(self::$__FILE__)) . '/languages');
+        load_plugin_textdomain('leo-product-recommendations', false, dirname(plugin_basename(self::$__FILE__)) . '/languages');
     }
 
     /**
@@ -158,7 +158,7 @@ class LC_Woo_Product_Recommendations {
 
             $errors[] = sprintf(
                 /* translators: 1. link of plugin, 2. plugin version. */
-                __('The Woo Product Recommendations plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'woo-product-recommendations'),
+                __('The Leo Product Recommendations for WooCommerce plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'leo-product-recommendations'),
                 'https://wordpress.org/plugins/woocommerce/',
                 $minimum_woocommerce_version
             );
@@ -167,7 +167,7 @@ class LC_Woo_Product_Recommendations {
         if (!$wordpress_minimum_met) {
             $errors[] = sprintf(
                 /* translators: 1. link of wordpress, 2. version of WordPress. */
-                __('The Woo Product Recommendations plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'woo-product-recommendations'),
+                __('The Leo Product Recommendations for WooCommerce plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'leo-product-recommendations'),
                 'https://wordpress.org/',
                 $minimum_wordpress_version
             );
@@ -176,7 +176,7 @@ class LC_Woo_Product_Recommendations {
         if (!$php_minimum_met) {
             $errors[] = sprintf(
                 /* translators: 1. version of php */
-                __('The Woo Product Recommendations plugin requires <strong>php verion %s</strong> or greater. Please update your server php version.', 'woo-product-recommendations'),
+                __('The Leo Product Recommendations for WooCommerce plugin requires <strong>php verion %s</strong> or greater. Please update your server php version.', 'leo-product-recommendations'),
                 $minium_php_verion
             );
         }
@@ -215,10 +215,10 @@ class LC_Woo_Product_Recommendations {
      * @return void
      */
     public function admin_ajax() {
-        if (!class_exists('LC_Wpr_Admin_Ajax')) {
-            include_once $this->get_path('includes/class-lc-wpr-admin-ajax.php');
+        if (!class_exists('LC_Lpr_Admin_Ajax')) {
+            include_once $this->get_path('includes/class-lc-lpr-admin-ajax.php');
         }
-        new LC_Wpr_Admin_Ajax();
+        new LC_Lpr_Admin_Ajax();
     }
 
     /**
@@ -228,7 +228,7 @@ class LC_Woo_Product_Recommendations {
     public function plugin_action_links() {
         add_action('plugin_action_links_' . plugin_basename(self::$__FILE__), function ($links) {
             $settings = array(
-                'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=wpr-settings')) . '">' . __('Settings', 'woo-product-recommendations') . '</a>',
+                'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=lpr-settings')) . '">' . __('Settings', 'leo-product-recommendations') . '</a>',
             );
             return array_merge($settings, $links);
         });
@@ -240,11 +240,11 @@ class LC_Woo_Product_Recommendations {
      * @return void
      */
     public function plugin_settins() {
-        if (!class_exists('LC_Wpr_Settings_Page')) {
-            require_once $this->get_path('includes/class-lc-wpr-settings-page.php');
+        if (!class_exists('lc_lpr_settings_Page')) {
+            require_once $this->get_path('includes/class-lc-lpr-settings-page.php');
         }
 
-        new LC_Wpr_Settings_Page($this);
+        new lc_lpr_settings_Page($this);
     }
 
     /**
@@ -271,9 +271,8 @@ class LC_Woo_Product_Recommendations {
 
         add_filter('nonce_user_logged_out', array($this, 'nonce_fix'), 100, 2);
 
-        if (!is_admin()) {
-            add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
-        }
+        add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
+
 
         if (!$this->is_pro_activated()) {
             add_action('wp_head', array($this, 'settings_css')); // for custom styling
@@ -294,19 +293,19 @@ class LC_Woo_Product_Recommendations {
             wp_localize_script('selection-panel-script', 'ajax_url', admin_url('admin-ajax.php'));
             wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
         }
-
         $screen = get_current_screen();
-        if ($screen->id === 'toplevel_page_wpr-settings') {
-            wp_enqueue_style('wpr-settings', $this->get_url('assets/css/settings.css'), array(), $version);
+        if ($screen->id === 'toplevel_page_lpr-settings') {
             wp_enqueue_script('spectrum', $this->get_url('assets/js/color-picker/spectrum.js'), array('jquery'), $version, true);
-            wp_enqueue_script('wpr-settings', $this->get_url('assets/js/settings.min.js'), array('jquery', 'spectrum', 'wp-i18n'), $version, true);
-            wp_enqueue_style('wpr-spectrum', $this->get_url('assets/js/color-picker/spectrum.css'), array(), $version);
+            wp_enqueue_style('lpr-spectrum', $this->get_url('assets/js/color-picker/spectrum.css'), array(), $version);
 
-            wp_enqueue_script('wpr-select2', $this->get_url('assets/js/select2/select2.min.js'), array('spectrum'), $version, true);
-            wp_enqueue_style('wpr-select2', $this->get_url('assets/js/select2/select2.min.css'), array(), $version);
+            wp_enqueue_script('lpr-select2', $this->get_url('assets/js/select2/select2.min.js'), array('spectrum'), $version, true);
+            wp_enqueue_style('lpr-select2', $this->get_url('assets/js/select2/select2.min.css'), array(), $version);
+
+            wp_enqueue_script('lpr-settings', $this->get_url('assets/js/settings.min.js'), array('jquery', 'spectrum', 'wp-i18n'), $version, true);
+            wp_enqueue_style('lpr-settings', $this->get_url('assets/css/settings.css'), array(), $version);
 
             $cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
-            wp_localize_script('wpr-settings', 'wpr_css_editor', $cm_settings);
+            wp_localize_script('lpr-settings', 'lpr_css_editor', $cm_settings);
             wp_enqueue_style('wp-codemirror');
             wp_enqueue_script('wp-theme-plugin-editor');
         }
@@ -323,23 +322,23 @@ class LC_Woo_Product_Recommendations {
         $settings    = $this->get_settings();
         $layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
-        wp_enqueue_script('wpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery'), $version, true);
-        wp_localize_script('wpr-modal', 'lc_ajax_modal', array(
+        wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery'), $version, true);
+        wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
             'url'         => admin_url('admin-ajax.php'),
             'nonce'       => wp_create_nonce('lc-ajax-modal'),
             'layout_type' => $layout_type,
         ));
 
         // if (is_product()) { // disabled condition so that it work for quick view
-        wp_enqueue_script('wpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), array('jquery', 'wp-i18n'), $version, true);
-        wp_localize_script('wpr-ajax-add-to-cart', 'lc_ajax', array(
+        wp_enqueue_script('lpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), array('jquery', 'wp-i18n'), $version, true);
+        wp_localize_script('lpr-ajax-add-to-cart', 'lc_ajax', array(
             'url'   => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('lc-add-to-cart'),
         ));
         // }
 
         if (!$this->is_pro_activated()) {
-            wp_enqueue_style('wpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
+            wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
         }
     }
 
@@ -361,18 +360,18 @@ class LC_Woo_Product_Recommendations {
         // custom css
         $custom_css = $this->get_setting('custom_style') ? $this->get_setting('custom_style') : '';
         ?>
-		<style id="wpr-settings-css-front-end">
-			.wpr-modal .wpr-modal-content ul.recommended-products-list {
+		<style id="lpr-settings-css-front-end">
+			.lpr-modal .lpr-modal-content ul.recommended-products-list {
 				margin: 0 <?php echo -$grid_column_gap / 2; ?>px !important;
 			}
-			.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
+			.lpr-modal .lpr-modal-content ul.recommended-products-list li.single-lpr {
 				flex: 0 0 calc(<?php echo $desktop_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
 				width: calc(<?php echo $desktop_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
 				margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
 				margin-right: <?php echo $grid_column_gap / 2; ?>px !important;
 			}
 			@media screen and (max-width: 991px) {
-				.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
+				.lpr-modal .lpr-modal-content ul.recommended-products-list li.single-lpr {
 					flex: 0 0 calc(<?php echo $tablet_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
 					width: calc(<?php echo $tablet_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
 					margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
@@ -380,7 +379,7 @@ class LC_Woo_Product_Recommendations {
 				}
 			}
 			@media screen and (max-width: 767px) {
-				.wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr {
+				.lpr-modal .lpr-modal-content ul.recommended-products-list li.single-lpr {
 					flex: 0 0 calc(<?php echo $mobile_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
 					width: calc(<?php echo $mobile_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
 					margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
@@ -402,7 +401,7 @@ class LC_Woo_Product_Recommendations {
     public function add_meta_boxes() {
         add_meta_box(
             'lc_pr_prodcut_selection',
-            __('Product Recommendations', 'woo-product-recommendations'),
+            __('Product Recommendations', 'leo-product-recommendations'),
             array($this, 'product_selection'),
             array('product')
         );
@@ -449,7 +448,7 @@ class LC_Woo_Product_Recommendations {
      */
     public function get_templates_path($file_path) {
         //from theme
-        $theme_tmpl = get_stylesheet_directory() . '/wpr/' . $file_path;
+        $theme_tmpl = get_stylesheet_directory() . '/lpr/' . $file_path;
         if (file_exists($theme_tmpl)) {
             return $theme_tmpl;
         }
@@ -480,8 +479,8 @@ class LC_Woo_Product_Recommendations {
      * @return  void;
      */
     public function on_save_post($id) {
-        if (isset($_POST['_lc_wpr_data'])) {
-            update_post_meta($id, '_lc_wpr_data', $_POST['_lc_wpr_data']);
+        if (isset($_POST['_lc_lpr_data'])) {
+            update_post_meta($id, '_lc_lpr_data', $_POST['_lc_lpr_data']);
         }
     }
 
@@ -509,6 +508,7 @@ class LC_Woo_Product_Recommendations {
         );
 
         $loop = new WP_Query($args);
+
         if ($loop->have_posts()): while ($loop->have_posts()): $loop->the_post();
                 include $this->get_templates_path('templates/template-recommendations-products.php');
             endwhile;
@@ -544,9 +544,13 @@ class LC_Woo_Product_Recommendations {
      */
     public function get_cart_items() {
         $products_ids_array = array();
-        foreach (WC()->cart->get_cart() as $cart_item) {
-            $products_ids_array[] = $cart_item['product_id'];
+
+        if(WC()->cart) {
+            foreach (WC()->cart->get_cart() as $cart_item) {
+                $products_ids_array[] = $cart_item['product_id'];
+            }
         }
+
         wp_send_json($products_ids_array);
     }
 
@@ -557,17 +561,17 @@ class LC_Woo_Product_Recommendations {
      */
     public function include_templates() {
         // modal in shop / archives page
-        if (apply_filters('wc_pr_show_in_product_archives', true)) {
+        if (apply_filters('lc_pr_show_in_product_archives', true)) {
             add_action('woocommerce_after_shop_loop_item', array($this, 'product_archive_modal'));
         }
 
         // modal in single product page
-        if (apply_filters('wc_pr_show_in_singe_product', true)) {
+        if (apply_filters('lc_pr_show_in_singe_product', true)) {
             add_action('wp_footer', array($this, 'product_single_modal'));
         }
 
         // modal in WooCommerce Gutenberg products block
-        if (apply_filters('wc_pr_show_in_gutenberg_product_block', true)) {
+        if (apply_filters('lc_pr_show_in_gutenberg_product_block', true)) {
             add_filter('woocommerce_blocks_product_grid_item_html', array($this, 'product_gutenberg_block'), 10, 3);
         }
     }
@@ -592,9 +596,12 @@ class LC_Woo_Product_Recommendations {
         // cart products
         $cart_products_ids = array();
 
-        foreach (WC()->cart->get_cart() as $cart_item) {
-            $cart_products_ids[] = $cart_item['product_id'];
+        if(WC()->cart) {
+            foreach (WC()->cart->get_cart() as $cart_item) {
+                $cart_products_ids[] = $cart_item['product_id'];
+            }
         }
+
 
         $selectable_products = array_filter($recommended_products_id, function ($item) use ($cart_products_ids) {
             return !in_array($item, $cart_products_ids);
@@ -638,6 +645,7 @@ class LC_Woo_Product_Recommendations {
 
     /**
      * Check menual selection or not
+     * 
      * @return bool menually selected or not
      * @since   1.0.0
      */
@@ -648,6 +656,7 @@ class LC_Woo_Product_Recommendations {
 
     /**
      * Check dynamic selection or not
+     * 
      * @return bool dynamic selected or not
      * @since   1.0.0
      */
@@ -679,6 +688,7 @@ class LC_Woo_Product_Recommendations {
 
     /**
      * Check global selection applicable or not 
+     * 
      * @since      1.0.0
      * @return bool global selection applicable or not
      */
@@ -707,6 +717,7 @@ class LC_Woo_Product_Recommendations {
 
     /**
      * Get manual selection data
+     * 
      * @since      1.0.0
      * @return array of manually selection data 
      */
@@ -716,6 +727,7 @@ class LC_Woo_Product_Recommendations {
 
     /**
      * Get manual selection data
+     * 
      * @since      1.0.0
      * @return array of dynamically selection data
      */
@@ -905,9 +917,11 @@ class LC_Woo_Product_Recommendations {
      * Add modal in the Guterberg blocks product
      * @since      1.0.0
      */
-    public function product_gutenberg_block($html, $data, $product) {
-        $product_id = $product->get_id();
+    public function product_gutenberg_block( $html, $data, $product) {
 
+        if(!(WC()->cart)) return $html; // do nothing if backend block
+
+        $product_id = $product->get_id();
         if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_menually_selection($product_id)): // free version does not support dynamic selection
 
             $recommended_products_id = $this->get_recommended_products_id($product_id);
@@ -1036,18 +1050,18 @@ class LC_Woo_Product_Recommendations {
      * @since      1.0.0
      */
     public function is_pro_activated() {
-        return class_exists('LC_Woo_Product_Recommendations_Pro');
+        return class_exists('LC_Leo_Product_Recommendations_Pro');
     }
 
     /**
      * Get prodcut recommendations meta data
      * 
      * @since      1.0.0
-     * @return object of post meta _lc_wpr_data
+     * @return object of post meta _lc_lpr_data
      */
     public function get_pr_data($id) {
         if (!isset(self::$pr_meta[$id])) {
-            self::$pr_meta[$id] = get_post_meta($id, '_lc_wpr_data', true);
+            self::$pr_meta[$id] = get_post_meta($id, '_lc_lpr_data', true);
         }
 
         return self::$pr_meta[$id];
@@ -1213,21 +1227,21 @@ class LC_Woo_Product_Recommendations {
         $general_settings_fields = array(
             array(
                 'id'          => 'default_heading',
-                'title'       => __('Default Heading', 'woo-product-recommendations'),
+                'title'       => __('Default Heading', 'leo-product-recommendations'),
                 'type'        => 'text',
-                'description' => __('If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'woo-product-recommendations'),
-                'default'     => __('You may purchase following [item, items] with the %title%', 'woo-product-recommendations'),
+                'description' => __('If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'leo-product-recommendations'),
+                'default'     => __('You may purchase following [item, items] with the %title%', 'leo-product-recommendations'),
             ),
 
             array(
                 'id'     => 'grid_options',
-                'title'  => __('Grid Options', 'woo-product-recommendations'),
+                'title'  => __('Grid Options', 'leo-product-recommendations'),
                 'type'   => 'wrapper',
                 'childs' => array(
 
                     array(
                         'id'      => 'grid_lg_items',
-                        'title'   => __('Desktop Items', 'woo-product-recommendations'),
+                        'title'   => __('Desktop Items', 'leo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 2,
                         'max'     => 5,
@@ -1236,7 +1250,7 @@ class LC_Woo_Product_Recommendations {
 
                     array(
                         'id'      => 'grid_md_items',
-                        'title'   => __('Tablet Items', 'woo-product-recommendations'),
+                        'title'   => __('Tablet Items', 'leo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 2,
                         'max'     => 5,
@@ -1245,7 +1259,7 @@ class LC_Woo_Product_Recommendations {
 
                     array(
                         'id'      => 'grid_sm_items',
-                        'title'   => __('Mobile Items', 'woo-product-recommendations'),
+                        'title'   => __('Mobile Items', 'leo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 1,
                         'max'     => 3,
@@ -1253,7 +1267,7 @@ class LC_Woo_Product_Recommendations {
                     ),
                     array(
                         'id'      => 'grid_column_gap',
-                        'title'   => __('Column Gap', 'woo-product-recommendations'),
+                        'title'   => __('Column Gap', 'leo-product-recommendations'),
                         'type'    => 'number',
                         'sufix'   => 'px',
                         'min'     => 0,
@@ -1267,68 +1281,68 @@ class LC_Woo_Product_Recommendations {
         $style_settings = array(
             array(
                 'id'          => 'custom_style',
-                'title'       => __('Custom CSS', 'woo-product-recommendations'),
+                'title'       => __('Custom CSS', 'leo-product-recommendations'),
                 'type'        => 'css',
-                'description' => __('Write custom css to change style of modal.', 'woo-product-recommendations'),
+                'description' => __('Write custom css to change style of modal.', 'leo-product-recommendations'),
             ),
         );
 
         $global_settings_fields = array(
             array(
                 'id'          => 'active_global_settings',
-                'title'       => __('Active Global Setting', 'woo-product-recommendations'),
+                'title'       => __('Active Global Setting', 'leo-product-recommendations'),
                 'type'        => 'checkbox',
-                'description' => __('If there are no recommendations available for some products (if you don\'t setup from product editor), the global setting will work for those products as a fallback. This setting is also helpful if you like a bulk recommendation setup for entire shop instead of a different setup for each product.', 'woo-product-recommendations'),
+                'description' => __('If there are no recommendations available for some products (if you don\'t setup from product editor), the global setting will work for those products as a fallback. This setting is also helpful if you like a bulk recommendation setup for entire shop instead of a different setup for each product.', 'leo-product-recommendations'),
             ),
             array(
                 'id'     => 'selection_options',
-                'title'  => __('Recommendation Options', 'woo-product-recommendations'),
+                'title'  => __('Recommendation Options', 'leo-product-recommendations'),
                 'type'   => 'wrapper_extend',
                 'childs' => array(
                     array(
                         'id'      => 'global_categories',
-                        'title'   => __('Categories', 'woo-product-recommendations'),
+                        'title'   => __('Categories', 'leo-product-recommendations'),
                         'type'    => 'radio',
                         'options' => array(
-                            'same_categories'   => __('Product Related Category', 'woo-product-recommendations'),
-                            'menual_categories' => __('Menual', 'woo-product-recommendations'),
+                            'same_categories'   => __('Product Related Category', 'leo-product-recommendations'),
+                            'menual_categories' => __('Menual', 'leo-product-recommendations'),
                         ),
                         'default' => 'same_categories',
                     ),
                     array(
                         'id'    => 'global_custom_categories',
-                        'title' => __('Choose Categories', 'woo-product-recommendations'),
+                        'title' => __('Choose Categories', 'leo-product-recommendations'),
                         'type'  => 'categories_select',
                     ),
 
                     array(
                         'id'    => 'global_tags',
-                        'title' => __('Choose Tags', 'woo-product-recommendations'),
+                        'title' => __('Choose Tags', 'leo-product-recommendations'),
                         'type'  => 'tags_select',
                     ),
 
                     array(
                         'id'      => 'global_filtering',
-                        'title'   => __('Products Filtering', 'woo-product-recommendations'),
+                        'title'   => __('Products Filtering', 'leo-product-recommendations'),
                         'type'    => 'select',
                         'options' => array(
-                            'rand'       => __('Random Products','woo-product-recommendations'),
-                            'newest'     => __('Newest Products','woo-product-recommendations'),
-                            'oldest'     => __('Oldest Products','woo-product-recommendations'),
-                            'lowprice'   => __('Low Price Products','woo-product-recommendations'),
-                            'highprice' => __('High Price Products','woo-product-recommendations'),
-                            'popularity' => __('Best Selling Products','woo-product-recommendations'),
-                            'rating'     => __('Top Rated Products','woo-product-recommendations'),
+                            'rand'       => __('Random Products','leo-product-recommendations'),
+                            'newest'     => __('Newest Products','leo-product-recommendations'),
+                            'oldest'     => __('Oldest Products','leo-product-recommendations'),
+                            'lowprice'   => __('Low Price Products','leo-product-recommendations'),
+                            'highprice' => __('High Price Products','leo-product-recommendations'),
+                            'popularity' => __('Best Selling Products','leo-product-recommendations'),
+                            'rating'     => __('Top Rated Products','leo-product-recommendations'),
                         ),
                     ),
                     array(
                         'id'    => 'global_on_sale',
-                        'title' => __('On-Sale Only', 'woo-product-recommendations'),
+                        'title' => __('On-Sale Only', 'leo-product-recommendations'),
                         'type'  => 'checkbox',
                     ),
                     array(
                         'id'      => 'global_products_number',
-                        'title'   => __('Numbers of Products', 'woo-product-recommendations'),
+                        'title'   => __('Numbers of Products', 'leo-product-recommendations'),
                         'type'    => 'number',
                         'default' => 12,
                     ),
@@ -1336,8 +1350,8 @@ class LC_Woo_Product_Recommendations {
             ),
             array(
                 'id'          => 'disable_global_override',
-                'label'       => __('Skip','woo-product-recommendations'),
-                'title'       => __('Skip Manual Selection', 'woo-product-recommendations'),
+                'label'       => __('Skip','leo-product-recommendations'),
+                'title'       => __('Skip Manual Selection', 'leo-product-recommendations'),
                 'type'        => 'checkbox',
                 'description' => 'It will skip individual recommendations what you have done from product edit page using WPR setting panel. <br> It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to temporary skip individual product specific recommendations. And recommend some specific categories of products. Just select the categories from the above setting and check this <strong>Skip</strong> checkbox.',
             ),
@@ -1346,38 +1360,38 @@ class LC_Woo_Product_Recommendations {
         $setting_pages = array(
             array(
                 'id'         => $this->get_settings_id(),
-                'page_title' => __('Woo Product Recommendations Settings', 'woo-product-recommendations'),
-                'menu_title' => __('WPR Settings','woo-product-recommendations'),
-                'slug'       => 'wpr-settings',
+                'page_title' => __('Leo Product Recommendations Settings', 'leo-product-recommendations'),
+                'menu_title' => __('LPR Settings','leo-product-recommendations'),
+                'slug'       => 'lpr-settings',
                 'icon'       => 'dashicons-cart',
                 'position'   => 60,
 
                 'sections'   => array(
                     array(
-                        'id'           => 'wpr-general-settings',
-                        'tab_title'    => __('General','woo-product-recommendations'),
-                        'title'        => __('General Settings','woo-product-recommendations'),
+                        'id'           => 'lpr-general-settings',
+                        'tab_title'    => __('General','leo-product-recommendations'),
+                        'title'        => __('General Settings','leo-product-recommendations'),
                         'fields'       => $general_settings_fields,
                     ),
 
                     array(
-                        'id'           => 'wpr-style-settings',
-                        'tab_title'    => __('Style','woo-product-recommendations'),
-                        'title'        => __('Colors & Styles Settings','woo-product-recommendations'),
+                        'id'           => 'lpr-style-settings',
+                        'tab_title'    => __('Style','leo-product-recommendations'),
+                        'title'        => __('Colors & Styles Settings','leo-product-recommendations'),
                         'fields'       => $style_settings,
                     ),
 
                     array(
-                        'id'           => 'wpr-global-settings',
-                        'tab_title'    => __('Global','woo-product-recommendations'),
-                        'title'        => __('Global Settings','woo-product-recommendations'),
+                        'id'           => 'lpr-global-settings',
+                        'tab_title'    => __('Global','leo-product-recommendations'),
+                        'title'        => __('Global Settings','leo-product-recommendations'),
                         'fields'       => $global_settings_fields,
                     ),
 
                     array(
-                        'id'           => 'wpr-documentation',
-                        'tab_title'    => __('Tutorials','woo-product-recommendations'),
-                        'title'        => __('Tutorial & Documentation','woo-product-recommendations'),
+                        'id'           => 'lpr-documentation',
+                        'tab_title'    => __('Tutorials','leo-product-recommendations'),
+                        'title'        => __('Tutorial & Documentation','leo-product-recommendations'),
                         'type'         => 'article',
                         'template'     => $this->get_path('includes/tutorials.php'),
                     ),

@@ -40,11 +40,11 @@ import classNames from 'classnames';
     const headingType = [
       {
         id: "heading",
-        title: __("Heading", "woo-product-recommendations"),
+        title: __("Heading", "leo-product-recommendations"),
       },
       {
         id: "article",
-        title: __("Heading & Description", "woo-product-recommendations"),
+        title: __("Heading & Description", "leo-product-recommendations"),
       },
     ];
 
@@ -119,7 +119,7 @@ import classNames from 'classnames';
 				url: apiEndPoint,
 				method: 'GET',
 				data: {
-					action: 'wpr_initial_data',
+					action: 'lpr_initial_data',
 					post_id: postId
 				},
 
@@ -149,7 +149,7 @@ import classNames from 'classnames';
 				url: apiEndPoint,
 				method: 'GET',
 				data: {
-					action: 'wpr_fetch_categories'
+					action: 'lpr_fetch_categories'
 				},
 				success: function (data) {
 					if (data.length) {
@@ -169,7 +169,7 @@ import classNames from 'classnames';
 				url: apiEndPoint,
 				method: 'GET',
 				data: {
-					action: 'wpr_fetch_products',
+					action: 'lpr_fetch_products',
 					post_id: postId,
 					page,
 					category: selectedCategory,
@@ -201,12 +201,12 @@ import classNames from 'classnames';
 
         <div className="recommendation-prodcut-options-wrap" style={opacity}>
           <div className="pr-field">
-            <input type="hidden" name="_lc_wpr_data[type]" value={type} />
+            <input type="hidden" name="_lc_lpr_data[type]" value={type} />
             
             <div className="rp-panel-title">
               {__(
                 'Popup Heading',
-                "woo-product-recommendations"
+                "leo-product-recommendations"
               )}
             </div>
 
@@ -215,7 +215,7 @@ import classNames from 'classnames';
                 <label key={method.id}>
                   <input
                     type="radio"
-                    name="_lc_wpr_data[heading_type]"
+                    name="_lc_lpr_data[heading_type]"
                     value={method.id}
                     checked={initialData.heading_type === method.id}
                     onChange={(e) => setInitialData({ ...initialData, heading_type: e.target.value })}
@@ -228,7 +228,7 @@ import classNames from 'classnames';
             <div style={{ display: initialData.heading_type === 'article' ? 'block': 'none'}}>
             <WPEditor
               id="header-description"
-              name={initialData.heading_type === 'article' ? '_lc_wpr_data[heading_article]' : ''}
+              name={initialData.heading_type === 'article' ? '_lc_lpr_data[heading_article]' : ''}
               className="heading-article wp-editor-area"
               value={initialData.heading_article}
               onChange={(value) => {
@@ -244,7 +244,7 @@ import classNames from 'classnames';
             <p className="heading-input" style={{ display: initialData.heading_type === 'heading' ? 'block' : 'none' }}>
               <input
                 type="text"
-                name={initialData.heading_type === 'heading' ? '_lc_wpr_data[heading]' : ''}
+                name={initialData.heading_type === 'heading' ? '_lc_lpr_data[heading]' : ''}
                 value={initialData.heading}
                 onChange={(e) =>
                   setInitialData({ ...initialData, heading: e.target.value })
@@ -255,7 +255,7 @@ import classNames from 'classnames';
 
           <div className="pr-field">
             <div className="rp-panel-title">
-              {__("Select Products", "woo-product-recommendations")}
+              {__("Select Products", "leo-product-recommendations")}
             </div>
             <div className="product-selection-panel">
               <div className="product-filter">
@@ -269,7 +269,7 @@ import classNames from 'classnames';
                     }}
                     placeholder={__(
                       "Search...",
-                      "woocommerce-product-recommendation"
+                      "leo-product-recommendations"
                     )}
                   />
                 </div>
@@ -279,7 +279,7 @@ import classNames from 'classnames';
                     // label="All Category"
                     noOptionLabel={__(
                       "All Categories",
-                      "woo-product-recommendations"
+                      "leo-product-recommendations"
                     )}
                     onChange={(value) => {
                       setSelectedCategory(value);
@@ -300,7 +300,7 @@ import classNames from 'classnames';
                           {" "}
                           {__(
                             "Not found selectable product",
-                            "woo-product-recommendations"
+                            "leo-product-recommendations"
                           )}
                         </span>
                       </li>
@@ -337,7 +337,7 @@ import classNames from 'classnames';
                           invisible: !fetchingPosts,
                         })}
                       >
-                        <span className="wpr-loading-posts"></span>
+                        <span className="lpr-loading-posts"></span>
                       </li>
                     }
                   </ul>
@@ -359,7 +359,7 @@ import classNames from 'classnames';
                       <li key={product.id}>
                         <input
                           type="hidden"
-                          name="_lc_wpr_data[products][]"
+                          name="_lc_lpr_data[products][]"
                           value={product.id}
                         />
                         <span className="single-list" data-id="10">

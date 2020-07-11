@@ -1,6 +1,6 @@
 <?php
 /**
- * Settins Fields
+ * Settings fields
  *
  * @since      1.0.0
  * @author     LeoCoder
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 function wrapper($field, $base, $setting_id) {
     extract($field);
     ?>
-    <fieldset class="wpr-field-<?php echo $type; ?>" id="wpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <div class="fields-container">
             <?php foreach ($childs as $child) :
 
@@ -187,7 +187,7 @@ function wrapper_extend($field, $base, $setting_id) {
     extract($field);
     ?>
 
-    <fieldset class="wpr-field-<?php echo $type; ?>" id="wpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <div class="fields-container">
             <?php foreach ($childs as $child) :
 
@@ -365,7 +365,7 @@ function radio($field, $base, $setting_id) {
 
     ?>
 
-    <fieldset class="wpr-field-<?php echo $type; ?>" id="wpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <?php foreach ($options as $key => $option) : ?>
             <label>
                 <?php
@@ -400,7 +400,7 @@ function checkbox($field, $base, $setting_id) {
 
     ?>
 
-    <fieldset class="wpr-field-<?php echo $type; ?>" id="wpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <label>
             <?php 
             $checked = !empty($value) ? ' checked' : '';
@@ -432,7 +432,7 @@ function text($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
     ?>
 
-    <fieldset class="wpr-field-<?php echo $type; ?>" id="wpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <input type="text" name="<?php echo $field_name; ?>" value="<?php echo $value; ?>">
     </fieldset>
 
@@ -456,7 +456,7 @@ function info($field, $baser, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
     ?>
 
-    <fieldset class="wpr-field-<?php echo $type; ?>" id="wpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <?php if (isset($link)) : ?>
             <a href="<?php esc_url($link); ?>" target="_blank"><?php echo $label; ?></a>
         <?php else : ?>
@@ -480,7 +480,7 @@ function css($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
 
     ?>
-    <fieldset class="wpr-field-<?php echo $type; ?>" id="wpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <?php 
             printf(
                 '<textarea class="css-editor" name="%1$s">%2$s</textarea>',

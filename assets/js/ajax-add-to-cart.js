@@ -30,7 +30,7 @@
             }
 
             // recommendation products mdoal
-            var $targetMdoal = $('#wpr-modal-' + dataObject.product_id);
+            var $targetMdoal = $('#lpr-modal-' + dataObject.product_id);
 
             if($targetMdoal.length) {
                 // add product id to button to catch it by modal.
@@ -58,7 +58,7 @@
                         alert(response.data.message);
                         $submitButton.removeClass('loading');
                     }else {
-                        alert(__('Something went wrong','woo-product-recommendations'));
+                        alert(__('Something went wrong','leo-product-recommendations'));
                         location.reload(); 
                     }
      

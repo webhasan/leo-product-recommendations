@@ -1,9 +1,9 @@
 /**
  * stylesheet for front end modal
- * modal class ".wpr-modal"
+ * modal class ".lpr-modal"
  */
-$base_class: wpr-modal;
-$overlay_class: wpr-modal-overlay;
+$base_class: lpr-modal;
+$overlay_class: lpr-modal-overlay;
 
 $sm-modal: 600px;
 $md-modal: 720px;
@@ -26,7 +26,7 @@ $lg-media: 1199px;
 
 $wpr_message_bg: #46c28e;
 
-body.wpr-modal-opened {
+body.lpr-modal-opened {
   overflow: hidden;
 }
 
@@ -78,7 +78,7 @@ body.wpr-modal-opened {
     display: inline !important;
   }
 
-  .wpr-modal-dialog {
+  .lpr-modal-dialog {
     pointer-events: none;
     position: relative;
     transition: transform 0.4s ease-out, -webkit-transform 0.4s ease-out;
@@ -101,11 +101,11 @@ body.wpr-modal-opened {
     }
   }
 
-  &.show.fadeIn .wpr-modal-dialog {
+  &.show.fadeIn .lpr-modal-dialog {
     transform: translate(0, 0);
   }
 
-  .wpr-modal-content {
+  .lpr-modal-content {
     max-height: calc(100vh - 3.5rem);
     overflow: hidden;
     position: relative;
@@ -118,7 +118,7 @@ body.wpr-modal-opened {
     flex-direction: column;
     outline: 0;
 
-    .wpr-modal-close {
+    .lpr-modal-close {
       font-size: 25px;
       opacity: 0.8;
       cursor: pointer;
@@ -135,11 +135,11 @@ body.wpr-modal-opened {
       border-bottom-left-radius: 0.4em;
     }
 
-    .wpr-modal-close:before {
+    .lpr-modal-close:before {
       content: "×";
     }
 
-    .wpr-modal-head {
+    .lpr-modal-head {
       display: -ms-flexbox;
       border-top-left-radius: calc(0.3rem - 1px);
       border-top-right-radius: calc(0.3rem - 1px);
@@ -216,7 +216,7 @@ body.wpr-modal-opened {
       }
     }
 
-    .wpr-button {
+    .lpr-button {
       padding: 6px 12px;
       display: inline-block;
       background: #4cc491;
@@ -230,7 +230,7 @@ body.wpr-modal-opened {
       }
     }
 
-    .wpr-message {
+    .lpr-message {
       padding: 15px 30px 15px 50px;
       border-radius: 2px;
       clear: both;
@@ -255,11 +255,11 @@ body.wpr-modal-opened {
         vertical-align: text-top;
       }
 
-      .wpr-notification-text {
+      .lpr-notification-text {
         margin-right: 10px;
       }
 
-      a.wpr-cart-button {
+      a.lpr-cart-button {
         white-space: nowrap;
         padding: 0;
         background: none;
@@ -275,7 +275,7 @@ body.wpr-modal-opened {
       }
     }
 
-    .wpr-modal-body {
+    .lpr-modal-body {
       overflow-y: auto;
       position: relative;
       -ms-flex: 1 1 auto;
@@ -292,7 +292,7 @@ body.wpr-modal-opened {
       margin: 0 -10px !important;
       padding: 0 !important;
 
-      li.single-wpr {
+      li.single-lpr {
         list-style: none;
         text-align: center;
         display: block;
@@ -443,6 +443,6 @@ body.wpr-modal-opened {
 }
 
 /** divi fix **/
-body.theme-Divi .wpr-modal .wpr-modal-content ul.recommended-products-list li.single-wpr a.button:after {
+body.theme-Divi .lpr-modal .lpr-modal-content ul.recommended-products-list li.single-lpr a.button:after {
   line-height: 1.7em;
 }

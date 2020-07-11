@@ -1,4 +1,4 @@
-.wpr-setting-page {
+.lpr-setting-page {
   .nav-tab-wrapper {
     margin-bottom: 30px;
   }
@@ -25,16 +25,16 @@
         padding: 40px 10px;
       }
 
-      .wpr-field-post_type_checkbox,
-      .wpr-field-checkbox,
-      .wpr-field-wrapper,
-      .wpr-field-radio {
+      .lpr-field-post_type_checkbox,
+      .lpr-field-checkbox,
+      .lpr-field-wrapper,
+      .lpr-field-radio {
         label {
           margin-right: 15px !important;
         }
       }
 
-      .wpr-field-text input {
+      .lpr-field-text input {
         max-width: 100%;
         width: 500px;
       }
@@ -78,7 +78,7 @@
   }
 }
 
-.wpr-field-wrapper_extend .fields-container {
+.lpr-field-wrapper_extend .fields-container {
    display: flex;
   flex-wrap: wrap;
 
@@ -129,7 +129,7 @@
   }
 }
 
-.wpr-field-wrapper .fields-container {
+.lpr-field-wrapper .fields-container {
   display: flex;
   flex-wrap: wrap;
 
@@ -174,7 +174,7 @@
 }
 
 // tutorial related code
-.wpr-setting-page .tutorials .tutorials-wrapper {
+.lpr-setting-page .tutorials .tutorials-wrapper {
   background-color: #fff;
   margin-top: 30px;
   padding: 40px 20px;

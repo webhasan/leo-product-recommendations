@@ -1,5 +1,5 @@
-=== Woo Product Recommendations ===
-Contributors: webhasan
+=== Leo Product Recommendations for WooCommerce ===
+Contributors: webhasan, masum007
 Tags: woocommerce product recommendations, woocommerce, ajax add to cart, woocommerce products suggestion, add to cart popup, cross sell, up sell, woocommerce popup, woocommerce boost sales, increase sale, related products suggestion, quick checkout
 Requires at least: 5.0
 Tested up to: 5.4.2
@@ -13,19 +13,19 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Recommend products smartly and increase sales by nice-looking add to cart popup
 
 == Description ==
-**Woo Prodcut Recommendations** is a sale boosting plugin by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in a eye catching popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
+**Woo Prodcut Recommendations** is a sale boosting plugin for WooCommerce by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in a eye catching popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
 
 Harvard professor Gerald Zaltman says "95% of purchasing decisions are subconscious". So You have to just display the right product in front of the right customer, at the right time. Let me explain, how to make more Sale using this awesome plugin.
 
 After purchasing a smartphone definitely there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Woo Products Recommendations helps here to recommend that product instantly. 
 [youtube https://youtu.be/U5n7TH1psgE]
 
-In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of Jeans pant. Woo Product Recommendations helps here to sell T-Shirts with a pair of jeans pants.
+In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of Jeans pant. Leo Product Recommendations helps here to sell T-Shirts with a pair of jeans pants.
 [youtube https://youtu.be/3t--SH1MjDw]
 
 Woo Products Recommendation does everything Ajax way to improve the shopping experience. Customers do not require to browse a lot of pages to purchase products. It also reduces the steps and time of shopping and increases the chances of selling. 
 
-## How To Set up Woo Product Recommendations ##
+## How To Set up Leo Product Recommendations ##
 [youtube https://youtu.be/Y0V5bNlOKro]
 
 ## Key Features ##
@@ -51,7 +51,7 @@ Woo Products Recommendation does everything Ajax way to improve the shopping exp
 ### Automatic Installation ##
 
 1. From dashboard Navigate to **Plugins > Add New**
-2. Search **Woo Product Recommendations**
+2. Search **Leo Product Recommendations**
 5. Click on **Install Now** button
 5. When the installation is complete, click **Activate** button activate plugin.
 
@@ -95,8 +95,8 @@ Yes, it works with quick view with all major quick view plugin. If it does not w
 All template files are available in templates folder inside plugin files.
 In the templates files, filter and action hooks are available that allow you to add / edit popup template.
 
-You also can overwrite templates files by your theme. Create a directory as `/wpr/templates/` and copy template file inside the directory.
-Example: To `overwrite template-modal.php` file by your theme then the file structure should be `wp-content/themes/yourtheme/wpr/templates/template-modal.php`
+You also can overwrite templates files by your theme. Create a directory as `/lpr/templates/` and copy template file inside the directory.
+Example: To `overwrite template-modal.php` file by your theme then the file structure should be `wp-content/themes/yourtheme/lpr/templates/template-modal.php`
 
 <sub>Note: You need some development knowledge to overwrite template files or it may cause an error.</sub>
 
