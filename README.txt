@@ -13,11 +13,11 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Recommend products smartly and increase sales by nice-looking add to cart popup
 
 == Description ==
-**Woo Prodcut Recommendations** is a sale boosting plugin for WooCommerce by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in a eye catching popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
+**Leo Product Recommendations for WooCommerce** is a sale boosting plugin for WooCommerce by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in a eye catching popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
 
 Harvard professor Gerald Zaltman says "95% of purchasing decisions are subconscious". So You have to just display the right product in front of the right customer, at the right time. Let me explain, how to make more Sale using this awesome plugin.
 
-After purchasing a smartphone definitely there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Woo Products Recommendations helps here to recommend that product instantly. 
+After purchasing a smartphone definitely there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Leo Product Recommendations helps here to recommend that product instantly. 
 [youtube https://youtu.be/U5n7TH1psgE]
 
 In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of Jeans pant. Leo Product Recommendations helps here to sell T-Shirts with a pair of jeans pants.
@@ -101,10 +101,10 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 <sub>Note: You need some development knowledge to overwrite template files or it may cause an error.</sub>
 
 == Screenshots ==
-1. WooCommere Product Recommendation Preview
-2. WooCommere Product Recommendation Selection Panel
-3. WooCommere Product Recommendation Selection Settings
-4. WooCommere Product Recommendation Before After Preview 
+1. Leo Product Recommendations Preview
+2. Leo Product Recommendations Selection Panel
+3. Leo Product Recommendations Selection Settings
+4. Leo Product Recommendations Before After Preview 
 
 == Changelog ==
 = 1.0.0 =
