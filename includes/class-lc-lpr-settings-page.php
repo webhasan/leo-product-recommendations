@@ -223,6 +223,7 @@ class lc_lpr_settings_Page {
         if (function_exists($field_type)) {
             $field_type($field, $this->base, $this->base->get_settings_id());
         } else {
+            /* translators: %s: Name of field type */
             printf(__('<strong>%s</strong> field type not found!','leo-product-recommendations'), $field_type);
         }
     }

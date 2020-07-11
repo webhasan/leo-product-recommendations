@@ -25,8 +25,8 @@ In another scenario, customers usually search for the best matching T-Shirt afte
 
 Woo Products Recommendation does everything Ajax way to improve the shopping experience. Customers do not require to browse a lot of pages to purchase products. It also reduces the steps and time of shopping and increases the chances of selling. 
 
-## How To Set up Leo Product Recommendations ##
-[youtube https://youtu.be/Y0V5bNlOKro]
+## How To Setup Leo Product Recommendations ##
+[youtube https://youtu.be/zKUoISoDj94]
 
 ## Key Features ##
 * Responsive Popup 
