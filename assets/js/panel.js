@@ -31,7 +31,7 @@ import classNames from 'classnames';
 
 	const postId = parseInt(app.getAttribute('data-id'));
 	const { reorder } = Reorder;
-	const apiEndPoint = ajax_url;
+  const {ajax_url:apiEndPoint, nonce} = lc_pr_panel_data;
 	const { useState, useEffect } = React;
 
 
@@ -116,47 +116,53 @@ import classNames from 'classnames';
 
 		useEffect(() => {      
 			$.ajax({
-				url: apiEndPoint,
-				method: 'GET',
-				data: {
-					action: 'lpr_initial_data',
-					post_id: postId
-				},
+        url: apiEndPoint,
+        method: "GET",
+        data: {
+          action: "lpr_initial_data",
+          nonce,
+          post_id: postId,
+        },
 
-				success: function (data) {					
-					if (data) {
-						let products = data.products ? data.products : [];
-            let heading = data.heading ? data.heading : '';
-            let heading_article = data.heading_article ? data.heading_article : '';
-            let heading_type = data.heading_type ? data.heading_type : 'heading';
+        success: function (data) {
+          if (data) {
+            let products = data.products ? data.products : [];
+            let heading = data.heading ? data.heading : "";
+            let heading_article = data.heading_article
+              ? data.heading_article
+              : "";
+            let heading_type = data.heading_type
+              ? data.heading_type
+              : "heading";
 
-						setInitialData({
+            setInitialData({
               ...initialData,
               products,
               heading_type,
               heading,
               heading_article,
             });
-					}
+          }
 
-					setFacedData(true);
-				}
-			});
+          setFacedData(true);
+        },
+      });
 		}, []);
 
 		useEffect(() => {
 			$.ajax({
-				url: apiEndPoint,
-				method: 'GET',
-				data: {
-					action: 'lpr_fetch_categories'
-				},
-				success: function (data) {
-					if (data.length) {
-						setCategories(data);
-					}
-				}
-			});
+        url: apiEndPoint,
+        method: "GET",
+        data: {
+          action: "lpr_fetch_categories",
+          nonce
+        },
+        success: function (data) {
+          if (data.length) {
+            setCategories(data);
+          }
+        },
+      });
 		}, []);
 
 		useEffect(() => {
@@ -166,33 +172,33 @@ import classNames from 'classnames';
 			}
 
 			$.ajax({
-				url: apiEndPoint,
-				method: 'GET',
-				data: {
-					action: 'lpr_fetch_products',
-					post_id: postId,
-					page,
-					category: selectedCategory,
-					query
-				},
-				success: function (data) {
+        url: apiEndPoint,
+        method: "GET",
+        data: {
+          action: "lpr_fetch_products",
+          nonce,
+          post_id: postId,
+          page,
+          category: selectedCategory,
+          query,
+        },
+        success: function (data) {
+          let { products: newProducts, max_page: maxPage } = data;
 
-					let { products: newProducts, max_page: maxPage } = data;
-
-					if (page === 1) {
-						setProducts(newProducts);
-					} else {
-
-						setProducts([...products, ...newProducts]);
-					}
-					setMaxPage(maxPage);
-					setFetchingPosts(false);
-				}
-			});
+          if (page === 1) {
+            setProducts(newProducts);
+          } else {
+            setProducts([...products, ...newProducts]);
+          }
+          setMaxPage(maxPage);
+          setFetchingPosts(false);
+        },
+      });
 		}, [page, selectedCategory, query]);
 
 		return (
       <div className="lc-recommendation-product">
+        <input type="hidden" value={nonce} name="lc_pr_panel_nonce"/>
         {!facedData && (
           <span className="lc-recommendation-product-prelaoder">
             {<LoadingIcon />}

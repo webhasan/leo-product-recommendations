@@ -1,4 +1,10 @@
 <?php
+namespace LoeCoder\Plugin\ProductRecommendations;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * The Plugin Base Class
  *
@@ -6,11 +12,7 @@
  * @author     LeoCoder
  */
 
-if (!defined('ABSPATH')) {
-    exit;
-}
-
-class LC_Leo_Product_Recommendations {
+final class Product_Recommendations {
     /**
      * Inctance of class
      *
@@ -215,10 +217,10 @@ class LC_Leo_Product_Recommendations {
      * @return void
      */
     public function admin_ajax() {
-        if (!class_exists('LC_Lpr_Admin_Ajax')) {
-            include_once $this->get_path('includes/class-lc-lpr-admin-ajax.php');
+        if (!class_exists(Admin_Ajax::class)) {
+            include_once $this->get_path('includes/class-admin-ajax.php');
         }
-        new LC_Lpr_Admin_Ajax();
+        new Admin_Ajax();
     }
 
     /**
@@ -240,11 +242,11 @@ class LC_Leo_Product_Recommendations {
      * @return void
      */
     public function plugin_settins() {
-        if (!class_exists('lc_lpr_settings_Page')) {
-            require_once $this->get_path('includes/class-lc-lpr-settings-page.php');
+        if (!class_exists(Settings_Page::class)) {
+            require_once $this->get_path('includes/class-settings-page.php');
         }
 
-        new lc_lpr_settings_Page($this);
+        new Settings_Page($this);
     }
 
     /**
@@ -290,7 +292,10 @@ class LC_Leo_Product_Recommendations {
         wp_enqueue_editor();
         if (!$this->is_pro_activated()) {
             wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
-            wp_localize_script('selection-panel-script', 'ajax_url', admin_url('admin-ajax.php'));
+            wp_localize_script('selection-panel-script', 'lc_pr_panel_data', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce'    => wp_create_nonce('lc-panel-security')
+            ));
             wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
         }
         $screen = get_current_screen();
@@ -323,6 +328,7 @@ class LC_Leo_Product_Recommendations {
         $layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
         wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery'), $version, true);
+        
         wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
             'url'         => admin_url('admin-ajax.php'),
             'nonce'       => wp_create_nonce('lc-ajax-modal'),
@@ -479,8 +485,83 @@ class LC_Leo_Product_Recommendations {
      * @return  void;
      */
     public function on_save_post($id) {
-        if (isset($_POST['_lc_lpr_data'])) {
-            update_post_meta($id, '_lc_lpr_data', $_POST['_lc_lpr_data']);
+        $is_secure = isset($_POST['_lc_lpr_data']) && isset($_POST['lc_pr_panel_nonce']) && wp_verify_nonce($_POST['lc_pr_panel_nonce'], 'lc-panel-security');
+
+        if ($is_secure) {
+            $panel_data = $_POST['_lc_lpr_data'];
+            $entry_data = array();
+
+            // heading type
+            if(isset($panel_data['heading_type'])) {
+                $entry_data['heading_type'] = sanitize_key($panel_data['heading_type']);
+            }
+
+            // normal heading
+            if (isset($panel_data['heading'])) {
+                $html_permission = array(
+                    'span'   => array('class'),
+                    'b'      => array(),
+                    'strong' => array(),
+                    'i'      => array(),
+                    'br'     => array(),
+                );
+                $entry_data['heading'] = wp_kses($panel_data['heading'], $html_permission);
+            }
+
+           // heading article
+            if (isset($panel_data['heading_article'])) {
+                $entry_data['heading_article'] = wp_kses_post($panel_data['heading_article']);
+            }
+
+           // select by type
+            if (isset($panel_data['type'])) {
+                $entry_data['type'] = sanitize_key($panel_data['type']);
+            }
+
+           //selected prodcut
+            if (isset($panel_data['products']) && is_array($panel_data['products'])) {
+                $recommend_products = array_map(function($id) {
+                    return (int) $id;
+                }, $panel_data['products']);
+
+                $entry_data['products'] = $recommend_products;
+            }
+
+           //categories
+            if (isset($panel_data['categories']) && is_array($panel_data['categories'])) {
+                $recommend_categories = array_map(function($id) {
+                    return (int) $id;
+                }, $panel_data['categories']);
+
+                $entry_data['categories'] = $recommend_categories;
+            }
+
+           //tags
+            if (isset($panel_data['tags']) && is_array($panel_data['tags'])) {
+                $recommend_tags = array_map(function($id) {
+                    return (int) $id;
+                }, $panel_data['tags']);
+
+                $entry_data['tags'] = $recommend_tags;
+            }
+
+           //orderby
+            if (isset($panel_data['orderby'])) {
+                $entry_data['orderby'] = sanitize_key($panel_data['orderby']);
+            }
+
+           //is sale
+            if (isset($panel_data['sale'])) {
+                $entry_data['sale'] = $panel_data['sale'];
+            }
+
+           //number of products
+            if (isset($panel_data['number'])) {
+                $entry_data['number'] = (int) $panel_data['number'];
+            }
+
+
+            update_post_meta($id, '_lc_lpr_data', $entry_data);
         }
     }
 
@@ -493,12 +574,18 @@ class LC_Leo_Product_Recommendations {
 
     public function fetch_modal_products() {
         $nonce                   = $_GET['nonce'];
-        $recommended_products_id = $_GET['recommendation_items'];
-        $layout_type             = $_GET['layout_type'];
+        $recommended_products_id = (isset($_GET['recommendation_items']) && is_array($_GET['recommendation_items'])) ? $_GET['recommendation_items'] : null;
 
-        if (!isset($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || !isset($recommended_products_id)) {
+        if (!isset($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || empty($recommended_products_id)) {
             wp_send_json_error(array('message' => 'Bad request'), 400);
         }
+
+        $recommended_products_id = array_map(function ($id) {
+            return (int) $id;
+        }, $recommended_products_id);
+
+        $layout_type = isset($_GET['layout_type']) ?  sanitize_key($_GET['layout_type']) : 'grid';
+
 
         $args = array(
             'post_type'      => 'product',
@@ -507,7 +594,7 @@ class LC_Leo_Product_Recommendations {
             'orderby'        => 'post__in',
         );
 
-        $loop = new WP_Query($args);
+        $loop = new \WP_Query($args);
 
         if ($loop->have_posts()): while ($loop->have_posts()): $loop->the_post();
                 include $this->get_templates_path('templates/template-recommendations-products.php');
@@ -526,11 +613,11 @@ class LC_Leo_Product_Recommendations {
     public function ajax_add_to_cart() {
 
         if ($_REQUEST['data'] && $_REQUEST['nonce'] && wp_verify_nonce($_REQUEST['nonce'], 'lc-add-to-cart')) {
-            if (!class_exists('LC_Ajax_Add_To_Cart')) {
-                include $this->get_path('includes/class-lc-ajax-add-to-cart.php');
+            if (!class_exists(Ajax_Add_To_Cart::class)) {
+                include $this->get_path('includes/class-ajax-add-to-cart.php');
             }
 
-            new LC_Ajax_Add_To_Cart($_REQUEST['data']);
+            new Ajax_Add_To_Cart($_REQUEST['data']);
         } else {
             wp_send_json_error(array('message' => 'Bad request'), 400);
         }
@@ -615,7 +702,7 @@ class LC_Leo_Product_Recommendations {
             'br'     => array(),
         );
 
-        $modal_heading = !empty(trim($modal_heading)) ? $modal_heading : $default_heading;
+        $modal_heading = (!$this->is_active_global($product_id) && !empty(trim($modal_heading))) ? $modal_heading : $default_heading;
         $modal_heading = wp_kses($modal_heading, $html_permission);
         $modal_heading = str_replace('%title%', get_the_title($product_id), $modal_heading);
         $modal_heading = preg_replace('/\[(.+),(.+)\]/', _n('${1}', '${2}', count($selectable_products)), $modal_heading);
@@ -623,7 +710,7 @@ class LC_Leo_Product_Recommendations {
         $heading_type    = isset($pr_data['heading_type']) ? $pr_data['heading_type'] : 'heading';
         $heading_article = isset($pr_data['heading_article']) ? $pr_data['heading_article'] : '';
 
-        $modal_heading = ($heading_type === 'heading')
+        $modal_heading = ($heading_type === 'heading') || $this->is_active_global($product_id)
         ? '<h2 class="modal-heading">' . $modal_heading . '</h2>' :
         '<div class="modal-heading-article">' . do_shortcode($heading_article) . '</div>';
         $template_data['modal_heading'] = $modal_heading;
@@ -1050,7 +1137,7 @@ class LC_Leo_Product_Recommendations {
      * @since      1.0.0
      */
     public function is_pro_activated() {
-        return class_exists('LC_Leo_Product_Recommendations_Pro');
+        return class_exists(Product_Recommendations_Pro::class);
     }
 
     /**
@@ -1122,22 +1209,23 @@ class LC_Leo_Product_Recommendations {
         );
 
         switch ($field_type) {
-        case 'text':
-            $value = wp_kses($value, $html_permission);
-            break;
+            case 'text':
+                $value = wp_kses($value, $html_permission);
+                break;
 
-        case 'color_picker':
-            $value = esc_attr($value);
-            break;
+            case 'color_picker':
+                $value = esc_attr($value);
+                break;
 
-        case 'number':
-            $value = (int) esc_attr($value);
-            break;
+            case 'number':
+                $value = (int) esc_attr($value);
+                break;
 
-        case 'css':
-            $value = sanitize_textarea_field($value);
-            break;
+            case 'css':
+                $value = sanitize_textarea_field($value);
+                break;
         }
+
         return $value;
     }
 
@@ -1229,7 +1317,7 @@ class LC_Leo_Product_Recommendations {
                 'id'          => 'default_heading',
                 'title'       => __('Default Heading', 'leo-product-recommendations'),
                 'type'        => 'text',
-                'description' => __('If you like to use same heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'leo-product-recommendations'),
+                'description' => __('If you like to use same  heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'leo-product-recommendations'),
                 'default'     => __('You may purchase following [item, items] with the %title%', 'leo-product-recommendations'),
             ),
 

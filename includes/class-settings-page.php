@@ -1,4 +1,5 @@
 <?php
+namespace LoeCoder\Plugin\ProductRecommendations;
 /**
  * Plugin Setting page
  *
@@ -10,7 +11,7 @@
     exit;
 }
 
-class lc_lpr_settings_Page {
+class Settings_Page {
     /**
      * Copy of plugins base class
      * @var LC_Leo_Product_Recommendations_Pro
@@ -100,7 +101,9 @@ class lc_lpr_settings_Page {
             if ($this->hook[$screen->id] === $page) {
                 // rest color settings
                 if (isset($_GET['action']) && $_GET['action'] === 'rest_color' && $_GET['color_ids']) {
-                    $color_fields = $this->get_sub_field($_GET['color_ids']);
+                    $color_ids = sanitize_key($_GET['color_ids']);
+                    
+                    $color_fields = $this->get_sub_field($color_ids);
                     $this->remove_settings($color_fields);
                     wp_redirect(get_admin_url(null, 'admin.php?page=lpr-settings&sec=lpr-style-settings'));
                 }
@@ -172,7 +175,7 @@ class lc_lpr_settings_Page {
             return false;
         }
 
-        $active_section = isset($_GET['sec']) ? $_GET['sec'] : $sections[0]['id'];
+        $active_section = isset($_GET['sec']) ? sanitize_key($_GET['sec']) : $sections[0]['id'];
         ?>
 		<div class="nav-tab-wrapper">
 			<?php foreach ($sections as $section): ?>
@@ -192,7 +195,7 @@ class lc_lpr_settings_Page {
     public function sections_content($page) {
         $sections = $this->get_sections($page);
 
-        $active_section = isset($_GET['sec']) ? $_GET['sec'] : $sections[0]['id'];
+        $active_section = isset($_GET['sec']) ? sanitize_key($_GET['sec']) : $sections[0]['id'];
 
         foreach ($sections as $section) {
 
@@ -218,7 +221,9 @@ class lc_lpr_settings_Page {
      */
     public function display_field($field) {
         require_once $this->base->get_path('includes/settings-fields-type.php');
-        $field_type = $field['type'];
+        
+        $namespace = 'LoeCoder\Plugin\ProductRecommendations';
+        $field_type = $namespace . '\\'.$field['type'];
 
         if (function_exists($field_type)) {
             $field_type($field, $this->base, $this->base->get_settings_id());

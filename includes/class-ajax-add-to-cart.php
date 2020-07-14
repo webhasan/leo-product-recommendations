@@ -1,4 +1,5 @@
 <?php
+namespace LoeCoder\Plugin\ProductRecommendations;
 /**
  * Class for single page ajax add to cart 
  * 
@@ -10,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class LC_Ajax_Add_To_Cart {
+class Ajax_Add_To_Cart {
     private $data = array();
 
     public function __construct($request) {

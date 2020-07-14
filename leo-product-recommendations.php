@@ -20,13 +20,14 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Exit if accessed directly
-if (!class_exists('LC_Leo_Product_Recommendations')) {
-    require plugin_dir_path(__FILE__) . 'includes/class-lc-leo-product-recommendations.php';
+use LoeCoder\Plugin\ProductRecommendations\Product_Recommendations;
+
+if (!class_exists(Product_Recommendations::class)) {
+   require plugin_dir_path(__FILE__) . 'includes/class-product-recommendations.php';
 }
 
 /**
  * Plugin execution
  * @since    1.0.0
  */
-LC_Leo_Product_Recommendations::init(__FILE__);
+Product_Recommendations::init(__FILE__);

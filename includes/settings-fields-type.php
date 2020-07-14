@@ -1,4 +1,5 @@
 <?php
+namespace LoeCoder\Plugin\ProductRecommendations;
 /**
  * Settings fields
  *

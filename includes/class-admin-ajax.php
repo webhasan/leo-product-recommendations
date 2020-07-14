@@ -1,4 +1,5 @@
 <?php
+namespace LoeCoder\Plugin\ProductRecommendations;
 /**
  * Class to handle ajax request 
  * send from admin side
@@ -11,7 +12,7 @@
     exit;
 }
 
-class LC_Lpr_Admin_Ajax {
+class Admin_Ajax {
     /**
      * Class constructor
      *
@@ -37,9 +38,19 @@ class LC_Lpr_Admin_Ajax {
      * @since      1.0.0
      */
     public function initial_data() {
+        // nonce validation
+        $nonce_validation =  isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
+        if(!$nonce_validation) {
+            wp_send_json_error(array('message' => 'Bad request'), 400);
+        }
 
         // post ID
-        $post_id = $_GET['post_id'];
+        $post_id = (int) $_GET['post_id'];
+
+        // incalid post id
+        if ( FALSE === get_post_status( $post_id ) ) {
+            wp_send_json(null);
+        }
 
         if (!metadata_exists('post', $post_id, '_lc_lpr_data')) {
             wp_send_json(null);
@@ -60,15 +71,23 @@ class LC_Lpr_Admin_Ajax {
             $data['heading'] = wp_kses($data['heading'], $html_permission);
         }
 
+        if (!empty($data['heading_article'])) {
+            $data['heading_article'] = wp_kses_post($data['heading_article']);
+        }
+
         if (!empty($data['products'])) {
-            $products = $data['products'];
+
+            $products = is_array($data['products']) ? $data['products'] : array();
+
             $products = array_map(function ($prodcut) {
                 $id    = (int) $prodcut;
-                $title = get_the_title($id);
 
-                $feature_image = get_the_post_thumbnail_url($id, array('100', '100'));
+                if ( FALSE !== get_post_status( $id ) ) {
+                    $title         = get_the_title($id);
+                    $feature_image = get_the_post_thumbnail_url($id, array('100', '100'));
+                    return compact('id', 'title', 'feature_image');
+                }
 
-                return compact('id', 'title', 'feature_image');
             }, $products);
 
             $data['products'] = $products;
@@ -76,6 +95,7 @@ class LC_Lpr_Admin_Ajax {
 
         if (!empty($data['categories'])) {
             $categories = $data['categories'];
+
             $categories = array_map(function ($category) {
                 return (int) $category;
             }, $categories);
@@ -85,6 +105,7 @@ class LC_Lpr_Admin_Ajax {
 
         if (!empty($data['tags'])) {
             $tags = $data['tags'];
+
             $tags = array_map(function ($tag) {
                 return (int) $tag;
             }, $tags);
@@ -109,6 +130,11 @@ class LC_Lpr_Admin_Ajax {
      * @return void
      */
     public function fetch_categories() {
+        // nonce validation
+        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
+        if (!$nonce_validation) {
+            wp_send_json_error(array('message' => 'Bad request'), 400);
+        }
 
         $product_categoreis = get_terms(array(
             'taxonomy'   => "product_cat",
@@ -133,6 +159,11 @@ class LC_Lpr_Admin_Ajax {
      * @return void
      */
     public function fetch_tags() {
+        // nonce validation
+        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
+        if (!$nonce_validation) {
+            wp_send_json_error(array('message' => 'Bad request'), 400);
+        }
 
         $product_tags = get_terms(array(
             'taxonomy'   => "product_tag",
@@ -156,6 +187,12 @@ class LC_Lpr_Admin_Ajax {
      * @return void
      */
     public function fetch_prodcuts() {
+        // nonce validation
+        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
+        if (!$nonce_validation) {
+            wp_send_json_error(array('message' => 'Bad request'), 400);
+        }
+
         // post ID
         $post_id = (int) $_GET['post_id'];
 
@@ -180,11 +217,11 @@ class LC_Lpr_Admin_Ajax {
         }
 
         if (!empty($_GET['query'])) {
-            $args['s'] = $_GET['query'];
+            $args['s'] = sanitize_text_field($_GET['query']);
         }
 
         $products      = get_posts($args);
-        $prodcut_query = new WP_Query($args);
+        $prodcut_query = new \WP_Query($args);
 
         // map prodcut id , title, thumbnails and categoris
         $products = array_map(function ($item) {
