@@ -485,15 +485,21 @@ final class Product_Recommendations {
      * @return  void;
      */
     public function on_save_post($id) {
-        $is_secure = isset($_POST['_lc_lpr_data']) && isset($_POST['lc_pr_panel_nonce']) && wp_verify_nonce($_POST['lc_pr_panel_nonce'], 'lc-panel-security');
+        $is_secure = !empty($_POST['_lc_lpr_data']) && !empty($_POST['lc_pr_panel_nonce']) && wp_verify_nonce($_POST['lc_pr_panel_nonce'], 'lc-panel-security');
 
         if ($is_secure) {
-            $panel_data = $_POST['_lc_lpr_data'];
+            $panel_data = (array) $_POST['_lc_lpr_data'];
             $entry_data = array();
 
             // heading type
             if(isset($panel_data['heading_type'])) {
-                $entry_data['heading_type'] = sanitize_key($panel_data['heading_type']);
+                $allowed_heading_type = array('heading','article');
+                $heading_type = sanitize_key($panel_data['heading_type']);
+
+                if(in_array($heading_type, $allowed_heading_type, true)) {
+                    $entry_data['heading_type'] = $heading_type;
+                }
+                
             }
 
             // normal heading
@@ -547,19 +553,24 @@ final class Product_Recommendations {
 
            //orderby
             if (isset($panel_data['orderby'])) {
-                $entry_data['orderby'] = sanitize_key($panel_data['orderby']);
+                $allowed_orderby = array('rand','newest','oldest','lowprice','highprice','popularity','rating');
+                $orderby = sanitize_key($panel_data['orderby']);
+
+                if(in_array($orderby, $allowed_orderby, true)) {
+                    $entry_data['orderby'] =  $orderby;
+                }
+                
             }
 
            //is sale
             if (isset($panel_data['sale'])) {
-                $entry_data['sale'] = $panel_data['sale'];
+                $entry_data['sale'] = (bool) $panel_data['sale'];
             }
 
            //number of products
             if (isset($panel_data['number'])) {
                 $entry_data['number'] = (int) $panel_data['number'];
             }
-
 
             update_post_meta($id, '_lc_lpr_data', $entry_data);
         }
