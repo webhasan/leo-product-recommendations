@@ -1,12 +1,12 @@
 === Leo Product Recommendations for WooCommerce ===
 Contributors: webhasan, masum007
-Tags: woocommerce product recommendations, woocommerce, ajax add to cart, woocommerce products suggestion, add to cart popup, cross sell, up sell, woocommerce popup, woocommerce boost sales, increase sale, related products suggestion, quick checkout
+Tags: product recommendations, woocommerce, woocommerce popup, woocommerce cross sell, woocommerce boost sales, ajax add to cart, woocommerce up-sell, woocommerce related products, quick checkout, add to cart popup, cart, popup
 Requires at least: 5.0
 Tested up to: 5.4.2
 Requires PHP: 5.6
-Stable tag: 1.0.0
+Stable tag: 1.0
 WC requires at least: 3.5
-WC tested up to: 4.2.2
+WC tested up to: 4.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,28 +30,48 @@ Woo Products Recommendation does everything Ajax way to improve the shopping exp
 
 ## Key Features ##
 * Responsive Popup 
+* Flexible Recommendation Popup Heading (Heading & Descripton)
 * Recommended Products Grid Settings
 * Manual Selection 
 * Global Selection
-* Flexible Recommendation Heading (Single Heading & Description)
 * Custom CSS 
 * Ajax Add to Cart
-* Like WooCommerce override templates via a theme
-* Single & Product Archive page support. 
+* Simple, Variable, Grouped Products Support
+* Override templates via theme files (Like WooCommerce)
+* Single & Product Archive page support
 * Gutenberg blocks and page builder (Elementor, Divi, WpBakery)
+* Quick Checkout Button
+
+## 🟢Pro Version Is Comming Soon With More Features ##
+
+## Demos ##
+Leo Product Recommendations is prefectly feet for all types of WooCommerce shop. Check example bellow: 
+[ 👉SMARTPHONE](https://bit.ly/2Ow8uhU)
+[ 👉ELECTRONICS](https://bit.ly/3fFySlx)
+[ 👉COMPUTER](https://bit.ly/2CakuU1)
+[ 👉SHOES](https://bit.ly/2OxkXC7)
+[ 👉FOOD](https://bit.ly/3h8CJIi)
+[ 👉CLOTHING](https://bit.ly/2DHS4AX)
+[ 👉JEWELLERY](https://bit.ly/2Zz8STo)
+[ 👉LEATHER](https://bit.ly/3fHtsqc)
+[ 👉SOFTWARE](https://bit.ly/2DRhZq4)
+[ 👉TOYS](https://bit.ly/2ZD2Oct)
+[ 👉FASHION](https://bit.ly/3h58a68)
+[ 👉SPORTS](https://bit.ly/3fEzgk7)
+
 
 == Installation ==
 
 ### MINIMUM REQUIREMENTS ##
 
-* WordPress Version 5.0 or greater is recommended
-* WooCommerce Plugin 3.5 or greater is recommended
-* PHP 5.6 or greater is recommended
+* WordPress Version 5.0 or greater is required
+* WooCommerce Plugin 3.5 or greater is required
+* PHP 5.6 or greater is required
 
 ### Automatic Installation ##
 
 1. From dashboard Navigate to **Plugins > Add New**
-2. Search **Leo Product Recommendations**
+2. Search **Leo Product Recommendations for WooCommerce**
 5. Click on **Install Now** button
 5. When the installation is complete, click **Activate** button activate plugin.
 
@@ -101,10 +121,12 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 <sub>Note: You need some development knowledge to overwrite template files or it may cause an error.</sub>
 
 == Screenshots ==
-1. Leo Product Recommendations Preview
-2. Leo Product Recommendations Selection Panel
-3. Leo Product Recommendations Selection Settings
-4. Leo Product Recommendations Before After Preview 
+1. Product Recommendations Preview
+2. Ajax Add To Cart
+3. Flexible Popup Heading
+4. Selection Panel
+5. Settings Panel
+6. Popup Layouts
 
 == Changelog ==
 = 1.0.0 =
