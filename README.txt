@@ -7,10 +7,10 @@ Requires PHP: 5.6
 Stable tag: 1.0
 WC requires at least: 3.5
 WC tested up to: 4.2.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later License
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Recommend products smartly and increase sales by nice-looking add to cart popup
+Recommend products smartly for boosting WooCommerce sales by nice-looking add to cart popup
 
 == Description ==
 **Leo Product Recommendations for WooCommerce** is a sale boosting plugin for WooCommerce by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in a eye catching popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
@@ -18,9 +18,11 @@ Recommend products smartly and increase sales by nice-looking add to cart popup
 Harvard professor Gerald Zaltman says "95% of purchasing decisions are subconscious". So You have to just display the right product in front of the right customer, at the right time. Let me explain, how to make more Sale using this awesome plugin.
 
 After purchasing a smartphone definitely there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Leo Product Recommendations helps here to recommend that product instantly. 
+
 [youtube https://youtu.be/U5n7TH1psgE]
 
 In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of Jeans pant. Leo Product Recommendations helps here to sell T-Shirts with a pair of jeans pants.
+
 [youtube https://youtu.be/3t--SH1MjDw]
 
 Woo Products Recommendation does everything Ajax way to improve the shopping experience. Customers do not require to browse a lot of pages to purchase products. It also reduces the steps and time of shopping and increases the chances of selling. 
@@ -75,7 +77,7 @@ Leo Product Recommendations is prefectly feet for all types of WooCommerce shop.
 5. Click on **Install Now** button
 5. When the installation is complete, click **Activate** button activate plugin.
 
-### Menual Installation ###
+### Manual Installation ###
 
 #### Install From WordPress Dashboard: ####
 1. From dashboard Navigate to **Plugins > Add New**

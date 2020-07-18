@@ -126,7 +126,7 @@ msgid "Product Related Category"
 msgstr ""
 
 #: includes/class-lc-leo-product-recommendations.php:1308
-msgid "Menual"
+msgid '"Manual"'
 msgstr ""
 
 #: includes/class-lc-leo-product-recommendations.php:1314

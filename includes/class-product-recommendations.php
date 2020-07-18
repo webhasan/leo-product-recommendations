@@ -742,14 +742,14 @@ final class Product_Recommendations {
     }
 
     /**
-     * Check menual selection or not
+     * Check manual selection or not
      * 
-     * @return bool menually selected or not
+     * @return bool manually selected or not
      * @since   1.0.0
      */
-    public function is_menually_selection($product_id) {
+    public function is_manually_selection($product_id) {
         $pr_data = $this->get_pr_data($product_id);
-        return (!empty($pr_data['type']) && $pr_data['type'] === 'menual-selection');
+        return (!empty($pr_data['type']) && $pr_data['type'] === 'manual-selection');
     }
 
     /**
@@ -776,7 +776,7 @@ final class Product_Recommendations {
         }
 
         $data = $this->get_pr_data($product_id);
-        if ($this->is_menually_selection($product_id)) {
+        if ($this->is_manually_selection($product_id)) {
             return $this->manual_query_products($data);
         } elseif ($this->is_dynamic_selection($product_id)) {
             return $this->dynamic_query_products($product_id, $data);
@@ -976,7 +976,7 @@ final class Product_Recommendations {
         global $product;
         $product_id = $product->get_id();
 
-        if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_menually_selection($product_id)): // free version does not support dynamic selection
+        if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
 
             $recommended_products_id = $this->get_recommended_products_id($product_id);
 
@@ -1002,7 +1002,7 @@ final class Product_Recommendations {
         global $product;
         $product_id = $product->get_id();
 
-        if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_menually_selection($product_id)): // free version does not support dynamic selection
+        if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
             $recommended_products_id = $this->get_recommended_products_id($product_id);
             if (!empty($recommended_products_id)) {
                 $data = $this->get_template_data($product_id, $recommended_products_id);
@@ -1020,7 +1020,7 @@ final class Product_Recommendations {
         if(!(WC()->cart)) return $html; // do nothing if backend block
 
         $product_id = $product->get_id();
-        if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_menually_selection($product_id)): // free version does not support dynamic selection
+        if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
 
             $recommended_products_id = $this->get_recommended_products_id($product_id);
 
@@ -1404,7 +1404,7 @@ final class Product_Recommendations {
                         'type'    => 'radio',
                         'options' => array(
                             'same_categories'   => __('Product Related Category', 'leo-product-recommendations'),
-                            'menual_categories' => __('Menual', 'leo-product-recommendations'),
+                            'manual_categories' => __('Manual', 'leo-product-recommendations'),
                         ),
                         'default' => 'same_categories',
                     ),

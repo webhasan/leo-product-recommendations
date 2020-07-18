@@ -48,8 +48,8 @@ import classNames from 'classnames';
       },
     ];
 
-		// free version only support menual selection
-		const type = 'menual-selection';
+		// free version only support manual selection
+		const type = 'manual-selection';
 
 		const [facedData, setFacedData] = useState(false);
 		const [fetchingPosts, setFetchingPosts] = useState(true);
