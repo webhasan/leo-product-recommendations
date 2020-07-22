@@ -12,6 +12,7 @@
 
       th {
         padding: 40px 10px 40px 20px;
+
         small {
           font-weight: normal;
           opacity: 0.8;
@@ -19,10 +20,37 @@
           padding-right: 20px;
           display: block;
         }
+
+        .badge {
+            background: red;
+            color: #fff;
+            font-size: 8px;
+            font-weight: lighter;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
       }
 
       td {
         padding: 40px 10px;
+        img {
+          max-width: 100%;
+          height: auto;
+          cursor: not-allowed;
+        }
+
+        .pro-link a {
+          color: red;
+          font-size: 15px;
+          font-weight: bold;
+          margin-bottom: 13px;
+          display: inline-block;
+          text-decoration: none;
+          outline: none !important;
+        }
+        .pro-link a:hover {
+          text-decoration: underline;
+        }
       }
 
       .lpr-field-post_type_checkbox,

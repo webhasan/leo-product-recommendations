@@ -1,17 +1,17 @@
 <?php
 /**
  * Plugin Name: Leo Product Recommendations for WooCommerce
- * Plugin URI: https://leocoder.com/leo-product-recommendations
+ * Plugin URI: https: //leocoder.com/leo-product-recommendations
  * Description: Recommend products smartly for boosting WooCommerce sales by nice-looking add to cart popup
- * Version: 1.0.0
+ * Version: 1.1.0
  * Requires at least: 5.0
- * Requires PHP: 5.6
+ * Requires PHP: 7.0
  * Author: LeoCoder
  * Author URI: https://leocoder.com/
  * Text Domain: leo-product-recommendations
  * Domain Path: /languages
- * WC requires at least: 3.5
- * WC tested up to: 4.3
+ * WC requires at least: 3.7
+ * WC tested up to: 4.3.1
  * License: GPLv3 or later License
  * URI: http://www.gnu.org/licenses/gpl-3.0.html
  */

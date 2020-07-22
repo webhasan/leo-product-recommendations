@@ -3,17 +3,17 @@ Contributors: webhasan, masum007
 Tags: product recommendations, woocommerce, woocommerce popup, woocommerce cross sell, woocommerce boost sales, ajax add to cart, woocommerce up-sell, woocommerce related products, quick checkout, add to cart popup, cart, popup
 Requires at least: 5.0
 Tested up to: 5.4.2
-Requires PHP: 5.6
-Stable tag: 1.0
-WC requires at least: 3.5
-WC tested up to: 4.2.3
+Requires PHP: 7.0
+Stable tag: 1.1.0
+WC requires at least: 3.7
+WC tested up to: 4.3.1
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Recommend products smartly for boosting WooCommerce sales by nice-looking add to cart popup
+Recommend products smartly for boosting WooCommerce sales by nice-looking ajax add to cart popup. Include up-sell, cross sell or related products and make sure quick checkout.
 
 == Description ==
-**Leo Product Recommendations for WooCommerce** is a sale boosting plugin for WooCommerce by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in a eye catching popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
+**Leo Product Recommendations for WooCommerce** is a sale boosting plugin for WooCommerce by recommending products smartly in a fully customizable and nice-looking popup. It shows recommended products in an eye-catching popup when customers click on add to cart button which indirectly forces customers to purchase more.  Powerful backend selection panel and settings provide you full flexibility to assign and display recommended products manual and dynamic way. 
 
 Harvard professor Gerald Zaltman says "95% of purchasing decisions are subconscious". So You have to just display the right product in front of the right customer, at the right time. Let me explain, how to make more Sale using this awesome plugin.
 
@@ -30,9 +30,11 @@ Woo Products Recommendation does everything Ajax way to improve the shopping exp
 ## How To Setup Leo Product Recommendations ##
 [youtube https://youtu.be/zKUoISoDj94]
 
+[**See Details Documentation »**](https://bit.ly/39b81ey)
+
 ## Key Features ##
 * Responsive Popup 
-* Flexible Recommendation Popup Heading (Heading & Descripton)
+* Flexible Recommendation Popup Heading (Heading & Description)
 * Recommended Products Grid Settings
 * Manual Selection 
 * Global Selection
@@ -44,10 +46,21 @@ Woo Products Recommendation does everything Ajax way to improve the shopping exp
 * Gutenberg blocks and page builder (Elementor, Divi, WpBakery)
 * Quick Checkout Button
 
-## 🟢Pro Version Is Comming Soon With More Features ##
+## Pro Features ##
+Including all free features, Pro version provides more features and flexibility to recommend products.
+
+* Slider Layouts
+* Dynamic Selection
+* Modal Color Settings
+* Modal Sizes Settings
+* Recommended Product Color Settings 
+* Items visibility and more
+
+[**Pro Version Details »**](https://leocoder.com/leo-product-recommendations-for-woocommerce/)
 
 ## Demos ##
 Leo Product Recommendations is prefectly feet for all types of WooCommerce shop. Check example bellow: 
+
 [ 👉SMARTPHONE](https://bit.ly/2Ow8uhU)
 [ 👉ELECTRONICS](https://bit.ly/3fFySlx)
 [ 👉COMPUTER](https://bit.ly/2CakuU1)
@@ -60,7 +73,6 @@ Leo Product Recommendations is prefectly feet for all types of WooCommerce shop.
 [ 👉TOYS](https://bit.ly/2ZD2Oct)
 [ 👉FASHION](https://bit.ly/3h58a68)
 [ 👉SPORTS](https://bit.ly/3fEzgk7)
-
 
 == Installation ==
 

@@ -173,7 +173,7 @@ function wrapper($field, $base, $setting_id) {
             <?php endforeach; ?>
         </div>
         <?php if (isset($description)) : ?>
-            <p class="description"><?php echo $description; ?></p>
+            <p class="description"><?php echo wp_kses_post($description); ?></p>
         <?php endif; ?>
     </fieldset>
     <?php
@@ -346,7 +346,7 @@ function wrapper_extend($field, $base, $setting_id) {
             <?php endforeach; ?>
         </div>
         <?php if (isset($description)) : ?>
-            <p class="description"><?php echo $description; ?></p>
+            <p class="description"><?php echo wp_kses_post($description); ?></p>
         <?php endif; ?>
     </fieldset>
 <?php
@@ -385,7 +385,7 @@ function radio($field, $base, $setting_id) {
     </fieldset>
 
     <?php if (isset($description)) : ?>
-        <p class="description"><?php echo $description; ?></p>
+        <p class="description"><?php echo wp_kses_post($description); ?></p>
     <?php endif;
 }
 
@@ -415,7 +415,7 @@ function checkbox($field, $base, $setting_id) {
             ?>
         </label>
         <?php if (isset($description)) : ?>
-            <p class="description"><?php echo $description; ?></p>
+            <p class="description"><?php echo wp_kses_post($description); ?></p>
         <?php endif; ?>
     </fieldset>
     <?php
@@ -438,7 +438,7 @@ function text($field, $base, $setting_id) {
     </fieldset>
 
     <?php if (isset($description)) : ?>
-        <p class="description"><?php echo $description; ?></p>
+        <p class="description"><?php echo wp_kses_post($description); ?></p>
     <?php endif;
 }
 
@@ -466,7 +466,7 @@ function info($field, $baser, $setting_id) {
     </fieldset>
 
     <?php if (isset($description)) : ?>
-        <p class="description"><?php echo $description; ?></p>
+        <p class="description"><?php echo wp_kses_post($description); ?></p>
     <?php endif;
 }
 
@@ -492,6 +492,29 @@ function css($field, $base, $setting_id) {
     </fieldset>
 
     <?php if (isset($description)) : ?>
-        <p class="description"><?php echo $description; ?></p>
+        <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif;
+}
+
+
+
+/**
+ * Image
+ *
+ * @since 1.0.0
+ */
+function pro_image($field, $base, $setting_id) {
+    extract($field);
+    $value      = $base->get_setting($id);
+    $field_name = $setting_id . '[' . $id . ']';
+
+    ?>
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+    <div class="pro-link"><a href="<?php echo esc_url($link); ?>" target="_blank"><?php _e('Get Pro Version »'); ?></a></div>
+    <div class="field-image"><img src="<?php echo esc_url($image_url); ?>" alt=""></div>
+    </fieldset>
+
+    <?php if (isset($description)): ?>
+        <p class="description"><?php echo wp_kses_post($description); ?></p>
     <?php endif;
 }

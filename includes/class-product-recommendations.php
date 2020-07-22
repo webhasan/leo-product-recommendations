@@ -229,10 +229,19 @@ final class Product_Recommendations {
      */
     public function plugin_action_links() {
         add_action('plugin_action_links_' . plugin_basename(self::$__FILE__), function ($links) {
-            $settings = array(
+            $link_before = array(
                 'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=lpr-settings')) . '">' . __('Settings', 'leo-product-recommendations') . '</a>',
+                'documentation' => '<a href="'.esc_url('https://bit.ly/39b81ey').'" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
             );
-            return array_merge($settings, $links);
+
+            if(!$this->has_pro_plugin()) {
+                $link_after = array(
+                    'go-pro' => '<a href="' . esc_url('https: //bit.ly/2CnIseD') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
+                );
+                return array_merge($link_before, $links, $link_after);
+            } 
+                
+            return array_merge($link_before, $links);
         });
     }
 
@@ -294,7 +303,9 @@ final class Product_Recommendations {
             wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
             wp_localize_script('selection-panel-script', 'lc_pr_panel_data', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce'    => wp_create_nonce('lc-panel-security')
+                'nonce'    => wp_create_nonce('lc-panel-security'),
+                'pro_image'=> $this->get_url('assets/images/pro-feature.jpg'),
+                'pro_link' => esc_url('https://bit.ly/2CnIseD'),
             ));
             wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
         }
@@ -559,7 +570,6 @@ final class Product_Recommendations {
                 if(in_array($orderby, $allowed_orderby, true)) {
                     $entry_data['orderby'] =  $orderby;
                 }
-                
             }
 
            //is sale
@@ -1152,6 +1162,24 @@ final class Product_Recommendations {
     }
 
     /**
+     * Check pro plugin avaiable or not
+     *
+     * @since      1.1.0
+     */
+    public function has_pro_plugin() {
+        return file_exists(self::$__FILE__PRO__);
+    }
+
+    /**
+     * Check Pro version of the plugin is installed or not
+     *
+     * @since      1.0.0
+     */
+    public function has_pro() {
+        return class_exists(Product_Recommendations_Pro::class);
+    }
+
+    /**
      * Get prodcut recommendations meta data
      * 
      * @since      1.0.0
@@ -1229,7 +1257,29 @@ final class Product_Recommendations {
                 break;
 
             case 'number':
-                $value = (int) esc_attr($value);
+                $value = (int) $value;
+                break;
+
+            case 'checkbox':
+                $value = (bool) $value;
+                break;
+
+            case 'radio':
+                $value = esc_attr($value);
+                break;
+
+            case 'categories_select':
+                $value = (array) $value;
+                $value = array_map(function ($id) {
+                    return (int) $id;
+                }, $value);
+                break;
+
+            case 'tags_select':
+                $value = (array) $value;
+                $value = array_map(function ($id) {
+                    return (int) $id;
+                }, $value);
                 break;
 
             case 'css':
@@ -1375,9 +1425,51 @@ final class Product_Recommendations {
                     ),
                 ),
             ),
+            array(
+                'id'          => 'layout_image',
+                'title'       => __('Layout Type <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'        => 'pro_image',
+                'image_url'   => $this->get_url('assets/images/layout-type.jpg'),
+                'link'        => esc_url('https://bit.ly/2CnIseD'),
+            ),          
+            array(
+                'id'          => 'slidar_options_image',
+                'title'       => __('Slider Options <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'        => 'pro_image',
+                'image_url'   => $this->get_url('assets/images/slider-options.jpg'),
+                'link'        => esc_url('https://bit.ly/2CnIseD'),
+            ),
+            array(
+                'id'          => 'popup_size_image',
+                'title'       => __('Popup Size <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'        => 'pro_image',
+                'image_url'   => $this->get_url('assets/images/popup-size.jpg'),
+                'link'        => esc_url('https://bit.ly/2CnIseD'),
+            ),
+            array(
+                'id'          => 'button_visiblity_image',
+                'title'       => __('Buttons Visiblity <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'        => 'pro_image',
+                'image_url'   => $this->get_url('assets/images/button-visiblity.jpg'),
+                'link'        => esc_url('https://bit.ly/2CnIseD'),
+            ),
         );
-
+ 
         $style_settings = array(
+            array(
+                'id'          => 'popup_color_image',
+                'title'       => __('Popup Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'        => 'pro_image',
+                'image_url'   => $this->get_url('assets/images/modal-color.jpg'),
+                'link'        => esc_url('https://bit.ly/2CnIseD'),
+            ),
+            array(
+                'id'          => 'product_color_image',
+                'title'       => __('Product Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'        => 'pro_image',
+                'image_url'   => $this->get_url('assets/images/product-color-setting.jpg'),
+                'link'        => esc_url('https://bit.ly/2CnIseD'),
+            ),
             array(
                 'id'          => 'custom_style',
                 'title'       => __('Custom CSS', 'leo-product-recommendations'),

@@ -1,42 +1,111 @@
-import Reorder from 'react-reorder';
-import buildTermsTree  from './functions/tree';
-import WPEditor from './functions/wpEditor';
-import { TreeSelect } from '@wordpress/components';
-import { DebounceInput } from 'react-debounce-input';
-import classNames from 'classnames';
+import Reorder from "react-reorder";
+import buildTermsTree from "./functions/tree";
+import WPEditor from "./functions/wpEditor";
+import { TreeSelect } from "@wordpress/components";
+import { DebounceInput } from "react-debounce-input";
+import classNames from "classnames";
 
 (function (React, __, $, app, Reorder) {
+  if (!app) return;
 
-	if (!app) return;
+  const LoadingIcon = () => (
+    <svg
+      version="1.1"
+      id="Layer_1"
+      x="0px"
+      y="0px"
+      viewBox="0 0 100 100"
+      enableBackground="new 0 0 100 100"
+      width="80"
+      height="80"
+    >
+      <rect
+        fill="#0073aa"
+        width="3"
+        height="45.2018"
+        transform="translate(0) rotate(180 3 50)"
+      >
+        <animate
+          attributeName="height"
+          attributeType="XML"
+          dur="1s"
+          values="30; 100; 30"
+          repeatCount="indefinite"
+        ></animate>
+      </rect>
+      <rect
+        x="17"
+        fill="#0073aa"
+        width="3"
+        height="31.2018"
+        transform="translate(0) rotate(180 20 50)"
+      >
+        <animate
+          attributeName="height"
+          attributeType="XML"
+          dur="1s"
+          values="30; 100; 30"
+          repeatCount="indefinite"
+          begin="0.1s"
+        ></animate>
+      </rect>
+      <rect
+        x="40"
+        fill="#0073aa"
+        width="3"
+        height="56.7982"
+        transform="translate(0) rotate(180 40 50)"
+      >
+        <animate
+          attributeName="height"
+          attributeType="XML"
+          dur="1s"
+          values="30; 100; 30"
+          repeatCount="indefinite"
+          begin="0.3s"
+        ></animate>
+      </rect>
+      <rect
+        x="60"
+        fill="#0073aa"
+        width="3"
+        height="84.7982"
+        transform="translate(0) rotate(180 58 50)"
+      >
+        <animate
+          attributeName="height"
+          attributeType="XML"
+          dur="1s"
+          values="30; 100; 30"
+          repeatCount="indefinite"
+          begin="0.5s"
+        ></animate>
+      </rect>
+      <rect
+        x="80"
+        fill="#0073aa"
+        width="3"
+        height="31.2018"
+        transform="translate(0) rotate(180 76 50)"
+      >
+        <animate
+          attributeName="height"
+          attributeType="XML"
+          dur="1s"
+          values="30; 100; 30"
+          repeatCount="indefinite"
+          begin="0.1s"
+        ></animate>
+      </rect>
+    </svg>
+  );
 
-	const LoadingIcon = () => (
-		<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 100 100" enableBackground="new 0 0 100 100" width="80" height="80">
-			<rect fill="#0073aa" width="3" height="45.2018" transform="translate(0) rotate(180 3 50)">
-				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite"></animate>
-			</rect>
-			<rect x="17" fill="#0073aa" width="3" height="31.2018" transform="translate(0) rotate(180 20 50)">
-				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.1s"></animate>
-			</rect>
-			<rect x="40" fill="#0073aa" width="3" height="56.7982" transform="translate(0) rotate(180 40 50)">
-				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.3s"></animate>
-			</rect>
-			<rect x="60" fill="#0073aa" width="3" height="84.7982" transform="translate(0) rotate(180 58 50)">
-				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.5s"></animate>
-			</rect>
-			<rect x="80" fill="#0073aa" width="3" height="31.2018" transform="translate(0) rotate(180 76 50)">
-				<animate attributeName="height" attributeType="XML" dur="1s" values="30; 100; 30" repeatCount="indefinite" begin="0.1s"></animate>
-			</rect>
-		</svg>
-	);
+  const postId = parseInt(app.getAttribute("data-id"));
+  const { reorder } = Reorder;
+  const { ajax_url: apiEndPoint, nonce, pro_image, pro_link } = lc_pr_panel_data;
+  const { useState, useEffect } = React;
 
-	const postId = parseInt(app.getAttribute('data-id'));
-	const { reorder } = Reorder;
-  const {ajax_url:apiEndPoint, nonce} = lc_pr_panel_data;
-	const { useState, useEffect } = React;
-
-
-	const SelectProduct = () => {
-
+  const SelectProduct = () => {
     const headingType = [
       {
         id: "heading",
@@ -48,74 +117,95 @@ import classNames from 'classnames';
       },
     ];
 
-		// free version only support manual selection
-		const type = 'manual-selection';
+    const selectionMehtods = [
+      {
+        id: "manual-selection",
+        title: __("Manual Selection", "leo-product-recommendations"),
+      },
+      {
+        id: "dynamic-selection",
+        title: __("Dynamic Selection", "leo-product-recommendations"),
+      },
+    ];
 
-		const [facedData, setFacedData] = useState(false);
-		const [fetchingPosts, setFetchingPosts] = useState(true);
+    // free version only support manual selection
+    const type = "manual-selection";
 
-		const [initialData, setInitialData] = useState({
-      heading: '',
-      heading_article: '',
-      heading_type: 'heading',
-			products: []
-		});
+    const [facedData, setFacedData] = useState(false);
+    const [fetchingPosts, setFetchingPosts] = useState(true);
 
-		const [page, setPage] = useState(1);
-		const [maxPage, setMaxPage] = useState(1);
+    const [initialData, setInitialData] = useState({
+      heading: "",
+      heading_article: "",
+      heading_type: "heading",
+      demoMethod: "manual-selection",
+      products: [],
+    });
 
-		const [products, setProducts] = useState([]);
+    const [page, setPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(1);
 
+    const [products, setProducts] = useState([]);
 
-		const [categories, setCategories] = useState([]);
-		const [selectedCategory, setSelectedCategory] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("");
 
-		const [query, setQuery] = useState('');
+    const [query, setQuery] = useState("");
 
-		const reorderProduct = (event, previousIndex, nextIndex) => {
-			let reorderProducts = reorder(initialData.products, previousIndex, nextIndex);
-			setInitialData({ ...initialData, products: reorderProducts });
-		}
+    const reorderProduct = (event, previousIndex, nextIndex) => {
+      let reorderProducts = reorder(
+        initialData.products,
+        previousIndex,
+        nextIndex
+      );
+      setInitialData({ ...initialData, products: reorderProducts });
+    };
 
-		const addProdcut = (product) => {
-			let products = [product, ...initialData.products];
-			setInitialData({ ...initialData, products });
-		}
+    const addProdcut = (product) => {
+      let products = [product, ...initialData.products];
+      setInitialData({ ...initialData, products });
+    };
 
-		const removeProduct = (id) => {
-			let existsProducs = initialData.products.filter(product => product.id !== id);
-			setInitialData({ ...initialData, products: existsProducs });
-		}
+    const removeProduct = (id) => {
+      let existsProducs = initialData.products.filter(
+        (product) => product.id !== id
+      );
+      setInitialData({ ...initialData, products: existsProducs });
+    };
 
-		const handleScroll = (event) => {
-			if (!fetchingPosts) {
-				const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-				if (bottom && page < maxPage) {
-					setPage(page + 1);
-				}
-			}
-		}
+    const handleScroll = (event) => {
+      if (!fetchingPosts) {
+        const bottom =
+          event.target.scrollHeight - event.target.scrollTop ===
+          event.target.clientHeight;
+        if (bottom && page < maxPage) {
+          setPage(page + 1);
+        }
+      }
+    };
 
-		const selectAble = (producs) => {
-			return producs.map(product => {
-				let isSelected = initialData.products.find(selectedProduct => selectedProduct.id === product.id);
+    const selectAble = (producs) => {
+      return producs.map((product) => {
+        let isSelected = initialData.products.find(
+          (selectedProduct) => selectedProduct.id === product.id
+        );
 
-				if (isSelected) {
-					product['selcted'] = true;
-				} else {
-					product['selcted'] = false;
-				}
+        if (isSelected) {
+          product["selcted"] = true;
+        } else {
+          product["selcted"] = false;
+        }
 
-				return product;
-			});
-		};
+        return product;
+      });
+    };
 
-		const opacity = {
-			opacity: facedData ? 1 : 0
-		}
+    const opacity = {
+      opacity: facedData ? 1 : 0,
+    };
 
-		useEffect(() => {      
-			$.ajax({
+    useEffect(() => {
+      $.ajax({
         url: apiEndPoint,
         method: "GET",
         data: {
@@ -147,15 +237,15 @@ import classNames from 'classnames';
           setFacedData(true);
         },
       });
-		}, []);
+    }, []);
 
-		useEffect(() => {
-			$.ajax({
+    useEffect(() => {
+      $.ajax({
         url: apiEndPoint,
         method: "GET",
         data: {
           action: "lpr_fetch_categories",
-          nonce
+          nonce,
         },
         success: function (data) {
           if (data.length) {
@@ -163,15 +253,15 @@ import classNames from 'classnames';
           }
         },
       });
-		}, []);
+    }, []);
 
-		useEffect(() => {
-			setFetchingPosts(true);
-			if (page === 1) {
-				setProducts([]);
-			}
+    useEffect(() => {
+      setFetchingPosts(true);
+      if (page === 1) {
+        setProducts([]);
+      }
 
-			$.ajax({
+      $.ajax({
         url: apiEndPoint,
         method: "GET",
         data: {
@@ -194,11 +284,11 @@ import classNames from 'classnames';
           setFetchingPosts(false);
         },
       });
-		}, [page, selectedCategory, query]);
+    }, [page, selectedCategory, query]);
 
-		return (
+    return (
       <div className="lc-recommendation-product">
-        <input type="hidden" value={nonce} name="lc_pr_panel_nonce"/>
+        <input type="hidden" value={nonce} name="lc_pr_panel_nonce" />
         {!facedData && (
           <span className="lc-recommendation-product-prelaoder">
             {<LoadingIcon />}
@@ -208,49 +298,69 @@ import classNames from 'classnames';
         <div className="recommendation-prodcut-options-wrap" style={opacity}>
           <div className="pr-field">
             <input type="hidden" name="_lc_lpr_data[type]" value={type} />
-            
+
             <div className="rp-panel-title">
-              {__(
-                'Popup Heading',
-                "leo-product-recommendations"
-              )}
+              {__("Popup Heading", "leo-product-recommendations")}
             </div>
 
             <div className="heading-control">
-              {headingType.map(method => (
+              {headingType.map((method) => (
                 <label key={method.id}>
                   <input
                     type="radio"
                     name="_lc_lpr_data[heading_type]"
                     value={method.id}
                     checked={initialData.heading_type === method.id}
-                    onChange={(e) => setInitialData({ ...initialData, heading_type: e.target.value })}
+                    onChange={(e) =>
+                      setInitialData({
+                        ...initialData,
+                        heading_type: e.target.value,
+                      })
+                    }
                   />
                   {method.title}
                 </label>
               ))}
             </div>
 
-            <div style={{ display: initialData.heading_type === 'article' ? 'block': 'none'}}>
-            <WPEditor
-              id="header-description"
-              name={initialData.heading_type === 'article' ? '_lc_lpr_data[heading_article]' : ''}
-              className="heading-article wp-editor-area"
-              value={initialData.heading_article}
-              onChange={(value) => {
-                console.log(value);
-                setInitialData({
-                  ...initialData,
-                  heading_article: value
-                });
+            <div
+              style={{
+                display:
+                  initialData.heading_type === "article" ? "block" : "none",
               }}
-            />
+            >
+              <WPEditor
+                id="header-description"
+                name={
+                  initialData.heading_type === "article"
+                    ? "_lc_lpr_data[heading_article]"
+                    : ""
+                }
+                className="heading-article wp-editor-area"
+                value={initialData.heading_article}
+                onChange={(value) => {
+                  setInitialData({
+                    ...initialData,
+                    heading_article: value,
+                  });
+                }}
+              />
             </div>
 
-            <p className="heading-input" style={{ display: initialData.heading_type === 'heading' ? 'block' : 'none' }}>
+            <p
+              className="heading-input"
+              style={{
+                display:
+                  initialData.heading_type === "heading" ? "block" : "none",
+              }}
+            >
               <input
                 type="text"
-                name={initialData.heading_type === 'heading' ? '_lc_lpr_data[heading]' : ''}
+                name={
+                  initialData.heading_type === "heading"
+                    ? "_lc_lpr_data[heading]"
+                    : ""
+                }
                 value={initialData.heading}
                 onChange={(e) =>
                   setInitialData({ ...initialData, heading: e.target.value })
@@ -261,67 +371,135 @@ import classNames from 'classnames';
 
           <div className="pr-field">
             <div className="rp-panel-title">
-              {__("Select Products", "leo-product-recommendations")}
+              {__("Select By", "leo-product-recommendations")}
             </div>
-            <div className="product-selection-panel">
-              <div className="product-filter">
-                <div className="search">
-                  <DebounceInput
-                    minLength={2}
-                    debounceTimeout={300}
-                    onChange={(event) => {
-                      setQuery(event.target.value);
-                      setPage(1);
-                    }}
-                    placeholder={__(
-                      "Search...",
-                      "leo-product-recommendations"
-                    )}
+            <div className="selection-methods">
+              {selectionMehtods.map((method) => (
+                <label key={method.id}>
+                  <input
+                    type="radio"
+                    value={method.id}
+                    checked={initialData.demoMethod === method.id}
+                    onChange={(e) =>
+                      setInitialData({
+                        ...initialData,
+                        demoMethod: e.target.value,
+                      })
+                    }
                   />
-                </div>
-
-                <div className="category-filter">
-                  <TreeSelect
-                    // label="All Category"
-                    noOptionLabel={__(
-                      "All Categories",
-                      "leo-product-recommendations"
-                    )}
-                    onChange={(value) => {
-                      setSelectedCategory(value);
-                      setPage(1);
-                    }}
-                    selectedId={selectedCategory}
-                    tree={buildTermsTree(categories)}
-                  />
-                </div>
+                  {method.title}
+                </label>
+              ))}
+            </div>
+          </div>
+          {initialData.demoMethod === 'manual-selection' &&      
+            <div className="pr-field">
+              <div className="rp-panel-title">
+                {__('Select Products', 'leo-product-recommendations')}
               </div>
+              
+              <div className="product-selection-panel">
+                <div className="product-filter">
+                  <div className="search">
+                    <DebounceInput
+                      minLength={2}
+                      debounceTimeout={300}
+                      onChange={(event) => {
+                        setQuery(event.target.value);
+                        setPage(1);
+                      }}
+                      placeholder={__("Search...", "leo-product-recommendations")}
+                    />
+                  </div>
 
-              <div className="product-selection">
-                <div className="list-panel">
-                  <ul onScroll={handleScroll}>
-                    {!fetchingPosts && !selectAble(products).length && (
-                      <li className="disabled">
-                        <span className="single-list">
-                          {" "}
-                          {__(
-                            "Not found selectable product",
-                            "leo-product-recommendations"
-                          )}
-                        </span>
-                      </li>
-                    )}
+                  <div className="category-filter">
+                    <TreeSelect
+                      // label="All Category"
+                      noOptionLabel={__(
+                        "All Categories",
+                        "leo-product-recommendations"
+                      )}
+                      onChange={(value) => {
+                        setSelectedCategory(value);
+                        setPage(1);
+                      }}
+                      selectedId={selectedCategory}
+                      tree={buildTermsTree(categories)}
+                    />
+                  </div>
+                </div>
 
-                    {!!products.length &&
-                      selectAble(products).map((product) => (
-                        <li
-                          key={product.id}
-                          className={classNames({
-                            "selected-product": product.selcted,
-                          })}
-                          onClick={() => addProdcut(product)}
-                        >
+                <div className="product-selection">
+                  <div className="list-panel">
+                    <ul onScroll={handleScroll}>
+                      {!fetchingPosts && !selectAble(products).length && (
+                        <li className="disabled">
                           <span className="single-list">
+                            {" "}
+                            {__(
+                              "Not found selectable product",
+                              "leo-product-recommendations"
+                            )}
+                          </span>
+                        </li>
+                      )}
+
+                      {!!products.length &&
+                        selectAble(products).map((product) => (
+                          <li
+                            key={product.id}
+                            className={classNames({
+                              "selected-product": product.selcted,
+                            })}
+                            onClick={() => addProdcut(product)}
+                          >
+                            <span className="single-list">
+                              <div className="thumb">
+                                <img
+                                  src={
+                                    !!product.feature_image
+                                      ? product.feature_image
+                                      : ""
+                                  }
+                                  alt=""
+                                />
+                              </div>
+                              {product.title}
+                            </span>
+                          </li>
+                        ))}
+
+                      {
+                        <li
+                          className={classNames("disabled", {
+                            invisible: !fetchingPosts,
+                          })}
+                        >
+                          <span className="lpr-loading-posts"></span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+
+                  <div className="select-item-panel">
+                    <Reorder
+                      component="ul"
+                      reorderId="my-list"
+                      placeholderClassName="placeholder"
+                      holdTime={50}
+                      touchHoldTime={50}
+                      onReorder={reorderProduct}
+                      autoScroll={false}
+                      placeholder={<li className="custom-placeholder" />}
+                    >
+                      {initialData.products.map((product) => (
+                        <li key={product.id}>
+                          <input
+                            type="hidden"
+                            name="_lc_lpr_data[products][]"
+                            value={product.id}
+                          />
+                          <span className="single-list" data-id="10">
                             <div className="thumb">
                               <img
                                 src={
@@ -333,79 +511,41 @@ import classNames from 'classnames';
                               />
                             </div>
                             {product.title}
+                            <span
+                              className="remove-item"
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                removeProduct(product.id);
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                              }}
+                            >
+                              -
+                            </span>
                           </span>
                         </li>
                       ))}
-
-                    {
-                      <li
-                        className={classNames("disabled", {
-                          invisible: !fetchingPosts,
-                        })}
-                      >
-                        <span className="lpr-loading-posts"></span>
-                      </li>
-                    }
-                  </ul>
-                </div>
-
-                <div className="select-item-panel">
-                  <Reorder
-                    component="ul"
-                    reorderId="my-list"
-                    placeholderClassName="placeholder"
-                    // lock="horizontal"
-                    holdTime={50}
-                    touchHoldTime={50}
-                    onReorder={reorderProduct}
-                    autoScroll={false}
-                    placeholder={<li className="custom-placeholder" />}
-                  >
-                    {initialData.products.map((product) => (
-                      <li key={product.id}>
-                        <input
-                          type="hidden"
-                          name="_lc_lpr_data[products][]"
-                          value={product.id}
-                        />
-                        <span className="single-list" data-id="10">
-                          <div className="thumb">
-                            <img
-                              src={
-                                !!product.feature_image
-                                  ? product.feature_image
-                                  : ""
-                              }
-                              alt=""
-                            />
-                          </div>
-                          {product.title}
-                          <span
-                            className="remove-item"
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              removeProduct(product.id);
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                            }}
-                          >
-                            -
-                          </span>
-                        </span>
-                      </li>
-                    ))}
-                  </Reorder>
+                    </Reorder>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          }
+          {initialData.demoMethod === 'dynamic-selection' &&  
+            <div className="pr-field">  
+              <div className="pro-dynamic-selection">
+              <div><a href={pro_link} target="_blank">{__('Get Pro Version »','leo-product-recommendations')}</a></div>
+                <div><img src={pro_image} alt=""/></div>
+              </div>
+            </div>
+          }
         </div>
       </div>
     );
-	}
+  };
 
-	React.render(<SelectProduct />, app)
-})(wp.element, wp.i18n.__, jQuery, document.getElementById('pr-app'), Reorder);
+  React.render(<SelectProduct />, app);
+})(wp.element, wp.i18n.__, jQuery, document.getElementById("pr-app"), Reorder);

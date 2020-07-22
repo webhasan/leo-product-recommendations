@@ -55,6 +55,12 @@
         transition: opacity .4s;
     }
 
+    .selection-methods label {
+        margin-right: 10px;
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+    
     .pr-field {
         border-top: 1px solid #ccd0d4;
         margin-top: 25px;
@@ -71,6 +77,28 @@
 
         .heading-control label {
             margin-right: 10px
+        }
+
+        .pro-dynamic-selection {
+            a {
+                color: red;
+                text-decoration: none;
+                font-size: 15px;
+                margin-top: -26px;
+                display: inline-block;
+                position: relative;
+                top: -12px;
+                outline: none !important;
+                box-shadow: none !important;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+            img {
+            width: 100%;
+            height: auto;
+            cursor: not-allowed;
+            }
         }
     }
 
