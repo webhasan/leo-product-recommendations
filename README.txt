@@ -143,6 +143,9 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 1.1.0 =
+* Update Features
+
 = 1.0.0 =
 * Initial release
 
