@@ -236,7 +236,7 @@ final class Product_Recommendations {
 
             if(!$this->has_pro_plugin()) {
                 $link_after = array(
-                    'go-pro' => '<a href="' . esc_url('https: //bit.ly/2CnIseD') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
+                    'go-pro' => '<a href="' . esc_url('https://bit.ly/2CnIseD') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
                 );
                 return array_merge($link_before, $links, $link_after);
             } 
