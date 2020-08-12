@@ -4,7 +4,7 @@ Tags: product recommendations, woocommerce, woocommerce popup, woocommerce cross
 Requires at least: 5.0
 Tested up to: 5.5
 Requires PHP: 7.0
-Stable tag: 1.3
+Stable tag: 1.2
 WC requires at least: 3.7
 WC tested up to: 4.3.2
 License: GPLv3 or later License
