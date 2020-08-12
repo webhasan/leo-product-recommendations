@@ -2,11 +2,11 @@
 Contributors: webhasan, masum007
 Tags: product recommendations, woocommerce, woocommerce popup, woocommerce cross sell, woocommerce boost sales, ajax add to cart, woocommerce up-sell, woocommerce related products, quick checkout, add to cart popup, cart, popup
 Requires at least: 5.0
-Tested up to: 5.4.2
+Tested up to: 5.5
 Requires PHP: 7.0
-Stable tag: 1.1.0
+Stable tag: 1.3
 WC requires at least: 3.7
-WC tested up to: 4.3.1
+WC tested up to: 4.3.2
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -19,7 +19,7 @@ Harvard professor Gerald Zaltman says "95% of purchasing decisions are subconsci
 
 After purchasing a smartphone definitely there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Leo Product Recommendations helps here to recommend that product instantly. 
 
-[youtube https://youtu.be/U5n7TH1psgE]
+[youtube https://youtu.be/6ojRz6bK9Xo]
 
 In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of Jeans pant. Leo Product Recommendations helps here to sell T-Shirts with a pair of jeans pants.
 
@@ -143,6 +143,9 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 1.2 =
+* Update compatibility
+
 = 1.1.0 =
 * Update Features
 
