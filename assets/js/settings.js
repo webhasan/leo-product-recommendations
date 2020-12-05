@@ -14,6 +14,38 @@
       wp.codeEditor.initialize($(".css-editor"), lpr_css_editor);
     },
 
+    editor: function() {
+      let {
+        tinymce: tinymceObj,
+        quicktags: quicktagsObj,
+      } = wp.editor.getDefaultSettings();
+      
+      wp.editor.initialize('default-heaidng-editor', {
+        tinymce: {
+          ...tinymceObj,
+          toolbar1:
+            "formatselect,,forecolor,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_add_media,wp_adv",
+          toolbar2:
+            "strikethrough,hr,pastetext,removeformat,charmap,outdent,indent,undo,redo",
+          plugins:
+            "charmap,colorpicker,hr,lists,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview",
+
+          setup: function (editor) {
+            editor.on("NodeChange", function (e) {
+              editor.save();
+            });
+          }
+        },
+        quicktags: quicktagsObj,
+      });
+    },
+    switchHeadingType: function() {
+     $('.lpr-field-heading_type input[type="radio"]').on('click', function() {
+        $('.lpr-field-heading_type .heading-field>div').hide();
+        $('.' + this.value).fadeIn();
+      });
+    },
+
     showHideSettings: function () {
       // grid and slider
       if ($('#lpr-field-layout_type input[type="radio"]:checked').val() === 'grid') {
@@ -103,8 +135,10 @@
   App.init = function () {
     this.colorPicker();
     this.cssEditor();
+    this.editor();
     this.showHideSettings();
     this.select2();
+    this.switchHeadingType();
   }
 
   $(function () {

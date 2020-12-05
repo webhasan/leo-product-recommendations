@@ -10,6 +10,7 @@ const WPEditor = ({ onChange, id, ...options}) => {
         tinymce: tinymceObj,
         quicktags: quicktagsObj,
       } = wp.editor.getDefaultSettings();
+      
       wp.editor.initialize(id, {
         tinymce: {
           ...tinymceObj,

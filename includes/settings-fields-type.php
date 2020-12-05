@@ -352,7 +352,6 @@ function wrapper_extend($field, $base, $setting_id) {
 <?php
 }
 
-
 /**
  * Input type radio
  * 
@@ -400,7 +399,6 @@ function checkbox($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
 
     ?>
-
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <label>
             <?php 
@@ -512,6 +510,61 @@ function pro_image($field, $base, $setting_id) {
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
     <div class="pro-link"><a href="<?php echo esc_url($link); ?>" target="_blank"><?php _e('Get Pro Version »'); ?></a></div>
     <div class="field-image"><img src="<?php echo esc_url($image_url); ?>" alt=""></div>
+    </fieldset>
+
+    <?php if (isset($description)): ?>
+        <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif;
+}
+
+/**
+ * Heading Selection Field
+ *
+ * @since 1.0.0
+ */
+function heading_selection($field, $base, $setting_id) {
+    extract($field);
+    $value      = $base->get_setting($id);
+    $field_name = $setting_id . '[' . $id . ']';
+    ?>
+    <fieldset class="lpr-field-heading_type" id="lpr-field-<?php echo $id; ?>">
+        <?php foreach($heading_types as $heading_type): 
+            $checked = ( $value === $heading_type['id'] ) ? ' checked ' : '';
+        ?>
+            <label>
+                <input type="radio" <?php echo $checked; ?> name="<?php echo $field_name; ?>" value="<?php echo $heading_type['id'] ;?>">
+                <?php echo $heading_type['title']; ?>
+            </label>
+        <?php endforeach; ?>
+
+        <div class="heading-field">
+            <?php foreach ($heading_types as $heading_type): 
+                $sub_field_name = $setting_id . '[' . $heading_type['id'] . ']';
+                $sub_field_value = $base->get_setting($heading_type['id']);
+                $display = ($value === $heading_type['id']) ?  'block' : 'none';
+
+                if($heading_type['type'] === 'text'):
+                $sub_field_value = ($value === 'default_heading') ? $sub_field_value : '';
+                printf(
+                    '<div style="display:%1$s" class="%2$s"><input type="text" name="%3$s" value="%4$s"/></div>',
+                    $display,
+                    $heading_type['id'],
+                    $sub_field_name,
+                    $sub_field_value
+                );
+
+                elseif($heading_type['type'] === 'editor'):  
+                    $sub_field_value = ($value === 'default_heading_description') ? $sub_field_value : '';
+                    printf(
+                        '<div style="display:%1$s" class="%2$s"><textarea id="default-heaidng-editor" name="%3$s">%4$s</textarea></div>',
+                        $display,
+                        $heading_type['id'],
+                        $sub_field_name,
+                        $sub_field_value
+                    );
+                endif; 
+            endforeach;?>
+        </div>
     </fieldset>
 
     <?php if (isset($description)): ?>

@@ -1,8 +1,8 @@
 <?php
 namespace LoeCoder\Plugin\ProductRecommendations;
 /**
- * Class for single page ajax add to cart 
- * 
+ * Class for single page ajax add to cart
+ *
  * @since      1.0.0
  * @author     LeoCoder
  */
@@ -64,7 +64,7 @@ class Ajax_Add_To_Cart {
                 $adding_to_cart = wc_get_product($product_id);
 
                 if (!$adding_to_cart) {
-                    $this->response_add_to_cart_fail(__('Product not found','leo-product-recommendations'), 404);
+                    $this->response_add_to_cart_fail(__('Product not found', 'leo-product-recommendations'), 404);
                 }
             }
 

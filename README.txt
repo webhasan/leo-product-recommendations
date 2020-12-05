@@ -2,11 +2,11 @@
 Contributors: webhasan, masum007
 Tags: product recommendations, woocommerce, woocommerce popup, woocommerce cross sell, woocommerce boost sales, ajax add to cart, woocommerce up-sell, woocommerce related products, quick checkout, add to cart popup, cart, popup
 Requires at least: 5.0
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 7.0
-Stable tag: 1.2.1
+Stable tag: 1.3.1
 WC requires at least: 4.0
-WC tested up to: 4.5.2
+WC tested up to: 4.7.1
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -143,6 +143,9 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 1.3.1 =
+* Add editor field for default heading
+
 = 1.2 =
 * Update compatibility
 

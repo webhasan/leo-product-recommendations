@@ -204,9 +204,9 @@ final class Product_Recommendations {
      * @return void
      */
     public function includes() {
-        $this->admin_ajax(); // handle all admin ajax request 
+        $this->admin_ajax(); // handle all admin ajax request
         $this->plugin_action_links(); // add Settings link
-        if (!$this->is_pro_activated()) { 
+        if (!$this->is_pro_activated()) {
             $this->plugin_settins(); // plugin Settings Page
         }
     }
@@ -230,17 +230,17 @@ final class Product_Recommendations {
     public function plugin_action_links() {
         add_action('plugin_action_links_' . plugin_basename(self::$__FILE__), function ($links) {
             $link_before = array(
-                'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=lpr-settings')) . '">' . __('Settings', 'leo-product-recommendations') . '</a>',
-                'documentation' => '<a href="'.esc_url('https://bit.ly/39b81ey').'" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
+                'settings'      => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=lpr-settings')) . '">' . __('Settings', 'leo-product-recommendations') . '</a>',
+                'documentation' => '<a href="' . esc_url('https://bit.ly/39b81ey') . '" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
             );
 
-            if(!$this->has_pro_plugin()) {
+            if (!$this->has_pro_plugin()) {
                 $link_after = array(
                     'go-pro' => '<a href="' . esc_url('https://bit.ly/2CnIseD') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
                 );
                 return array_merge($link_before, $links, $link_after);
-            } 
-                
+            }
+
             return array_merge($link_before, $links);
         });
     }
@@ -284,7 +284,6 @@ final class Product_Recommendations {
 
         add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
 
-
         if (!$this->is_pro_activated()) {
             add_action('wp_head', array($this, 'settings_css')); // for custom styling
         }
@@ -302,10 +301,10 @@ final class Product_Recommendations {
         if (!$this->is_pro_activated()) {
             wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
             wp_localize_script('selection-panel-script', 'lc_pr_panel_data', array(
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce'    => wp_create_nonce('lc-panel-security'),
-                'pro_image'=> $this->get_url('assets/images/pro-feature.jpg'),
-                'pro_link' => esc_url('https://bit.ly/2CnIseD'),
+                'ajax_url'  => admin_url('admin-ajax.php'),
+                'nonce'     => wp_create_nonce('lc-panel-security'),
+                'pro_image' => $this->get_url('assets/images/pro-feature.jpg'),
+                'pro_link'  => esc_url('https://bit.ly/2CnIseD'),
             ));
             wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
         }
@@ -334,12 +333,12 @@ final class Product_Recommendations {
      * @return void
      */
     public function wp_enqueue_scripts() {
-        $version = $this->script_version();
+        $version     = $this->script_version();
         $settings    = $this->get_settings();
         $layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
         wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery'), $version, true);
-        
+
         wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
             'url'         => admin_url('admin-ajax.php'),
             'nonce'       => wp_create_nonce('lc-ajax-modal'),
@@ -490,7 +489,7 @@ final class Product_Recommendations {
     }
 
     /**
-     * Save recommended data to the product 
+     * Save recommended data to the product
      *
      * @since      1.0.0
      * @return  void;
@@ -503,14 +502,14 @@ final class Product_Recommendations {
             $entry_data = array();
 
             // heading type
-            if(isset($panel_data['heading_type'])) {
-                $allowed_heading_type = array('heading','article');
-                $heading_type = sanitize_key($panel_data['heading_type']);
+            if (isset($panel_data['heading_type'])) {
+                $allowed_heading_type = array('heading', 'article');
+                $heading_type         = sanitize_key($panel_data['heading_type']);
 
-                if(in_array($heading_type, $allowed_heading_type, true)) {
+                if (in_array($heading_type, $allowed_heading_type, true)) {
                     $entry_data['heading_type'] = $heading_type;
                 }
-                
+
             }
 
             // normal heading
@@ -525,59 +524,59 @@ final class Product_Recommendations {
                 $entry_data['heading'] = wp_kses($panel_data['heading'], $html_permission);
             }
 
-           // heading article
+            // heading article
             if (isset($panel_data['heading_article'])) {
                 $entry_data['heading_article'] = wp_kses_post($panel_data['heading_article']);
             }
 
-           // select by type
+            // select by type
             if (isset($panel_data['type'])) {
                 $entry_data['type'] = sanitize_key($panel_data['type']);
             }
 
-           //selected prodcut
+            //selected prodcut
             if (isset($panel_data['products']) && is_array($panel_data['products'])) {
-                $recommend_products = array_map(function($id) {
+                $recommend_products = array_map(function ($id) {
                     return (int) $id;
                 }, $panel_data['products']);
 
                 $entry_data['products'] = $recommend_products;
             }
 
-           //categories
+            //categories
             if (isset($panel_data['categories']) && is_array($panel_data['categories'])) {
-                $recommend_categories = array_map(function($id) {
+                $recommend_categories = array_map(function ($id) {
                     return (int) $id;
                 }, $panel_data['categories']);
 
                 $entry_data['categories'] = $recommend_categories;
             }
 
-           //tags
+            //tags
             if (isset($panel_data['tags']) && is_array($panel_data['tags'])) {
-                $recommend_tags = array_map(function($id) {
+                $recommend_tags = array_map(function ($id) {
                     return (int) $id;
                 }, $panel_data['tags']);
 
                 $entry_data['tags'] = $recommend_tags;
             }
 
-           //orderby
+            //orderby
             if (isset($panel_data['orderby'])) {
-                $allowed_orderby = array('rand','newest','oldest','lowprice','highprice','popularity','rating');
-                $orderby = sanitize_key($panel_data['orderby']);
+                $allowed_orderby = array('rand', 'newest', 'oldest', 'lowprice', 'highprice', 'popularity', 'rating');
+                $orderby         = sanitize_key($panel_data['orderby']);
 
-                if(in_array($orderby, $allowed_orderby, true)) {
-                    $entry_data['orderby'] =  $orderby;
+                if (in_array($orderby, $allowed_orderby, true)) {
+                    $entry_data['orderby'] = $orderby;
                 }
             }
 
-           //is sale
+            //is sale
             if (isset($panel_data['sale'])) {
                 $entry_data['sale'] = (bool) $panel_data['sale'];
             }
 
-           //number of products
+            //number of products
             if (isset($panel_data['number'])) {
                 $entry_data['number'] = (int) $panel_data['number'];
             }
@@ -605,8 +604,7 @@ final class Product_Recommendations {
             return (int) $id;
         }, $recommended_products_id);
 
-        $layout_type = isset($_GET['layout_type']) ?  sanitize_key($_GET['layout_type']) : 'grid';
-
+        $layout_type = isset($_GET['layout_type']) ? sanitize_key($_GET['layout_type']) : 'grid';
 
         $args = array(
             'post_type'      => 'product',
@@ -645,7 +643,7 @@ final class Product_Recommendations {
     }
 
     /**
-     * Ajax callback to get cart items 
+     * Ajax callback to get cart items
      *
      * @since      1.0.0
      * @return  json with cart items
@@ -653,7 +651,7 @@ final class Product_Recommendations {
     public function get_cart_items() {
         $products_ids_array = array();
 
-        if(WC()->cart) {
+        if (WC()->cart) {
             foreach (WC()->cart->get_cart() as $cart_item) {
                 $products_ids_array[] = $cart_item['product_id'];
             }
@@ -695,21 +693,24 @@ final class Product_Recommendations {
         $template_data                            = array();
         $template_data['product_id']              = $product_id;
         $template_data['recommended_products_id'] = $recommended_products_id;
-        //heaidng
-        $pr_data = $this->get_pr_data($product_id);
 
-        $modal_heading   = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
-        $default_heading = $this->get_setting('default_heading');
+        //heading from product editor panel
+        $pr_data       = $this->get_pr_data($product_id); //recommendations data for product
+        $modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
+
+        //heading editor panel
+        $is_article_heading = ($this->get_setting('heading_type') === 'default_heading_description');
+        $default_heading    = $is_article_heading ? $this->get_setting('default_heading_description') : $this->get_setting('default_heading');
+
         $default_heading = !empty($default_heading) ? $default_heading : '';
         // cart products
         $cart_products_ids = array();
 
-        if(WC()->cart) {
+        if (WC()->cart) {
             foreach (WC()->cart->get_cart() as $cart_item) {
                 $cart_products_ids[] = $cart_item['product_id'];
             }
         }
-
 
         $selectable_products = array_filter($recommended_products_id, function ($item) use ($cart_products_ids) {
             return !in_array($item, $cart_products_ids);
@@ -753,7 +754,7 @@ final class Product_Recommendations {
 
     /**
      * Check manual selection or not
-     * 
+     *
      * @return bool manually selected or not
      * @since   1.0.0
      */
@@ -764,7 +765,7 @@ final class Product_Recommendations {
 
     /**
      * Check dynamic selection or not
-     * 
+     *
      * @return bool dynamic selected or not
      * @since   1.0.0
      */
@@ -795,8 +796,8 @@ final class Product_Recommendations {
     }
 
     /**
-     * Check global selection applicable or not 
-     * 
+     * Check global selection applicable or not
+     *
      * @since      1.0.0
      * @return bool global selection applicable or not
      */
@@ -805,7 +806,7 @@ final class Product_Recommendations {
         $settings          = $this->get_settings();
         $has_global        = !empty($settings['active_global_settings']) ? true : false;
         $disable_overwrite = !empty($settings['disable_global_override']) ? true : false;
-        
+
         // active global and not overwirte by local
         if ($has_global && $disable_overwrite) {
             return true;
@@ -825,9 +826,9 @@ final class Product_Recommendations {
 
     /**
      * Get manual selection data
-     * 
+     *
      * @since      1.0.0
-     * @return array of manually selection data 
+     * @return array of manually selection data
      */
     public function manual_query_products($data) {
         return !empty($data['products']) ? $data['products'] : array();
@@ -835,7 +836,7 @@ final class Product_Recommendations {
 
     /**
      * Get manual selection data
-     * 
+     *
      * @since      1.0.0
      * @return array of dynamically selection data
      */
@@ -1025,9 +1026,12 @@ final class Product_Recommendations {
      * Add modal in the Guterberg blocks product
      * @since      1.0.0
      */
-    public function product_gutenberg_block( $html, $data, $product) {
+    public function product_gutenberg_block($html, $data, $product) {
 
-        if(!(WC()->cart)) return $html; // do nothing if backend block
+        if (!(WC()->cart)) {
+            return $html;
+        }
+        // do nothing if it is admin dashboard
 
         $product_id = $product->get_id();
         if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
@@ -1181,7 +1185,7 @@ final class Product_Recommendations {
 
     /**
      * Get prodcut recommendations meta data
-     * 
+     *
      * @since      1.0.0
      * @return object of post meta _lc_lpr_data
      */
@@ -1225,10 +1229,10 @@ final class Product_Recommendations {
      * @return  mixed value of setting by setting id
      */
     public function get_setting($id) {
-		
-        $settings = $this->get_settings();
+
+        $settings   = $this->get_settings();
         $field_type = $this->get_field_type($id);
-        $value = isset($settings[$id]) ? $settings[$id] : $this->get_default_setting($id);
+        $value      = isset($settings[$id]) ? $settings[$id] : $this->get_default_setting($id);
 
         if ($field_type === 'checkbox' && $settings && !isset($settings[$id])) {
             $value = null;
@@ -1248,43 +1252,47 @@ final class Product_Recommendations {
         );
 
         switch ($field_type) {
-            case 'text':
-                $value = wp_kses($value, $html_permission);
-                break;
+        case 'text':
+            $value = wp_kses($value, $html_permission);
+            break;
 
-            case 'color_picker':
-                $value = esc_attr($value);
-                break;
+        case 'color_picker':
+            $value = esc_attr($value);
+            break;
 
-            case 'number':
-                $value = (int) $value;
-                break;
+        case 'number':
+            $value = (int) $value;
+            break;
 
-            case 'checkbox':
-                $value = (bool) $value;
-                break;
+        case 'checkbox':
+            $value = (bool) $value;
+            break;
 
-            case 'radio':
-                $value = esc_attr($value);
-                break;
+        case 'radio':
+            $value = esc_attr($value);
+            break;
 
-            case 'categories_select':
-                $value = (array) $value;
-                $value = array_map(function ($id) {
-                    return (int) $id;
-                }, $value);
-                break;
+        case 'categories_select':
+            $value = (array) $value;
+            $value = array_map(function ($id) {
+                return (int) $id;
+            }, $value);
+            break;
 
-            case 'tags_select':
-                $value = (array) $value;
-                $value = array_map(function ($id) {
-                    return (int) $id;
-                }, $value);
-                break;
+        case 'tags_select':
+            $value = (array) $value;
+            $value = array_map(function ($id) {
+                return (int) $id;
+            }, $value);
+            break;
 
-            case 'css':
-                $value = sanitize_textarea_field($value);
-                break;
+        case 'css':
+            $value = sanitize_textarea_field($value);
+            break;
+
+        case 'editor':
+            $value = wp_kses_post($value);
+            break;
         }
 
         return $value;
@@ -1292,7 +1300,7 @@ final class Product_Recommendations {
 
     /**
      * Get default setting by ID
-     * 
+     *
      * @since      1.0.0
      * @param id settings field id
      * @return mixed value of default setting
@@ -1331,7 +1339,7 @@ final class Product_Recommendations {
 
     /**
      * Get setting field type by setting ID
-     * 
+     *
      * @since      1.0.0
      * @param id setting field ID
      * @return mixed value of setting field type
@@ -1375,13 +1383,25 @@ final class Product_Recommendations {
     public function settings_pages() {
         $general_settings_fields = array(
             array(
-                'id'          => 'default_heading',
-                'title'       => __('Default Heading', 'leo-product-recommendations'),
-                'type'        => 'text',
+                'id'          => 'heading_type',
+                'title'       => __('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="' . home_url() . '/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings">globl setting</a></small>', 'leo-product-recommendations'),
+                'type'        => 'heading_selection',
+                'default'     => 'default_heading',
+                'childs'      => array(
+                    array(
+                        'id'      => 'default_heading',
+                        'title'   => __('Heading', 'leo-product-recommendations'),
+                        'type'    => 'text',
+                        'default' => __('You may purchase following [item, items] with the %title%', 'leo-product-recommendations'),
+                    ),
+                    array(
+                        'id'    => 'default_heading_description',
+                        'title' => __('Heading & Description', 'leo-product-recommendations'),
+                        'type'  => 'editor',
+                    ),
+                ),
                 'description' => __('If you like to use same  heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'leo-product-recommendations'),
-                'default'     => __('You may purchase following [item, items] with the %title%', 'leo-product-recommendations'),
             ),
-
             array(
                 'id'     => 'grid_options',
                 'title'  => __('Grid Options', 'leo-product-recommendations'),
@@ -1390,7 +1410,7 @@ final class Product_Recommendations {
 
                     array(
                         'id'      => 'grid_lg_items',
-                        'title'   => __('Desktop Items', 'leo-product-recommendations'),
+                        'title'   => __('Desktop Items Per Row', 'leo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 2,
                         'max'     => 5,
@@ -1399,7 +1419,7 @@ final class Product_Recommendations {
 
                     array(
                         'id'      => 'grid_md_items',
-                        'title'   => __('Tablet Items', 'leo-product-recommendations'),
+                        'title'   => __('Tablet Items Per Row', 'leo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 2,
                         'max'     => 5,
@@ -1408,7 +1428,7 @@ final class Product_Recommendations {
 
                     array(
                         'id'      => 'grid_sm_items',
-                        'title'   => __('Mobile Items', 'leo-product-recommendations'),
+                        'title'   => __('Mobile Items Per Row', 'leo-product-recommendations'),
                         'type'    => 'number',
                         'min'     => 1,
                         'max'     => 3,
@@ -1426,49 +1446,49 @@ final class Product_Recommendations {
                 ),
             ),
             array(
-                'id'          => 'layout_image',
-                'title'       => __('Layout Type <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-                'type'        => 'pro_image',
-                'image_url'   => $this->get_url('assets/images/layout-type.jpg'),
-                'link'        => esc_url('https://bit.ly/2CnIseD'),
-            ),          
-            array(
-                'id'          => 'slidar_options_image',
-                'title'       => __('Slider Options <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-                'type'        => 'pro_image',
-                'image_url'   => $this->get_url('assets/images/slider-options.jpg'),
-                'link'        => esc_url('https://bit.ly/2CnIseD'),
+                'id'        => 'layout_image',
+                'title'     => __('Layout Type <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'      => 'pro_image',
+                'image_url' => $this->get_url('assets/images/layout-type.jpg'),
+                'link'      => esc_url('https://bit.ly/2CnIseD'),
             ),
             array(
-                'id'          => 'popup_size_image',
-                'title'       => __('Popup Size <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-                'type'        => 'pro_image',
-                'image_url'   => $this->get_url('assets/images/popup-size.jpg'),
-                'link'        => esc_url('https://bit.ly/2CnIseD'),
+                'id'        => 'slidar_options_image',
+                'title'     => __('Slider Options <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'      => 'pro_image',
+                'image_url' => $this->get_url('assets/images/slider-options.jpg'),
+                'link'      => esc_url('https://bit.ly/2CnIseD'),
             ),
             array(
-                'id'          => 'button_visiblity_image',
-                'title'       => __('Buttons Visiblity <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-                'type'        => 'pro_image',
-                'image_url'   => $this->get_url('assets/images/button-visiblity.jpg'),
-                'link'        => esc_url('https://bit.ly/2CnIseD'),
+                'id'        => 'popup_size_image',
+                'title'     => __('Popup Size <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'      => 'pro_image',
+                'image_url' => $this->get_url('assets/images/popup-size.jpg'),
+                'link'      => esc_url('https://bit.ly/2CnIseD'),
+            ),
+            array(
+                'id'        => 'button_visiblity_image',
+                'title'     => __('Buttons Visiblity <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'      => 'pro_image',
+                'image_url' => $this->get_url('assets/images/button-visiblity.jpg'),
+                'link'      => esc_url('https://bit.ly/2CnIseD'),
             ),
         );
- 
+
         $style_settings = array(
             array(
-                'id'          => 'popup_color_image',
-                'title'       => __('Popup Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-                'type'        => 'pro_image',
-                'image_url'   => $this->get_url('assets/images/modal-color.jpg'),
-                'link'        => esc_url('https://bit.ly/2CnIseD'),
+                'id'        => 'popup_color_image',
+                'title'     => __('Popup Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'      => 'pro_image',
+                'image_url' => $this->get_url('assets/images/modal-color.jpg'),
+                'link'      => esc_url('https://bit.ly/2CnIseD'),
             ),
             array(
-                'id'          => 'product_color_image',
-                'title'       => __('Product Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-                'type'        => 'pro_image',
-                'image_url'   => $this->get_url('assets/images/product-color-setting.jpg'),
-                'link'        => esc_url('https://bit.ly/2CnIseD'),
+                'id'        => 'product_color_image',
+                'title'     => __('Product Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+                'type'      => 'pro_image',
+                'image_url' => $this->get_url('assets/images/product-color-setting.jpg'),
+                'link'      => esc_url('https://bit.ly/2CnIseD'),
             ),
             array(
                 'id'          => 'custom_style',
@@ -1517,13 +1537,13 @@ final class Product_Recommendations {
                         'title'   => __('Products Filtering', 'leo-product-recommendations'),
                         'type'    => 'select',
                         'options' => array(
-                            'rand'       => __('Random Products','leo-product-recommendations'),
-                            'newest'     => __('Newest Products','leo-product-recommendations'),
-                            'oldest'     => __('Oldest Products','leo-product-recommendations'),
-                            'lowprice'   => __('Low Price Products','leo-product-recommendations'),
-                            'highprice' => __('High Price Products','leo-product-recommendations'),
-                            'popularity' => __('Best Selling Products','leo-product-recommendations'),
-                            'rating'     => __('Top Rated Products','leo-product-recommendations'),
+                            'rand'       => __('Random Products', 'leo-product-recommendations'),
+                            'newest'     => __('Newest Products', 'leo-product-recommendations'),
+                            'oldest'     => __('Oldest Products', 'leo-product-recommendations'),
+                            'lowprice'   => __('Low Price Products', 'leo-product-recommendations'),
+                            'highprice'  => __('High Price Products', 'leo-product-recommendations'),
+                            'popularity' => __('Best Selling Products', 'leo-product-recommendations'),
+                            'rating'     => __('Top Rated Products', 'leo-product-recommendations'),
                         ),
                     ),
                     array(
@@ -1541,7 +1561,7 @@ final class Product_Recommendations {
             ),
             array(
                 'id'          => 'disable_global_override',
-                'label'       => __('Skip','leo-product-recommendations'),
+                'label'       => __('Skip', 'leo-product-recommendations'),
                 'title'       => __('Skip Manual Selection', 'leo-product-recommendations'),
                 'type'        => 'checkbox',
                 'description' => 'It will skip individual recommendations what you have done from product edit page using WPR setting panel. <br> It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to temporary skip individual product specific recommendations. And recommend some specific categories of products. Just select the categories from the above setting and check this <strong>Skip</strong> checkbox.',
@@ -1552,39 +1572,39 @@ final class Product_Recommendations {
             array(
                 'id'         => $this->get_settings_id(),
                 'page_title' => __('Leo Product Recommendations Settings', 'leo-product-recommendations'),
-                'menu_title' => __('LPR Settings','leo-product-recommendations'),
+                'menu_title' => __('LPR Settings', 'leo-product-recommendations'),
                 'slug'       => 'lpr-settings',
                 'icon'       => 'dashicons-cart',
                 'position'   => 60,
 
                 'sections'   => array(
                     array(
-                        'id'           => 'lpr-general-settings',
-                        'tab_title'    => __('General','leo-product-recommendations'),
-                        'title'        => __('General Settings','leo-product-recommendations'),
-                        'fields'       => $general_settings_fields,
+                        'id'        => 'lpr-general-settings',
+                        'tab_title' => __('General', 'leo-product-recommendations'),
+                        'title'     => __('General Settings', 'leo-product-recommendations'),
+                        'fields'    => $general_settings_fields,
                     ),
 
                     array(
-                        'id'           => 'lpr-style-settings',
-                        'tab_title'    => __('Style','leo-product-recommendations'),
-                        'title'        => __('Colors & Styles Settings','leo-product-recommendations'),
-                        'fields'       => $style_settings,
+                        'id'        => 'lpr-style-settings',
+                        'tab_title' => __('Style', 'leo-product-recommendations'),
+                        'title'     => __('Colors & Styles Settings', 'leo-product-recommendations'),
+                        'fields'    => $style_settings,
                     ),
 
                     array(
-                        'id'           => 'lpr-global-settings',
-                        'tab_title'    => __('Global','leo-product-recommendations'),
-                        'title'        => __('Global Settings','leo-product-recommendations'),
-                        'fields'       => $global_settings_fields,
+                        'id'        => 'lpr-global-settings',
+                        'tab_title' => __('Global', 'leo-product-recommendations'),
+                        'title'     => __('Global Settings', 'leo-product-recommendations'),
+                        'fields'    => $global_settings_fields,
                     ),
 
                     array(
-                        'id'           => 'lpr-documentation',
-                        'tab_title'    => __('Tutorials','leo-product-recommendations'),
-                        'title'        => __('Tutorial & Documentation','leo-product-recommendations'),
-                        'type'         => 'article',
-                        'template'     => $this->get_path('includes/tutorials.php'),
+                        'id'        => 'lpr-documentation',
+                        'tab_title' => __('Tutorials', 'leo-product-recommendations'),
+                        'title'     => __('Tutorial & Documentation', 'leo-product-recommendations'),
+                        'type'      => 'article',
+                        'template'  => $this->get_path('includes/tutorials.php'),
                     ),
                 ),
             ),
@@ -1606,9 +1626,8 @@ final class Product_Recommendations {
         return $this->plugin_version();
     }
 
-
     /**
-     * Ger plugin version 
+     * Ger plugin version
      *
      * @since      1.0.0
      * @return string current version of plugin
