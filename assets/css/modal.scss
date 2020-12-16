@@ -351,15 +351,61 @@ body.lpr-modal-opened {
           text-transform: uppercase;
         }
 
-        a.button {
+        a.button,
+        button[type="submit"].button {
           font-size: 14px;
           font-weight: bold;
+          outline: none;
         }
 
         a.button:before,
-        a.button:after {
+        a.button:after,
+        button[type="submit"].button:before,
+        button[type="submit"].button:after {
           font-size: 14px;
         }
+
+        table {
+          margin-bottom: 0;
+          td,
+          th {
+            padding-top: 5px;
+            padding-bottom: 5px;
+          }
+        }
+
+        table tbody {
+          display: inline-table;
+          .reset_variations {
+            display: block;
+          }
+          td.label {
+            padding-left: 0 !important;
+            padding-right: 5px !important;
+          }
+          td.value {
+            padding-right: 0 !important;
+            padding-left: 5px !important;
+          }
+        }
+
+        .quantity .qty,
+        .single_variation_wrap .single_variation {
+          display: none;
+        }
+
+        .woocommerce-grouped-product-list .quantity .qty {
+            display: block;
+        }
+        
+        .woocommerce-grouped-product-list-item__label,
+        .woocommerce-grouped-product-list-item__price,
+        .woocommerce-grouped-product-list-item__quantity {
+          padding-left: 3px !important;
+          padding-right: 3px !important;
+          vertical-align: middle;
+        }
+        
       }
     }
 

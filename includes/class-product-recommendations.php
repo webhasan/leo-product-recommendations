@@ -115,8 +115,9 @@ final class Product_Recommendations {
         do_action('lpr_before_action');
 
         $this->includes();
-        $this->hooks();
+        $this->hooks();   
     }
+
 
     /**
      * Load Localization files
@@ -335,14 +336,17 @@ final class Product_Recommendations {
     public function wp_enqueue_scripts() {
         $version     = $this->script_version();
         $settings    = $this->get_settings();
+        $variable_add_to_cart = $this->get_setting('variable_add_to_cart') ? $this->get_setting('variable_add_to_cart') : false;
         $layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
+
 
         wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery'), $version, true);
 
         wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
-            'url'         => admin_url('admin-ajax.php'),
-            'nonce'       => wp_create_nonce('lc-ajax-modal'),
-            'layout_type' => $layout_type,
+            'url'                  => admin_url('admin-ajax.php'),
+            'nonce'                => wp_create_nonce('lc-ajax-modal'),
+            'layout_type'          => $layout_type,
+            'variable_add_to_cart' => $variable_add_to_cart,
         ));
 
         // if (is_product()) { // disabled condition so that it work for quick view
@@ -355,6 +359,11 @@ final class Product_Recommendations {
 
         if (!$this->is_pro_activated()) {
             wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
+        }
+
+        //recommend variable and group product add to cart 
+        if($this->get_setting('variable_add_to_cart')) {
+            wp_enqueue_script('wc-add-to-cart-variation');
         }
     }
 
@@ -605,7 +614,7 @@ final class Product_Recommendations {
         }, $recommended_products_id);
 
         $layout_type = isset($_GET['layout_type']) ? sanitize_key($_GET['layout_type']) : 'grid';
-
+        $variable_add_to_cart = isset($_GET['variable_add_to_cart']) ? (bool) $_GET['variable_add_to_cart'] : false;
         $args = array(
             'post_type'      => 'product',
             'posts_per_page' => -1,
@@ -618,8 +627,8 @@ final class Product_Recommendations {
         if ($loop->have_posts()): while ($loop->have_posts()): $loop->the_post();
                 include $this->get_templates_path('templates/template-recommendations-products.php');
             endwhile;
-            wp_reset_postdata();endif;
-
+            wp_reset_postdata(); 
+        endif;
         wp_die();
     }
 
@@ -1403,11 +1412,18 @@ final class Product_Recommendations {
                 'description' => __('If you like to use same  heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'leo-product-recommendations'),
             ),
             array(
+                'id'          => 'variable_add_to_cart',
+                'default'     => 1,
+                'title'       => __('Variable / Group Products <br> Add To Cart', 'leo-product-recommendations'),
+                'label'       => __('Add To Cart'),
+                'type'        => 'checkbox',
+                'description' => __('To show <strong>Add to cart</strong> button with variation options insted <strong>Select options</strong> button for recommend Variable and Group products. It will enable customers to purchase products without visiting single page for variable/group products. <a href="'.esc_url("https://bit.ly/3qWJL8q").'" target="_blank">Example» </a>'),
+            ),
+            array(
                 'id'     => 'grid_options',
                 'title'  => __('Grid Options', 'leo-product-recommendations'),
                 'type'   => 'wrapper',
                 'childs' => array(
-
                     array(
                         'id'      => 'grid_lg_items',
                         'title'   => __('Desktop Items Per Row', 'leo-product-recommendations'),

@@ -3,7 +3,7 @@
         var __ = wp.i18n.__;
 
         $('body').on('submit','form.cart', function (e) {   
-
+            
             var $form = $(this);
             var $submitButton = $form.find('button[type="submit"]');
             var data = $form.serialize();
@@ -32,7 +32,7 @@
             // recommendation products mdoal
             var $targetMdoal = $('#lpr-modal-' + dataObject.product_id);
 
-            if($targetMdoal.length) {
+            if($targetMdoal.length || $form.closest('.lpr-modal-body').length ) {
                 // add product id to button to catch it by modal.
                 $submitButton.attr('data-product_id', dataObject.product_id);
                 $submitButton.removeClass( 'added' );

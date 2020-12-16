@@ -140,6 +140,7 @@
               nonce: lc_ajax_modal.nonce,
               recommendation_items: recommendationProducts,
               layout_type: lc_ajax_modal.layout_type,
+              variable_add_to_cart: lc_ajax_modal.variable_add_to_cart
             },
           }).done(function (data) {
             $preloader.hide();
@@ -157,6 +158,12 @@
               $recommendationProductsWrapper.html(data);
             }
           });
+
+          setTimeout(() => {
+              $( '.lpr-modal .variations_form' ).each( function() {
+                  $( this ).wc_variation_form();
+              });   
+          }, 700);
         }
       }
     });

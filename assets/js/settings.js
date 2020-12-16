@@ -49,18 +49,20 @@
     showHideSettings: function () {
       // grid and slider
       if ($('#lpr-field-layout_type input[type="radio"]:checked').val() === 'grid') {
-        $('.lpr-setting-page .form-table tr').eq(3).hide();
+        $('.lpr-setting-page #lpr-field-slider_options').closest('tr').hide();
       }else if($('#lpr-field-layout_type input[type="radio"]:checked').val() === 'slider') {
-        $('.lpr-setting-page .form-table tr').eq(2).hide();
+        $('.lpr-setting-page #lpr-field-grid_options').closest('tr').hide();
       }
 
       $('#lpr-field-layout_type input[type="radio"]').on('change', function () {
+        console.log(this.value);
+
         if (this.value === 'slider') {
-          $('.lpr-setting-page .form-table tr').eq(3).slideDown();
-          $('.lpr-setting-page .form-table tr').eq(2).hide();
+          $('.lpr-setting-page #lpr-field-slider_options').closest('tr').slideDown();
+          $('.lpr-setting-page #lpr-field-grid_options').closest('tr').hide();
         } else {
-          $('.lpr-setting-page .form-table tr').eq(2).slideDown();
-          $('.lpr-setting-page .form-table tr').eq(3).hide();
+          $('.lpr-setting-page #lpr-field-grid_options').closest('tr').slideDown();
+          $('.lpr-setting-page #lpr-field-slider_options').closest('tr').hide();
         }
       });
 

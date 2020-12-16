@@ -21,13 +21,13 @@ if (!defined('ABSPATH')) {
         ?>
     </a>
 
-    <?php echo do_shortcode('[add_to_cart 
-            id="' . get_the_ID() . '" 
-            show_price = "FALSE"
-            style=""
-        ]');
-    ?>
 
-    <?php do_action('lpr_after_recommended_prodcut', get_the_ID()); ?>
+    <?php 
+    if($variable_add_to_cart) {
+        woocommerce_template_single_add_to_cart();
+    }else {
+        woocommerce_template_loop_add_to_cart();
+    }
+    do_action('lpr_after_recommended_prodcut', get_the_ID()); ?>
 </li>
 
