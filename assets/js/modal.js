@@ -96,6 +96,7 @@
   $(function () {
     // call modal
     $(document.body).on("added_to_cart", function (e, ...data) {
+      
       const [, , buttonInfo] = data;
       var button = buttonInfo[0];
 
@@ -157,13 +158,18 @@
             } else {
               $recommendationProductsWrapper.html(data);
             }
-          });
 
-          setTimeout(() => {
+            //verialbe product swatch
+            setTimeout(() => {
               $( '.lpr-modal .variations_form' ).each( function() {
                   $( this ).wc_variation_form();
               });   
-          }, 700);
+              // woodmart theme veriation swatch
+              if(woodmartThemeModule && woodmartThemeModule.swatchesVariations) {
+                woodmartThemeModule.swatchesVariations();
+              }
+            }, 700);
+          });
         }
       }
     });

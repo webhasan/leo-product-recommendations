@@ -309,7 +309,9 @@ final class Product_Recommendations {
             ));
             wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
         }
+
         $screen = get_current_screen();
+
         if ($screen->id === 'toplevel_page_lpr-settings') {
             wp_enqueue_script('spectrum', $this->get_url('assets/js/color-picker/spectrum.js'), array('jquery'), $version, true);
             wp_enqueue_style('lpr-spectrum', $this->get_url('assets/js/color-picker/spectrum.css'), array(), $version);

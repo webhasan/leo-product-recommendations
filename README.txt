@@ -144,13 +144,13 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 
 == Changelog ==
 = 1.4.0 =
-* Added option to ajax add to cart for Variable & Group recommend products. Customers don't need to go to single product page to add to cart variable/group.
+* Add option to ajax add to cart for Variable & Group recommend products. Customers don't need to go to single product page to add to cart variable/group.
 
 = 1.3.2 =
-* Bug Fixed
+* Bug Fix
 
 = 1.3.1 =
-* Added editor field for default heading
+* Add editor field for default heading
 
 = 1.2 =
 * Update compatibility
