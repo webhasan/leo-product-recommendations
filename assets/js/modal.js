@@ -165,7 +165,7 @@
                   $( this ).wc_variation_form();
               });   
               // woodmart theme veriation swatch
-              if(woodmartThemeModule && woodmartThemeModule.swatchesVariations) {
+              if(window.woodmartThemeModule && woodmartThemeModule.swatchesVariations) {
                 woodmartThemeModule.swatchesVariations();
               }
             }, 700);
