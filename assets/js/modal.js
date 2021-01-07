@@ -153,7 +153,6 @@
                 $visible_items = owl.data('owl.carousel').options.items;
                 
                 owl.data('owl.carousel').options.loop = owl.data('owl.carousel').options.loop && $total_items > $visible_items
-
                 owl.trigger("refresh.owl.carousel");
             } else {
               $recommendationProductsWrapper.html(data);

@@ -309,6 +309,21 @@ body.lpr-modal-opened {
         font-size: 14px;
         line-height: 22.5px;
 
+        /*avada theme fix*/
+        .product-details-container .fusion-price-rating {
+          justify-content: center;
+        }
+
+      .fusion-product-content a.button {
+        padding: 10px 15px;
+        background: #000;
+        color: #fff;
+      }
+
+      .quantity {
+        display: none !important;
+      }
+
         @media screen and (max-width: $md-media) {
           flex: 0 0 calc(33.333333% - 21px);
           width: calc(33.333333% - 21px);
@@ -412,6 +427,20 @@ body.lpr-modal-opened {
     ul li img {
       border: 1px solid #e6e6e6;
       margin-bottom: 22px;
+    }
+    /*avada theme fix*/
+    .crossfade-images {
+      margin-bottom: 22px !important;
+    }
+    .quantity {
+      display: none !important;
+    }
+    .fusion-product-content .star-rating {
+      display: none;
+    }
+    .fusion-product-content  button[type=submit].button {
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
   }
 
