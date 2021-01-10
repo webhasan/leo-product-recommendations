@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, __) {
   //setup cart items in localstorage to exclude from recommendation
   function lpr_cart_items() {
     $.ajax({
@@ -173,18 +173,17 @@
           });
         }
       }else {
-        var notificationText = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title').text(); //show notification for added product.
-        console.log($modal);
+        var $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
+        var notificationText = ($productHeading.length) ? `${$productHeading.text()} ${__('has been added to cart.','leo-product-recommendations')}` : __('Item has been added to cart.','leo-product-recommendations'); 
+        var topPosition = $(button).closest('.lpr-modal').find('.lpr-message').outerHeight();
+        console.log(topPosition);
 
-        $notification_bar = $modal.find('.lpr-purchase-notification');
-        console.log($notification_bar);
-
-        $notification_bar.fadeIn(100).text(`${notificationText} has been added to cart.`);
-
+        $notification_bar = $(button).closest('.lpr-modal').find('.lpr-purchase-notification'); 
+        $notification_bar.css('top', topPosition).fadeIn(300).text(notificationText);
         setTimeout(() => {
-           $notification_bar.fadeOut();
-        }, 100);
+           $notification_bar.fadeOut(600);
+        }, 1500);
       }
     });
   });
-})(jQuery);
+})(jQuery, wp.i18n.__);

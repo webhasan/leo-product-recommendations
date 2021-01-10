@@ -342,7 +342,7 @@ final class Product_Recommendations {
         $layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
 
-        wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery'), $version, true);
+        wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery','wp-i18n'), $version, true);
 
         wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
             'url'                  => admin_url('admin-ajax.php'),
@@ -359,10 +359,7 @@ final class Product_Recommendations {
         ));
         // }
 
-        if (!$this->is_pro_activated()) {
-            wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
-        }
-
+        wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
         //recommend variable and group product add to cart 
         if($this->get_setting('variable_add_to_cart')) {
             wp_enqueue_script('wc-add-to-cart-variation');

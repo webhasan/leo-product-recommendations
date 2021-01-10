@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 
 <li class="product single-lpr">
     <?php do_action('lpr_before_recommended_prodcut', get_the_ID()); ?>
-
+    
     <a href="<?php the_permalink(); ?>">
         <?php
         do_action('woocommerce_before_shop_loop_item_title');
@@ -20,7 +20,6 @@ if (!defined('ABSPATH')) {
         do_action('woocommerce_after_shop_loop_item_title');
         ?>
     </a>
-
 
     <?php 
     if($variable_add_to_cart) {
