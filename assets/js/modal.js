@@ -100,10 +100,12 @@
       const [, , buttonInfo] = data;
       var button = buttonInfo[0];
 
+      var addedProductId = $(button).data("product_id");
+
       //don't show modal inside modal
       if (!$(button).closest(".recommended-products-wrapper").length) {
-        var buttonId = $(button).data("product_id");
-        var modalId = "#lpr-modal-" + buttonId;
+        
+        var modalId = "#lpr-modal-" + addedProductId;
         var $modal = $(modalId);
 
         if ($modal.length) {
@@ -170,6 +172,18 @@
             }, 700);
           });
         }
+      }else {
+        var notificationText = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title').text(); //show notification for added product.
+        console.log($modal);
+
+        $notification_bar = $modal.find('.lpr-purchase-notification');
+        console.log($notification_bar);
+
+        $notification_bar.fadeIn(100).text(`${notificationText} has been added to cart.`);
+
+        setTimeout(() => {
+           $notification_bar.fadeOut();
+        }, 100);
       }
     });
   });

@@ -8,7 +8,6 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-
 extract($data);
 ?>
 
@@ -92,6 +91,7 @@ extract($data);
 
                 <?php do_action('lpr_end_modal_head', $product_id, $recommended_products_id); ?>
             </div>
+            <div class="lpr-purchase-notification"></div>
         </div>
         <?php do_action('lpr_after_modal_content', $product_id, $recommended_products_id); ?>
     </div>
