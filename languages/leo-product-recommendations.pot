@@ -1,15 +1,15 @@
-# Copyright (C) 2020 LeoCoder
+# Copyright (C) 2021 LeoCoder
 # This file is distributed under the same license as the Leo Product Recommendations for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Leo Product Recommendations for WooCommerce 1.3.2\n"
+"Project-Id-Version: Leo Product Recommendations for WooCommerce 1.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/leo-product-recommendations\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-12-15T11:02:04+00:00\n"
+"POT-Creation-Date: 2021-01-11T11:30:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: leo-product-recommendations\n"
@@ -69,205 +69,205 @@ msgstr ""
 msgid "Go Pro"
 msgstr ""
 
-#: includes/class-product-recommendations.php:429
+#: includes/class-product-recommendations.php:428
 msgid "Product Recommendations"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1396
+#: includes/class-product-recommendations.php:1395
 msgid "Default Heading <small>Default will use for undefined heading & <a target=\"_blank\" href=\""
 msgstr ""
 
-#: includes/class-product-recommendations.php:1402
+#: includes/class-product-recommendations.php:1401
 #: assets/js/panel.js:112
 msgid "Heading"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1404
+#: includes/class-product-recommendations.php:1403
 msgid "You may purchase following [item, items] with the %title%"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1408
+#: includes/class-product-recommendations.php:1407
 #: assets/js/panel.js:116
 msgid "Heading & Description"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1412
-msgid "If you like to use same  heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products."
+#: includes/class-product-recommendations.php:1411
+msgid "If you like to use same  heading pattern for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1417
+#: includes/class-product-recommendations.php:1416
 msgid "Variable / Group Products <br> Add To Cart"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1424
+#: includes/class-product-recommendations.php:1423
 msgid "Grid Options"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1429
+#: includes/class-product-recommendations.php:1428
 msgid "Desktop Items Per Row"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1438
+#: includes/class-product-recommendations.php:1437
 msgid "Tablet Items Per Row"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1447
+#: includes/class-product-recommendations.php:1446
 msgid "Mobile Items Per Row"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1455
+#: includes/class-product-recommendations.php:1454
 msgid "Column Gap"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1466
+#: includes/class-product-recommendations.php:1465
 msgid "Layout Type <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1473
+#: includes/class-product-recommendations.php:1472
 msgid "Slider Options <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1480
+#: includes/class-product-recommendations.php:1479
 msgid "Popup Size <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1487
+#: includes/class-product-recommendations.php:1486
 msgid "Buttons Visiblity <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1497
+#: includes/class-product-recommendations.php:1496
 msgid "Popup Color Settings <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1504
+#: includes/class-product-recommendations.php:1503
 msgid "Product Color Settings <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1511
+#: includes/class-product-recommendations.php:1510
 msgid "Custom CSS"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1513
+#: includes/class-product-recommendations.php:1512
 msgid "Write custom css to change style of modal."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1520
+#: includes/class-product-recommendations.php:1519
 msgid "Active Global Setting"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1522
+#: includes/class-product-recommendations.php:1521
 msgid "If there are no recommendations available for some products (if you don't setup from product editor), the global setting will work for those products as a fallback. This setting is also helpful if you like a bulk recommendation setup for entire shop instead of a different setup for each product."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1526
+#: includes/class-product-recommendations.php:1525
 msgid "Recommendation Options"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1531
+#: includes/class-product-recommendations.php:1530
 msgid "Categories"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1534
+#: includes/class-product-recommendations.php:1533
 msgid "Product Related Category"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1535
+#: includes/class-product-recommendations.php:1534
 msgid "Manual"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1541
+#: includes/class-product-recommendations.php:1540
 msgid "Choose Categories"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1547
+#: includes/class-product-recommendations.php:1546
 msgid "Choose Tags"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1553
+#: includes/class-product-recommendations.php:1552
 msgid "Products Filtering"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1556
+#: includes/class-product-recommendations.php:1555
 msgid "Random Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1557
+#: includes/class-product-recommendations.php:1556
 msgid "Newest Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1558
+#: includes/class-product-recommendations.php:1557
 msgid "Oldest Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1559
+#: includes/class-product-recommendations.php:1558
 msgid "Low Price Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1560
+#: includes/class-product-recommendations.php:1559
 msgid "High Price Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1561
+#: includes/class-product-recommendations.php:1560
 msgid "Best Selling Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1562
+#: includes/class-product-recommendations.php:1561
 msgid "Top Rated Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1567
+#: includes/class-product-recommendations.php:1566
 msgid "On-Sale Only"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1572
+#: includes/class-product-recommendations.php:1571
 msgid "Numbers of Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1580
+#: includes/class-product-recommendations.php:1579
 msgid "Skip"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1581
+#: includes/class-product-recommendations.php:1580
 msgid "Skip Manual Selection"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1590
+#: includes/class-product-recommendations.php:1589
 msgid "Leo Product Recommendations Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1591
+#: includes/class-product-recommendations.php:1590
 msgid "LPR Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1599
+#: includes/class-product-recommendations.php:1598
 msgid "General"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1600
+#: includes/class-product-recommendations.php:1599
 msgid "General Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1606
+#: includes/class-product-recommendations.php:1605
 msgid "Style"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1607
+#: includes/class-product-recommendations.php:1606
 msgid "Colors & Styles Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1613
+#: includes/class-product-recommendations.php:1612
 msgid "Global"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1614
+#: includes/class-product-recommendations.php:1613
 msgid "Global Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1620
+#: includes/class-product-recommendations.php:1619
 msgid "Tutorials"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1621
+#: includes/class-product-recommendations.php:1620
 msgid "Tutorial & Documentation"
 msgstr ""
 
@@ -292,24 +292,32 @@ msgstr ""
 msgid "See Details Documentation"
 msgstr ""
 
-#: templates/template-modal.php:30
+#: templates/template-modal.php:29
 msgid "has been added to your cart."
 msgstr ""
 
-#: templates/template-modal.php:31
+#: templates/template-modal.php:30
 msgid "View cart"
 msgstr ""
 
-#: templates/template-modal.php:37
+#: templates/template-modal.php:36
 msgid "Continue Shopping"
 msgstr ""
 
-#: templates/template-modal.php:41
+#: templates/template-modal.php:40
 msgid "Checkout"
 msgstr ""
 
 #: assets/js/ajax-add-to-cart.js:61
 msgid "Something went wrong"
+msgstr ""
+
+#: assets/js/modal.js:177
+msgid "has been added to cart."
+msgstr ""
+
+#: assets/js/modal.js:177
+msgid "Item has been added to cart."
 msgstr ""
 
 #: assets/js/panel.js:123

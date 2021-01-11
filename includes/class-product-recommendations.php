@@ -1408,7 +1408,7 @@ final class Product_Recommendations {
                         'type'  => 'editor',
                     ),
                 ),
-                'description' => __('If you like to use same  heading patternt for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'leo-product-recommendations'),
+                'description' => __('If you like to use same  heading pattern for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'leo-product-recommendations'),
             ),
             array(
                 'id'          => 'variable_add_to_cart',
@@ -1416,7 +1416,7 @@ final class Product_Recommendations {
                 'title'       => __('Variable / Group Products <br> Add To Cart', 'leo-product-recommendations'),
                 'label'       => __('Add To Cart'),
                 'type'        => 'checkbox',
-                'description' => __('To show <strong>Add to cart</strong> button with variation options insted <strong>Select options</strong> button for recommend Variable and Group products. It will enable customers to purchase products without visiting single page for variable/group products. <a href="'.esc_url("https://bit.ly/3qWJL8q").'" target="_blank">Example» </a>'),
+                'description' => __('To show <strong>Add to cart</strong> button with variation options instead of <strong>Select options</strong> button for recommend Variable and Group products. It will enable customers to purchase products without visiting single page for variable/group products. <a href="'.esc_url("https://bit.ly/3qWJL8q").'" target="_blank">Example» </a>'),
             ),
             array(
                 'id'     => 'grid_options',

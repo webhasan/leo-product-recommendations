@@ -4,7 +4,7 @@ Tags: product recommendations, woocommerce, woocommerce popup, woocommerce cross
 Requires at least: 5.0
 Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 1.4.0
+Stable tag: 1.5
 WC requires at least: 4.0
 WC tested up to: 4.8.0
 License: GPLv3 or later License
@@ -143,7 +143,11 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
-= 1.4.0 =
+= 1.5 =
+* Added Add To Cart flash notification.
+* Improved theme compatibility.
+
+= 1.4 =
 * Add option to ajax add to cart for Variable & Group recommend products. Customers don't need to go to single product page to add to cart variable/group.
 
 = 1.3.2 =
@@ -155,10 +159,10 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 = 1.2 =
 * Update compatibility
 
-= 1.1.0 =
+= 1.1 =
 * Update Features
 
-= 1.0.0 =
+= 1.0 =
 * Initial release
 
 == Upgrade Notice =
