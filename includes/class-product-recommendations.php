@@ -614,6 +614,10 @@ final class Product_Recommendations {
 
         $layout_type = isset($_GET['layout_type']) ? sanitize_key($_GET['layout_type']) : 'grid';
         $variable_add_to_cart = isset($_GET['variable_add_to_cart']) ? (bool) $_GET['variable_add_to_cart'] : false;
+
+        $theme_info = wp_get_theme();
+        $theme = $theme_info->parent() ? $theme_info->parent()->get('Name') : $theme_info->get('Name');
+        
         $args = array(
             'post_type'      => 'product',
             'posts_per_page' => -1,

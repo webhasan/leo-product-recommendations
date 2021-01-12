@@ -15,6 +15,9 @@ if (!defined('ABSPATH')) {
     
     <a href="<?php the_permalink(); ?>">
         <?php
+        if($theme === 'Flatsome') { // Flatsome product thumbnail
+            do_action( 'flatsome_woocommerce_shop_loop_images' );
+        }
         do_action('woocommerce_before_shop_loop_item_title');
         do_action('woocommerce_shop_loop_item_title');
         do_action('woocommerce_after_shop_loop_item_title');
