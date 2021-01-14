@@ -337,6 +337,13 @@ body.lpr-modal-opened {
       }
     }
 
+    .owl-carousel .owl-nav {
+      display: block !important;
+    }
+    .owl-carousel .owl-dots {
+      display: none !important;
+    }
+
     .recommended-products-slider .single-lpr,
     ul.recommended-products-list li.single-lpr {
       list-style: none;
@@ -347,6 +354,22 @@ body.lpr-modal-opened {
       box-sizing: border-box;
       font-size: 14px;
       line-height: 22.5px;
+      border: none !important;
+
+      &:before,
+      &:after {
+        display: none;
+      }
+
+      .add-to-cart-wrap {
+        display: none;
+      }
+
+      /* electron theme fixed */
+      .product-item__footer:before,
+      .product-item__footer:after {
+        display: none !important;
+      }
 
       /*avada theme fix*/
       .product-details-container .fusion-price-rating {
@@ -388,6 +411,7 @@ body.lpr-modal-opened {
         margin-top: 0;
         margin-bottom: 0.5em;
         font-family: Arial, Helvetica, sans-serif;
+        height: auto;
 
         padding: 10px 0;
 
@@ -417,6 +441,7 @@ body.lpr-modal-opened {
           td.label {
             padding-left: 0 !important;
             padding-right: 5px !important;
+            color: #000;
           }
           td.value {
             padding-right: 0 !important;
@@ -436,6 +461,8 @@ body.lpr-modal-opened {
         display: block;
         font-weight: 400;
         margin-bottom: 16px;
+        width: 100%;
+        float: none !important;
       }
 
       .onsale {
@@ -603,9 +630,10 @@ body.lpr-modal-opened {
       text-decoration: none;
       display: inline-block;
       font-size: 70px;
-      top: 55px;
+      top: 50%;
+      margin-top: -70px;
       opacity: 0.6;
-      transition: opacity 0.1;
+      transition: opacity 0.1s;
 
       &:before,
       &:after {
