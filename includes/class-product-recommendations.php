@@ -21,6 +21,14 @@ final class Product_Recommendations {
     static protected $instance;
 
     /**
+     * All settings page values
+     *
+     * @var array
+     * @since      1.5.1
+     */
+    static protected $settings;
+
+    /**
      * Array of all products recommendations data
      *
      * @var array
@@ -232,12 +240,12 @@ final class Product_Recommendations {
         add_action('plugin_action_links_' . plugin_basename(self::$__FILE__), function ($links) {
             $link_before = array(
                 'settings'      => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=lpr-settings')) . '">' . __('Settings', 'leo-product-recommendations') . '</a>',
-                'documentation' => '<a href="' . esc_url('https://bit.ly/39b81ey') . '" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
+                'documentation' => '<a href="' . esc_url('https://cutt.ly/KjE8lEI') . '" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
             );
 
             if (!$this->has_pro_plugin()) {
                 $link_after = array(
-                    'go-pro' => '<a href="' . esc_url('https://bit.ly/2CnIseD') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
+                    'go-pro' => '<a href="' . esc_url('https://cutt.ly/4jE8fxM') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
                 );
                 return array_merge($link_before, $links, $link_after);
             }
@@ -305,7 +313,7 @@ final class Product_Recommendations {
                 'ajax_url'  => admin_url('admin-ajax.php'),
                 'nonce'     => wp_create_nonce('lc-panel-security'),
                 'pro_image' => $this->get_url('assets/images/pro-feature.jpg'),
-                'pro_link'  => esc_url('https://bit.ly/2CnIseD'),
+                'pro_link'  => esc_url('https://cutt.ly/4jE8fxM'),
             ));
             wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
         }
@@ -1123,10 +1131,13 @@ final class Product_Recommendations {
      * Get settings
      *
      * @since      1.0.0
-     * @return  array of the plugins settings
+     * @return  array all settings values of the plugins settings.
      */
     public function get_settings() {
-        return get_option($this->get_settings_id());
+        if(is_null(self::$settings)) {
+            self::$settings = get_option($this->get_settings_id());
+        }
+        return self::$settings;
     }
 
     /**
@@ -1412,15 +1423,15 @@ final class Product_Recommendations {
                         'type'  => 'editor',
                     ),
                 ),
-                'description' => __('If you like to use same  heading pattern for all recommendations then use default heading. Use pattern <strong>%title%</strong> for product title. Pattern <strong>[item, items]</strong> is changeable. You can use <strong>[product, products]</strong> or anything that makes sense. Singular word for single recommended product and plural word for multiple recommended products.', 'leo-product-recommendations'),
+                'description' => __('If you like to use the same heading patterns for all recommendations then use the default heading. Use pattern <strong>%title%</strong> for the product title. Pattern <strong>[item, items]</strong> is changeable. You can utilize <strong>[product, products]</strong> or all that makes sense. The particular expression for a single recommended item and the plural expression for more than one supported item.', 'leo-product-recommendations'),
             ),
             array(
                 'id'          => 'variable_add_to_cart',
                 'default'     => 1,
-                'title'       => __('Variable / Group Products <br> Add To Cart', 'leo-product-recommendations'),
+                'title'       => __('Variable Products <br> Add To Cart', 'leo-product-recommendations'),
                 'label'       => __('Add To Cart'),
                 'type'        => 'checkbox',
-                'description' => __('To show <strong>Add to cart</strong> button with variation options instead of <strong>Select options</strong> button for recommend Variable and Group products. It will enable customers to purchase products without visiting single page for variable/group products. <a href="'.esc_url("https://bit.ly/3qWJL8q").'" target="_blank">Example» </a>'),
+                'description' => __('To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href="'.esc_url("https://cutt.ly/QjE8s8y").'" target="_blank">Example» </a>','leo-product-recommendations'),
             ),
             array(
                 'id'     => 'grid_options',
@@ -1469,28 +1480,28 @@ final class Product_Recommendations {
                 'title'     => __('Layout Type <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
                 'type'      => 'pro_image',
                 'image_url' => $this->get_url('assets/images/layout-type.jpg'),
-                'link'      => esc_url('https://bit.ly/2CnIseD'),
+                'link'      => esc_url('https://cutt.ly/4jE8fxM'),
             ),
             array(
                 'id'        => 'slidar_options_image',
                 'title'     => __('Slider Options <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
                 'type'      => 'pro_image',
                 'image_url' => $this->get_url('assets/images/slider-options.jpg'),
-                'link'      => esc_url('https://bit.ly/2CnIseD'),
+                'link'      => esc_url('https://cutt.ly/4jE8fxM'),
             ),
             array(
                 'id'        => 'popup_size_image',
                 'title'     => __('Popup Size <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
                 'type'      => 'pro_image',
                 'image_url' => $this->get_url('assets/images/popup-size.jpg'),
-                'link'      => esc_url('https://bit.ly/2CnIseD'),
+                'link'      => esc_url('https://cutt.ly/4jE8fxM'),
             ),
             array(
                 'id'        => 'button_visiblity_image',
                 'title'     => __('Buttons Visiblity <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
                 'type'      => 'pro_image',
                 'image_url' => $this->get_url('assets/images/button-visiblity.jpg'),
-                'link'      => esc_url('https://bit.ly/2CnIseD'),
+                'link'      => esc_url('https://cutt.ly/4jE8fxM'),
             ),
         );
 
@@ -1500,14 +1511,14 @@ final class Product_Recommendations {
                 'title'     => __('Popup Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
                 'type'      => 'pro_image',
                 'image_url' => $this->get_url('assets/images/modal-color.jpg'),
-                'link'      => esc_url('https://bit.ly/2CnIseD'),
+                'link'      => esc_url('https://cutt.ly/4jE8fxM'),
             ),
             array(
                 'id'        => 'product_color_image',
                 'title'     => __('Product Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
                 'type'      => 'pro_image',
                 'image_url' => $this->get_url('assets/images/product-color-setting.jpg'),
-                'link'      => esc_url('https://bit.ly/2CnIseD'),
+                'link'      => esc_url('https://cutt.ly/4jE8fxM'),
             ),
             array(
                 'id'          => 'custom_style',
@@ -1522,7 +1533,7 @@ final class Product_Recommendations {
                 'id'          => 'active_global_settings',
                 'title'       => __('Active Global Setting', 'leo-product-recommendations'),
                 'type'        => 'checkbox',
-                'description' => __('If there are no recommendations available for some products (if you don\'t setup from product editor), the global setting will work for those products as a fallback. This setting is also helpful if you like a bulk recommendation setup for entire shop instead of a different setup for each product.', 'leo-product-recommendations'),
+                'description' => __('If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.'),
             ),
             array(
                 'id'     => 'selection_options',
@@ -1583,7 +1594,8 @@ final class Product_Recommendations {
                 'label'       => __('Skip', 'leo-product-recommendations'),
                 'title'       => __('Skip Manual Selection', 'leo-product-recommendations'),
                 'type'        => 'checkbox',
-                'description' => 'It will skip individual recommendations what you have done from product edit page using WPR setting panel. <br> It is helpful for a quick campaign. <strong>example:</strong> On your black Friday campaign, you want to temporary skip individual product specific recommendations. And recommend some specific categories of products. Just select the categories from the above setting and check this <strong>Skip</strong> checkbox.',
+                'description' => 'It will ignore individual recommendations of what you have done from the Woo-Commerce Edit Product page using the WPR configuration panel. <br>
+                It is helpful for a quick campaign. For example: In your Black Friday campaign, you want to temporarily skip individual product-specific recommendations. And recommend certain or several categories of products. Simply select the categories of the previous configuration from above and check this <strong>Skip</strong> check box.',
             ),
         );
 

@@ -4,7 +4,7 @@ Tags: product recommendations, woocommerce, woocommerce popup, woocommerce cross
 Requires at least: 5.0
 Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 1.5.1
+Stable tag: 1.5.3
 WC requires at least: 4.4
 WC tested up to: 4.9.0
 License: GPLv3 or later License
@@ -30,7 +30,7 @@ Woo Products Recommendation does everything Ajax way to improve the shopping exp
 ## How To Setup Leo Product Recommendations ##
 [youtube https://youtu.be/zKUoISoDj94]
 
-[**See Details Documentation »**](https://bit.ly/39b81ey)
+[**See Details Documentation »**](https://cutt.ly/rjE8eiu)
 
 ## Key Features ##
 * Responsive Popup 
@@ -56,23 +56,23 @@ Including all free features, Pro version provides more features and flexibility 
 * Recommended Product Color Settings 
 * Items visibility and more
 
-[**Pro Version Details »**](https://leocoder.com/leo-product-recommendations-for-woocommerce/)
+[**Pro Version Details »**](https://cutt.ly/LjE8qAj)
 
 ## Demos ##
 Leo Product Recommendations is prefectly feet for all types of WooCommerce shop. Check example bellow: 
 
-[ 👉SMARTPHONE](https://bit.ly/2Ow8uhU)
-[ 👉ELECTRONICS](https://bit.ly/3fFySlx)
-[ 👉COMPUTER](https://bit.ly/2CakuU1)
-[ 👉SHOES](https://bit.ly/2OxkXC7)
-[ 👉FOOD](https://bit.ly/3h8CJIi)
-[ 👉CLOTHING](https://bit.ly/2DHS4AX)
-[ 👉JEWELLERY](https://bit.ly/2Zz8STo)
-[ 👉LEATHER](https://bit.ly/3fHtsqc)
-[ 👉SOFTWARE](https://bit.ly/2DRhZq4)
-[ 👉TOYS](https://bit.ly/2ZD2Oct)
-[ 👉FASHION](https://bit.ly/3h58a68)
-[ 👉SPORTS](https://bit.ly/3fEzgk7)
+[ 👉SMARTPHONE](https://cutt.ly/EjE3JbC)
+[ 👉ELECTRONICS](https://cutt.ly/RjE3CKI)
+[ 👉COMPUTER](https://cutt.ly/RjE3BE0)
+[ 👉SHOES](https://cutt.ly/UjE3N3P)
+[ 👉FOOD](https://cutt.ly/djE3M3P)
+[ 👉CLOTHING](https://cutt.ly/zjE312p)
+[ 👉JEWELLERY](https://cutt.ly/BjE30CR)
+[ 👉LEATHER](https://cutt.ly/QjE39ni)
+[ 👉SOFTWARE](https://cutt.ly/mjE33SE)
+[ 👉TOYS](https://cutt.ly/CjE380X)
+[ 👉FASHION](https://cutt.ly/EjE345n)
+[ 👉SPORTS](https://cutt.ly/7jE35lO)
 
 == Installation ==
 
@@ -143,6 +143,10 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 1.5.3 =
+* Improved performance.
+* Improved theme compatibility.
+
 = 1.5.1 =
 * Bug Fixed
 

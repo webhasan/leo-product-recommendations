@@ -8,9 +8,18 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+$tag_classes = 'product single-lpr ';
+if($theme === 'Electro') {
+    $tag_classes .= 'single-product';
+}
+
+$begning_tag = '<li class="%s">';
+$begning_tag = sprintf($begning_tag, $tag_classes);
+$endng_tag   = '</li>';
 ?>
 
-<li class="product single-lpr">
+<?php echo $begning_tag; ?>
     <?php do_action('lpr_before_recommended_prodcut', get_the_ID()); ?>
     
     <a href="<?php the_permalink(); ?>">
@@ -31,5 +40,5 @@ if (!defined('ABSPATH')) {
         woocommerce_template_loop_add_to_cart();
     }
     do_action('lpr_after_recommended_prodcut', get_the_ID()); ?>
-</li>
+<?php echo $endng_tag; ?>
 

@@ -356,6 +356,26 @@ body.lpr-modal-opened {
       line-height: 22.5px;
       border: none !important;
 
+      .mf-product-thumbnail .footer-button {
+        display: none;
+      }
+
+      .mf-product-content h2{
+        font-size: 18px;
+      }
+
+      .social-icon {
+        display: none;
+      }
+
+      .button-buynow {
+        display: none;
+      }
+
+      .product-wrap .product-add-to-cart {
+        display: none;
+      }
+
       &:before,
       &:after {
         display: none;
