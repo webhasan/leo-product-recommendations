@@ -138,7 +138,7 @@ class Ajax_Add_To_Cart {
                 /* translators: %s: Attribute name. */
                 $this->response_add_to_cart_fail(sprintf(_n('%s is a required field', '%s are required fields', count($missing_attributes), 'woocommerce'), wc_format_list_of_items($missing_attributes)));
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->response_add_to_cart_fail($e->getMessage());
         }
 

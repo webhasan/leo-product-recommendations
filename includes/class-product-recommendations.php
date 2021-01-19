@@ -1,5 +1,6 @@
 <?php
 namespace LoeCoder\Plugin\ProductRecommendations;
+use LoeCoder\Plugin\ProductRecommendations\DeactivationFeedback\Deactivation_Feedback;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -124,6 +125,12 @@ final class Product_Recommendations {
 
         $this->includes();
         $this->hooks();   
+
+        //deactivation feedback 
+        if (!class_exists(!class_exists(Deactivation_Feedback::class))) {
+			include_once($this->get_path('feedbacks/deactivation-feedback/class-deactivation-feedback.php'));
+		}
+		new Deactivation_Feedback($this->feedback_fiels());
     }
 
 
@@ -1070,6 +1077,9 @@ final class Product_Recommendations {
         return $html;
     }
 
+    /**
+     * Nonce fixe for logged out user
+     */
     public function nonce_fix($uid = 0, $action = '') {
         $nonce_actions = array('lc-ajax-modal', 'lc-add-to-cart');
         if (in_array($action, $nonce_actions)) {
@@ -1642,6 +1652,138 @@ final class Product_Recommendations {
         );
 
         return $setting_pages;
+    }
+
+
+    /**
+	 * Feedback fiels
+	 * 
+	 * @return array deactivation form field settings data
+	 */
+	public function feedback_fiels() {
+        
+		$form_data = array(
+			'plugin_name' 		=> $this->get_plugin_name(),
+			'plugin_version' 	=> $this->get_plugin_version(),
+			'plugin_slug'		=> $this->get_slug(),
+
+			'feedback_heading'  => 'Quick Feedback',
+			'form_heading'      => 'May we have a little info about why you are deactivating?',
+			'api_url' => 'http://localhost/woocommerce/wp-json/leocoder/v1/deactivation-feedback',
+
+			'fields' => array(
+				array(
+					'category' 		=> 'temporary_deactivation',
+					'reason' 	  	=> __('It\'s a temporary deactivation.'),
+					'instuction'  	=> '',
+					'input_field' 	=> '',
+					'placeholder' 	=> '',
+					'input_default' => '',
+				),
+
+				array(
+					'category' 		=> 'dont_understand',
+					'reason' 	  	=> __('I couldn\'t understand how to make it work.'),
+					'instuction'  	=> '<a href="#">Please check document and demo</a>',
+					'input_field' 	=> '',
+					'placeholder' 	=> '',
+					'input_default' => '',
+                ),
+
+                array(
+					'category' 		=> 'not_works',
+					'reason' 	  	=> __('The plugin doesn\'t work with my website or it looks bad.'),
+					'instuction'  	=> '<a href="#">Plesae conact with our support we will try fix it quickly for you</a>',
+					'input_field' 	=> '',
+					'placeholder' 	=> '',
+					'input_default' => '',
+				),
+
+				array(
+					'category' 		=> 'dont_need',
+					'reason' 	  	=> __('Plugin works nice but longer need the plugin.'),
+					'instuction'  	=> '<a href="#">Incourse us by giving nice feedback</a>',
+					'input_field' 	=> '',
+					'placeholder' 	=> '',
+					'input_default' => '',
+				),
+
+				array(
+					'category' => 'need_help',
+					'reason' 	  => __('I need some help to setup the plugin.'),
+					'instuction'  => 'Please provide your email address we will conact you soon.',
+					'input_field' => 'email',
+					'placeholder' => '',
+					'input_default' => sanitize_email($this->amdin_email()),
+				),
+
+				array(
+					'category' 		=> 'another_plugin',
+					'reason' 	  	=> __('Found better plugin.'),
+					'instuction'  	=> '',
+					'input_field' 	=> 'text',
+					'placeholder' 	=> 'Please share which plugin',
+					'input_default' => '',
+				),
+
+				array(
+					'category' 		=> 'feature_request',
+					'reason' 	  	=> __('I need specific feature that you don\'t support.'),
+					'instuction'  	=> 'Please let us know feature details we will try add it ASAP',
+					'input_field' 	=> 'textarea',
+					'placeholder' 	=> 'Require feature details',
+					'input_default' => '',
+				),
+
+				array(
+					'category' 		=> 'other',
+					'reason' 	  	=> __('Other'),
+					'instuction'  	=> '',
+					'input_field' 	=> 'textarea',
+					'placeholder' 	=> 'Please share the reason. We will try to fix / help.',
+					'input_default' => '',
+				),
+			)
+		);
+
+		return $form_data;
+    }
+
+    /**
+	 * Get plugin name
+	 * 
+	 * @since      1.6.0
+	 * @return string name of the plugin
+	 */
+
+	public function get_plugin_name() {
+		$file_info = get_file_data(self::$__FILE__, array(
+			'plugin_name' => 'Plugin Name',
+		));
+		return $file_info['plugin_name'];
+	}
+
+    /**
+	 * Get plugin version
+	 * 
+	 * @since      1.6.0
+	 * @return string version number of plugin
+	 */
+	public function get_plugin_version() {
+		$file_info = get_file_data(self::$__FILE__, array(
+			'version' => 'Version',
+		));
+		return $file_info['version'];
+	}
+
+    /**
+	 * Get admin email address
+	 * 
+	 * @return string current user email address
+	 */
+	public function amdin_email() {
+        $admin_email =  wp_get_current_user();
+        return (0 !== $admin_email->ID) ? $admin_email->data->user_email : '';
     }
 
     /**
