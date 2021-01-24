@@ -146,6 +146,17 @@
   display: flex;
   align-items: center;
   justify-content: left;
+  position: relative;
+}
+
+.lprw-submit-wrap .error {
+  color: red;
+  font-size: 10px;
+  font-weight: 500;
+  left: 0;
+  top: -19px;
+  position: absolute;
+  display: none;
 }
 
 .lprw-submit-wrap .loading {

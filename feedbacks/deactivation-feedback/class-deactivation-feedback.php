@@ -1,5 +1,5 @@
 <?php
-namespace LoeCoder\Plugin\ProductRecommendations\DeactivationFeedback;
+namespace LoeCoder\Plugin;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -7,36 +7,57 @@ if (!defined('ABSPATH')) {
 /**
  * Deactivation Feedback
  * Show feedback form to reason of deactivation plugin
- * @since      1.0.0
+ * @since      1.6
  * @author     Md Hasanuzzaman <webhasan24@gmail.com>
  */
 
-final class Deactivation_Feedback {
+class Deactivation_Feedback {
 
-
+    /**
+     * Arry of all form and other requrie data
+     *
+     * @var arr
+     */
     private $settings = [];
 
+    /**
+     * Script loaded or not. 
+     * It will check all required css and js already available.
+     *
+     * @var arr
+     */
     private static $has_scripts = false;
 
+
+    /**
+     * Class constructor, initialize everything
+     * All action passed insded it.
+     */
     public function __construct($settings) {
-        $this->settingss = $settings;
+        $this->settings = $settings;
         $this->init_feedback_form();
         $this->submit_feedback();
     }
 
+    /**
+     * Initialized popup deacitvatoin from.
+     */
     private function init_feedback_form() {
-        
-        add_action('current_screen', function () {
+        add_action('current_screen', function() {
+
             $current_screen = get_current_screen();
 
             if ($current_screen && in_array($current_screen->id, ['plugins', 'plugins-network'], true)) {
                 $this->modal_scripts();
                 add_action('admin_footer', [$this, 'add_modal']);
             }
+
         });
+
     }
 
     /**
+     * Load all require scripts
      * If used deactivation feedback  in multipule plugins
      * scripts should load only one time.
      *
@@ -46,20 +67,34 @@ final class Deactivation_Feedback {
 
         if (!self::$has_scripts) {
             add_action('admin_enqueue_scripts', function () {
-                wp_enqueue_script('lprw-deactivation-feedback-script', $this->url('script.js'), ['jquery', 'wp-i18n'], false, true);
-                wp_localize_script('lprw-deactivation-feedback-script', 'ajax_url', admin_url('admin-ajax.php'));
-                wp_localize_script('lprw-deactivation-feedback-script', 'security', wp_create_nonce('valid-feedback-submit'));
-                wp_enqueue_style('lprw-deactivation-feedback-style', $this->url('style.css'));
+                wp_enqueue_script('lprw-deactivation-feedback-script', $this->url('script.js'), ['jquery', 'wp-i18n'], $this->version('script.js'), true);
+                wp_localize_script(
+                    'lprw-deactivation-feedback-script', 
+                    'leo_defeedback_data', 
+                    [
+                        'ajax_url' =>  admin_url('admin-ajax.php'),
+                        'security' => wp_create_nonce('valid-feedback-submit')
+                    ]
+                );
+                wp_enqueue_style('lprw-deactivation-feedback-style', $this->url('style.css'), [], $this->version('style.css'));
             });
 
             self::$has_scripts = true;
         }
     }
 
+    /**
+     * Deactivation popup modal veiw.
+     */
     public function add_modal() {
         echo $this->modal();
     }
 
+    /**
+     * Deactivation Modal
+     * 
+     * @return html markup for deacivation modal.
+     */
     public function modal() {
         $settings = $this->settings;
 
@@ -124,8 +159,8 @@ final class Deactivation_Feedback {
         $modal_html .= '</section>';
 
         $modal_html .= '<footer class="lprw-feedback-modal-card-foot">';
-        $modal_html .= '<div class="lprw-submit-wrap"><button class="button button-primary">Send & Deactive</button><span class="loading" style="background-image: url(' . home_url() . '/wp-admin/images/spinner.gif)"></span></div>';
-        $modal_html .= '<a href="" class="lprw-feedback-deactivation-link">Skip & Deactive</a>';
+        $modal_html .= '<div class="lprw-submit-wrap"><span class="error">'.__('Please select a reason.','leo-product-recommendations').'</span><button class="button button-primary">'.__('Send & Deactive.','leo-product-recommendations').'</button><span class="loading" style="background-image: url(' . home_url() . '/wp-admin/images/spinner.gif)"></span></div>';
+        $modal_html .= '<a href="" class="lprw-feedback-deactivation-link">'.__('Skip & Deactive','leo-product-recommendations').'</a>';
         $modal_html .= '</footer>';
 
         $modal_html .= '</div>';
@@ -211,12 +246,24 @@ final class Deactivation_Feedback {
     }
 
     /**
+     * Script version of the plgin
+     * Verson will change based on file change time
+     *
+     * @since      1.6
+     * @param      stirng file path 
+     * @return     string of verion based on file changed time
+     */
+    public function version($file) {
+        return filemtime(plugin_dir_path(__FILE__) . $file);
+    }
+
+    /**
      * URL of the assets
      * @since      1.6
-     * @return instance of the class
+     * @return string of file url 
      */
     public function url($filte) {
         $dir_url = plugin_dir_url(__FILE__);
-        return $dir_url . '/' . $filte;
+        return $dir_url . $filte;
     }
 }

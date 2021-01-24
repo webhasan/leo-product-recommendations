@@ -11,6 +11,7 @@
                 var deactivationLink = $(this).attr('href');
                 var $modalRadio = $modal.find('label input.reason');
                 var $form = $modal.find('form');
+                var $notification = $modal.find('.lprw-feedback-modal-card-foot .error');
                 var $submitButton = $modal.find('.lprw-feedback-modal-card-foot button');
 
                 $modal.find('a.lprw-feedback-deactivation-link').attr('href',deactivationLink);
@@ -31,10 +32,16 @@
                 // submit button action
                 $submitButton.on('click', function(e) {
                     e.preventDefault();
+                    $notification.hide();
                     $form.submit();
                 });
 
-                
+                // hide error after selct reason
+                $modal.find('input[name="reason"]').on('change', function() {
+                    if(!!this.value) {
+                        $notification.hide();
+                    }
+                });
 
                 //form on submission
                 $form.on('submit', function(e) {
@@ -47,29 +54,27 @@
                     }, {});
 
                     if(!$formData.reason) {
-                        $modal.removeClass('is-active');
+                        $notification.show();
                         return false;
                     }
 
-                    
-                    //$submitButton.addClass('submiting').text(__('Deactivating...','pgfy_deactivation_plugin'));
-
+                    $submitButton.addClass('submiting').text(__('Deactivating...','pgfy_deactivation_plugin'));
                     var request =  $.ajax({
                         method: 'POST',
-                        url: ajax_url,
+                        url: leo_defeedback_data.ajax_url,
                         data: {
                             action: 'deactivation_feedback',
-                            security: security,
+                            security: leo_defeedback_data.security,
                             formData: $formData
                         }
                     })
                     
                     request.done(function() {
-                        // window.location.href = deactivationLink;
+                        window.location.href = deactivationLink;
                     });
 
                     request.fail(function() {
-                    //    window.location.href = deactivationLink;
+                        window.location.href = deactivationLink;
                     });
                 });
             }

@@ -1,1 +1,189 @@
-.lpr-setting-page .nav-tab-wrapper{margin-bottom:30px}.lpr-setting-page .form-table{background-color:#fff;margin-top:30px}.lpr-setting-page .form-table tr{border-bottom:1px solid #eee}.lpr-setting-page .form-table tr th{padding:40px 10px 40px 20px}.lpr-setting-page .form-table tr th small{font-weight:normal;opacity:.8;padding-top:5px;padding-right:20px;display:block}.lpr-setting-page .form-table tr th .badge{background:red;color:#fff;font-size:8px;font-weight:lighter;padding:3px 6px;border-radius:3px}.lpr-setting-page .form-table tr td{padding:40px 10px}.lpr-setting-page .form-table tr td img{max-width:100%;height:auto;cursor:not-allowed}.lpr-setting-page .form-table tr td .pro-link a{color:red;font-size:15px;font-weight:bold;margin-bottom:13px;display:inline-block;text-decoration:none;outline:none !important}.lpr-setting-page .form-table tr td .pro-link a:hover{text-decoration:underline}.lpr-setting-page .form-table tr .lpr-field-post_type_checkbox label,.lpr-setting-page .form-table tr .lpr-field-checkbox label,.lpr-setting-page .form-table tr .lpr-field-wrapper label,.lpr-setting-page .form-table tr .lpr-field-radio label{margin-right:15px !important}.lpr-setting-page .form-table tr .lpr-field-text input{max-width:100%;width:500px}.lpr-setting-page .form-table tr .lpr-field-heading_type label{margin-right:15px !important}.lpr-setting-page .form-table tr .lpr-field-heading_type .default_heading input{width:100%;max-width:500px;margin-top:15px}.lpr-setting-page .form-table tr .lpr-field-heading_type .default_heading_description{position:relative}.lpr-setting-page .form-table tr .lpr-field-heading_type .default_heading_description textarea{visibility:hidden}.lpr-setting-page .form-table .CodeMirror{border:1px solid #ddd}.lpr-setting-page .form-table .css-editor{width:100%;height:300px}.lpr-setting-page .form-table .sp-replacer{padding:0;border:1px solid #0071a1;border-radius:3px}.lpr-setting-page .form-table .sp-dd{padding:0 8px;height:26px;line-height:26px;float:left;font-size:10px;color:#eee}.lpr-setting-page .form-table .sp-dd:before{content:"Select Color";color:#000}.lpr-setting-page .form-table .sp-preview{height:26px;width:30px;border:none;border-right:1px solid #ddd}.lpr-field-wrapper_extend .fields-container{display:flex;flex-wrap:wrap}.lpr-field-wrapper_extend .fields-container>*{width:calc(33% - 30px);margin-right:30px;margin-bottom:20px}.lpr-field-wrapper_extend .fields-container label{display:block;width:100%;font-weight:600}.lpr-field-wrapper_extend .fields-container select{width:100%;max-width:100%}.lpr-field-wrapper_extend .fields-container input[type=number]{width:80px}.lpr-field-wrapper_extend .fields-container .child-checkbox{margin-top:30px}.lpr-field-wrapper_extend .fields-container .select2-selection__rendered{display:block !important}.lpr-field-wrapper_extend .fields-container .select2-selection__rendered li{margin-bottom:0}.lpr-field-wrapper_extend .fields-container .select2-container--default .select2-search--inline .select2-search__field{padding-left:5px;padding-right:5px;margin-top:0;margin-bottom:0}.lpr-field-wrapper_extend .fields-container .select2-container--default .select2-selection--multiple{border-radius:4px;border:1px solid #7e8993;color:#32373c}.lpr-field-wrapper .fields-container{display:flex;flex-wrap:wrap}.lpr-field-wrapper .fields-container>*{width:25%;margin-bottom:20px}.lpr-field-wrapper .fields-container label{white-space:nowrap;font-weight:500;font-size:.9em;color:#202020;display:block;width:100%}.lpr-field-wrapper .fields-container .color-selection label{padding-top:10px}.lpr-field-wrapper .fields-container input[type=number]{width:70px;margin-bottom:5px}.lpr-field-wrapper .fields-container select{margin-bottom:5px}.lpr-field-wrapper .fields-container .reset-colors{display:block;width:100%;margin-bottom:20px}.lpr-field-wrapper .fields-container .reset-colors a{color:#f1310f;font-weight:bold;font-size:.9em}.lpr-setting-page .tutorials .tutorials-wrapper{background-color:#fff;margin-top:30px;padding:40px 20px}/*# sourceMappingURL=settings.css.map */
+.lpr-setting-page .nav-tab-wrapper {
+  margin-bottom: 30px;
+}
+.lpr-setting-page .form-table {
+  background-color: #fff;
+  margin-top: 30px;
+}
+.lpr-setting-page .form-table tr {
+  border-bottom: 1px solid #eee;
+}
+.lpr-setting-page .form-table tr th {
+  padding: 40px 10px 40px 20px;
+}
+.lpr-setting-page .form-table tr th small {
+  font-weight: normal;
+  opacity: 0.8;
+  padding-top: 5px;
+  padding-right: 20px;
+  display: block;
+}
+.lpr-setting-page .form-table tr th .badge {
+  background: red;
+  color: #fff;
+  font-size: 8px;
+  font-weight: lighter;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+.lpr-setting-page .form-table tr td {
+  padding: 40px 10px;
+}
+.lpr-setting-page .form-table tr td img {
+  max-width: 100%;
+  height: auto;
+  cursor: not-allowed;
+}
+.lpr-setting-page .form-table tr td .pro-link a {
+  color: red;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 13px;
+  display: inline-block;
+  text-decoration: none;
+  outline: none !important;
+}
+.lpr-setting-page .form-table tr td .pro-link a:hover {
+  text-decoration: underline;
+}
+.lpr-setting-page .form-table tr .lpr-field-post_type_checkbox label,
+.lpr-setting-page .form-table tr .lpr-field-checkbox label,
+.lpr-setting-page .form-table tr .lpr-field-wrapper label,
+.lpr-setting-page .form-table tr .lpr-field-radio label {
+  margin-right: 15px !important;
+}
+.lpr-setting-page .form-table tr .lpr-field-text input {
+  max-width: 100%;
+  width: 500px;
+}
+.lpr-setting-page .form-table tr .lpr-field-heading_type label {
+  margin-right: 15px !important;
+}
+.lpr-setting-page .form-table tr .lpr-field-heading_type .default_heading input {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 15px;
+}
+.lpr-setting-page .form-table tr .lpr-field-heading_type .default_heading_description {
+  position: relative;
+}
+.lpr-setting-page .form-table tr .lpr-field-heading_type .default_heading_description textarea {
+  visibility: hidden;
+}
+.lpr-setting-page .form-table .CodeMirror {
+  border: 1px solid #ddd;
+}
+.lpr-setting-page .form-table .css-editor {
+  width: 100%;
+  height: 300px;
+}
+.lpr-setting-page .form-table .sp-replacer {
+  padding: 0;
+  border: 1px solid #0071a1;
+  border-radius: 3px;
+}
+.lpr-setting-page .form-table .sp-dd {
+  padding: 0 8px;
+  height: 26px;
+  line-height: 26px;
+  float: left;
+  font-size: 10px;
+  color: #eee;
+}
+.lpr-setting-page .form-table .sp-dd:before {
+  content: "Select Color";
+  color: #000;
+}
+.lpr-setting-page .form-table .sp-preview {
+  height: 26px;
+  width: 30px;
+  border: none;
+  border-right: 1px solid #ddd;
+}
+
+.lpr-field-wrapper_extend .fields-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.lpr-field-wrapper_extend .fields-container > * {
+  width: calc(33% - 30px);
+  margin-right: 30px;
+  margin-bottom: 20px;
+}
+.lpr-field-wrapper_extend .fields-container label {
+  display: block;
+  width: 100%;
+  font-weight: 600;
+}
+.lpr-field-wrapper_extend .fields-container select {
+  width: 100%;
+  max-width: 100%;
+}
+.lpr-field-wrapper_extend .fields-container input[type=number] {
+  width: 80px;
+}
+.lpr-field-wrapper_extend .fields-container .child-checkbox {
+  margin-top: 30px;
+}
+.lpr-field-wrapper_extend .fields-container .select2-selection__rendered {
+  display: block !important;
+}
+.lpr-field-wrapper_extend .fields-container .select2-selection__rendered li {
+  margin-bottom: 0;
+}
+.lpr-field-wrapper_extend .fields-container .select2-container--default .select2-search--inline .select2-search__field {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.lpr-field-wrapper_extend .fields-container .select2-container--default .select2-selection--multiple {
+  border-radius: 4px;
+  border: 1px solid #7e8993;
+  color: #32373c;
+}
+
+.lpr-field-wrapper .fields-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.lpr-field-wrapper .fields-container > * {
+  width: 25%;
+  margin-bottom: 20px;
+}
+.lpr-field-wrapper .fields-container label {
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 0.9em;
+  color: #202020;
+  display: block;
+  width: 100%;
+}
+.lpr-field-wrapper .fields-container .color-selection label {
+  padding-top: 10px;
+}
+.lpr-field-wrapper .fields-container input[type=number] {
+  width: 70px;
+  margin-bottom: 5px;
+}
+.lpr-field-wrapper .fields-container select {
+  margin-bottom: 5px;
+}
+.lpr-field-wrapper .fields-container .reset-colors {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.lpr-field-wrapper .fields-container .reset-colors a {
+  color: #f1310f;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.lpr-setting-page .tutorials .tutorials-wrapper {
+  background-color: #fff;
+  margin-top: 30px;
+  padding: 40px 20px;
+}
+
+/*# sourceMappingURL=settings.css.map */

@@ -1,6 +1,6 @@
 <?php
 namespace LoeCoder\Plugin\ProductRecommendations;
-use LoeCoder\Plugin\ProductRecommendations\DeactivationFeedback\Deactivation_Feedback;
+use LoeCoder\Plugin\Deactivation_Feedback;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -127,10 +127,7 @@ final class Product_Recommendations {
         $this->hooks();   
 
         //deactivation feedback 
-        if (!class_exists(!class_exists(Deactivation_Feedback::class))) {
-			include_once($this->get_path('feedbacks/deactivation-feedback/class-deactivation-feedback.php'));
-		}
-		new Deactivation_Feedback($this->feedback_fiels());
+        $this->deactivation_feedback();
     }
 
 
@@ -1654,6 +1651,20 @@ final class Product_Recommendations {
         return $setting_pages;
     }
 
+    /**
+	 * Feedback fiels
+	 * 
+	 * @return array deactivation form field settings data
+	 */
+    public function deactivation_feedback() {
+        if(is_admin()) {
+            if (!class_exists(!class_exists(Deactivation_Feedback::class))) {
+                include_once($this->get_path('feedbacks/deactivation-feedback/class-deactivation-feedback.php'));
+            }
+            new Deactivation_Feedback($this->feedback_fiels());
+        }
+    }
+
 
     /**
 	 * Feedback fiels
@@ -1667,14 +1678,14 @@ final class Product_Recommendations {
 			'plugin_version' 	=> $this->get_plugin_version(),
 			'plugin_slug'		=> $this->get_slug(),
 
-			'feedback_heading'  => 'Quick Feedback',
-			'form_heading'      => 'May we have a little info about why you are deactivating?',
+			'feedback_heading'  => __('Quick Feedback','leo-product-recommendations'),
+			'form_heading'      => __('May we have a little info about why you are deactivating?','leo-product-recommendations'),
 			'api_url' => 'http://localhost/woocommerce/wp-json/leocoder/v1/deactivation-feedback',
 
 			'fields' => array(
 				array(
 					'category' 		=> 'temporary_deactivation',
-					'reason' 	  	=> __('It\'s a temporary deactivation.'),
+					'reason' 	  	=> __('It\'s a temporary deactivation.','leo-product-recommendations','leo-product-recommendations'),
 					'instuction'  	=> '',
 					'input_field' 	=> '',
 					'placeholder' 	=> '',
@@ -1683,8 +1694,8 @@ final class Product_Recommendations {
 
 				array(
 					'category' 		=> 'dont_understand',
-					'reason' 	  	=> __('I couldn\'t understand how to make it work.'),
-					'instuction'  	=> '<a href="#">Please check document and demo</a>',
+					'reason' 	  	=> __('I couldn\'t understand how to make it work.','leo-product-recommendations'),
+					'instuction'  	=> '<a href="https://cutt.ly/rjE8eiu" target="_blank">'.__('Please check details documentations »','leo-product-recommendations').'</a>',
 					'input_field' 	=> '',
 					'placeholder' 	=> '',
 					'input_default' => '',
@@ -1692,8 +1703,8 @@ final class Product_Recommendations {
 
                 array(
 					'category' 		=> 'not_works',
-					'reason' 	  	=> __('The plugin doesn\'t work with my website or it looks bad.'),
-					'instuction'  	=> '<a href="#">Plesae conact with our support we will try fix it quickly for you</a>',
+					'reason' 	  	=> __('The plugin doesn\'t work with my website or it looks bad.','leo-product-recommendations'),
+					'instuction'  	=> '<a href="https://cutt.ly/UjXivGe" target="_blank">'.__('Plesae contact with our support we will try fix it quickly for you  »','leo-product-recommendations').'</a>',
 					'input_field' 	=> '',
 					'placeholder' 	=> '',
 					'input_default' => '',
@@ -1701,8 +1712,8 @@ final class Product_Recommendations {
 
 				array(
 					'category' 		=> 'dont_need',
-					'reason' 	  	=> __('Plugin works nice but longer need the plugin.'),
-					'instuction'  	=> '<a href="#">Incourse us by giving nice feedback</a>',
+					'reason' 	  	=> __('Plugin works nice but longer need the plugin.','leo-product-recommendations'),
+					'instuction'  	=> '<a href="https://cutt.ly/ZjXi7q8" target="_blank">'.__('Please incourse us by giving nice feedback  »','leo-product-recommendations').'</a>',
 					'input_field' 	=> '',
 					'placeholder' 	=> '',
 					'input_default' => '',
@@ -1710,8 +1721,8 @@ final class Product_Recommendations {
 
 				array(
 					'category' => 'need_help',
-					'reason' 	  => __('I need some help to setup the plugin.'),
-					'instuction'  => 'Please provide your email address we will conact you soon.',
+					'reason' 	  => __('I need some help to setup the plugin.','leo-product-recommendations'),
+					'instuction'  => __('Please provide your email address we will conact you soon.','leo-product-recommendations'),
 					'input_field' => 'email',
 					'placeholder' => '',
 					'input_default' => sanitize_email($this->amdin_email()),
@@ -1719,28 +1730,28 @@ final class Product_Recommendations {
 
 				array(
 					'category' 		=> 'another_plugin',
-					'reason' 	  	=> __('Found better plugin.'),
+					'reason' 	  	=> __('Found better plugin.','leo-product-recommendations'),
 					'instuction'  	=> '',
 					'input_field' 	=> 'text',
-					'placeholder' 	=> 'Please share which plugin',
+					'placeholder' 	=> __('Please share which plugin','leo-product-recommendations'),
 					'input_default' => '',
 				),
 
 				array(
 					'category' 		=> 'feature_request',
-					'reason' 	  	=> __('I need specific feature that you don\'t support.'),
-					'instuction'  	=> 'Please let us know feature details we will try add it ASAP',
+					'reason' 	  	=> __('I need specific feature that you don\'t support.','leo-product-recommendations'),
+					'instuction'  	=> __('Please let us know feature details we will try add it ASAP','leo-product-recommendations'),
 					'input_field' 	=> 'textarea',
-					'placeholder' 	=> 'Require feature details',
+					'placeholder' 	=> __('Require feature details','leo-product-recommendations'),
 					'input_default' => '',
 				),
 
 				array(
 					'category' 		=> 'other',
-					'reason' 	  	=> __('Other'),
+					'reason' 	  	=> __('Other','leo-product-recommendations'),
 					'instuction'  	=> '',
 					'input_field' 	=> 'textarea',
-					'placeholder' 	=> 'Please share the reason. We will try to fix / help.',
+					'placeholder' 	=> __('Please share the reason. We will try to fix / help you.','leo-product-recommendations'),
 					'input_default' => '',
 				),
 			)
@@ -1761,7 +1772,26 @@ final class Product_Recommendations {
 			'plugin_name' => 'Plugin Name',
 		));
 		return $file_info['plugin_name'];
-	}
+    }
+    
+    /**
+     * Get the current screen object
+     *
+     * @since 1.6.0
+     *
+     * @global WP_Screen $current_screen WordPress current screen object.
+     *
+     * @return WP_Screen|null Current screen object or null when screen not defined.
+     */
+    function get_current_screen() {
+        global $current_screen;
+
+        if ( ! isset( $current_screen ) ) {
+            return null;
+        }
+
+        return $current_screen;
+    }
 
     /**
 	 * Get plugin version
