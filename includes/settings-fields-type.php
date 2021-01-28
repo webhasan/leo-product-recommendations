@@ -172,6 +172,11 @@ function wrapper($field, $base, $setting_id) {
 
             <?php endforeach; ?>
         </div>
+
+        <?php if (isset($help)): ?>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <?php endif; ?>
+        
         <?php if (isset($description)) : ?>
             <p class="description"><?php echo wp_kses_post($description); ?></p>
         <?php endif; ?>
@@ -345,6 +350,11 @@ function wrapper_extend($field, $base, $setting_id) {
 
             <?php endforeach; ?>
         </div>
+
+        <?php if (isset($help)): ?>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <?php endif; ?>
+
         <?php if (isset($description)) : ?>
             <p class="description"><?php echo wp_kses_post($description); ?></p>
         <?php endif; ?>
@@ -383,6 +393,10 @@ function radio($field, $base, $setting_id) {
         <?php endforeach; ?>
     </fieldset>
 
+    <?php if (isset($help)): ?>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+    <?php endif; ?>
+
     <?php if (isset($description)) : ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
     <?php endif;
@@ -399,7 +413,6 @@ function checkbox($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
     ?>
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
-    <a href="//www.youtube.com/watch?v=XSGBVzeBUbk" class="help" data-lity><?php _e('HELP'); ?></a>
         <label>
             <?php 
             $checked = !empty($value) ? ' checked' : '';
@@ -412,6 +425,11 @@ function checkbox($field, $base, $setting_id) {
             )
             ?>
         </label>
+
+        <?php if (isset($help)): ?>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <?php endif; ?>
+        
         <?php if (isset($description)) : ?>
             <p class="description"><?php echo wp_kses_post($description); ?></p>
         <?php endif; ?>
@@ -434,6 +452,10 @@ function text($field, $base, $setting_id) {
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <input type="text" name="<?php echo $field_name; ?>" value="<?php echo $value; ?>">
     </fieldset>
+
+    <?php if (isset($help)): ?>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+    <?php endif; ?>
 
     <?php if (isset($description)) : ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
@@ -463,6 +485,10 @@ function info($field, $baser, $setting_id) {
         <?php endif; ?>
     </fieldset>
 
+    <?php if (isset($help)): ?>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+    <?php endif; ?>
+
     <?php if (isset($description)) : ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
     <?php endif;
@@ -489,6 +515,10 @@ function css($field, $base, $setting_id) {
         ?>
     </fieldset>
 
+    <?php if (isset($help)): ?>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+    <?php endif; ?>
+
     <?php if (isset($description)) : ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
     <?php endif;
@@ -509,6 +539,10 @@ function pro_image($field, $base, $setting_id) {
     <div class="pro-link"><a href="<?php echo esc_url($link); ?>" target="_blank"><?php _e('Get Pro Version »'); ?></a></div>
     <div class="field-image"><img src="<?php echo esc_url($image_url); ?>" alt=""></div>
     </fieldset>
+
+    <?php if (isset($help)): ?>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+    <?php endif; ?>
 
     <?php if (isset($description)): ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
