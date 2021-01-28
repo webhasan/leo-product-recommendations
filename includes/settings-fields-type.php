@@ -399,6 +399,7 @@ function checkbox($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
     ?>
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+    <a href="//www.youtube.com/watch?v=XSGBVzeBUbk" class="help" data-lity><?php _e('HELP'); ?></a>
         <label>
             <?php 
             $checked = !empty($value) ? ' checked' : '';
@@ -493,8 +494,6 @@ function css($field, $base, $setting_id) {
     <?php endif;
 }
 
-
-
 /**
  * Image
  *
@@ -534,41 +533,46 @@ function heading_selection($field, $base, $setting_id) {
         <?php foreach ($childs as $heading_type):
         $checked = ($value === $heading_type['id']) ? ' checked ' : '';
         ?>
-	            <label>
-	                <input type="radio" <?php echo $checked; ?> name="<?php echo $field_name; ?>" value="<?php echo $heading_type['id']; ?>">
-	                <?php echo $heading_type['title']; ?>
-	            </label>
-	        <?php endforeach;?>
+            <label>
+                <input type="radio" <?php echo $checked; ?> name="<?php echo $field_name; ?>" value="<?php echo $heading_type['id']; ?>">
+                <?php echo $heading_type['title']; ?>
+            </label>
+	    <?php endforeach;?>
 
         <div class="heading-field">
+            
             <?php foreach ($childs as $heading_type):
-        $sub_field_name  = $setting_id . '[' . $heading_type['id'] . ']';
-        $sub_field_value = $base->get_setting($heading_type['id']);
-        $display         = ($value === $heading_type['id']) ? 'block' : 'none';
+                $sub_field_name  = $setting_id . '[' . $heading_type['id'] . ']';
+                $sub_field_value = $base->get_setting($heading_type['id']);
+                $display         = ($value === $heading_type['id']) ? 'block' : 'none';
 
-        if ($heading_type['type'] === 'text'):
-            $sub_field_value = ($value === 'default_heading') ? $sub_field_value : '';
-            printf(
-                '<div style="display:%1$s" class="%2$s"><input type="text" name="%3$s" value="%4$s"/></div>',
-                $display,
-                $heading_type['id'],
-                $sub_field_name,
-                $sub_field_value
-            );
+                if ($heading_type['type'] === 'text'):
+                    $sub_field_value = ($value === 'default_heading') ? $sub_field_value : '';
+                    printf(
+                        '<div style="display:%1$s" class="%2$s"><input type="text" name="%3$s" value="%4$s"/></div>',
+                        $display,
+                        $heading_type['id'],
+                        $sub_field_name,
+                        $sub_field_value
+                    );
 
-        elseif ($heading_type['type'] === 'editor'):
-            $sub_field_value = ($value === 'default_heading_description') ? $sub_field_value : '';
-            printf(
-                '<div style="display:%1$s" class="%2$s"><textarea id="default-heaidng-editor" name="%3$s">%4$s</textarea></div>',
-                $display,
-                $heading_type['id'],
-                $sub_field_name,
-                $sub_field_value
-            );
-        endif;
-    endforeach;?>
+                elseif ($heading_type['type'] === 'editor'):
+                    $sub_field_value = ($value === 'default_heading_description') ? $sub_field_value : '';
+                    printf(
+                        '<div style="display:%1$s" class="%2$s"><textarea id="default-heaidng-editor" name="%3$s">%4$s</textarea></div>',
+                        $display,
+                        $heading_type['id'],
+                        $sub_field_name,
+                        $sub_field_value
+                    );
+                endif;
+            endforeach;?>
         </div>
     </fieldset>
+            
+    <?php if (isset($help)): ?>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+    <?php endif; ?>
 
     <?php if (isset($description)): ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>

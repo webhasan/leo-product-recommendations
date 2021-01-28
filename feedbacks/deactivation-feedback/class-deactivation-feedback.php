@@ -159,7 +159,7 @@ class Deactivation_Feedback {
         $modal_html .= '</section>';
 
         $modal_html .= '<footer class="lprw-feedback-modal-card-foot">';
-        $modal_html .= '<div class="lprw-submit-wrap"><span class="error">'.__('Please select a reason.','leo-product-recommendations').'</span><button class="button button-primary">'.__('Send & Deactive.','leo-product-recommendations').'</button><span class="loading" style="background-image: url(' . home_url() . '/wp-admin/images/spinner.gif)"></span></div>';
+        $modal_html .= '<div class="lprw-submit-wrap"><span class="error">'.__('Please select a reason.','leo-product-recommendations').'</span><button class="button button-primary">'.__('Send & Deactive','leo-product-recommendations').'</button><span class="loading" style="background-image: url(' . home_url() . '/wp-admin/images/spinner.gif)"></span></div>';
         $modal_html .= '<a href="" class="lprw-feedback-deactivation-link">'.__('Skip & Deactive','leo-product-recommendations').'</a>';
         $modal_html .= '</footer>';
 
@@ -169,10 +169,16 @@ class Deactivation_Feedback {
         return $modal_html;
     }
 
+    /**
+     * Create Ajax Handler for submit feedback
+     */
     public function submit_feedback() {
-        add_action('wp_ajax_deactivation_feedback', [$this, 'deactivation_feedback']);
+        add_action('wp_ajax_deactivation_feedback_'.$this->settings['plugin_slug'], [$this, 'deactivation_feedback']);
     }
 
+    /**
+     * Submit feedback data to remote server
+     */
     public function deactivation_feedback() {
 
         if ((!isset($_POST['formData']) || !wp_verify_nonce($_POST['security'], 'valid-feedback-submit'))) {
