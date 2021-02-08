@@ -130,7 +130,7 @@
 
           // return if all recommendation product are already in cart
           if (!recommendationProducts.length) return;
-          $('body, quickview-wrapper .closeqv, .yith-quick-view-overlay, .mfp-wrap').click(); // to hide existing popup, quick view, etc
+          $('body, .quickview-wrapper .closeqv, .yith-quick-view-overlay, .mfp-wrap').click(); // to hide existing popup, quick view, etc
           $modal.lprModal();
           $preloader.show();
 
