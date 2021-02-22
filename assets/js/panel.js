@@ -367,6 +367,7 @@ import classNames from "classnames";
                 }
               />
             </p>
+            <p><a href="https://cutt.ly/Lk3hveN" target="_blank">{__('Documentation»', 'leo-product-recommendations')}</a></p>
           </div>
 
           <div className="pr-field">
@@ -391,6 +392,7 @@ import classNames from "classnames";
                 </label>
               ))}
             </div>
+            <p><a href="https://cutt.ly/pk3hBPH" target="_blank">{__('Documentation»', 'leo-product-recommendations')}</a></p>
           </div>
           {initialData.demoMethod === 'manual-selection' &&      
             <div className="pr-field">

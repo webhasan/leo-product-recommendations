@@ -174,11 +174,15 @@ function wrapper($field, $base, $setting_id) {
         </div>
 
         <?php if (isset($help)): ?>
-            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
         <?php endif; ?>
         
         <?php if (isset($description)) : ?>
             <p class="description"><?php echo wp_kses_post($description); ?></p>
+        <?php endif; ?>
+
+        <?php if (isset($doc)): ?>
+            <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
         <?php endif; ?>
     </fieldset>
     <?php
@@ -352,11 +356,15 @@ function wrapper_extend($field, $base, $setting_id) {
         </div>
 
         <?php if (isset($help)): ?>
-            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
         <?php endif; ?>
 
         <?php if (isset($description)) : ?>
             <p class="description"><?php echo wp_kses_post($description); ?></p>
+        <?php endif; ?>
+
+        <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
         <?php endif; ?>
     </fieldset>
 <?php
@@ -394,11 +402,15 @@ function radio($field, $base, $setting_id) {
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -427,11 +439,15 @@ function checkbox($field, $base, $setting_id) {
         </label>
 
         <?php if (isset($help)): ?>
-            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
         <?php endif; ?>
         
         <?php if (isset($description)) : ?>
             <p class="description"><?php echo wp_kses_post($description); ?></p>
+        <?php endif; ?>
+
+        <?php if (isset($doc)): ?>
+            <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
         <?php endif; ?>
     </fieldset>
     <?php
@@ -454,11 +470,15 @@ function text($field, $base, $setting_id) {
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif;?>
+
+    <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -486,11 +506,15 @@ function info($field, $baser, $setting_id) {
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -516,11 +540,15 @@ function css($field, $base, $setting_id) {
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -541,11 +569,15 @@ function pro_image($field, $base, $setting_id) {
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)): ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -605,10 +637,14 @@ function heading_selection($field, $base, $setting_id) {
     </fieldset>
             
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)): ?>
         <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }

@@ -1420,7 +1420,7 @@ final class Product_Recommendations {
 		$general_settings_fields = array(
 			array(
 				'id' => 'heading_type',
-				'title' => __('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="' . home_url() . '/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings">globl setting</a></small>', 'leo-product-recommendations'),
+				'title' => __('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="' . home_url() . '/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings">Globl Setting</a></small>', 'leo-product-recommendations'),
 				'type' => 'heading_selection',
 				'default' => 'default_heading',
 				'childs' => array(
@@ -1437,6 +1437,7 @@ final class Product_Recommendations {
 					),
 				),
 				'description' => __('If you like to use the same heading patterns for all recommendations then use the default heading. Use pattern <strong>%title%</strong> for the product title. Pattern <strong>[item, items]</strong> is changeable. You can utilize <strong>[product, products]</strong> or all that makes sense. The particular expression for a single recommended item and the plural expression for more than one supported item.', 'leo-product-recommendations'),
+				'doc' 		  => 'https://cutt.ly/Ek3t5AJ',
 			),
 			array(
 				'id' => 'variable_add_to_cart',
@@ -1445,6 +1446,7 @@ final class Product_Recommendations {
 				'label' => __('Add To Cart'),
 				'type' => 'checkbox',
 				'description' => __('To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href="' . esc_url("https://cutt.ly/QjE8s8y") . '" target="_blank">Example» </a>', 'leo-product-recommendations'),
+				'doc'         => 'https://cutt.ly/QjE8s8y',
 			),
 			array(
 				'id' => 'grid_options',
@@ -1487,6 +1489,7 @@ final class Product_Recommendations {
 						'default' => 20,
 					),
 				),
+				'doc' => 'https://cutt.ly/Vk3a9kC'
 			),
 			array(
 				'id' => 'layout_image',
@@ -1538,6 +1541,7 @@ final class Product_Recommendations {
 				'title' => __('Custom CSS', 'leo-product-recommendations'),
 				'type' => 'css',
 				'description' => __('Write custom css to change style of modal.', 'leo-product-recommendations'),
+				'doc' 		  => 'https://cutt.ly/Uk3sC4R',
 			),
 		);
 
@@ -1547,6 +1551,7 @@ final class Product_Recommendations {
 				'title' => __('Active Global Setting', 'leo-product-recommendations'),
 				'type' => 'checkbox',
 				'description' => __('If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.'),
+				'doc' 		  => 'https://cutt.ly/Rk3dWPA',
 			),
 			array(
 				'id' => 'selection_options',
@@ -1578,37 +1583,39 @@ final class Product_Recommendations {
 					array(
 						'id' => 'global_filtering',
 						'title' => __('Products Filtering', 'leo-product-recommendations'),
-						'type' => 'select',
+						'type' 	=> 'select',
 						'options' => array(
-							'rand' => __('Random Products', 'leo-product-recommendations'),
-							'newest' => __('Newest Products', 'leo-product-recommendations'),
-							'oldest' => __('Oldest Products', 'leo-product-recommendations'),
-							'lowprice' => __('Low Price Products', 'leo-product-recommendations'),
-							'highprice' => __('High Price Products', 'leo-product-recommendations'),
+							'rand' 		 => __('Random Products', 'leo-product-recommendations'),
+							'newest' 	 => __('Newest Products', 'leo-product-recommendations'),
+							'oldest' 	 => __('Oldest Products', 'leo-product-recommendations'),
+							'lowprice' 	 => __('Low Price Products', 'leo-product-recommendations'),
+							'highprice'  => __('High Price Products', 'leo-product-recommendations'),
 							'popularity' => __('Best Selling Products', 'leo-product-recommendations'),
-							'rating' => __('Top Rated Products', 'leo-product-recommendations'),
+							'rating' 	 => __('Top Rated Products', 'leo-product-recommendations'),
 						),
 					),
 					array(
-						'id' => 'global_on_sale',
+						'id' 	=> 'global_on_sale',
 						'title' => __('On-Sale Only', 'leo-product-recommendations'),
-						'type' => 'checkbox',
+						'type' 	=> 'checkbox',
 					),
 					array(
-						'id' => 'global_products_number',
-						'title' => __('Numbers of Products', 'leo-product-recommendations'),
-						'type' => 'number',
+						'id' 	  => 'global_products_number',
+						'title'   => __('Numbers of Products', 'leo-product-recommendations'),
+						'type' 	  => 'number',
 						'default' => 12,
 					),
 				),
+				'doc' => 'https://cutt.ly/sk3d7sE',
 			),
 			array(
 				'id' => 'disable_global_override',
 				'label' => __('Skip', 'leo-product-recommendations'),
 				'title' => __('Skip Manual Selection', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => 'It will ignore individual recommendations of what you have done from the Woo-Commerce Edit Product page using the WPR configuration panel. <br>
-                It is helpful for a quick campaign. For example: In your Black Friday campaign, you want to temporarily skip individual product-specific recommendations. And recommend certain or several categories of products. Simply select the categories of the previous configuration from above and check this <strong>Skip</strong> check box.',
+				'description' => __('It will ignore individual recommendations of what you have done from the Woo-Commerce Edit Product page using the WPR configuration panel. <br>
+                It is helpful for a quick campaign. For example: In your Black Friday campaign, you want to temporarily skip individual product-specific recommendations. And recommend certain or several categories of products. Simply select the categories of the previous configuration from above and check this <strong>Skip</strong> check box.','leo-product-recommendations'),
+				'doc' => 'https://cutt.ly/zk3fi4g',
 			),
 		);
 
