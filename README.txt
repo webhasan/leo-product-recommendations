@@ -4,9 +4,9 @@ Tags: product recommendations, woocommerce, woocommerce popup, woocommerce cross
 Requires at least: 5.0
 Tested up to: 5.6.1
 Requires PHP: 7.0
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 WC requires at least: 4.5
-WC tested up to: 4.9.2
+WC tested up to: 5.0
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -143,6 +143,9 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 1.7.0 =
+* Improved plugin documentation
+
 = 1.6.1 =
 * Fix for Safira theme quick view 
 
