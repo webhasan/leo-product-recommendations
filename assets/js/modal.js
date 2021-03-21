@@ -159,6 +159,11 @@
               $recommendationProductsWrapper.html(data);
             }
 
+            setTimeout(() =>{
+              //mesasge animation
+              $modal.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
+            }, 200);
+
             //verialbe product swatch
             setTimeout(() => {
               $( '.lpr-modal .variations_form' ).each( function() {
@@ -168,6 +173,9 @@
               if(window.woodmartThemeModule && woodmartThemeModule.swatchesVariations) {
                 woodmartThemeModule.swatchesVariations();
               }
+
+              $modal.find('.modal-heading').addClass('lpr__animated animate__lpr_headShake');
+              $modal.find('.modal-heading-article').addClass('lpr__animated animate__lpr_headShake');
             }, 700);
           });
         }
@@ -175,7 +183,6 @@
         var $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
         var notificationText = ($productHeading.length) ? `${$productHeading.text()} ${__('has been added to cart.','leo-product-recommendations')}` : __('Item has been added to cart.','leo-product-recommendations'); 
         var topPosition = $(button).closest('.lpr-modal').find('.lpr-message').outerHeight();
-        console.log(topPosition);
 
         $notification_bar = $(button).closest('.lpr-modal').find('.lpr-purchase-notification'); 
         $notification_bar.css('top', topPosition).fadeIn(300).text(notificationText);
