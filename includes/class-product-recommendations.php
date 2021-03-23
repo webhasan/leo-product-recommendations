@@ -312,6 +312,7 @@ final class Product_Recommendations {
 		wp_enqueue_editor();
 		if (!$this->is_pro_activated()) {
 			wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
+			wp_set_script_translations( 'selection-panel-script', 'leo-product-recommendations' );
 			wp_localize_script('selection-panel-script', 'lc_pr_panel_data', array(
 				'ajax_url' => admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('lc-panel-security'),
@@ -361,6 +362,7 @@ final class Product_Recommendations {
 		$layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
 		wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery', 'wp-i18n'), $version, true);
+		wp_set_script_translations( 'lpr-modal', 'leo-product-recommendations' );
 
 		wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
 			'url' => admin_url('admin-ajax.php'),
@@ -371,6 +373,7 @@ final class Product_Recommendations {
 
 		// if (is_product()) { // disabled condition so that it work for quick view
 		wp_enqueue_script('lpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), array('jquery', 'wp-i18n'), $version, true);
+		wp_set_script_translations( 'lpr-ajax-add-to-cart', 'leo-product-recommendations' );
 		wp_localize_script('lpr-ajax-add-to-cart', 'lc_ajax', array(
 			'url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('lc-add-to-cart'),
