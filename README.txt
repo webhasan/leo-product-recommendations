@@ -110,6 +110,10 @@ If you are unable to install the plugin from your WordPress dashboard you can in
 <sub>Note: After activating the plugin it will automatically enable “Enable AJAX add to cart buttons on archives” setting and disable “Redirect to the cart page after successful addition” setting. It is required setting to work the plugin properly.</sub>
 
 == Frequently Asked Questions ==
+= How to translate it to another language =
+The plugin is completely translation-ready for any language. You need to use **Loco Translate** pluign.
+[**More Details Documentation »**](https://leocoder.com/docs/woocommerce-product-recommendations/translation/)
+
 = Does it work for product archive single and product single page? =
 Yes, it works perfectly for a single product page and product archive page.
 
