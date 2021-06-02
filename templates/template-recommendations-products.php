@@ -27,11 +27,24 @@ $endng_tag   = '</li>';
         if($theme === 'Flatsome') { // Flatsome product thumbnail
             do_action( 'flatsome_woocommerce_shop_loop_images' );
         }
+
+        // Fixgin for Medibazar theme
+        if($theme === 'Medibazar') {
+            medibazar_shop_thumbnail();
+        }
+
         do_action('woocommerce_before_shop_loop_item_title');
         do_action('woocommerce_shop_loop_item_title');
         do_action('woocommerce_after_shop_loop_item_title');
         ?>
     </a>
+
+    <?php 
+    // Fixgin for Sneaker & Safira theme
+        if($theme === 'Sneaker' || $theme == 'Safira') {
+            woocommerce_template_single_price();
+        }
+    ?>
 
     <?php 
     if($variable_add_to_cart) {
