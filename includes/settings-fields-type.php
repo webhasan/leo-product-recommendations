@@ -648,3 +648,40 @@ function heading_selection($field, $base, $setting_id) {
         <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
+
+/**
+ * Page Recommendations
+ *
+ * @since 1.8.0
+ */
+function page_recommendations($field, $base, $setting_id) {
+
+        extract($field);
+
+        $value = $base->get_setting($id);
+        if(!empty($value)) {
+            $value = array_values($value);
+        }
+
+        if(!$value) {
+            $value = $default;
+        }
+
+        $field_name = $setting_id . '[' . $id . ']';
+    ?>
+    <fieldset class="lpr-field-heading_type" id="lpr-field-<?php echo $id; ?>" data-value='<?php echo json_encode($value); ?>'>
+        
+    </fieldset>
+
+    <?php if (isset($help)): ?>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+    <?php endif; ?>
+
+    <?php if (isset($description)): ?>
+        <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+    <?php endif;  
+}

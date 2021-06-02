@@ -1622,6 +1622,54 @@ final class Product_Recommendations {
 			),
 		);
 
+		$page_recommendations = array(
+			array(
+				'id' => 'page_recommendations',
+				'title' => 'Add Page Recommendations',
+				'button_text' => 'Add New+',
+				'default' => array(),
+				'type' => 'page_recommendations',
+				'recommendations' => array(
+					array(
+						'locations' => array(
+							array(
+								array(
+									'param' => 'post_type',
+									'operator' => '==',
+									'value' => 'page',
+								),
+								array(
+									'param' => 'page',
+									'operator' => '!=',
+									'value' => '6',
+								),
+							),
+						),
+						'heading' => 'This is heaidng for recommendations',
+						'products' => array(10,13,15,19)
+					),
+					array(
+						'locations' => array(
+							array(
+								array(
+									'param' => 'post_type',
+									'operator' => '==',
+									'value' => 'page',
+								),
+								array(
+									'param' => 'page',
+									'operator' => '!=',
+									'value' => '6',
+								),
+							),
+						),
+						'heading' => 'This is heaidng for recommendations',
+						'products' => array(10,13,15,19)
+					),
+				)
+			)
+		);
+
 		$setting_pages = array(
 			array(
 				'id' => $this->get_settings_id(),
@@ -1651,6 +1699,13 @@ final class Product_Recommendations {
 						'tab_title' => __('Global', 'leo-product-recommendations'),
 						'title' => __('Global Settings', 'leo-product-recommendations'),
 						'fields' => $global_settings_fields,
+					),
+
+					array(
+						'id' => 'lpr-page-recommendations',
+						'tab_title' => __('Pages Recommendations', 'leo-product-recommendations'),
+						'title' => __('Recommendations In Pages', 'leo-product-recommendations'),
+						'fields' => $page_recommendations,
 					),
 
 					array(

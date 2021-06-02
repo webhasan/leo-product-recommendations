@@ -1,4 +1,5 @@
-(function ($) {
+import PageRecommendations from './PageRecommendations';
+(function (React, $, __, app) {
   var __ = wp.i18n.__;
   var App = {
     colorPicker: function() {
@@ -131,6 +132,13 @@
       $(".lpr-setting-page .tags-selector select").select2({
         placeholder: __("All Tags","leo-product-recommendations"),
       });
+    },
+
+    pageRecommendations: function() {
+      React.render(
+        <PageRecommendations/>,
+        app
+      );
     }
   }
 
@@ -141,9 +149,10 @@
     this.showHideSettings();
     this.select2();
     this.switchHeadingType();
+    this.pageRecommendations();
   }
 
   $(function () {
     App.init();
   });
-})(jQuery);
+})(wp.element, jQuery, wp.i18n.__, document.getElementById("lpr-field-page_recommendations"));
