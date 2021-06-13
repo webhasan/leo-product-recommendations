@@ -4,101 +4,11 @@ import WPEditor from "./functions/wpEditor";
 import { TreeSelect } from "@wordpress/components";
 import { DebounceInput } from "react-debounce-input";
 import classNames from "classnames";
+import LoadingIcon from './components/Loading';
+import RecommendationHeading from './components/RecommnedationHeading';
 
 (function (React, __, $, app, Reorder) {
   if (!app) return;
-
-  const LoadingIcon = () => (
-    <svg
-      version="1.1"
-      id="Layer_1"
-      x="0px"
-      y="0px"
-      viewBox="0 0 100 100"
-      enableBackground="new 0 0 100 100"
-      width="80"
-      height="80"
-    >
-      <rect
-        fill="#0073aa"
-        width="3"
-        height="45.2018"
-        transform="translate(0) rotate(180 3 50)"
-      >
-        <animate
-          attributeName="height"
-          attributeType="XML"
-          dur="1s"
-          values="30; 100; 30"
-          repeatCount="indefinite"
-        ></animate>
-      </rect>
-      <rect
-        x="17"
-        fill="#0073aa"
-        width="3"
-        height="31.2018"
-        transform="translate(0) rotate(180 20 50)"
-      >
-        <animate
-          attributeName="height"
-          attributeType="XML"
-          dur="1s"
-          values="30; 100; 30"
-          repeatCount="indefinite"
-          begin="0.1s"
-        ></animate>
-      </rect>
-      <rect
-        x="40"
-        fill="#0073aa"
-        width="3"
-        height="56.7982"
-        transform="translate(0) rotate(180 40 50)"
-      >
-        <animate
-          attributeName="height"
-          attributeType="XML"
-          dur="1s"
-          values="30; 100; 30"
-          repeatCount="indefinite"
-          begin="0.3s"
-        ></animate>
-      </rect>
-      <rect
-        x="60"
-        fill="#0073aa"
-        width="3"
-        height="84.7982"
-        transform="translate(0) rotate(180 58 50)"
-      >
-        <animate
-          attributeName="height"
-          attributeType="XML"
-          dur="1s"
-          values="30; 100; 30"
-          repeatCount="indefinite"
-          begin="0.5s"
-        ></animate>
-      </rect>
-      <rect
-        x="80"
-        fill="#0073aa"
-        width="3"
-        height="31.2018"
-        transform="translate(0) rotate(180 76 50)"
-      >
-        <animate
-          attributeName="height"
-          attributeType="XML"
-          dur="1s"
-          values="30; 100; 30"
-          repeatCount="indefinite"
-          begin="0.1s"
-        ></animate>
-      </rect>
-    </svg>
-  );
 
   const postId = parseInt(app.getAttribute("data-id"));
   const { reorder } = Reorder;
@@ -289,6 +199,7 @@ import classNames from "classnames";
     return (
       <div className="lc-recommendation-product">
         <input type="hidden" value={nonce} name="lc_pr_panel_nonce" />
+        <input type="hidden" name="_lc_lpr_data[type]" value={type} />
         {!facedData && (
           <span className="lc-recommendation-product-prelaoder">
             {<LoadingIcon />}
@@ -296,9 +207,23 @@ import classNames from "classnames";
         )}
 
         <div className="recommendation-prodcut-options-wrap" style={opacity}>
-          <div className="pr-field">
-            <input type="hidden" name="_lc_lpr_data[type]" value={type} />
+        <div className="pr-field">
+          <RecommendationHeading
+            name="_lc_lpr_data[heading_type]"
+            textDomain='leo-product-recommendations'
+            heading='Popup Heading'
+            headingTypes = {headingType}
+            documenttionURL = 'https://cutt.ly/Lk3hveN'
+            initialType = {initialData.heading_type}
+            onClick = {
+              (value) => {
+                console.log(value)
+              }
+            }
+          />
+          </div>
 
+          <div className="pr-field">
             <div className="rp-panel-title">
               {__("Popup Heading", "leo-product-recommendations")}
             </div>
