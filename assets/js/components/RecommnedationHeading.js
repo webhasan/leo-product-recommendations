@@ -1,29 +1,36 @@
+import WPEditorTest from "../functions/wpEditor";
 const RecommendationHeading = (props) => {
+    let { 
+        textDomain, 
+        heading, 
+        headingTypes, 
+        documenttionURL, 
+        initialType, 
+        typeName,
+        headingFieldName,
+        headingArticleFieldName,
+        headingValue,
+        headingArticleValue,
+        onChangeType, 
+        onChangeValue 
+    } = props;
 
-    return (
-        <button type="button" onClick={() => props.onClick('some value')}>Click Me!</button>
-    )
+    let {__} = wp.i18n;
 
     return (
         <div className="pr-field">
             <div className="rp-panel-title">
-                {__("Popup Heading", "leo-product-recommendations")}
+                {__(heading, textDomain)}
             </div>
-
             <div className="heading-control">
-                {headingType.map((method) => (
+                {headingTypes.map((method) => (
                     <label key={method.id}>
                         <input
                             type="radio"
-                            name="_lc_lpr_data[heading_type]"
+                            name={typeName}
                             value={method.id}
-                            checked={initialData.heading_type === method.id}
-                            onChange={(e) =>
-                                setInitialData({
-                                    ...initialData,
-                                    heading_type: e.target.value,
-                                })
-                            }
+                            checked={initialType === method.id}
+                            onChange={(e) => onChangeType(e.target.value)}
                         />
                         {method.title}
                     </label>
@@ -32,24 +39,19 @@ const RecommendationHeading = (props) => {
             <div
                 style={{
                     display:
-                        initialData.heading_type === "article" ? "block" : "none",
+                        initialType === "article" ? "block" : "none",
                 }}
             >
-                <WPEditor
+                <WPEditorTest
                     id="header-description"
                     name={
-                        initialData.heading_type === "article"
-                            ? "_lc_lpr_data[heading_article]"
+                        initialType === "article"
+                            ? headingArticleFieldName
                             : ""
                     }
                     className="heading-article wp-editor-area"
-                    value={initialData.heading_article}
-                    onChange={(value) => {
-                        setInitialData({
-                            ...initialData,
-                            heading_article: value,
-                        });
-                    }}
+                    value={headingArticleValue}
+                    onChange={(value) => onChangeValue('heading_article', value)}
                 />
             </div>
 
@@ -57,23 +59,26 @@ const RecommendationHeading = (props) => {
                 className="heading-input"
                 style={{
                     display:
-                        initialData.heading_type === "heading" ? "block" : "none",
+                        initialType === "heading" ? "block" : "none",
                 }}
             >
                 <input
                     type="text"
                     name={
-                        initialData.heading_type === "heading"
-                            ? "_lc_lpr_data[heading]"
+                        initialType === "heading"
+                            ? headingFieldName
                             : ""
                     }
-                    value={initialData.heading}
-                    onChange={(e) =>
-                        setInitialData({ ...initialData, heading: e.target.value })
-                    }
+                    value={headingValue}
+                    onChange={(e) => onChangeValue('heading', e.target.value )}
                 />
             </p>
-            <p><a href="https://cutt.ly/Lk3hveN" target="_blank">{__('Documentation»', 'leo-product-recommendations')}</a></p>
+
+            {
+                documenttionURL && 
+                <p><a href={documenttionURL} target="_blank">{__('Documentation»', {textDomain})}</a></p>
+            }
+            
         </div>
     );
 }
