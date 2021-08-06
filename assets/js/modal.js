@@ -102,6 +102,11 @@
 
       var addedProductId = $(button).data("product_id");
 
+      //if don't find product id from button data
+      if(!addedProductId && $(button).closest('form').length) {
+        addedProductId = $(button).closest('form').find('[name="add-to-cart"]').val();
+      }
+
       //don't show modal inside modal
       if (!$(button).closest(".recommended-products-wrapper").length) {
         

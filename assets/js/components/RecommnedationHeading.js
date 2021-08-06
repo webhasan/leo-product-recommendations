@@ -1,21 +1,21 @@
 import WPEditorTest from "../functions/wpEditor";
+const { __ } = wp.i18n;
+
 const RecommendationHeading = (props) => {
-    let { 
-        textDomain, 
-        heading, 
-        headingTypes, 
-        documenttionURL, 
-        initialType, 
+    const {
+        textDomain,
+        heading,
+        headingTypes,
+        docURL,
+        initialType,
         typeName,
         headingFieldName,
         headingArticleFieldName,
         headingValue,
         headingArticleValue,
-        onChangeType, 
-        onChangeValue 
+        onChangeType,
+        onChangeValue
     } = props;
-
-    let {__} = wp.i18n;
 
     return (
         <div className="pr-field">
@@ -70,15 +70,15 @@ const RecommendationHeading = (props) => {
                             : ""
                     }
                     value={headingValue}
-                    onChange={(e) => onChangeValue('heading', e.target.value )}
+                    onChange={(e) => onChangeValue('heading', e.target.value)}
                 />
             </p>
 
             {
-                documenttionURL && 
-                <p><a href={documenttionURL} target="_blank">{__('Documentation»', {textDomain})}</a></p>
+                docURL &&
+                <p><a href={docURL} target="_blank">{__('Documentation»', { textDomain })}</a></p>
             }
-            
+
         </div>
     );
 }

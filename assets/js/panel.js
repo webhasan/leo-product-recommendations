@@ -5,6 +5,8 @@ import { DebounceInput } from "react-debounce-input";
 import classNames from "classnames";
 import LoadingIcon from './components/Loading';
 import RecommendationHeading from './components/RecommnedationHeading';
+import RadioSelection from './components/RadioSelection';
+import ProductSelection from './components/ProductSelection';
 
 (function (React, __, $, app, Reorder) {
   if (!app) return;
@@ -206,12 +208,13 @@ import RecommendationHeading from './components/RecommnedationHeading';
         )}
 
         <div className="recommendation-prodcut-options-wrap" style={opacity}>
+
         <div className="pr-field">
           <RecommendationHeading
             textDomain='leo-product-recommendations'
             heading='Popup Heading'
             headingTypes = {headingType}
-            documenttionURL = 'https://cutt.ly/Lk3hveN'
+            docURL = 'https://cutt.ly/Lk3hveN'
             initialType = {initialData.heading_type}
             typeName = '_lc_lpr_data[heading_type]'
             headingFieldName = '_lc_lpr_data[heading]'
@@ -239,29 +242,31 @@ import RecommendationHeading from './components/RecommnedationHeading';
           </div>
 
           <div className="pr-field">
-            <div className="rp-panel-title">
-              {__("Select By", "leo-product-recommendations")}
-            </div>
-            <div className="selection-methods">
-              {selectionMehtods.map((method) => (
-                <label key={method.id}>
-                  <input
-                    type="radio"
-                    value={method.id}
-                    checked={initialData.demoMethod === method.id}
-                    onChange={(e) =>
-                      setInitialData({
-                        ...initialData,
-                        demoMethod: e.target.value,
-                      })
-                    }
-                  />
-                  {method.title}
-                </label>
-              ))}
-            </div>
-            <p><a href="https://cutt.ly/pk3hBPH" target="_blank">{__('Documentation»', 'leo-product-recommendations')}</a></p>
+            <RadioSelection 
+              title = 'Select By'
+              textDomain='leo-product-recommendations'
+              docURL = 'https://cutt.ly/pk3hBPH'
+              options={selectionMehtods} 
+              value = {initialData.demoMethod}
+              onChange = {(value) => {
+                setInitialData({
+                  ...initialData,
+                  demoMethod: value
+                });
+              }}
+            />
           </div>
+
+          {initialData.demoMethod === 'manual-selection' &&      
+            <div className="pr-field">
+              <ProductSelection 
+                title = 'Select Products'
+                textDomain = 'leo-product-recommendations'
+                
+              />
+            </div>
+          }
+
           {initialData.demoMethod === 'manual-selection' &&      
             <div className="pr-field">
               <div className="rp-panel-title">
