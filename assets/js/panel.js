@@ -1,91 +1,84 @@
-import Reorder from "react-reorder";
-import buildTermsTree from "./functions/tree";
-import { TreeSelect } from "@wordpress/components";
-import { DebounceInput } from "react-debounce-input";
-import classNames from "classnames";
+import fetchProducts from './functions/ajax/fetchProducts';
+import fetchCategories from './functions/ajax/fetchCategories';
+import fetchAppData from './functions/ajax/fetchAppData';
 import LoadingIcon from './components/Loading';
 import RecommendationHeading from './components/RecommnedationHeading';
 import RadioSelection from './components/RadioSelection';
-import ProductSelection from './components/ProductSelection';
+import ManualSelection from './components/ManualSelection';
 
-(function (React, __, $, app, Reorder) {
+(function (React, __, app) {
   if (!app) return;
 
+  //Get Product Id
   const postId = parseInt(app.getAttribute("data-id"));
-  const { reorder } = Reorder;
+
+  //Date get from localize script
   const { ajax_url: apiEndPoint, nonce, pro_image, pro_link } = lc_pr_panel_data;
+
+  //React Sate and Effect Hook
   const { useState, useEffect } = React;
 
+  // Heading Type
+  const headingType = [
+    {
+      id: "heading",
+      title: __("Heading", "leo-product-recommendations"),
+    },
+    {
+      id: "article",
+      title: __("Heading & Description", "leo-product-recommendations"),
+    },
+  ];
+
+  const selectionMehtods = [
+    {
+      id: "manual-selection",
+      title: __("Manual Selection", "leo-product-recommendations"),
+    },
+    {
+      id: "dynamic-selection",
+      title: __("Dynamic Selection", "leo-product-recommendations"),
+    },
+  ];
+
+  // free version only support manual selection
+  const type = "manual-selection";
+
   const SelectProduct = () => {
-    const headingType = [
-      {
-        id: "heading",
-        title: __("Heading", "leo-product-recommendations"),
-      },
-      {
-        id: "article",
-        title: __("Heading & Description", "leo-product-recommendations"),
-      },
-    ];
-
-    const selectionMehtods = [
-      {
-        id: "manual-selection",
-        title: __("Manual Selection", "leo-product-recommendations"),
-      },
-      {
-        id: "dynamic-selection",
-        title: __("Dynamic Selection", "leo-product-recommendations"),
-      },
-    ];
-
-    // free version only support manual selection
-    const type = "manual-selection";
-
-    const [facedData, setFacedData] = useState(false);
-    const [fetchingPosts, setFetchingPosts] = useState(true);
-
-    const [initialData, setInitialData] = useState({
+    const [appData, setAppData] = useState({
       heading: "",
       heading_article: "",
       heading_type: "heading",
-      demoMethod: "manual-selection",
+      selectMethod: "manual-selection",
       products: [],
     });
-
+    const [loadedData, setLoadedData] = useState(false);
+    const [fetchingProducts, setFetchingProducts] = useState(true);
+    const [categories, setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
-
-    const [products, setProducts] = useState([]);
-
-    const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
 
-    const [query, setQuery] = useState("");
 
-    const reorderProduct = (event, previousIndex, nextIndex) => {
-      let reorderProducts = reorder(
-        initialData.products,
-        previousIndex,
-        nextIndex
-      );
-      setInitialData({ ...initialData, products: reorderProducts });
-    };
-
+    // add product in recommendations list
     const addProdcut = (product) => {
-      let products = [product, ...initialData.products];
-      setInitialData({ ...initialData, products });
+      let products = [product, ...appData.products];
+      setAppData({ ...appData, products });
     };
 
+    // remove product from recommendations list
     const removeProduct = (id) => {
-      let existsProducs = initialData.products.filter(
+      let products = appData.products.filter(
         (product) => product.id !== id
       );
-      setInitialData({ ...initialData, products: existsProducs });
+      setAppData({ ...appData, products });
     };
 
+    // query products form next page when scroll to the last product
     const handleScroll = (event) => {
-      if (!fetchingPosts) {
+      if (!fetchingProducts) {
         const bottom =
           event.target.scrollHeight - event.target.scrollTop ===
           event.target.clientHeight;
@@ -95,9 +88,11 @@ import ProductSelection from './components/ProductSelection';
       }
     };
 
-    const selectAble = (producs) => {
+    // check product is selectable, if product is already added in recommendation list
+    // then it will not selectable
+    const selectable = (producs) => {
       return producs.map((product) => {
-        let isSelected = initialData.products.find(
+        let isSelected = appData.products.find(
           (selectedProduct) => selectedProduct.id === product.id
         );
 
@@ -111,97 +106,72 @@ import ProductSelection from './components/ProductSelection';
       });
     };
 
+    // set opacity 0 when initial data is loading
     const opacity = {
-      opacity: facedData ? 1 : 0,
+      opacity: loadedData ? 1 : 0,
     };
 
+
+
     useEffect(() => {
-      $.ajax({
-        url: apiEndPoint,
-        method: "GET",
-        data: {
-          action: "lpr_initial_data",
-          nonce,
-          post_id: postId,
-        },
+    // loading initial app data
+    fetchAppData(apiEndPoint, nonce, postId).then(data => {
+      if (data) {
+        let products = data.products || [];
+        let heading = data.heading || "";
+        let heading_article = data.heading_article || "";
+        let heading_type = data.heading_type || "heading";
 
-        success: function (data) {
-          if (data) {
-            let products = data.products ? data.products : [];
-            let heading = data.heading ? data.heading : "";
-            let heading_article = data.heading_article
-              ? data.heading_article
-              : "";
-            let heading_type = data.heading_type
-              ? data.heading_type
-              : "heading";
+        setAppData({
+          ...appData,
+          products,
+          heading_type,
+          heading,
+          heading_article,
+        });
+      }
+      setLoadedData(true);
+    });
+    }, []);
 
-            setInitialData({
-              ...initialData,
-              products,
-              heading_type,
-              heading,
-              heading_article,
-            });
-          }
-
-          setFacedData(true);
-        },
+    // loading all categores of products
+    useEffect(() => {
+      fetchCategories(apiEndPoint, nonce).then(data => {
+        if (data.length) {
+          setCategories(data);
+        }
       });
     }, []);
 
+    // loading products for selection panel
     useEffect(() => {
-      $.ajax({
-        url: apiEndPoint,
-        method: "GET",
-        data: {
-          action: "lpr_fetch_categories",
-          nonce,
-        },
-        success: function (data) {
-          if (data.length) {
-            setCategories(data);
-          }
-        },
-      });
-    }, []);
+      setFetchingProducts(true);
 
-    useEffect(() => {
-      setFetchingPosts(true);
+      // when back to page no: 1 make empty previous products list 
+      // before fetching products
       if (page === 1) {
         setProducts([]);
       }
 
-      $.ajax({
-        url: apiEndPoint,
-        method: "GET",
-        data: {
-          action: "lpr_fetch_products",
-          nonce,
-          post_id: postId,
-          page,
-          category: selectedCategory,
-          query,
-        },
-        success: function (data) {
+      fetchProducts(apiEndPoint, nonce, postId, page, selectedCategory, searchTerm).then(data => {
+        if(data) {
           let { products: newProducts, max_page: maxPage } = data;
-
           if (page === 1) {
             setProducts(newProducts);
           } else {
             setProducts([...products, ...newProducts]);
           }
           setMaxPage(maxPage);
-          setFetchingPosts(false);
-        },
+          setFetchingProducts(false);
+        }
       });
-    }, [page, selectedCategory, query]);
+    }, [page, selectedCategory, searchTerm]);
 
     return (
       <div className="lc-recommendation-product">
         <input type="hidden" value={nonce} name="lc_pr_panel_nonce" />
         <input type="hidden" name="_lc_lpr_data[type]" value={type} />
-        {!facedData && (
+        {!loadedData && (
           <span className="lc-recommendation-product-prelaoder">
             {<LoadingIcon />}
           </span>
@@ -215,16 +185,16 @@ import ProductSelection from './components/ProductSelection';
             heading='Popup Heading'
             headingTypes = {headingType}
             docURL = 'https://cutt.ly/Lk3hveN'
-            initialType = {initialData.heading_type}
+            initialType = {appData.heading_type}
             typeName = '_lc_lpr_data[heading_type]'
             headingFieldName = '_lc_lpr_data[heading]'
             headingArticleFieldName = '_lc_lpr_data[heading_article]'
-            headingValue = {initialData.heading}
-            headingArticleValue = {initialData.heading_article}
+            headingValue = {appData.heading}
+            headingArticleValue = {appData.heading_article}
             onChangeType = {
               (value) => {
-                setInitialData({
-                  ...initialData,
+                setAppData({
+                  ...appData,
                   heading_type: value,
                 })
               }
@@ -232,9 +202,9 @@ import ProductSelection from './components/ProductSelection';
             onChangeValue = {
               (type, value) => {
                 if(type === 'heading') {
-                  setInitialData({ ...initialData, heading: value })
+                  setAppData({ ...appData, heading: value })
                 }else if ('heading_article') {
-                  setInitialData({...initialData, heading_article: value});
+                  setAppData({...appData, heading_article: value});
                 }
               }
             }
@@ -247,169 +217,44 @@ import ProductSelection from './components/ProductSelection';
               textDomain='leo-product-recommendations'
               docURL = 'https://cutt.ly/pk3hBPH'
               options={selectionMehtods} 
-              value = {initialData.demoMethod}
+              value = {appData.selectMethod}
               onChange = {(value) => {
-                setInitialData({
-                  ...initialData,
-                  demoMethod: value
+                setAppData({
+                  ...appData,
+                  selectMethod: value
                 });
               }}
             />
           </div>
 
-          {initialData.demoMethod === 'manual-selection' &&      
+          {appData.selectMethod === 'manual-selection' &&      
             <div className="pr-field">
-              <ProductSelection 
-                title = 'Select Products'
-                textDomain = 'leo-product-recommendations'
-                
+              <ManualSelection 
+                title = {__('Select Products', 'leo-product-recommendations')}
+                searchPlaceholder = {__("Search...", "leo-product-recommendations")}
+                onSearchChange = {(value) => {
+                      setSearchTerm(value);
+                      setPage(1);
+                }}
+                allCategories = {categories}
+                selectedCategory = {selectedCategory}
+                onChangeCategory = {(value) => {
+                  setSelectedCategory(value);
+                  setPage(1);
+                }}
+                onScrollList = {handleScroll}
+                fetchingProducts = {fetchingProducts}
+                notFoundSelectableProduct = {!fetchingProducts && !selectable(products).length}
+                selectableProducts = {!!products.length && selectable(products)}
+                onAddProduct = {addProdcut}
+                onRemoveProduct = {removeProduct}
+                initialProdcuts = {appData.products}
+                onReorder = { (products) => setAppData({ ...appData, products }) }
               />
             </div>
           }
 
-          {initialData.demoMethod === 'manual-selection' &&      
-            <div className="pr-field">
-              <div className="rp-panel-title">
-                {__('Select Products', 'leo-product-recommendations')}
-              </div>
-              
-              <div className="product-selection-panel">
-                <div className="product-filter">
-                  <div className="search">
-                    <DebounceInput
-                      minLength={2}
-                      debounceTimeout={300}
-                      onChange={(event) => {
-                        setQuery(event.target.value);
-                        setPage(1);
-                      }}
-                      placeholder={__("Search...", "leo-product-recommendations")}
-                    />
-                  </div>
-
-                  <div className="category-filter">
-                    <TreeSelect
-                      // label="All Category"
-                      noOptionLabel={__(
-                        "All Categories",
-                        "leo-product-recommendations"
-                      )}
-                      onChange={(value) => {
-                        setSelectedCategory(value);
-                        setPage(1);
-                      }}
-                      selectedId={selectedCategory}
-                      tree={buildTermsTree(categories)}
-                    />
-                  </div>
-                </div>
-
-                <div className="product-selection">
-                  <div className="list-panel">
-                    <ul onScroll={handleScroll}>
-                      {!fetchingPosts && !selectAble(products).length && (
-                        <li className="disabled">
-                          <span className="single-list">
-                            {" "}
-                            {__(
-                              "Not found selectable product",
-                              "leo-product-recommendations"
-                            )}
-                          </span>
-                        </li>
-                      )}
-
-                      {!!products.length &&
-                        selectAble(products).map((product) => (
-                          <li
-                            key={product.id}
-                            className={classNames({
-                              "selected-product": product.selcted,
-                            })}
-                            onClick={() => addProdcut(product)}
-                          >
-                            <span className="single-list">
-                              <div className="thumb">
-                                <img
-                                  src={
-                                    !!product.feature_image
-                                      ? product.feature_image
-                                      : ""
-                                  }
-                                  alt=""
-                                />
-                              </div>
-                              {product.title}
-                            </span>
-                          </li>
-                        ))}
-
-                      {
-                        <li
-                          className={classNames("disabled", {
-                            invisible: !fetchingPosts,
-                          })}
-                        >
-                          <span className="lpr-loading-posts"></span>
-                        </li>
-                      }
-                    </ul>
-                  </div>
-
-                  <div className="select-item-panel">
-                    <Reorder
-                      component="ul"
-                      reorderId="my-list"
-                      placeholderClassName="placeholder"
-                      holdTime={50}
-                      touchHoldTime={50}
-                      onReorder={reorderProduct}
-                      autoScroll={false}
-                      placeholder={<li className="custom-placeholder" />}
-                    >
-                      {initialData.products.map((product) => (
-                        <li key={product.id}>
-                          <input
-                            type="hidden"
-                            name="_lc_lpr_data[products][]"
-                            value={product.id}
-                          />
-                          <span className="single-list" data-id="10">
-                            <div className="thumb">
-                              <img
-                                src={
-                                  !!product.feature_image
-                                    ? product.feature_image
-                                    : ""
-                                }
-                                alt=""
-                              />
-                            </div>
-                            {product.title}
-                            <span
-                              className="remove-item"
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                removeProduct(product.id);
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                              }}
-                            >
-                              -
-                            </span>
-                          </span>
-                        </li>
-                      ))}
-                    </Reorder>
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
-          {initialData.demoMethod === 'dynamic-selection' &&  
+          {appData.selectMethod === 'dynamic-selection' &&  
             <div className="pr-field">  
               <div className="pro-dynamic-selection">
               <div><a href={pro_link} target="_blank">{__('Get Pro Version »','leo-product-recommendations')}</a></div>
@@ -423,4 +268,4 @@ import ProductSelection from './components/ProductSelection';
   };
 
   React.render(<SelectProduct />, app);
-})(wp.element, wp.i18n.__, jQuery, document.getElementById("pr-app"), Reorder);
+})(wp.element, wp.i18n.__, document.getElementById("pr-app"));

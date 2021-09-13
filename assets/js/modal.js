@@ -101,7 +101,7 @@
       var button = buttonInfo[0];
 
       var addedProductId = $(button).data("product_id");
-
+      
       //if don't find product id from button data
       if(!addedProductId && $(button).closest('form').length) {
         addedProductId = $(button).closest('form').find('[name="add-to-cart"]').val();
@@ -155,7 +155,7 @@
             if (lc_ajax_modal.layout_type === "slider") {
               var owl = $modal.find(".recommended-products-slider").trigger("replace.owl.carousel", data);
 
-                $total_items = owl.data('owl.carousel')._items.length
+                $total_items = owl.data('owl.carousel')._items.length;
                 $visible_items = owl.data('owl.carousel').options.items;
                 
                 owl.data('owl.carousel').options.loop = owl.data('owl.carousel').options.loop && $total_items > $visible_items
