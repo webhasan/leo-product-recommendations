@@ -15,8 +15,8 @@ class Ajax_Add_To_Cart {
 	private $data = array();
 
 	public function __construct($request) {
-		parse_str($request, $data);
-		$this->data = $data;
+		// parse_str($request, $data);
+		$this->data = $request;
 		$this->add_to_cart_init();
 	}
 

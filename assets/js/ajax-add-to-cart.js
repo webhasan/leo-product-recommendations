@@ -6,27 +6,25 @@
             
             var $form = $(this);
             var $submitButton = $form.find('button[type="submit"]');
-            var data = $form.serialize();
 
             var dataObject = {};
+            var data = {};
             var productId = '';
 
             $form.serializeArray().forEach(function(option) {
                 if(option.name !== 'add-to-cart') {
                     dataObject[option.name] = option.value;
+                    data[option.name] = option.value;
                 }else {
                     productId = option.value;
+                    data['add-to-cart'] = option.value;
                 }
             });
 
             dataObject.product_id = $submitButton.val() ? $submitButton.val() : productId;
 
-            if(!dataObject.product_id) {
-                dataObject.product_id = $submitButton.val() ? $submitButton.val() : productId;
-            }
-
-            if(data.search('add-to-cart') === -1) {
-                data += '&add-to-cart=' + dataObject.product_id;
+            if(!data['add-to-cart']) {
+                data['add-to-cart'] = dataObject.product_id;
             }
 
             // recommendation products mdoal
@@ -47,7 +45,7 @@
                     data: {
                         action: 'lc_ajax_add_to_cart',
                         nonce: lc_ajax.nonce,
-                        data: data
+                        ...data
                     }
                 }).done(function(response) {
                     if(response.success === true) {
@@ -59,7 +57,7 @@
                         $submitButton.removeClass('loading');
                     }else {
                         alert(__('Something went wrong','leo-product-recommendations'));
-                        location.reload(); 
+                        //location.reload(); 
                     }
      
                 }).fail(function(response) {

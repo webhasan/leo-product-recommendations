@@ -41,7 +41,7 @@ $endng_tag   = '</li>';
 
     <?php 
     // Fixgin for Sneaker & Safira theme
-        if($theme === 'Sneaker' || $theme == 'Safira' || 'Plantmore') {
+        if($theme === 'Sneaker' || $theme === 'Safira' || $theme === 'Plantmore') {
             woocommerce_template_single_price();
         }
     ?>

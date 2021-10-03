@@ -664,12 +664,12 @@ final class Product_Recommendations {
 	 */
 	public function ajax_add_to_cart() {
 
-		if ($_REQUEST['data'] && $_REQUEST['nonce'] && wp_verify_nonce($_REQUEST['nonce'], 'lc-add-to-cart')) {
+		if (!empty($_REQUEST) && $_REQUEST['nonce'] && wp_verify_nonce($_REQUEST['nonce'], 'lc-add-to-cart')) {
 			if (!class_exists(Ajax_Add_To_Cart::class)) {
 				include $this->get_path('includes/class-ajax-add-to-cart.php');
 			}
 
-			new Ajax_Add_To_Cart($_REQUEST['data']);
+			new Ajax_Add_To_Cart($_REQUEST);
 		} else {
 			wp_send_json_error(array('message' => 'Bad request'), 400);
 		}
