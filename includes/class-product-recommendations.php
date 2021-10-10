@@ -664,12 +664,11 @@ final class Product_Recommendations {
 	 */
 	public function ajax_add_to_cart() {
 
-		if (!empty($_REQUEST) && $_REQUEST['nonce'] && wp_verify_nonce($_REQUEST['nonce'], 'lc-add-to-cart')) {
+		if (!empty($_POST) && $_POST['nonce'] && wp_verify_nonce($_POST['nonce'], 'lc-add-to-cart')) {
 			if (!class_exists(Ajax_Add_To_Cart::class)) {
 				include $this->get_path('includes/class-ajax-add-to-cart.php');
 			}
-
-			new Ajax_Add_To_Cart($_REQUEST);
+			new Ajax_Add_To_Cart($_POST);
 		} else {
 			wp_send_json_error(array('message' => 'Bad request'), 400);
 		}
@@ -1692,6 +1691,10 @@ final class Product_Recommendations {
 			'plugin_name' => $this->get_plugin_name(),
 			'plugin_version' => $this->get_plugin_version(),
 			'plugin_slug' => $this->get_slug(),
+			'support' => array(
+				'title' => __('Need Help?', 'leo-product-recommendations'),
+				'support_url' => 'https://cutt.ly/UjXivGe'
+			),
 			'feedback_heading' => __('Quick Feedback', 'leo-product-recommendations'),
 			'form_heading' => __('May we have a little info about why you are deactivating?', 'leo-product-recommendations'),
 			'api_url' => 'https://leocoder.com/wp-json/leocoder/v1/deactivation-feedback',
@@ -1701,6 +1704,15 @@ final class Product_Recommendations {
 					'category' => 'temporary_deactivation',
 					'reason' => __('It\'s a temporary deactivation.', 'leo-product-recommendations', 'leo-product-recommendations'),
 					'instuction' => '',
+					'input_field' => '',
+					'placeholder' => '',
+					'input_default' => '',
+				),
+
+				array(
+					'category' => 'not_show_image_button',
+					'reason' => __('Does not show product image or add to cart button.', 'leo-product-recommendations', 'leo-product-recommendations'),
+					'instuction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Plesae contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',

@@ -15,22 +15,20 @@ class Ajax_Add_To_Cart {
 	private $data = array();
 
 	public function __construct($request) {
-		// parse_str($request, $data);
 		$this->data = $request;
 		$this->add_to_cart_init();
 	}
 
 	public function add_to_cart_init() {
 
-		if (!isset($this->data['add-to-cart']) || !is_numeric(wp_unslash($this->data['add-to-cart']))) {
+		if (!isset($this->data['product_id']) || !is_numeric(wp_unslash($this->data['product_id']))) {
 			// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$this->response_add_to_cart_fail('Bad request.', 400);
 		}
 
 		wc_nocache_headers();
 
-		$product_id = apply_filters('woocommerce_add_to_cart_product_id', absint(wp_unslash($this->data['add-to-cart'])));
-
+		$product_id = apply_filters('woocommerce_add_to_cart_product_id', absint(wp_unslash($this->data['product_id'])));
 		$adding_to_cart = wc_get_product($product_id);
 
 		if (!$adding_to_cart) {
@@ -147,6 +145,7 @@ class Ajax_Add_To_Cart {
 		$passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations);
 
 		if ($passed_validation && false !== WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variations)) {
+			do_action( 'woocommerce_ajax_added_to_cart', $product_id );
 			$this->response_add_to_cart_success(wc_add_to_cart_message(array($product_id => $quantity), true, true));
 		}
 
@@ -175,6 +174,7 @@ class Ajax_Add_To_Cart {
 				remove_action('woocommerce_add_to_cart', array(WC()->cart, 'calculate_totals'), 20, 0);
 
 				if ($passed_validation && false !== WC()->cart->add_to_cart($item, $quantity)) {
+					do_action( 'woocommerce_ajax_added_to_cart', $product_id );
 					$was_added_to_cart = true;
 					$added_to_cart[$item] = $quantity;
 				} else {
@@ -203,6 +203,7 @@ class Ajax_Add_To_Cart {
 		$passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
 
 		if ($passed_validation && false !== WC()->cart->add_to_cart($product_id, $quantity)) {
+			do_action( 'woocommerce_ajax_added_to_cart', $product_id );
 			$this->response_add_to_cart_success(wc_add_to_cart_message(array($product_id => $quantity), true, true));
 		}
 

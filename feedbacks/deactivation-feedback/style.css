@@ -110,6 +110,21 @@
   position: relative;
   width: 100%;
 }
+
+.lprw-feedback-modal-card a.button {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background-color: #0984E3;
+  color: #fff;
+  transition: all .3s;
+}
+
+.lprw-feedback-modal-card a.button:hover {
+  background-color: #003bb1;
+  color: #fff;
+}
+
 @media screen and (min-width: 769px), print {
   .modal-content,
 .lprw-feedback-modal-card {

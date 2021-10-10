@@ -110,6 +110,7 @@ class Deactivation_Feedback {
 
         if ($settings['feedback_heading']) {
             $modal_html .= '<p class="lprw-feedback-modal-card-title">' . $settings['feedback_heading'] . '</p>';
+            $modal_html .= '<a href="'.$settings['support']['support_url'].'" class="button" target="_blank">'.$settings['support']['title'].'</a>';
             $modal_html .= '<button class="lprw-feedback-modal-close" aria-label="close"></button>';
         }
 

@@ -7,37 +7,30 @@
             var $form = $(this);
             var $submitButton = $form.find('button[type="submit"]');
 
-            var dataObject = {};
             var data = {};
             var productId = '';
 
             $form.serializeArray().forEach(function(option) {
                 if(option.name !== 'add-to-cart') {
-                    dataObject[option.name] = option.value;
                     data[option.name] = option.value;
                 }else {
                     productId = option.value;
-                    data['add-to-cart'] = option.value;
                 }
             });
 
-            dataObject.product_id = $submitButton.val() ? $submitButton.val() : productId;
+            data.product_id = $submitButton.val() ? $submitButton.val() : productId;
 
-            if(!data['add-to-cart']) {
-                data['add-to-cart'] = dataObject.product_id;
-            }
-
-            // recommendation products mdoal
-            var $targetMdoal = $('#lpr-modal-' + dataObject.product_id);
+            // recommendation products modal.
+            var $targetMdoal = $('#lpr-modal-' + data.product_id);
 
             if($targetMdoal.length || $form.closest('.lpr-modal-body').length ) {
                 // add product id to button to catch it by modal.
-                $submitButton.attr('data-product_id', dataObject.product_id);
+                $submitButton.attr('data-product_id', data.product_id);
                 $submitButton.removeClass( 'added' );
                 $submitButton.addClass( 'loading' );
 
                 // Trigger event before add to cart.
-                $( document.body ).trigger( 'adding_to_cart', [ $submitButton,  dataObject]);
+                $( document.body ).trigger( 'adding_to_cart', [ $submitButton,  data]);
 
                 $.ajax({
                     type: 'POST',
@@ -48,7 +41,9 @@
                         ...data
                     }
                 }).done(function(response) {
+
                     if(response.success === true) {
+
                         $( document.body ).trigger( 'added_to_cart', [ response.data.fragments, response.data.cart_hash, $submitButton ] );
                         $submitButton.addClass('added').removeClass('loading');
 
@@ -57,7 +52,7 @@
                         $submitButton.removeClass('loading');
                     }else {
                         alert(__('Something went wrong','leo-product-recommendations'));
-                        //location.reload(); 
+                        location.reload(); 
                     }
      
                 }).fail(function(response) {
