@@ -705,7 +705,7 @@ final class Product_Recommendations {
 
 		// modal in single product page
 		if (apply_filters('lc_pr_show_in_singe_product', true)) {
-			add_action('wp_footer', array($this, 'product_single_modal'));
+			add_action('woocommerce_before_single_product', array($this, 'product_single_modal'));
 		}
 
 		// modal in WooCommerce Gutenberg products block
@@ -1042,14 +1042,15 @@ final class Product_Recommendations {
 			return false;
 		}
 
-		global $product;
-		$product_id = $product->get_id();
+		$product_id = get_the_ID();
 
 		if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
 			$recommended_products_id = $this->get_recommended_products_id($product_id);
 			if (!empty($recommended_products_id)) {
 				$data = $this->get_template_data($product_id, $recommended_products_id);
-				include $this->get_templates_path('templates/template-modal.php');
+				add_action('wp_footer', function () use ($data) {
+					include ($this->get_templates_path('templates/template-modal.php'));
+				});
 			}
 		endif;
 	}
