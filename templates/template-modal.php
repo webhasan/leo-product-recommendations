@@ -9,6 +9,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 extract($data);
+$feature_image = get_the_post_thumbnail_url($product_id, array('100', '100'));
 ?>
 
 <div class="lpr-modal woocommerce" style="display:none;" id="lpr-modal-<?php echo $product_id; ?>">
@@ -23,6 +24,7 @@ extract($data);
 
                 <div class="lpr-message" role="alert">
                     <div class="message-text">
+                        <img class="lpr-added-product" src="<?php echo $feature_image; ?>" alt="">
                         <?php
                             echo apply_filters('lpr_checked_icon', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path d="M256,0C114.84,0,0,114.84,0,256S114.84,512,256,512,512,397.16,512,256,397.16,0,256,0ZM385.75,201.75,247.08,340.41a21.29,21.29,0,0,1-30.16,0l-69.33-69.33a21.33,21.33,0,0,1,30.16-30.16L232,295.17,355.59,171.59a21.33,21.33,0,0,1,30.16,30.16Z"/></g></g></svg>');
                         ?>
@@ -33,14 +35,25 @@ extract($data);
                     <?php if(apply_filters('lpr_show_buttons', true)): ?>
                     <div class="right-buttons">
                         <?php if(apply_filters('lpr_show_continue_shopping', true)): ?>
-                        <a href="#" class="lpr-close-modal lpr-button"><?php _e('Continue Shopping', 'leo-product-recommendations'); ?></a>
+                            <a href="#" class="lpr-close-modal lpr-button"><?php _e('Continue Shopping', 'leo-product-recommendations'); ?></a>
                         <?php endif; ?>
 
-                        <?php if(apply_filters('wpr_go_checkout', true)): ?>
-                        <a href="<?php echo wc_get_checkout_url(); ?>" class="lpr-button"><?php _e('Checkout', 'leo-product-recommendations'); ?></a>
+                        <?php if(apply_filters('lpr_go_checkout', true)): ?>
+                            <a href="<?php echo wc_get_checkout_url(); ?>" class="lpr-button"><?php _e('Checkout', 'leo-product-recommendations'); ?></a>
+                        <?php endif; ?>
+
+                        <?php if(apply_filters('lpr_cart_count', true)): ?>
+                            <a href="<?php echo wc_get_cart_url(); ?>" class="lpr-cart-count">
+                                <span class="lpr-total-items"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+                                <?php 
+                                    echo apply_filters('lpr_cart_icon','<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path d="M23.76 4.248c-0.096-0.096-0.24-0.24-0.504-0.24h-18.48l-0.48-2.4c-0.024-0.288-0.384-0.528-0.624-0.528h-2.952c-0.384 0-0.624 0.264-0.624 0.624s0.264 0.648 0.624 0.648h2.424l2.328 11.832c0.312 1.608 1.848 2.856 3.48 2.856h11.28c0.384 0 0.624-0.264 0.624-0.624s-0.264-0.624-0.624-0.624h-11.16c-0.696 0-1.344-0.312-1.704-0.816l14.064-1.92c0.264 0 0.528-0.24 0.528-0.528l1.968-7.824v-0.024c-0.024-0.048-0.024-0.288-0.168-0.432zM22.392 5.184l-1.608 6.696-14.064 1.824-1.704-8.52h17.376zM8.568 17.736c-1.464 0-2.592 1.128-2.592 2.592s1.128 2.592 2.592 2.592c1.464 0 2.592-1.128 2.592-2.592s-1.128-2.592-2.592-2.592zM9.888 20.328c0 0.696-0.624 1.32-1.32 1.32s-1.32-0.624-1.32-1.32 0.624-1.32 1.32-1.32 1.32 0.624 1.32 1.32zM18.36 17.736c-1.464 0-2.592 1.128-2.592 2.592s1.128 2.592 2.592 2.592c1.464 0 2.592-1.128 2.592-2.592s-1.128-2.592-2.592-2.592zM19.704 20.328c0 0.696-0.624 1.32-1.32 1.32s-1.344-0.6-1.344-1.32 0.624-1.32 1.32-1.32 1.344 0.624 1.344 1.32z"></path></svg>');
+                                ?>
+                            </a>
                         <?php endif; ?>
                     </div>
                     <?php endif; ?>
+
+
                 </div>
 
                 <?php echo $modal_heading; ?>

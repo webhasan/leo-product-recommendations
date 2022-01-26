@@ -299,6 +299,8 @@ final class Product_Recommendations {
 		if (!$this->is_pro_activated()) {
 			add_action('wp_head', array($this, 'settings_css')); // for custom styling
 		}
+
+		add_filter('add_to_cart_fragments', array($this, 'cart_items_count'));
 	}
 
 	/**
@@ -346,6 +348,9 @@ final class Product_Recommendations {
 			wp_localize_script('lpr-settings', 'lpr_css_editor', $cm_settings);
 			wp_enqueue_style('wp-codemirror');
 			wp_enqueue_script('wp-theme-plugin-editor');
+
+			//register scripts
+			wp_register_script('setting-in-page', $this->get_url('assets/js/recommendations-in-page.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
 		}
 	}
 
@@ -1236,6 +1241,22 @@ final class Product_Recommendations {
 		return self::$pr_meta[$id];
 	}
 
+	/**
+	 * Count total items in cart in Ajax way 
+	 *
+	 * @since      1.9.0
+	 * @return object of post meta _lc_lpr_data
+	 */
+	public function cart_items_count() {
+		global $woocommerce;
+		ob_start();
+		?>
+		<span class="lpr-total-items"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+		<?php
+		$fragments['a.lpr-cart-count .lpr-total-items'] = ob_get_clean();
+		return $fragments;
+	}
+
 	public function get_global_pr_data() {
 		$settings = $this->get_settings();
 		if (empty($settings['active_global_settings'])) {
@@ -1630,7 +1651,7 @@ final class Product_Recommendations {
 				'slug' => 'lpr-settings',
 				'icon' => 'dashicons-cart',
 				'position' => 60,
-
+				
 				'sections' => array(
 					array(
 						'id' => 'lpr-general-settings',
@@ -1658,7 +1679,7 @@ final class Product_Recommendations {
 						'tab_title' => __('Tutorials', 'leo-product-recommendations'),
 						'title' => __('Tutorial & Documentation', 'leo-product-recommendations'),
 						'type' => 'article',
-						'template' => $this->get_path('includes/tutorials.php'),
+						'template' => $this->get_path('includes/page-tutorials.php'),
 					),
 				),
 			),
