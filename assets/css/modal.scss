@@ -127,12 +127,15 @@
        top: 0;
        right: 0;
        color: #fff;
-       text-align: center;
        background: $wpr_message_bg;
        width: 28px;
        height: 28px;
-       line-height: 24px;
-       border-bottom-left-radius: 0.4em;
+       border-radius: 50%;
+       top: -14px;
+       right: -14px;
+       display: flex;
+       align-items: center;
+       justify-content: center;
      }
  
      .lpr-modal-close:before {
@@ -365,6 +368,8 @@
  
      .recommended-products-slider {
        padding: 0 20px;
+       max-width: 100% !important;
+       box-sizing: border-box;
      }
      .recommended-products-slider .single-lpr {
        margin-left: 0 !important;
@@ -437,8 +442,7 @@
  
        .add-to-cart-wrap {
          display: none;
-       }
- 
+       } 
        /* electron theme fixed */
        .product-item__footer:before,
        .product-item__footer:after {
@@ -752,6 +756,13 @@
    a.button:after {
    line-height: 1.7em;
  }
+
+
+/*Fixing for twenty twenty two theme */
+body.theme-twentytwentytwo .lpr-modal .lpr-modal-content .recommended-products-slider .single-lpr .onsale {
+    top: 0;
+    right: 0;
+  }
  
  //animation
  .lpr__animated {

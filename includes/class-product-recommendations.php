@@ -180,7 +180,7 @@ final class Product_Recommendations {
 
 		if (!$wordpress_minimum_met) {
 			$errors[] = sprintf(
-				/* translators: 1. link of wordpress, 2. version of WordPress. */
+				/* translators: 1. link of wordpress 2. version of WordPress. */
 				__('The Leo Product Recommendations for WooCommerce plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'leo-product-recommendations'),
 				'https://wordpress.org/',
 				$minimum_wordpress_version

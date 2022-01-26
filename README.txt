@@ -148,7 +148,7 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 
 == Changelog ==
 = 1.9.0 =
-* Update recommendation modal template.
+* Update recommendation modal & added new features.
 
 = 1.8.9 =
 * Bug fixed for product_page shortcode
