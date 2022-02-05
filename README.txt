@@ -13,6 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Recommend products smartly for boosting WooCommerce sales by nice-looking ajax add to cart popup. Include up-sell, cross sell or related products and make sure quick checkout.
 
 == Description ==
+[youtube https://youtu.be/c20SsY1zsf8]
 Leo Product Recommendations is **sale boosting** plugin for WooCommerce with a great strategy. It helps to recommend products smartly in a nice looking popup. By suggesting products in an eye-catching popup after adding a product to a cart **directly influence customers to purchase more** related products. It comes with a fully customizable, powerful, and easy-to-use settings panel to recommend products manual and dynamic way based on your marketing need.
 
 Harvard professor Gerald Zaltman says "95% of purchasing decisions are subconscious". So you have to just display the right product in front of the right customer, at the right time. Let me explain, how the great plugin does the things smartly.
