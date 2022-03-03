@@ -24,13 +24,18 @@ $endng_tag   = '</li>';
     
     <a href="<?php the_permalink(); ?>">
         <?php
-        if($theme === 'Flatsome') { // Flatsome product thumbnail
+        if($theme === 'Flatsome') { //Flatsome product thumbnail
             do_action( 'flatsome_woocommerce_shop_loop_images' );
         }
 
-        // Fixgin for Medibazar theme
-        if($theme === 'Medibazar') {
+        if($theme === 'Medibazar') { //Medibazar product thumbnail
             medibazar_shop_thumbnail();
+        }
+        
+        //fixed not showing image issue
+        $no_thumbail_themes = apply_filters('lpr_show_image', ['DavinciWoo']);
+        if(in_array($theme, $no_thumbail_themes)) {
+            echo woocommerce_get_product_thumbnail();
         }
 
         do_action('woocommerce_before_shop_loop_item_title');

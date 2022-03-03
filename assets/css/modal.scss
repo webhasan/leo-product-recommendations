@@ -758,6 +758,12 @@
  }
 
 
+ /*Fixing for davinciwoo theme */
+ .theme-davinciwoo .lpr-modal .single_add_to_cart_button-group .view-cart.cart-popup {
+   display: none;
+ }
+
+
 /*Fixing for twenty twenty two theme */
 body.theme-twentytwentytwo .lpr-modal .lpr-modal-content .recommended-products-slider .single-lpr .onsale {
     top: 0;
