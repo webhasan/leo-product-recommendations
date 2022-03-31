@@ -1603,6 +1603,7 @@ final class Product_Recommendations {
 				'type' => 'checkbox',
 				'description' => __('If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.'),
 				'doc' 		  => 'https://cutt.ly/Rk3dWPA',
+				'default' => 1,
 			),
 			array(
 				'id' => 'selection_options',
