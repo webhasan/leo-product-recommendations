@@ -291,6 +291,7 @@
 }
 .recommendation-product-options .category-filter select {
   width: 100%;
+  line-height: inherit !important;
 }
 
 #woocommerce-product-data ul.wc-tabs li.lpr-product-recommendations_tab a::before {
