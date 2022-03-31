@@ -201,7 +201,7 @@ class Admin_Ajax {
 
         $args = array(
             'post_type'   => 'product',
-            'numberposts' => 20,
+            'posts_per_page' => 20,
             'exclude'     => array($post_id),
             'paged'       => $paged,
         );

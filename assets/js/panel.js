@@ -81,8 +81,9 @@ import ManualSelection from './components/ManualSelection';
     const handleScroll = (event) => {
       if (!fetchingProducts) {
         const bottom =
-          event.target.scrollHeight - event.target.scrollTop ===
-          event.target.clientHeight;
+          event.target.scrollHeight - event.target.scrollTop <=
+          event.target.clientHeight + 1;
+
         if (bottom && page < maxPage) {
           setPage(page + 1);
         }
@@ -158,8 +159,10 @@ import ManualSelection from './components/ManualSelection';
           if (page === 1) {
             setProducts(newProducts);
           } else {
-            setProducts([...products, ...newProducts]);
+            // setProducts([...products, ...newProducts]);
+            setProducts(oldProducts => [...oldProducts, ...newProducts]);
           }
+
           setMaxPage(maxPage);
           setFetchingProducts(false);
         }

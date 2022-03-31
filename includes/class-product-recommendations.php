@@ -217,7 +217,9 @@ final class Product_Recommendations {
 	 */
 	public function includes() {
 		$this->admin_ajax(); // handle all admin ajax request
-		$this->plugin_action_links(); // add Settings link
+
+		$this->plugin_action_links(); // add action link, example: Go Pro, Settings
+
 		if (!$this->is_pro_activated()) {
 			$this->plugin_settins($this); // plugin Settings Page
 		}
@@ -277,29 +279,40 @@ final class Product_Recommendations {
 	 * @return void
 	 */
 	public function hooks() {
-		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts')); // back-end scripts
-		add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts')); // front-end scripts
+		// Include required admin scripts
+		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 
-		add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
+		// Include requred front-end scripts
+		add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts')); 
+
+		// Add recommendations tabs in product data table
+		add_action('woocommerce_product_data_tabs', array($this, 'product_data_tabs'));
+		add_action('woocommerce_product_data_panels', array($this, 'product_data_panels'));
 		add_action('save_post', array($this, 'on_save_post'));
 
+		// Fetching product for popup modal
 		add_action('wp_ajax_fetch_modal_products', array($this, 'fetch_modal_products'));
 		add_action('wp_ajax_nopriv_fetch_modal_products', array($this, 'fetch_modal_products'));
 
+		// Ajax add to cart
 		add_action('wp_ajax_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 		add_action('wp_ajax_nopriv_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 
+		// Fetch items already in cart
 		add_action('wp_ajax_lc_get_cart_items', array($this, 'get_cart_items'));
 		add_action('wp_ajax_nopriv_lc_get_cart_items', array($this, 'get_cart_items'));
 
 		add_filter('nonce_user_logged_out', array($this, 'nonce_fix'), 100, 2);
 
-		add_action('after_setup_theme', array($this, 'include_templates')); // include modal template
+		// include modal template
+		add_action('after_setup_theme', array($this, 'include_templates')); 
 
+		// load css from plugin style setting
 		if (!$this->is_pro_activated()) {
-			add_action('wp_head', array($this, 'settings_css')); // for custom styling
+			add_action('wp_head', array($this, 'settings_css')); 
 		}
 
+		// cart item count for popup cart
 		add_filter('add_to_cart_fragments', array($this, 'cart_items_count'));
 	}
 
@@ -443,18 +456,32 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Add Meta Box
-	 *
-	 * @since      1.0.0
+	 * Filter & add new tab in 
+	 * product data tabes
+	 * 
+	 * @since      1.9.1
 	 * @return void
 	 */
-	public function add_meta_boxes() {
-		add_meta_box(
-			'lc_pr_prodcut_selection',
-			__('Product Recommendations', 'leo-product-recommendations'),
-			array($this, 'product_selection'),
-			array('product')
-		);
+
+	public function product_data_tabs($tabs) {
+		$tabs['lpr-product-recommendations'] = [
+			'label' => __('Product Recommendations', 'leo-product-recommendations'),
+			'target' => 'lpr_product_recommendations_panel',
+			'class' => ['hide_if_external'],
+		];
+		return $tabs;
+	}
+
+	/**
+	 * Add fields in prodcut recommendations tab
+	 * 
+	 * @since      1.9.1
+	 * @return void
+	 */
+
+	public function product_data_panels() {
+		global $woocommerce, $post;
+		$this->product_selection($post);
 	}
 
 	/**
@@ -1689,25 +1716,25 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Feedback fiels
+	 * Feedback fields
 	 *
-	 * @return array deactivation form field settings data
+	 * @return array deactivation form fields settings data
 	 */
 	public function deactivation_feedback() {
 		if (is_admin()) {
 			if (!class_exists(Deactivation_Feedback::class)) {
 				include_once $this->get_path('feedbacks/deactivation-feedback/class-deactivation-feedback.php');
 			}
-			new Deactivation_Feedback($this->feedback_fiels());
+			new Deactivation_Feedback($this->feedback_fields());
 		}
 	}
 
 	/**
-	 * Feedback fiels
+	 * Feedback fields
 	 *
-	 * @return array deactivation form field settings data
+	 * @return array deactivation form fields settings data
 	 */
-	public function feedback_fiels() {
+	public function feedback_fields() {
 
 		$form_data = array(
 			'plugin_name' => $this->get_plugin_name(),

@@ -18,7 +18,7 @@ const RecommendationHeading = (props) => {
     } = props;
 
     return (
-        <div className="pr-field">
+        <>
             <div className="rp-panel-title">
                 {__(heading, textDomain)}
             </div>
@@ -79,7 +79,7 @@ const RecommendationHeading = (props) => {
                 <p><a href={docURL} target="_blank">{__('Documentation»', { textDomain })}</a></p>
             }
 
-        </div>
+        </>
     );
 }
 
