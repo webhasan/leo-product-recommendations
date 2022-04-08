@@ -2,7 +2,7 @@ import fetchProducts from './functions/ajax/fetchProducts';
 import fetchCategories from './functions/ajax/fetchCategories';
 import fetchAppData from './functions/ajax/fetchAppData';
 import LoadingIcon from './components/Loading';
-import RecommendationHeading from './components/RecommnedationHeading';
+import RecommendationHeading from './components/RecommendationHeading';
 import RadioSelection from './components/RadioSelection';
 import ManualSelection from './components/ManualSelection';
 
@@ -31,7 +31,7 @@ import ManualSelection from './components/ManualSelection';
   ];
 
   // Recommendations product select options
-  const selectionMehtods = [
+  const selectionMethods = [
     {
       id: "manual-selection",
       title: __("Manual Selection", "leo-product-recommendations"),
@@ -64,7 +64,7 @@ import ManualSelection from './components/ManualSelection';
 
 
     // add product in recommendations list
-    const addProdcut = (product) => {
+    const addProduct = (product) => {
       let products = [product, ...appData.products];
       setAppData({ ...appData, products });
     };
@@ -92,16 +92,16 @@ import ManualSelection from './components/ManualSelection';
 
     // check product is selectable, if product is already added in recommendation list
     // then it will not selectable
-    const selectable = (producs) => {
-      return producs.map((product) => {
+    const selectable = (products) => {
+      return products.map((product) => {
         let isSelected = appData.products.find(
           (selectedProduct) => selectedProduct.id === product.id
         );
 
         if (isSelected) {
-          product["selcted"] = true;
+          product["selected"] = true;
         } else {
-          product["selcted"] = false;
+          product["selected"] = false;
         }
 
         return product;
@@ -134,7 +134,7 @@ import ManualSelection from './components/ManualSelection';
     });
     }, []);
 
-    // loading all categores of products
+    // loading all categories of products
     useEffect(() => {
       fetchCategories(apiEndPoint, nonce).then(data => {
         if (data.length) {
@@ -174,12 +174,12 @@ import ManualSelection from './components/ManualSelection';
         <input type="hidden" value={nonce} name="lc_pr_panel_nonce" />
         <input type="hidden" name="_lc_lpr_data[type]" value={type} />
         {!loadedData && (
-          <span className="lc-recommendation-product-prelaoder">
+          <span className="lc-recommendation-product-loader">
             {<LoadingIcon />}
           </span>
         )}
 
-        <div className="recommendation-prodcut-options-wrap" style={opacity}>
+        <div className="recommendation-product-options-wrap" style={opacity}>
 
         <div className="pr-field">
           <RecommendationHeading
@@ -218,7 +218,7 @@ import ManualSelection from './components/ManualSelection';
               title = 'Select By'
               textDomain='leo-product-recommendations'
               docURL = 'https://cutt.ly/pk3hBPH'
-              options={selectionMehtods} 
+              options={selectionMethods} 
               value = {appData.selectMethod}
               onChange = {(value) => {
                 setAppData({
@@ -248,9 +248,9 @@ import ManualSelection from './components/ManualSelection';
                 fetchingProducts = {fetchingProducts}
                 notFoundSelectableProduct = {!fetchingProducts && !selectable(products).length}
                 selectableProducts = {!!products.length && selectable(products)}
-                onAddProduct = {addProdcut}
+                onAddProduct = {addProduct}
                 onRemoveProduct = {removeProduct}
-                initialProdcuts = {appData.products}
+                initialProducts = {appData.products}
                 onReorder = { (products) => setAppData({ ...appData, products }) }
               />
             </div>

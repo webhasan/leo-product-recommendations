@@ -314,7 +314,7 @@ msgid "It doesn't work with my website."
 msgstr ""
 
 #: includes/class-product-recommendations.php:1718
-msgid "Plesae contact with our support we will try fix it quickly for you »"
+msgid "Please contact with our support we will try fix it quickly for you »"
 msgstr ""
 
 #: includes/class-product-recommendations.php:1726
@@ -322,7 +322,7 @@ msgid "It looks bad on my website."
 msgstr ""
 
 #: includes/class-product-recommendations.php:1727
-msgid "Plesae contact with our support we will help you to fix the issues »"
+msgid "Please contact with our support we will help you to fix the issues »"
 msgstr ""
 
 #: includes/class-product-recommendations.php:1735

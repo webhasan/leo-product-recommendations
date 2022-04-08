@@ -1,5 +1,5 @@
 (function ($, __) {
-  //setup cart items in localstorage to exclude from recommendation
+  //setup cart items in localStorage to exclude from recommendation
   function lpr_cart_items() {
     $.ajax({
       method: "GET",
@@ -26,7 +26,7 @@
   $.fn.lprModal = function (options) {
     var settings = $.extend(
       {
-        action: "open", // opton for modal open or close default: open
+        action: "open", // option for modal open or close default: open
       },
       options
     );
@@ -36,8 +36,8 @@
     // modal overlay
     var overlay = $('<div class="lpr-modal-overlay show"></div>');
 
-    // opne modal
-    function opneModal() {
+    // open modal
+    function openModal() {
       $('body').trigger('before_open_lpr_modal'); // event before modal open
 
       var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -73,7 +73,7 @@
 
     // call modal open
     if (settings.action === "open") {
-      opneModal();
+      openModal();
     }
 
     // call modal close
@@ -165,16 +165,16 @@
             }
 
             setTimeout(() =>{
-              //mesasge animation
+              //message animation
               $modal.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
             }, 200);
 
-            //verialbe product swatch
+            //variable product swatch
             setTimeout(() => {
               $( '.lpr-modal .variations_form' ).each( function() {
                   $( this ).wc_variation_form();
               });   
-              // woodmart theme veriation swatch
+              // woodmart theme vernation swatch
               if(window.woodmartThemeModule && woodmartThemeModule.swatchesVariations) {
                 woodmartThemeModule.swatchesVariations();
               }

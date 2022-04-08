@@ -30,8 +30,8 @@ if (!class_exists(Product_Recommendations::class)) {
  * Plugin execution
  * @since    1.0.0
  */
-function leo_product_recommendaitons() {
+function leo_product_recommendations() {
     return Product_Recommendations::init(__FILE__);
 }
-leo_product_recommendaitons();
+leo_product_recommendations();
 

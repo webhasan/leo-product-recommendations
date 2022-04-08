@@ -21,9 +21,9 @@
             data.product_id = $submitButton.val() ? $submitButton.val() : productId;
 
             // recommendation products modal.
-            var $targetMdoal = $('#lpr-modal-' + data.product_id);
+            var $targetModal = $('#lpr-modal-' + data.product_id);
 
-            if($targetMdoal.length || $form.closest('.lpr-modal-body').length ) {
+            if($targetModal.length || $form.closest('.lpr-modal-body').length ) {
                 // add product id to button to catch it by modal.
                 $submitButton.attr('data-product_id', data.product_id);
                 $submitButton.removeClass( 'added' );

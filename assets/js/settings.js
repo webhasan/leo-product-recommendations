@@ -20,7 +20,7 @@
         quicktags: quicktagsObj,
       } = wp.editor.getDefaultSettings();
       
-      wp.editor.initialize('default-heaidng-editor', {
+      wp.editor.initialize('default-heading-editor', {
         tinymce: {
           ...tinymceObj,
           toolbar1:
@@ -66,7 +66,7 @@
         }
       });
 
-      // global selction 
+      // global selection 
       if(!$('input[name="lc_lpr_settings[active_global_settings]"]').is(':checked')) {
         $(
           "#lpr-field-selection_options, #lpr-field-disable_global_override"

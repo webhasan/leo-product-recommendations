@@ -20,7 +20,7 @@ const ManualSelection = (props) => {
         onAddProduct,
         onRemoveProduct,
         fetchingProducts,
-        initialProdcuts,
+        initialProducts,
         onReorder
     } = props;
 
@@ -76,7 +76,7 @@ const ManualSelection = (props) => {
                                 <li
                                     key={product.id}
                                     className={classNames({
-                                        "selected-product": product.selcted,
+                                        "selected-product": product.selected,
                                     })}
                                     onClick={() => onAddProduct(product) }
                                 >
@@ -117,7 +117,7 @@ const ManualSelection = (props) => {
                         touchHoldTime={50}
                         onReorder={(event, previousIndex, nextIndex) => {
                             let reorderProducts = reorder(
-                                initialProdcuts,
+                                initialProducts,
                                 previousIndex,
                                 nextIndex
                             );
@@ -126,7 +126,7 @@ const ManualSelection = (props) => {
                         autoScroll={false}
                         placeholder={<li className="custom-placeholder" />}
                     >
-                        {initialProdcuts.map((product) => (
+                        {initialProducts.map((product) => (
                             <li key={product.id}>
                                 <input
                                     type="hidden"

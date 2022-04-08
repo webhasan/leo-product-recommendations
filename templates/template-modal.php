@@ -69,7 +69,7 @@ $feature_image = get_the_post_thumbnail_url($product_id, array('100', '100'));
                 <?php do_action('lpr_before_products_loop', $product_id, $recommended_products_id); ?>
 
                 <ul class="products recommended-products-wrapper recommended-products-list" data-recommendation-ids="<?php echo implode(',', $recommended_products_id); ?>">
-                    <!-- prodcut will fill by ajax -->
+                    <!-- product will fill by ajax -->
                 </ul>
 
                 <div class="loading-products">

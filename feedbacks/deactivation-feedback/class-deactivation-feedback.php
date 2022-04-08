@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 class Deactivation_Feedback {
 
     /**
-     * Arry of all form and other requrie data
+     * Array of all form and other require data
      *
      * @var arr
      */
@@ -31,7 +31,7 @@ class Deactivation_Feedback {
 
     /**
      * Class constructor, initialize everything
-     * All action passed insded it.
+     * All action passed inside it.
      */
     public function __construct($settings) {
         $this->settings = $settings;
@@ -40,7 +40,7 @@ class Deactivation_Feedback {
     }
 
     /**
-     * Initialized popup deacitvatoin from.
+     * Initialized popup deactivation from.
      */
     private function init_feedback_form() {
         add_action('current_screen', function() {
@@ -58,7 +58,7 @@ class Deactivation_Feedback {
 
     /**
      * Load all require scripts
-     * If used deactivation feedback  in multipule plugins
+     * If used deactivation feedback  in multiple plugins
      * scripts should load only one time.
      *
      * @return void
@@ -70,7 +70,7 @@ class Deactivation_Feedback {
                 wp_enqueue_script('lprw-deactivation-feedback-script', $this->url('script.js'), ['jquery', 'wp-i18n'], $this->version('script.js'), true);
                 wp_localize_script(
                     'lprw-deactivation-feedback-script', 
-                    'leo_defeedback_data', 
+                    'leo_feedback_data', 
                     [
                         'ajax_url' =>  admin_url('admin-ajax.php'),
                         'security' => wp_create_nonce('valid-feedback-submit')
@@ -84,7 +84,7 @@ class Deactivation_Feedback {
     }
 
     /**
-     * Deactivation popup modal veiw.
+     * Deactivation popup modal view.
      */
     public function add_modal() {
         echo $this->modal();
@@ -93,7 +93,7 @@ class Deactivation_Feedback {
     /**
      * Deactivation Modal
      * 
-     * @return html markup for deacivation modal.
+     * @return html markup for deactivation modal.
      */
     public function modal() {
         $settings = $this->settings;
@@ -131,12 +131,12 @@ class Deactivation_Feedback {
             $input_field   = (isset($field['input_field']) && $field['input_field'] !== '') ? $field['input_field'] : false;
             $placeholder   = (isset($field['placeholder']) && $field['placeholder'] !== '') ? $field['placeholder'] : '';
             $input_default = (isset($field['input_default']) && $field['input_default'] !== '') ? $field['input_default'] : '';
-            $instuction    = (isset($field['instuction']) && $field['instuction'] !== '') ? $field['instuction'] : false;
+            $instruction    = (isset($field['instruction']) && $field['instruction'] !== '') ? $field['instruction'] : false;
 
             $modal_html .= '<fieldset>';
             $modal_html .= sprintf('<label><input type="radio" class="reason" name="reason" value="%1$s"/>%2$s</label>', $category, $reason);
 
-            if ($input_field || $instuction):
+            if ($input_field || $instruction):
 
                 $modal_html .= '<div class="lprw-inner-field">';
 
@@ -146,8 +146,8 @@ class Deactivation_Feedback {
                     $modal_html .= sprintf('<input type="%1$s" name="%2$s" placeholder="%3$s" value="%4$s" />', $input_field, $category, $placeholder, $input_default);
                 endif;
 
-                if ($instuction):
-                    $modal_html .= '<p>' . $field['instuction'] . '</p>';
+                if ($instruction):
+                    $modal_html .= '<p>' . $field['instruction'] . '</p>';
                 endif;
 
                 $modal_html .= '</div>';
@@ -161,7 +161,7 @@ class Deactivation_Feedback {
 
         $modal_html .= '<footer class="lprw-feedback-modal-card-foot">';
         $modal_html .= '<div class="lprw-submit-wrap"><span class="error">'.__('Please select a reason.','leo-product-recommendations').'</span><button class="button button-primary">'.__('Send & Deactive','leo-product-recommendations').'</button><span class="loading" style="background-image: url(' . home_url() . '/wp-admin/images/spinner.gif)"></span></div>';
-        $modal_html .= '<a href="" class="lprw-feedback-deactivation-link">'.__('Skip & Deactive','leo-product-recommendations').'</a>';
+        $modal_html .= '<a href="" class="lprw-feedback-deactivation-link">'.__('Skip & Deactivate','leo-product-recommendations').'</a>';
         $modal_html .= '</footer>';
 
         $modal_html .= '</div>';
@@ -242,9 +242,9 @@ class Deactivation_Feedback {
             ],
         ]);
 
-        $responce_code = wp_remote_retrieve_response_code($response);
+        $response_code = wp_remote_retrieve_response_code($response);
 
-        if (!is_wp_error($response) && $responce_code >= 200 && $responce_code <= 299) {
+        if (!is_wp_error($response) && $response_code >= 200 && $response_code <= 299) {
             wp_send_json_success(wp_remote_retrieve_body($response));
         } else {
             wp_send_json_error(wp_remote_retrieve_response_message($response));
@@ -253,12 +253,12 @@ class Deactivation_Feedback {
     }
 
     /**
-     * Script version of the plgin
-     * Verson will change based on file change time
+     * Script version of the plugin
+     * Version will change based on file change time
      *
      * @since      1.6
-     * @param      stirng file path 
-     * @return     string of verion based on file changed time
+     * @param      string file path 
+     * @return     string of version based on file changed time
      */
     public function version($file) {
         return filemtime(plugin_dir_path(__FILE__) . $file);
@@ -269,8 +269,8 @@ class Deactivation_Feedback {
      * @since      1.6
      * @return string of file url 
      */
-    public function url($filte) {
+    public function url($file) {
         $dir_url = plugin_dir_url(__FILE__);
-        return $dir_url . $filte;
+        return $dir_url . $file;
     }
 }

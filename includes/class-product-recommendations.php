@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 
 final class Product_Recommendations {
 	/**
-	 * Inctance of class
+	 * Instance of class
 	 *
 	 * @var instance
 	 */
@@ -72,7 +72,7 @@ final class Product_Recommendations {
 
 	/**
 	 * Action after plugin activate
-	 * Enable ajax add to cart and disabel redirec to cart page.
+	 * Enable ajax add to cart and disable redirect to cart page.
 	 *
 	 * @since      1.0.0
 	 */
@@ -162,11 +162,11 @@ final class Product_Recommendations {
 		$wordpress_version = get_bloginfo('version');
 		$minimum_wordpress_version = $this->get_min_wp();
 		$minimum_woocommerce_version = $this->get_min_wc();
-		$minium_php_verion = $this->get_min_php();
+		$minium_php_version = $this->get_min_php();
 
 		$wordpress_minimum_met = version_compare($wordpress_version, $minimum_wordpress_version, '>=');
 		$woocommerce_minimum_met = class_exists('WooCommerce') && version_compare(WC_VERSION, $minimum_woocommerce_version, '>=');
-		$php_minimum_met = version_compare(phpversion(), $minium_php_verion, '>=');
+		$php_minimum_met = version_compare(phpversion(), $minium_php_version, '>=');
 
 		if (!$woocommerce_minimum_met) {
 
@@ -190,8 +190,8 @@ final class Product_Recommendations {
 		if (!$php_minimum_met) {
 			$errors[] = sprintf(
 				/* translators: 1. version of php */
-				__('The Leo Product Recommendations for WooCommerce plugin requires <strong>php verion %s</strong> or greater. Please update your server php version.', 'leo-product-recommendations'),
-				$minium_php_verion
+				__('The Leo Product Recommendations for WooCommerce plugin requires <strong>php version %s</strong> or greater. Please update your server php version.', 'leo-product-recommendations'),
+				$minium_php_version
 			);
 		}
 
@@ -221,7 +221,7 @@ final class Product_Recommendations {
 		$this->plugin_action_links(); // add action link, example: Go Pro, Settings
 
 		if (!$this->is_pro_activated()) {
-			$this->plugin_settins($this); // plugin Settings Page
+			$this->plugin_settings($this); // plugin Settings Page
 		}
 	}
 
@@ -264,7 +264,7 @@ final class Product_Recommendations {
 	 * @since      1.0.0
 	 * @return void
 	 */
-	public function plugin_settins($self) {
+	public function plugin_settings($self) {
 		if (!class_exists(Settings_Page::class)) {
 			require_once $this->get_path('includes/class-settings-page.php');
 		}
@@ -282,7 +282,7 @@ final class Product_Recommendations {
 		// Include required admin scripts
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 
-		// Include requred front-end scripts
+		// Include required front-end scripts
 		add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts')); 
 
 		// Add recommendations tabs in product data table
@@ -473,7 +473,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Add fields in prodcut recommendations tab
+	 * Add fields in product recommendations tab
 	 * 
 	 * @since      1.9.1
 	 * @return void
@@ -499,7 +499,7 @@ final class Product_Recommendations {
 	 *
 	 * @since      1.0.0
 	 * @return     URL link of file.
-	 * @param      stirng File name with folder path.
+	 * @param      string File name with folder path.
 	 */
 	public function get_url($file = '') {
 		return plugin_dir_url(self::$__FILE__) . $file;
@@ -509,7 +509,7 @@ final class Product_Recommendations {
 	 * Get file path of plugin file
 	 *
 	 * @since      1.0.0
-	 * @param      stirng relative path of plugin file
+	 * @param      string relative path of plugin file
 	 * @return     string full path of plugin file
 	 */
 	public function get_path($file_path) {
@@ -520,8 +520,8 @@ final class Product_Recommendations {
 	 * Get template path from theme or plugin
 	 *
 	 * @since      1.0.0
-	 * @param      stirng File name with folder path.
-	 * @return     string Full of template from theme or pro plguin or plugin.
+	 * @param      string File name with folder path.
+	 * @return     string Full of template from theme or pro plugin or plugin.
 	 */
 	public function get_templates_path($file_path) {
 		//from theme
@@ -595,7 +595,7 @@ final class Product_Recommendations {
 				$entry_data['type'] = sanitize_key($panel_data['type']);
 			}
 
-			//selected prodcut
+			//selected product
 			if (isset($panel_data['products']) && is_array($panel_data['products'])) {
 				$recommend_products = array_map(function ($id) {
 					return (int) $id;
@@ -801,7 +801,7 @@ final class Product_Recommendations {
 		'<div class="modal-heading-article">' . do_shortcode($heading_article) . '</div>';
 		$template_data['modal_heading'] = $modal_heading;
 
-		//visiblity items
+		//visibility items
 		$show_close_icon = $this->get_setting('show_close_icon');
 		$template_data['show_close_icon'] = $show_close_icon;
 		$show_continue_shopping = $this->get_setting('show_continue_shopping');
@@ -871,7 +871,7 @@ final class Product_Recommendations {
 		$has_global = !empty($settings['active_global_settings']) ? true : false;
 		$disable_overwrite = !empty($settings['disable_global_override']) ? true : false;
 
-		// active global and not overwirte by local
+		// active global and not overwrite by local
 		if ($has_global && $disable_overwrite) {
 			return true;
 		}
@@ -1043,11 +1043,13 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Add modal in the archive / shop page prodcuts
+	 * Add modal in the archive / shop page products
 	 * @since      1.0.0
 	 * @return void;
 	 */
 	public function product_archive_modal() {
+		//Todo: DOING_AJAX
+
 		global $product;
 		$product_id = $product->get_id();
 
@@ -1056,10 +1058,18 @@ final class Product_Recommendations {
 			$recommended_products_id = $this->get_recommended_products_id($product_id);
 
 			if (!empty($recommended_products_id)) {
+				
 				$data = $this->get_template_data($product_id, $recommended_products_id);
-				add_action('wp_footer', function () use ($data) {
-					include ($this->get_templates_path('templates/template-modal.php'));
-				});
+
+				if(!defined('DOING_AJAX')) {
+					add_action('wp_footer', function () use ($data) {
+						include ($this->get_templates_path('templates/template-modal.php'));
+					});
+				}else {
+					// request coming through ajax 
+					// How can insert template in footer 
+				}
+
 			}
 		endif;
 	}
@@ -1088,7 +1098,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Add modal in the Guterberg blocks product
+	 * Add modal in the Gutenberg blocks product
 	 * @since      1.0.0
 	 */
 	public function product_gutenberg_block($html, $data, $product) {
@@ -1192,7 +1202,7 @@ final class Product_Recommendations {
 	 * Get default settings
 	 *
 	 * @since      1.0.0
-	 * @return  array of default value of all sertting when default avaiable
+	 * @return  array of default value of all setting when default available
 	 */
 	public function get_default_settings() {
 		$default_settings = array();
@@ -1210,8 +1220,8 @@ final class Product_Recommendations {
 								$default_settings[$field['id']] = $field['default'];
 							}
 
-							if (!empty($field['childs'])) {
-								foreach ($field['childs'] as $child_field) {
+							if (!empty($field['chields'])) {
+								foreach ($field['chields'] as $child_field) {
 									if (isset($child_field['default'])) {
 										$default_settings[$child_field['id']] = $child_field['default'];
 									}
@@ -1237,7 +1247,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Check pro plugin avaiable or not
+	 * Check pro plugin available or not
 	 *
 	 * @since      1.1.0
 	 */
@@ -1255,7 +1265,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Get prodcut recommendations meta data
+	 * Get product recommendations meta data
 	 *
 	 * @since      1.0.0
 	 * @return object of post meta _lc_lpr_data
@@ -1407,8 +1417,8 @@ final class Product_Recommendations {
 								return $field['default'];
 							}
 
-							if (!empty($field['childs'])) {
-								foreach ($field['childs'] as $child_field) {
+							if (!empty($field['chields'])) {
+								foreach ($field['chields'] as $child_field) {
 
 									if ($child_field['id'] === $id && isset($child_field['default'])) {
 										return $child_field['default'];
@@ -1445,8 +1455,8 @@ final class Product_Recommendations {
 								return isset($field['type']) ? $field['type'] : false;
 							}
 
-							if (!empty($field['childs'])) {
-								foreach ($field['childs'] as $child_field) {
+							if (!empty($field['chields'])) {
+								foreach ($field['chields'] as $child_field) {
 									if ($child_field['id'] === $id) {
 										return isset($child_field['type']) ? $child_field['type'] : false;
 									}
@@ -1471,10 +1481,10 @@ final class Product_Recommendations {
 		$general_settings_fields = array(
 			array(
 				'id' => 'heading_type',
-				'title' => __('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="' . home_url() . '/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings">Globl Setting</a></small>', 'leo-product-recommendations'),
+				'title' => __('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="' . home_url() . '/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings">Global Setting</a></small>', 'leo-product-recommendations'),
 				'type' => 'heading_selection',
 				'default' => 'default_heading',
-				'childs' => array(
+				'chields' => array(
 					array(
 						'id' => 'default_heading',
 						'title' => __('Heading', 'leo-product-recommendations'),
@@ -1503,7 +1513,7 @@ final class Product_Recommendations {
 				'id' => 'grid_options',
 				'title' => __('Grid Options', 'leo-product-recommendations'),
 				'type' => 'wrapper',
-				'childs' => array(
+				'chields' => array(
 					array(
 						'id' => 'grid_lg_items',
 						'title' => __('Desktop Items Per Row', 'leo-product-recommendations'),
@@ -1534,7 +1544,7 @@ final class Product_Recommendations {
 						'id' => 'grid_column_gap',
 						'title' => __('Column Gap', 'leo-product-recommendations'),
 						'type' => 'number',
-						'sufix' => 'px',
+						'suffix' => 'px',
 						'min' => 0,
 						'max' => 60,
 						'default' => 20,
@@ -1550,7 +1560,7 @@ final class Product_Recommendations {
 				'link' => esc_url('https://cutt.ly/4jE8fxM'),
 			),
 			array(
-				'id' => 'slidar_options_image',
+				'id' => 'slider_options_image',
 				'title' => __('Slider Options <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
 				'type' => 'pro_image',
 				'image_url' => $this->get_url('assets/images/slider-options.jpg'),
@@ -1564,10 +1574,10 @@ final class Product_Recommendations {
 				'link' => esc_url('https://cutt.ly/4jE8fxM'),
 			),
 			array(
-				'id' => 'button_visiblity_image',
-				'title' => __('Buttons Visiblity <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
+				'id' => 'button_visibility_image',
+				'title' => __('Buttons Visibility <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
 				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/button-visiblity.jpg'),
+				'image_url' => $this->get_url('assets/images/button-visibility.jpg'),
 				'link' => esc_url('https://cutt.ly/4jE8fxM'),
 			),
 		);
@@ -1609,7 +1619,7 @@ final class Product_Recommendations {
 				'id' => 'selection_options',
 				'title' => __('Recommendation Options', 'leo-product-recommendations'),
 				'type' => 'wrapper_extend',
-				'childs' => array(
+				'chields' => array(
 					array(
 						'id' => 'global_categories',
 						'title' => __('Categories', 'leo-product-recommendations'),
@@ -1753,8 +1763,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'temporary_deactivation',
 					'reason' => __('It\'s a temporary deactivation.', 'leo-product-recommendations', 'leo-product-recommendations'),
-					'instuction' => '',
-					'input_field' => '',
+					'instruction' => '',
 					'placeholder' => '',
 					'input_default' => '',
 				),
@@ -1762,7 +1771,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'not_show_image_button',
 					'reason' => __('Does not show product image or add to cart button.', 'leo-product-recommendations', 'leo-product-recommendations'),
-					'instuction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Plesae contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -1771,7 +1780,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'dont_understand',
 					'reason' => __('I couldn\'t understand how to use it.', 'leo-product-recommendations'),
-					'instuction' => '<a href="https://cutt.ly/rjE8eiu" target="_blank">' . __('Please check details documentations »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://cutt.ly/rjE8eiu" target="_blank">' . __('Please check details documentations »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -1780,7 +1789,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'not_works',
 					'reason' => __('It doesn\'t work with my website.', 'leo-product-recommendations'),
-					'instuction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Plesae contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -1789,7 +1798,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'look_bad',
 					'reason' => __('It looks bad on my website.', 'leo-product-recommendations'),
-					'instuction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Plesae contact with our support we will help you to fix the issues »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Please contact with our support we will help you to fix the issues »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -1798,7 +1807,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'dont_need',
 					'reason' => __('It works nicely but I don’t need it now.', 'leo-product-recommendations'),
-					'instuction' => '<a href="https://cutt.ly/ZjXi7q8" target="_blank">' . __('Please incourse us by giving nice feedback  »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://cutt.ly/ZjXi7q8" target="_blank">' . __('Please encourage us by giving nice feedback  »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -1807,16 +1816,16 @@ final class Product_Recommendations {
 				array(
 					'category' => 'need_help',
 					'reason' => __('I need some help to set up the plugin.', 'leo-product-recommendations'),
-					'instuction' => __('Please provide your email address we will conact you soon.', 'leo-product-recommendations'),
+					'instruction' => __('Please provide your email address we will contact you soon.', 'leo-product-recommendations'),
 					'input_field' => 'email',
 					'placeholder' => '',
-					'input_default' => sanitize_email($this->amdin_email()),
+					'input_default' => sanitize_email($this->admin_email()),
 				),
 
 				array(
 					'category' => 'another_plugin',
 					'reason' => __('I found a better plugin.', 'leo-product-recommendations'),
-					'instuction' => '',
+					'instruction' => '',
 					'input_field' => 'text',
 					'placeholder' => __('Please share which plugin', 'leo-product-recommendations'),
 					'input_default' => '',
@@ -1825,7 +1834,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'feature_request',
 					'reason' => __('I need a specific feature that it doesn\'t support.', 'leo-product-recommendations'),
-					'instuction' => __('Please let us know feature details we will try add it ASAP', 'leo-product-recommendations'),
+					'instruction' => __('Please let us know feature details we will try add it ASAP', 'leo-product-recommendations'),
 					'input_field' => 'textarea',
 					'placeholder' => __('Require feature details', 'leo-product-recommendations'),
 					'input_default' => '',
@@ -1834,7 +1843,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'other',
 					'reason' => __('Other.', 'leo-product-recommendations'),
-					'instuction' => '',
+					'instruction' => '',
 					'input_field' => 'textarea',
 					'placeholder' => __('Please share the reason. We will try to fix / help you.', 'leo-product-recommendations'),
 					'input_default' => '',
@@ -1877,7 +1886,7 @@ final class Product_Recommendations {
 	 *
 	 * @return string current user email address
 	 */
-	public function amdin_email() {
+	public function admin_email() {
 		$admin_email = wp_get_current_user();
 		return (0 !== $admin_email->ID) ? $admin_email->data->user_email : '';
 	}

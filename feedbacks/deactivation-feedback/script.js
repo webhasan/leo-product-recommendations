@@ -61,10 +61,10 @@
                     $submitButton.addClass('submiting').text(__('Deactivating...', 'pgfy_deactivation_plugin'));
                     var request = $.ajax({
                         method: 'POST',
-                        url: leo_defeedback_data.ajax_url,
+                        url: leo_feedback_data.ajax_url,
                         data: {
                             action: 'deactivation_feedback_' + pluginSlug,
-                            security: leo_defeedback_data.security,
+                            security: leo_feedback_data.security,
                             formData: $formData
                         }
                     })

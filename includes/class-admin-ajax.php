@@ -28,8 +28,8 @@ class Admin_Ajax {
         add_action('wp_ajax_wpr_fetch_tags', array($this, 'fetch_tags'));
         add_action('wp_ajax_nopriv_wpr_fetch_tags', array($this, 'fetch_tags'));
 
-        add_action('wp_ajax_lpr_fetch_products', array($this, 'fetch_prodcuts'));
-        add_action('wp_ajax_nopriv_lpr_fetch_products', array($this, 'fetch_prodcuts'));
+        add_action('wp_ajax_lpr_fetch_products', array($this, 'fetch_products'));
+        add_action('wp_ajax_nopriv_lpr_fetch_products', array($this, 'fetch_products'));
     }
 
     /**
@@ -47,7 +47,7 @@ class Admin_Ajax {
         // post ID
         $post_id = (int) $_GET['post_id'];
 
-        // incalid post id
+        // include post id
         if ( FALSE === get_post_status( $post_id ) ) {
             wp_send_json(null);
         }
@@ -79,8 +79,8 @@ class Admin_Ajax {
 
             $products = is_array($data['products']) ? $data['products'] : array();
 
-            $products = array_map(function ($prodcut) {
-                $id    = (int) $prodcut;
+            $products = array_map(function ($product) {
+                $id    = (int) $product;
 
                 if ( FALSE !== get_post_status( $id ) ) {
                     $title         = get_the_title($id);
@@ -136,21 +136,21 @@ class Admin_Ajax {
             wp_send_json_error(array('message' => 'Bad request'), 400);
         }
 
-        $product_categoreis = get_terms(array(
+        $product_categories = get_terms(array(
             'taxonomy'   => "product_cat",
             'orderby'    => 'name',
             'hide_empty' => false,
         ));
 
-        $product_categoreis = array_map(function ($category) {
+        $product_categories = array_map(function ($category) {
             $id     = $category->term_id;
             $name   = $category->name;
             $parent = $category->parent;
 
             return compact('id', 'name', 'parent');
-        }, $product_categoreis);
+        }, $product_categories);
 
-        wp_send_json($product_categoreis);
+        wp_send_json($product_categories);
     }
 
     /**
@@ -186,7 +186,7 @@ class Admin_Ajax {
      *
      * @return void
      */
-    public function fetch_prodcuts() {
+    public function fetch_products() {
         // nonce validation
         $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
         if (!$nonce_validation) {
@@ -221,9 +221,9 @@ class Admin_Ajax {
         }
 
         $products      = get_posts($args);
-        $prodcut_query = new \WP_Query($args);
+        $product_query = new \WP_Query($args);
 
-        // map prodcut id , title, thumbnails and categoris
+        // map product id , title, thumbnails and categories
         $products = array_map(function ($item) {
             $id            = $item->ID;
             $title         = $item->post_title;
@@ -232,7 +232,7 @@ class Admin_Ajax {
             return compact('id', 'title', 'feature_image');
         }, $products);
 
-        $max_page = $prodcut_query->max_num_pages;
+        $max_page = $product_query->max_num_pages;
 
         wp_send_json(compact('products', 'max_page'));
     }

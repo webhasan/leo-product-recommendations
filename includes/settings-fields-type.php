@@ -21,7 +21,7 @@ function wrapper($field, $base, $setting_id) {
     ?>
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <div class="fields-container">
-            <?php foreach ($childs as $child) :
+            <?php foreach ($chields as $child) :
 
                 $field_name = $setting_id . '[' . $child['id'] . ']';
                 $title = $child['title'];
@@ -71,7 +71,7 @@ function wrapper($field, $base, $setting_id) {
 
                 <?php 
                     elseif ($child['type'] == 'number') : 
-                    $sufix = !empty($child['sufix']) ? $child['sufix'] : '';
+                    $suffix = !empty($child['suffix']) ? $child['suffix'] : '';
                     $min = !empty($child['min']) ? $child['min'] : '';
                     $max = !empty($child['max']) ? $child['max'] : '';
                 ?>
@@ -84,7 +84,7 @@ function wrapper($field, $base, $setting_id) {
                                     $field_name,
                                     $min,
                                     $max,
-                                    $sufix,
+                                    $suffix,
                                     $title
                                 )
                             ?>
@@ -199,7 +199,7 @@ function wrapper_extend($field, $base, $setting_id) {
 
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
         <div class="fields-container">
-            <?php foreach ($childs as $child) :
+            <?php foreach ($chields as $child) :
 
                 $field_name = $setting_id . '[' . $child['id'] . ']';
                 $title = $child['title'];
@@ -249,7 +249,7 @@ function wrapper_extend($field, $base, $setting_id) {
 
                 <?php 
                     elseif ($child['type'] == 'number') : 
-                    $sufix = !empty($child['sufix']) ? $child['sufix'] : '';
+                    $suffix = !empty($child['suffix']) ? $child['suffix'] : '';
                 ?>
                     <div class="child-number" id="<?php echo $id; ?>">
                         <label><?php echo $title; ?></label>
@@ -258,7 +258,7 @@ function wrapper_extend($field, $base, $setting_id) {
                                 '<input type="number" value="%1$s" name="%2$s"/> %3$s',
                                 $value,
                                 $field_name,
-                                $sufix
+                                $suffix
                             )
                         ?>
                     </div>
@@ -559,8 +559,6 @@ function css($field, $base, $setting_id) {
  */
 function pro_image($field, $base, $setting_id) {
     extract($field);
-    $value      = $base->get_setting($id);
-    $field_name = $setting_id . '[' . $id . ']';
 
     ?>
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
@@ -596,7 +594,7 @@ function heading_selection($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
     ?>
     <fieldset class="lpr-field-heading_type" id="lpr-field-<?php echo $id; ?>">
-        <?php foreach ($childs as $heading_type):
+        <?php foreach ($chields as $heading_type):
         $checked = ($value === $heading_type['id']) ? ' checked ' : '';
         ?>
             <label>
@@ -607,7 +605,7 @@ function heading_selection($field, $base, $setting_id) {
 
         <div class="heading-field">
             
-            <?php foreach ($childs as $heading_type):
+            <?php foreach ($chields as $heading_type):
                 $sub_field_name  = $setting_id . '[' . $heading_type['id'] . ']';
                 $sub_field_value = $base->get_setting($heading_type['id']);
                 $display         = ($value === $heading_type['id']) ? 'block' : 'none';
@@ -625,7 +623,7 @@ function heading_selection($field, $base, $setting_id) {
                 elseif ($heading_type['type'] === 'editor'):
                     $sub_field_value = ($value === 'default_heading_description') ? $sub_field_value : '';
                     printf(
-                        '<div style="display:%1$s" class="%2$s"><textarea id="default-heaidng-editor" name="%3$s">%4$s</textarea></div>',
+                        '<div style="display:%1$s" class="%2$s"><textarea id="default-heading-editor" name="%3$s">%4$s</textarea></div>',
                         $display,
                         $heading_type['id'],
                         $sub_field_name,

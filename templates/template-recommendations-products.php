@@ -14,13 +14,13 @@ if($theme === 'Electro') {
     $tag_classes .= 'single-product';
 }
 
-$begning_tag = '<li class="%s">';
-$begning_tag = sprintf($begning_tag, $tag_classes);
-$endng_tag   = '</li>';
+$beginning_tag = '<li class="%s">';
+$beginning_tag = sprintf($beginning_tag, $tag_classes);
+$ending_tag   = '</li>';
 ?>
 
-<?php echo $begning_tag; ?>
-    <?php do_action('lpr_before_recommended_prodcut', get_the_ID()); ?>
+<?php echo $beginning_tag; ?>
+    <?php do_action('lpr_before_recommended_product', get_the_ID()); ?>
     
     <a href="<?php the_permalink(); ?>">
         <?php
@@ -33,8 +33,8 @@ $endng_tag   = '</li>';
         }
         
         //fixed not showing image issue
-        $no_thumbail_themes = apply_filters('lpr_show_image', ['DavinciWoo']);
-        if(in_array($theme, $no_thumbail_themes)) {
+        $no_thumbnail_themes = apply_filters('lpr_show_image', ['DavinciWoo']);
+        if(in_array($theme, $no_thumbnail_themes)) {
             echo woocommerce_get_product_thumbnail();
         }
 
@@ -45,7 +45,7 @@ $endng_tag   = '</li>';
     </a>
 
     <?php 
-    // Fixgin for Sneaker & Safira theme
+    // Fixing for Sneaker & Safira theme
         if($theme === 'Sneaker' || $theme === 'Safira' || $theme === 'Plantmore') {
             woocommerce_template_single_price();
         }
@@ -57,6 +57,6 @@ $endng_tag   = '</li>';
     }else {
         woocommerce_template_loop_add_to_cart();
     }
-    do_action('lpr_after_recommended_prodcut', get_the_ID()); ?>
-<?php echo $endng_tag; ?>
+    do_action('lpr_after_recommended_product', get_the_ID()); ?>
+<?php echo $ending_tag; ?>
 

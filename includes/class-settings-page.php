@@ -27,7 +27,7 @@ class Settings_Page {
     private $hook = array();
 
     /**
-     * Setting consturctor
+     * Setting constructor
      * Initialize all setting actions
      *
      * @since      1.0.0
@@ -158,7 +158,7 @@ class Settings_Page {
             register_setting($page['id'], $page['id']);
 
             foreach ($this->get_fields($page) as $section => $field) {
-                add_settings_field($field['id'], $field['title'], array($this, 'display_field'), $field['sectoin'], $field['sectoin'], $field);
+                add_settings_field($field['id'], $field['title'], array($this, 'display_field'), $field['section'], $field['section'], $field);
             }
         }
     }
@@ -188,7 +188,7 @@ class Settings_Page {
     }
 
     /**
-     * Section tab conent
+     * Section tab content
      *
      * @since      1.0.0
      */
@@ -240,7 +240,7 @@ class Settings_Page {
      */
     public function get_sub_field($wrapper) {
         $pages     = $this->base->settings_pages();
-        $sub_fiels = array();
+        $sub_fields = array();
 
         foreach ($pages as $page) {
             if (isset($page['sections']) && !empty($page['sections'])) {
@@ -249,9 +249,9 @@ class Settings_Page {
 
                     if (isset($section['fields']) && !empty($section['fields'])) {
                         foreach ($section['fields'] as $field) {
-                            if (($field['id'] === $wrapper) && !empty($field['childs'])) {
-                                foreach ($field['childs'] as $sub_field) {
-                                    $sub_fiels[] = $sub_field['id'];
+                            if (($field['id'] === $wrapper) && !empty($field['chields'])) {
+                                foreach ($field['chields'] as $sub_field) {
+                                    $sub_fields[] = $sub_field['id'];
                                 }
                             }
                         }
@@ -260,7 +260,7 @@ class Settings_Page {
             }
         }
 
-        return $sub_fiels;
+        return $sub_fields;
     }
 
     /**
@@ -278,7 +278,7 @@ class Settings_Page {
     }
 
     /**
-     * Get settings fiels
+     * Get settings fields
      *
      * @return array of settings field
      */
@@ -295,7 +295,7 @@ class Settings_Page {
 
                 foreach ($section['fields'] as $field) {
 
-                    $field['sectoin']     = $section['id'];
+                    $field['section']     = $section['id'];
                     $field['register_id'] = $page['id'];
                     $field['label_for']   = $field['id'];
 
@@ -313,13 +313,13 @@ class Settings_Page {
     /**
      * Remove specific settings from database
      *
-     * @param array $fiels
+     * @param array $fields
      */
-    public function remove_settings($fiels = array()) {
-        if (!empty($fiels)) {
+    public function remove_settings($fields = array()) {
+        if (!empty($fields)) {
             $settings        = $this->base->get_settings();
-            $filter_settings = array_filter($settings, function ($key) use ($fiels) {
-                return !in_array($key, $fiels);
+            $filter_settings = array_filter($settings, function ($key) use ($fields) {
+                return !in_array($key, $fields);
             }, ARRAY_FILTER_USE_KEY);
 
             $this->base->set_settings($filter_settings);
