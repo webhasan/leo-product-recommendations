@@ -8,6 +8,18 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+extract($template_data);
+// $product_id
+// $recommended_products_id
+// $modal_heading
+// $show_close_icon
+// $show_continue_shopping
+// $show_go_check_out
+// $layout_type
+// $theme
+// $query
+// $feature_image
 ?>
 
 <?php do_action('lpr_before_modal_content', $product_id, $recommended_products_id); ?>
@@ -50,7 +62,7 @@ if (!defined('ABSPATH')) {
 
         </div>
 
-        <?php //echo $modal_heading; ?>
+        <?php echo $modal_heading; ?>
 
         <?php if(apply_filters('lpr_show_close_icon', false)): ?>
             <span aria-hidden="true" class="lpr-modal-close"></span>
@@ -64,7 +76,7 @@ if (!defined('ABSPATH')) {
 
         <ul class="products recommended-products-wrapper recommended-products-list">
             <?php 
-            if ($loop->have_posts()): while ($loop->have_posts()): $loop->the_post();
+            if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
                 include $this->get_templates_path('templates/template-recommendations-products.php');
             endwhile; wp_reset_postdata(); endif;
             ?>

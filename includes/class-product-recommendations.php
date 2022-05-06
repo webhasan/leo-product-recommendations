@@ -298,10 +298,6 @@ final class Product_Recommendations {
 		add_action('wp_ajax_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 		add_action('wp_ajax_nopriv_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 
-		// Fetch items already in cart
-		add_action('wp_ajax_lc_get_cart_items', array($this, 'get_cart_items'));
-		add_action('wp_ajax_nopriv_lc_get_cart_items', array($this, 'get_cart_items'));
-
 		add_filter('nonce_user_logged_out', array($this, 'nonce_fix'), 100, 2);
 
 		// include modal template
@@ -376,7 +372,6 @@ final class Product_Recommendations {
 	public function wp_enqueue_scripts() {
 		$version = $this->script_version();
 		$settings = $this->get_settings();
-		$variable_add_to_cart = $this->get_setting('variable_add_to_cart') ? $this->get_setting('variable_add_to_cart') : false;
 		$layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
 		wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery', 'wp-i18n'), $version, true);
@@ -385,8 +380,7 @@ final class Product_Recommendations {
 		wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
 			'url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('lc-ajax-modal'),
-			'layout_type' => $layout_type,
-			'variable_add_to_cart' => $variable_add_to_cart,
+			'layout_type' => $layout_type
 		));
 
 		// if (is_product()) { // disabled condition so that it work for quick view
@@ -655,31 +649,23 @@ final class Product_Recommendations {
 
 	public function fetch_modal_products() {
 		$nonce = $_GET['nonce'];
-		$recommended_products_id = (isset($_GET['recommendation_items']) && is_array($_GET['recommendation_items'])) ? $_GET['recommendation_items'] : null;
 		$product_id  = $_GET['product_id'];
 
-		if (!isset($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || !isset($product_id) || empty($recommended_products_id)) {
+		if (!isset($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || !isset($product_id)) {
 			wp_send_json_error(array('message' => 'Bad request'), 400);
 		}
 
-		$recommended_products_id = array_map(function ($id) {
-			return (int) $id;
-		}, $recommended_products_id);
+		$recommended_products_id = $this->get_recommended_products_id($product_id);
+		$cart_items = $this->get_cart_items();
 
-		$feature_image = get_the_post_thumbnail_url($product_id, array('100', '100'));
-		$layout_type = isset($_GET['layout_type']) ? sanitize_key($_GET['layout_type']) : 'grid';
-		$variable_add_to_cart = isset($_GET['variable_add_to_cart']) ? (bool) $_GET['variable_add_to_cart'] : false;
-		$theme_info = wp_get_theme();
-		$theme = $theme_info->parent() ? $theme_info->parent()->get('Name') : $theme_info->get('Name');
-		$args = array(
-			'post_type' => 'product',
-			'posts_per_page' => -1,
-			'post__in' => $recommended_products_id,
-			'orderby' => 'post__in',
-		);
-		$loop = new \WP_Query($args);
+		$recommended_products_id  = array_filter($recommended_products_id, function($id) use($cart_items) {
+			return !in_array($id, $cart_items);
+		});
 
-		include $this->get_templates_path('templates/template-modal.php');
+		if(!count($recommended_products_id)) wp_die();
+
+		$template_data = $this->get_template_data($product_id, $recommended_products_id);
+		include $this->get_templates_path('templates/template-modal-content.php');
 		wp_die();
 	}
 
@@ -705,18 +691,18 @@ final class Product_Recommendations {
 	 * Ajax callback to get cart items
 	 *
 	 * @since      1.0.0
-	 * @return  json with cart items
+	 * @return  array with cart items
 	 */
 	public function get_cart_items() {
-		$products_ids_array = array();
+		$product_ids = array();
 
 		if (WC()->cart) {
 			foreach (WC()->cart->get_cart() as $cart_item) {
-				$products_ids_array[] = $cart_item['product_id'];
+				$product_ids[] = $cart_item['product_id'];
 			}
 		}
 
-		wp_send_json($products_ids_array);
+		return $product_ids;
 	}
 
 	/**
@@ -725,56 +711,34 @@ final class Product_Recommendations {
 	 * @return  void;
 	 */
 	public function include_templates() {
-		// modal in shop / archives page
-		if (apply_filters('lc_pr_show_in_product_archives', true)) {
-			add_action('woocommerce_after_shop_loop_item', array($this, 'product_archive_modal'));
-		}
-
-		// modal in single product page
-		if (apply_filters('lc_pr_show_in_singe_product', true)) {
-			add_action('woocommerce_before_single_product', array($this, 'product_single_modal'));
-		}
-
-		// modal in WooCommerce Gutenberg products block
-		if (apply_filters('lc_pr_show_in_gutenberg_product_block', true)) {
-			add_filter('woocommerce_blocks_product_grid_item_html', array($this, 'product_gutenberg_block'), 10, 3);
-		}
+		add_action('wp_footer', function() {
+			include_once($this->get_templates_path('templates/modal-modal.php'));
+		});
 	}
 
 	/**
 	 * Get recommendation products modal heading
 	 *
 	 * @param int $product_id
-	 * @return string heading of recommendation products
+	 * @param array $recommended_products_id
+	 * @return array heading of recommendation products
 	 * @since   1.0.0
 	 */
 	public function get_template_data($product_id, $recommended_products_id) {
 		$template_data = array();
+
+		//product_id
 		$template_data['product_id'] = $product_id;
+
+		//recommended_products_id
 		$template_data['recommended_products_id'] = $recommended_products_id;
 
-		//heading from product editor panel
+		//modal_heading
 		$pr_data = $this->get_pr_data($product_id); //recommendations data for product
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
-
-		//heading editor panel
 		$is_article_heading = ($this->get_setting('heading_type') === 'default_heading_description');
 		$default_heading = $is_article_heading ? $this->get_setting('default_heading_description') : $this->get_setting('default_heading');
-
 		$default_heading = !empty($default_heading) ? $default_heading : '';
-		// cart products
-		$cart_products_ids = array();
-
-		if (WC()->cart) {
-			foreach (WC()->cart->get_cart() as $cart_item) {
-				$cart_products_ids[] = $cart_item['product_id'];
-			}
-		}
-
-		$selectable_products = array_filter($recommended_products_id, function ($item) use ($cart_products_ids) {
-			return !in_array($item, $cart_products_ids);
-		});
-
 		$html_permission = array(
 			'span' => array('class'),
 			'b' => array(),
@@ -782,31 +746,53 @@ final class Product_Recommendations {
 			'i' => array(),
 			'br' => array(),
 		);
-
 		$modal_heading = (!$this->is_active_global($product_id) && !empty(trim($modal_heading))) ? $modal_heading : $default_heading;
 		$modal_heading = wp_kses($modal_heading, $html_permission);
 		$modal_heading = str_replace('%title%', get_the_title($product_id), $modal_heading);
-		$modal_heading = preg_replace('/\[(.+),(.+)\]/', _n('${1}', '${2}', count($selectable_products)), $modal_heading);
-
+		$modal_heading = preg_replace('/\[(.+),(.+)\]/', _n('${1}', '${2}', count($recommended_products_id)), $modal_heading);
 		$heading_type = isset($pr_data['heading_type']) ? $pr_data['heading_type'] : 'heading';
 		$heading_article = isset($pr_data['heading_article']) ? $pr_data['heading_article'] : '';
-
 		$modal_heading = ($heading_type === 'heading') || $this->is_active_global($product_id)
 		? '<h2 class="modal-heading">' . $modal_heading . '</h2>' :
 		'<div class="modal-heading-article">' . do_shortcode($heading_article) . '</div>';
 		$template_data['modal_heading'] = $modal_heading;
 
-		//visibility items
-		$show_close_icon = $this->get_setting('show_close_icon');
-		$template_data['show_close_icon'] = $show_close_icon;
-		$show_continue_shopping = $this->get_setting('show_continue_shopping');
-		$template_data['show_continue_shopping'] = $show_continue_shopping;
-		$show_go_check_out = $this->get_setting('show_go_check_out');
-		$template_data['show_go_check_out'] = $show_go_check_out;
+		//show_close_icon
+		$template_data['show_close_icon'] = $this->get_setting('show_close_icon');
 
+		//show_continue_shopping
+		$template_data['show_continue_shopping'] = $this->get_setting('show_continue_shopping');
+
+		//show_go_check_out
+		$template_data['show_go_check_out'] = $this->get_setting('show_go_check_out');
+
+		//layout_type
 		$layout_type = $this->get_setting('layout_type');
 		$layout_type = !empty($layout_type) ? $layout_type : 'grid';
 		$template_data['layout_type'] = $layout_type;
+
+		//variable_add_to_cart
+		$template_data['variable_add_to_cart'] = $this->get_setting('variable_add_to_cart');
+
+		//theme
+		$theme_info = wp_get_theme();
+		$theme = $theme_info->parent() ? $theme_info->parent()->get('Name') : $theme_info->get('Name');
+		$template_data['theme'] = $theme;
+
+		//feature_image
+		$feature_image = get_the_post_thumbnail_url($product_id, array('100', '100'));
+		$template_data['feature_image'] = $feature_image;
+		
+		//query
+		$args = array(
+			'post_type' => 'product',
+			'posts_per_page' => -1,
+			'post__in' => $recommended_products_id,
+			'orderby' => 'post__in',
+		);
+		$query = new \WP_Query($args);
+		$template_data['query'] = $query;
+
 
 		return $template_data;
 	}
@@ -1035,91 +1021,6 @@ final class Product_Recommendations {
 		}, $posts);
 
 		return $recommended_products_ids;
-	}
-
-	/**
-	 * Add modal in the archive / shop page products
-	 * @since      1.0.0
-	 * @return void;
-	 */
-	public function product_archive_modal() {
-		//Todo: DOING_AJAX
-
-		global $product;
-		$product_id = $product->get_id();
-
-		if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
-
-			$recommended_products_id = $this->get_recommended_products_id($product_id);
-			$result = join(',', $recommended_products_id);
-
-			if (!empty($recommended_products_id)) {
-
-				
-				$data = $this->get_template_data($product_id, $recommended_products_id);
-
-				if(!defined('DOING_AJAX')) {
-					// add_action('wp_footer', function () use ($data) {
-					// 	include ($this->get_templates_path('templates/template-modal.php'));
-					// });
-				}else {
-					// request coming through ajax 
-					// How can insert template in footer 
-				}
-
-			}
-		endif;
-	}
-
-	/**
-	 * Add modal in the single product pages
-	 * @since      1.0.0
-	 * @return void;
-	 */
-	public function product_single_modal() {
-		if (!is_product()) {
-			return false;
-		}
-
-		$product_id = get_the_ID();
-
-		if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
-			$recommended_products_id = $this->get_recommended_products_id($product_id);
-			if (!empty($recommended_products_id)) {
-				$data = $this->get_template_data($product_id, $recommended_products_id);
-				add_action('wp_footer', function () use ($data) {
-					include ($this->get_templates_path('templates/template-modal.php'));
-				});
-			}
-		endif;
-	}
-
-	/**
-	 * Add modal in the Gutenberg blocks product
-	 * @since      1.0.0
-	 */
-	public function product_gutenberg_block($html, $data, $product) {
-
-		if (!(WC()->cart)) {
-			return $html;
-		}
-		// do nothing if it is admin dashboard
-
-		$product_id = $product->get_id();
-		if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
-
-			$recommended_products_id = $this->get_recommended_products_id($product_id);
-
-			if (!empty($recommended_products_id)) {
-				$data = $this->get_template_data($product_id, $recommended_products_id);
-
-				add_action('wp_footer', function () use ($data) {
-					include ($this->get_templates_path('templates/template-modal.php'));
-				});
-			}
-		endif;
-
-		return $html;
 	}
 
 	/**

@@ -1,23 +1,23 @@
 (function ($, __) {
   //modal plugin
   $.fn.lprModal = function (options) {
-    var settings = $.extend(
+    const settings = $.extend(
       {
         action: "open", // option for modal open or close default: open
       },
       options
     );
 
-    var that = this;
+    const that = this;
 
     // modal overlay
-    var overlay = $('<div class="lpr-modal-overlay show"></div>');
+    const overlay = $('<div class="lpr-modal-overlay show"></div>');
 
     // open modal
     function openModal() {
       $('body').trigger('before_open_lpr_modal'); // event before modal open
 
-      var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
       that.addClass("show");
 
@@ -76,93 +76,67 @@
 
       
       const [, , buttonInfo] = data;
-      var button = buttonInfo[0];
+      const button = buttonInfo[0];
 
-      var addedProductId = $(button).data("product_id");
+      let addedProductId = $(button).data("product_id");
       //if don't find product id from button data
       if(!addedProductId && $(button).closest('form').length) {
         addedProductId = $(button).closest('form').find('[name="add-to-cart"]').val();
       }
 
-      var recommendedProducts = [];
-      var productDataSpan = $(button).parent().find('.product-recommendations-data');
-      if(productDataSpan.length) {
-        recommendedProducts = productDataSpan.data('recommended-products').split(',').map(Number);
-      }
-
-      let cartItems = await $.get(lc_ajax_modal.url, {
-        action: "lc_get_cart_items",
-        nonce: lc_ajax_modal.nonce,
-      });
-
-
-
-      //exclude products which already in cart
-      recommendedProducts = recommendedProducts.filter(id => !cartItems.includes(id));
-
-      console.log(recommendedProducts);
-
       //don't show modal inside modal
       if (!$(button).closest(".recommended-products-wrapper").length) {
-        
-        //if does not have any product to recommend
-        if(!recommendedProducts.length) return false;
-
+      
         //hide existing popup, quick view etc
         $('body, .quickview-wrapper .closeqv, .yith-quick-view-overlay, .mfp-wrap').click(); 
 
-        //modal 
-        const modal = await $.get(lc_ajax_modal.url, {
-          action: "fetch_modal_products",
-          nonce: lc_ajax_modal.nonce,
-          product_id: addedProductId,
-          recommendation_items: recommendedProducts,
-          layout_type: lc_ajax_modal.layout_type,
-          variable_add_to_cart: lc_ajax_modal.variable_add_to_cart
-        });
+        try {
+          const modal = await $.get(lc_ajax_modal.url, {
+            action: "fetch_modal_products",
+            nonce: lc_ajax_modal.nonce,
+            product_id: addedProductId,
+          });
 
-         $('body').append(modal);
-         $('.lpr-modal').lprModal();
+          if(modal) {
+            const $modalWrapper = $('#lpr-modal-content');
+            $modalWrapper.html(modal);
 
+            $('#lpr-modal').lprModal();
+            setTimeout(() =>{
+              //message animation
+              $modalWrapper.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
+            }, 200);
 
-        // if (lc_ajax_modal.layout_type === "slider") {
-        //   var owl = $(modal).find(".recommended-products-slider").trigger("replace.owl.carousel", data);
+            setTimeout(() =>{
+              //message animation
+              $modalWrapper.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
+            }, 200);
 
-        //     $total_items = owl.data('owl.carousel')._items.length
-        //     $visible_items = owl.data('owl.carousel').options.items;
-            
-        //     owl.data('owl.carousel').options.loop = owl.data('owl.carousel').options.loop && $total_items > $visible_items
-        //     owl.trigger("refresh.owl.carousel");
-        // } 
+            //variable product swatch
+            setTimeout(() => {
+              $( '.lpr-modal .variations_form' ).each( function() {
+                  $( this ).wc_variation_form();
+              }); 
 
-        
-        
-
-        setTimeout(() =>{
-          //message animation
-          $modal.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
-        }, 200);
-
-        //variable product swatch
-        setTimeout(() => {
-          $( '.lpr-modal .variations_form' ).each( function() {
-              $( this ).wc_variation_form();
-          });   
-          // woodmart theme vernation swatch
-          if(window.woodmartThemeModule && woodmartThemeModule.swatchesVariations) {
-            woodmartThemeModule.swatchesVariations();
+              // woodmart theme variation swatch
+              if(window.woodmartThemeModule && woodmartThemeModule.swatchesVariations) {
+                woodmartThemeModule.swatchesVariations();
+              }
+              $modalWrapper.find('.modal-heading').addClass('lpr__animated animate__lpr_headShake');
+              $modalWrapper.find('.modal-heading-article').addClass('lpr__animated animate__lpr_headShake');
+            }, 700);
           }
-
-          $modal.find('.modal-heading').addClass('lpr__animated animate__lpr_headShake');
-          $modal.find('.modal-heading-article').addClass('lpr__animated animate__lpr_headShake');
-        }, 700);
+        }catch(e) {
+          //error occurred to fetch template
+        }
 
       }else {
-        var $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
-        var notificationText = ($productHeading.length) ? `${$productHeading.text()} ${__('has been added to cart.','leo-product-recommendations')}` : __('Item has been added to cart.','leo-product-recommendations'); 
-        var topPosition = $(button).closest('.lpr-modal').find('.lpr-message').outerHeight();
+        const $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
 
-        $notification_bar = $(button).closest('.lpr-modal').find('.lpr-purchase-notification'); 
+        const  notificationText = ($productHeading.length) ? `${$productHeading.text()} ${__('has been added to cart.','leo-product-recommendations')}` : __('Item has been added to cart.','leo-product-recommendations'); 
+        const topPosition = $(button).closest('.lpr-modal').find('.lpr-message').outerHeight();
+
+        const $notification_bar = $(button).closest('.lpr-modal').find('.lpr-purchase-notification'); 
         $notification_bar.css('top', topPosition).fadeIn(300).text(notificationText);
         setTimeout(() => {
            $notification_bar.fadeOut(600);

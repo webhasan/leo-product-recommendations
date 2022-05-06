@@ -4,7 +4,9 @@
  *
  * @since      1.0.0
  * @author     LeoCoder
+ * @global $theme
  */
+
 if (!defined('ABSPATH')) {
     exit;
 }
