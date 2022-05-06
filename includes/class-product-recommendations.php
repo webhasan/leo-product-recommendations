@@ -313,7 +313,7 @@ final class Product_Recommendations {
 		}
 
 		// cart item count for popup cart
-		add_filter('add_to_cart_fragments', array($this, 'cart_items_count'));
+		add_filter('woocommerce_add_to_cart_fragments', array($this, 'cart_items_count'));
 	}
 
 	/**
@@ -656,8 +656,9 @@ final class Product_Recommendations {
 	public function fetch_modal_products() {
 		$nonce = $_GET['nonce'];
 		$recommended_products_id = (isset($_GET['recommendation_items']) && is_array($_GET['recommendation_items'])) ? $_GET['recommendation_items'] : null;
+		$product_id  = $_GET['product_id'];
 
-		if (!isset($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || empty($recommended_products_id)) {
+		if (!isset($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || !isset($product_id) || empty($recommended_products_id)) {
 			wp_send_json_error(array('message' => 'Bad request'), 400);
 		}
 
@@ -665,26 +666,20 @@ final class Product_Recommendations {
 			return (int) $id;
 		}, $recommended_products_id);
 
+		$feature_image = get_the_post_thumbnail_url($product_id, array('100', '100'));
 		$layout_type = isset($_GET['layout_type']) ? sanitize_key($_GET['layout_type']) : 'grid';
 		$variable_add_to_cart = isset($_GET['variable_add_to_cart']) ? (bool) $_GET['variable_add_to_cart'] : false;
-
 		$theme_info = wp_get_theme();
 		$theme = $theme_info->parent() ? $theme_info->parent()->get('Name') : $theme_info->get('Name');
-
 		$args = array(
 			'post_type' => 'product',
 			'posts_per_page' => -1,
 			'post__in' => $recommended_products_id,
 			'orderby' => 'post__in',
 		);
-
 		$loop = new \WP_Query($args);
 
-		if ($loop->have_posts()): while ($loop->have_posts()): $loop->the_post();
-				include $this->get_templates_path('templates/template-recommendations-products.php');
-			endwhile;
-			wp_reset_postdata();
-		endif;
+		include $this->get_templates_path('templates/template-modal.php');
 		wp_die();
 	}
 
@@ -1056,15 +1051,17 @@ final class Product_Recommendations {
 		if ($this->is_active_global($product_id) || $this->is_pro_activated() || $this->is_manually_selection($product_id)): // free version does not support dynamic selection
 
 			$recommended_products_id = $this->get_recommended_products_id($product_id);
+			$result = join(',', $recommended_products_id);
 
 			if (!empty($recommended_products_id)) {
+
 				
 				$data = $this->get_template_data($product_id, $recommended_products_id);
 
 				if(!defined('DOING_AJAX')) {
-					add_action('wp_footer', function () use ($data) {
-						include ($this->get_templates_path('templates/template-modal.php'));
-					});
+					// add_action('wp_footer', function () use ($data) {
+					// 	include ($this->get_templates_path('templates/template-modal.php'));
+					// });
 				}else {
 					// request coming through ajax 
 					// How can insert template in footer 

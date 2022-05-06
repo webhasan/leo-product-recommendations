@@ -3,6 +3,7 @@
         var __ = wp.i18n.__;
 
         $('body').on('submit','form.cart', function (e) {   
+            e.preventDefault();
             
             var $form = $(this);
             var $submitButton = $form.find('button[type="submit"]');
@@ -22,8 +23,9 @@
 
             // recommendation products modal.
             var $targetModal = $('#lpr-modal-' + data.product_id);
+            //$targetModal.length || $form.closest('.lpr-modal-body').length
 
-            if($targetModal.length || $form.closest('.lpr-modal-body').length ) {
+            if( true ) {
                 // add product id to button to catch it by modal.
                 $submitButton.attr('data-product_id', data.product_id);
                 $submitButton.removeClass( 'added' );
@@ -58,7 +60,8 @@
                 }).fail(function(response) {
                     alert(response.responseJSON.data.message);
                     location.reload();
-                })
+                });
+
                 return false;
             }
         });
