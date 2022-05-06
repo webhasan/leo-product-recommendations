@@ -1165,7 +1165,7 @@ final class Product_Recommendations {
 	 * Get default settings
 	 *
 	 * @since      1.0.0
-	 * @return  array of default value of all sertting when default avaiable
+	 * @return  array of default value of all setting when default available
 	 */
 	public function get_default_settings() {
 		$default_settings = array();
@@ -1210,7 +1210,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Check pro plugin avaiable or not
+	 * Check pro plugin available or not
 	 *
 	 * @since      1.1.0
 	 */
@@ -1247,8 +1247,7 @@ final class Product_Recommendations {
 	 * @since      1.9.0
 	 * @return object of post meta _lc_lpr_data
 	 */
-	public function cart_items_count() {
-		global $woocommerce;
+	public function cart_items_count($fragments) {
 		ob_start();
 		?>
 		<span class="lpr-total-items"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
@@ -1679,7 +1678,7 @@ final class Product_Recommendations {
 						'tab_title' => __('Tutorials', 'leo-product-recommendations'),
 						'title' => __('Tutorial & Documentation', 'leo-product-recommendations'),
 						'type' => 'article',
-						'template' => $this->get_path('includes/page-tutorials.php'),
+						'template' => $this->get_path('includes/tutorials-page.php'),
 					),
 				),
 			),
