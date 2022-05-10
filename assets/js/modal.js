@@ -22,7 +22,6 @@
       that.addClass("show");
 
       $("body").css("paddingRight", scrollbarWidth);
-
       $("body").addClass("lpr-modal-opened").prepend(overlay);
 
       setTimeout(function () {
@@ -70,11 +69,12 @@
     });
   };
 
+
+
   $(function () {
     // call modal
     $(document.body).on("added_to_cart", async function (e, ...data) {
 
-      
       const [, , buttonInfo] = data;
       const button = buttonInfo[0];
 
@@ -92,7 +92,7 @@
 
         try {
           const modal = await $.get(lc_ajax_modal.url, {
-            action: "fetch_modal_products",
+            action: "get_popup_data",
             nonce: lc_ajax_modal.nonce,
             product_id: addedProductId,
           });

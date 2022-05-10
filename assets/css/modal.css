@@ -587,67 +587,6 @@ body.lpr-modal-opened {
   background: #4cc491;
   display: none;
 }
-.lpr-modal .loading-products {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  text-align: center;
-}
-.lpr-modal .loading-products .single-loading-product {
-  width: calc(25% - 16px);
-}
-@media screen and (max-width: 991px) {
-  .lpr-modal .loading-products .single-loading-product {
-    flex: 0 0 calc(33.333333% - 14px);
-    width: calc(33.333333% - 14px);
-  }
-  .lpr-modal .loading-products .single-loading-product:last-child {
-    display: none;
-  }
-}
-@media screen and (max-width: 767px) {
-  .lpr-modal .loading-products .single-loading-product {
-    flex: 0 0 calc(50% - 11px);
-    width: calc(50% - 11px);
-  }
-  .lpr-modal .loading-products .single-loading-product:nth-child(3) {
-    display: none;
-  }
-}
-.lpr-modal .loading-products .single-loading-product .loading-thumb {
-  width: 100%;
-  height: 200px;
-  background: #f6f7f8;
-  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
-  background-size: 800px 104px;
-  margin-bottom: 30px;
-  animation-duration: 2s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-name: placeHolderShimmer;
-  animation-timing-function: linear;
-}
-.lpr-modal .loading-products .single-loading-product .loading-title {
-  width: 70%;
-  height: 15px;
-  display: inline-block;
-  background: #f6f7f8;
-  margin-bottom: 10px;
-}
-.lpr-modal .loading-products .single-loading-product .loading-price {
-  height: 15px;
-  width: 50px;
-}
-.lpr-modal .loading-products .single-loading-product .loading-price,
-.lpr-modal .loading-products .single-loading-product .loading-button {
-  background: #f6f7f8;
-  display: inline-block;
-  margin-bottom: 10px;
-}
-.lpr-modal .loading-products .single-loading-product .loading-button {
-  width: 100px;
-  height: 30px;
-}
 
 .lpr-modal .owl-carousel .owl-stage {
   margin: auto;

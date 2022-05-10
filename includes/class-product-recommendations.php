@@ -30,7 +30,7 @@ final class Product_Recommendations {
 	static protected $settings;
 
 	/**
-	 * Array of all products recommendations data
+	 * Array of all products recommendations meta data
 	 *
 	 * @var array
 	 */
@@ -218,21 +218,22 @@ final class Product_Recommendations {
 	public function includes() {
 		$this->admin_ajax(); // handle all admin ajax request
 
-		$this->plugin_action_links(); // add action link, example: Go Pro, Settings
+		$this->plugin_action_links(); // add action link, example: Go Pro->, Settings->
 
 		if (!$this->is_pro_activated()) {
-			$this->plugin_settings($this); // plugin Settings Page
+			$this->plugin_settings($this); // Plugin settings page for free version
 		}
 	}
 
 	/**
-	 * Handle ajax request from selection panel
+	 * Handle ajax request 
+	 * for product recommendations selection panel
 	 * @since      1.0.0
 	 * @return void
 	 */
 	public function admin_ajax() {
 		if (!class_exists(Admin_Ajax::class)) {
-			include_once $this->get_path('includes/class-admin-ajax.php');
+			require_once $this->get_path('includes/class-admin-ajax.php');
 		}
 		new Admin_Ajax();
 	}
@@ -290,17 +291,18 @@ final class Product_Recommendations {
 		add_action('woocommerce_product_data_panels', array($this, 'product_data_panels'));
 		add_action('save_post', array($this, 'on_save_post'));
 
-		// Fetching product for popup modal
-		add_action('wp_ajax_fetch_modal_products', array($this, 'fetch_modal_products'));
-		add_action('wp_ajax_nopriv_fetch_modal_products', array($this, 'fetch_modal_products'));
+		// Fetch popup modal data
+		add_action('wp_ajax_get_popup_data', array($this, 'get_popup_data'));
+		add_action('wp_ajax_nopriv_get_popup_data', array($this, 'get_popup_data'));
 
 		// Ajax add to cart
 		add_action('wp_ajax_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 		add_action('wp_ajax_nopriv_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 
+		// fix woocommerce nonce issue logged out user
 		add_filter('nonce_user_logged_out', array($this, 'nonce_fix'), 100, 2);
 
-		// include modal template
+		// include popup modal template in footer
 		add_action('after_setup_theme', array($this, 'include_templates')); 
 
 		// load css from plugin style setting
@@ -320,7 +322,9 @@ final class Product_Recommendations {
 	 */
 	public function admin_enqueue_scripts() {
 		$version = $this->script_version();
+		$screen = get_current_screen();		
 		wp_enqueue_editor();
+
 		if (!$this->is_pro_activated()) {
 			wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
 			wp_set_script_translations( 'selection-panel-script', 'leo-product-recommendations' );
@@ -333,8 +337,7 @@ final class Product_Recommendations {
 			wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
 		}
 
-		$screen = get_current_screen();
-
+		//load script in setting page
 		if ($screen->id === 'toplevel_page_lpr-settings') {
 			// color picker
 			wp_enqueue_script('spectrum', $this->get_url('assets/js/color-picker/spectrum.js'), array('jquery'), $version, true);
@@ -358,13 +361,11 @@ final class Product_Recommendations {
 			wp_enqueue_style('wp-codemirror');
 			wp_enqueue_script('wp-theme-plugin-editor');
 
-			//register scripts
-			wp_register_script('setting-in-page', $this->get_url('assets/js/recommendations-in-page.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
 		}
 	}
 
 	/**
-	 * Enqueue all front end related scripts and styles
+	 * Enqueue all front-end related scripts and styles
 	 *
 	 * @since      1.0.0
 	 * @return void
@@ -450,8 +451,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Filter & add new tab in 
-	 * product data tabes
+	 * Add new tab in woocommerce product data tabes
 	 * 
 	 * @since      1.9.1
 	 * @return void
@@ -474,7 +474,7 @@ final class Product_Recommendations {
 	 */
 
 	public function product_data_panels() {
-		global $woocommerce, $post;
+		global $post;
 		$this->product_selection($post);
 	}
 
@@ -489,7 +489,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Plugin file URL
+	 * Get url of plugin file
 	 *
 	 * @since      1.0.0
 	 * @return     URL link of file.
@@ -500,7 +500,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Get file path of plugin file
+	 * Get path of plugin file 
 	 *
 	 * @since      1.0.0
 	 * @param      string relative path of plugin file
@@ -511,7 +511,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Get template path from theme or plugin
+	 * Get template path of popup modal 
 	 *
 	 * @since      1.0.0
 	 * @param      string File name with folder path.
@@ -529,7 +529,7 @@ final class Product_Recommendations {
 			return plugin_dir_path(self::$__FILE__PRO__) . $file_path;
 		}
 
-		//from plugin
+		//from  free version
 		return plugin_dir_path(self::$__FILE__) . $file_path;
 	}
 
@@ -544,7 +544,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Save recommended data to the product
+	 * Save product recommendations meta data
 	 *
 	 * @since      1.0.0
 	 * @return  void;
@@ -641,13 +641,13 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Ajax callback to query modal products
+	 * Ajax callback for query popup-modal data
 	 *
 	 * @since      1.0.0
 	 * @return  void;
 	 */
 
-	public function fetch_modal_products() {
+	public function get_popup_data() {
 		$nonce = $_GET['nonce'];
 		$product_id  = $_GET['product_id'];
 
@@ -670,7 +670,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Ajax callback to add to cart
+	 * Ajax add to cart 
 	 *
 	 * @since      1.0.0
 	 * @return  json
@@ -688,7 +688,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Ajax callback to get cart items
+	 * Get cart items 
 	 *
 	 * @since      1.0.0
 	 * @return  array with cart items
@@ -717,7 +717,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Get recommendation products modal heading
+	 * Get all require data for popup modal
 	 *
 	 * @param int $product_id
 	 * @param array $recommended_products_id
@@ -767,8 +767,7 @@ final class Product_Recommendations {
 		$template_data['show_go_check_out'] = $this->get_setting('show_go_check_out');
 
 		//layout_type
-		$layout_type = $this->get_setting('layout_type');
-		$layout_type = !empty($layout_type) ? $layout_type : 'grid';
+		$layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 		$template_data['layout_type'] = $layout_type;
 
 		//variable_add_to_cart
@@ -798,7 +797,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Check manual selection or not
+	 * Check manual selection or not 
 	 *
 	 * @return bool manually selected or not
 	 * @since   1.0.0
@@ -841,10 +840,10 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Check global selection applicable or not
+	 * Check global selection checked or not
 	 *
 	 * @since      1.0.0
-	 * @return bool global selection applicable or not
+	 * @return bool 
 	 */
 	public function is_active_global($id) {
 
@@ -880,7 +879,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Get manual selection data
+	 * Get dynamic selection data 
 	 *
 	 * @since      1.0.0
 	 * @return array of dynamically selection data
@@ -1035,7 +1034,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Require php version
+	 * Get required min php version
 	 *
 	 * @since      1.0.0
 	 * @return string min require php version
@@ -1048,7 +1047,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Require WooCommerce version
+	 * Get require WooCommerce version
 	 *
 	 * @since      1.0.0
 	 * @return string min require WooCommerce version
@@ -1061,7 +1060,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Require WordPress version
+	 * Get require WordPress version
 	 *
 	 * @since      1.0.0
 	 * @return string min require WordPress version
@@ -1100,7 +1099,7 @@ final class Product_Recommendations {
 	 * Get default settings
 	 *
 	 * @since      1.0.0
-	 * @return  array of default value of all setting when default available
+	 * @return  array of default value of all fields in setting page
 	 */
 	public function get_default_settings() {
 		$default_settings = array();
@@ -1136,7 +1135,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Check Pro version of the plugin is installed or not
+	 * Is pro version activated or not
 	 *
 	 * @since      1.0.0
 	 */
@@ -1145,21 +1144,12 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Check pro plugin available or not
+	 * Check pro plugin installed or not 
 	 *
 	 * @since      1.1.0
 	 */
 	public function has_pro_plugin() {
 		return file_exists(self::$__FILE__PRO__);
-	}
-
-	/**
-	 * Check Pro version of the plugin is installed or not
-	 *
-	 * @since      1.0.0
-	 */
-	public function has_pro() {
-		return class_exists(Product_Recommendations_Pro::class);
 	}
 
 	/**
@@ -1182,8 +1172,7 @@ final class Product_Recommendations {
 	 * @since      1.9.0
 	 * @return object of post meta _lc_lpr_data
 	 */
-	public function cart_items_count() {
-		global $woocommerce;
+	public function cart_items_count($fragments) {
 		ob_start();
 		?>
 		<span class="lpr-total-items"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
@@ -1192,6 +1181,11 @@ final class Product_Recommendations {
 		return $fragments;
 	}
 
+	/**
+	 * Get global recommendations data from setting page
+	 * 
+	 * @since      1.0.0
+	 */
 	public function get_global_pr_data() {
 		$settings = $this->get_settings();
 		if (empty($settings['active_global_settings'])) {
@@ -1217,11 +1211,11 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Get settings by ID
+	 * Get setting field data
 	 *
 	 * @since      1.0.0
 	 * @param id settings field id
-	 * @return  mixed value of setting by setting id
+	 * @return  mixed value of setting field
 	 */
 	public function get_setting($id) {
 
@@ -1294,7 +1288,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Get default setting by ID
+	 * Get default value setting input field
 	 *
 	 * @since      1.0.0
 	 * @param id settings field id
@@ -1615,7 +1609,7 @@ final class Product_Recommendations {
 						'tab_title' => __('Tutorials', 'leo-product-recommendations'),
 						'title' => __('Tutorial & Documentation', 'leo-product-recommendations'),
 						'type' => 'article',
-						'template' => $this->get_path('includes/page-tutorials.php'),
+						'template' => $this->get_path('includes/tutorials.php'),
 					),
 				),
 			),
@@ -1625,9 +1619,9 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Feedback fields
+	 * Initialize plugin deactivation feedback
 	 *
-	 * @return array deactivation form fields settings data
+	 * @since 1.3.0
 	 */
 	public function deactivation_feedback() {
 		if (is_admin()) {
@@ -1639,9 +1633,9 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Feedback fields
+	 * Plugin deactivation feedback fields
 	 *
-	 * @return array deactivation form fields settings data
+	 * @return array of deactivation feedback form fields
 	 */
 	public function feedback_fields() {
 
@@ -1803,7 +1797,7 @@ final class Product_Recommendations {
 	}
 
 	/**
-	 * Ger plugin version
+	 * Get plugin version
 	 *
 	 * @since      1.0.0
 	 * @return string current version of plugin
