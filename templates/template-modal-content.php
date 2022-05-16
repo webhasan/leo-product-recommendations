@@ -4,6 +4,7 @@
  *
  * @since      1.0.0
  * @author     LeoCoder
+ * @global     $template_data
  */
 if (!defined('ABSPATH')) {
     exit;
@@ -20,6 +21,7 @@ extract($template_data);
 // $theme
 // $query
 // $feature_image
+// $variable_add_to_cart
 ?>
 
 <?php do_action('lpr_before_modal_content', $product_id, $recommended_products_id); ?>
