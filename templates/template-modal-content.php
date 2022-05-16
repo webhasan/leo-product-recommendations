@@ -82,7 +82,7 @@ extract($template_data);
             ?>
         </ul>
 
-        <?php do_action('lpr_end_modal_head', $product_id, $recommended_products_id); ?>
+        <?php do_action('lpr_after_products_loop', $product_id, $recommended_products_id); ?>
     </div>
     <div class="lpr-purchase-notification"></div>
 </div>

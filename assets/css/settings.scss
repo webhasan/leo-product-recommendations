@@ -13,6 +13,11 @@
       th {
         padding: 40px 10px 40px 20px;
 
+        @media(max-width: 768px) {
+          padding-bottom: 0;
+          padding-left: 10px;
+        }
+
         small {
           font-weight: normal;
           opacity: 0.8;
@@ -34,6 +39,10 @@
       td {
         padding: 40px 10px;
         position: relative;
+
+        @media(max-width: 768px) {
+          padding-top: 20px;
+        }
 
         .help {
           display: inline-block;
@@ -140,13 +149,17 @@
 }
 
 .lpr-field-wrapper_extend .fields-container {
-   display: flex;
+  display: flex;
   flex-wrap: wrap;
 
   & > * {
     width: calc(33% - 30px);
     margin-right: 30px;
     margin-bottom: 20px;
+
+    @media(max-width: 767px) {
+      width: 100% !important;
+    }
   }
   label {
     display: block;
@@ -196,6 +209,12 @@
   & > * {
     width: 25%;
     margin-bottom: 20px;
+
+    @media(max-width: 768px) {
+       & {
+         width: 100%;
+       }
+    }
   }
 
   label {

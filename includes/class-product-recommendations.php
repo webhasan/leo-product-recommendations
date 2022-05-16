@@ -526,10 +526,13 @@ final class Product_Recommendations {
 
 		//from pro version
 		if ($this->is_pro_activated()) {
-			return plugin_dir_path(self::$__FILE__PRO__) . $file_path;
+			$pro_template = plugin_dir_path(self::$__FILE__PRO__) . $file_path;
+			if (file_exists($pro_template)) {
+				return $pro_template;
+			}
 		}
 
-		//from  free version
+		//from free version
 		return plugin_dir_path(self::$__FILE__) . $file_path;
 	}
 
@@ -767,8 +770,7 @@ final class Product_Recommendations {
 		$template_data['show_go_check_out'] = $this->get_setting('show_go_check_out');
 
 		//layout_type
-		$layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
-		$template_data['layout_type'] = $layout_type;
+		$template_data['layout_type'] = !empty($this->get_setting('layout_type')) ? $this->get_setting('layout_type') : 'grid';
 
 		//variable_add_to_cart
 		$template_data['variable_add_to_cart'] = $this->get_setting('variable_add_to_cart');
@@ -1576,7 +1578,7 @@ final class Product_Recommendations {
 		$setting_pages = array(
 			array(
 				'id' => $this->get_settings_id(),
-				'page_title' => __('Leo Product Recommendations Settings', 'leo-product-recommendations'),
+				'page_title' => __('Product Recommendations Settings', 'leo-product-recommendations'),
 				'menu_title' => __('LPR Settings', 'leo-product-recommendations'),
 				'slug' => 'lpr-settings',
 				'icon' => 'dashicons-cart',

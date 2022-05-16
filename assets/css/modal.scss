@@ -399,6 +399,11 @@
      .owl-carousel .owl-nav {
        display: block !important;
      }
+
+     .owl-carousel .owl-nav.disabled {
+      display: none !important;
+     }
+
      .owl-carousel .owl-dots {
        display: none !important;
      }

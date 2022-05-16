@@ -1,9 +1,8 @@
 (function ($, __) {
   //modal plugin
   $.fn.lprModal = function (options) {
-    const settings = $.extend(
-      {
-        action: "open", // option for modal open or close default: open
+    const settings = $.extend({
+        action: "open",
       },
       options
     );
@@ -101,7 +100,75 @@
             const $modalWrapper = $('#lpr-modal-content');
             $modalWrapper.html(modal);
 
-            $('#lpr-modal').lprModal();
+            if (lc_ajax_modal.layout_type === "slider") {
+
+              const windowWidth = window.innerWidth;
+              const $carouselWrapper = $modalWrapper.find(".recommended-products-slider");
+              const slideItems = $carouselWrapper.find('.single-lpr').length;
+              
+              let {
+                autoPlay,
+                autoPlaySpeed, 
+                columnGap, 
+                isLoop, 
+                slideBy, 
+                smartSpeed,
+                nextNavIcon, 
+                prevNavIcon, 
+                smItems, 
+                lgItems, 
+                mdItems, 
+               } = lc_slider_setting;
+
+               let isNav = true;
+
+
+              if(slideItems <= lgItems) {
+                isNav =  false;
+                isLoop = false;
+              }
+              
+              if(windowWidth < 992 && slideItems <= mdItems) {
+                isNav =  false;
+                isLoop = false;
+              }
+
+              if(windowWidth < 768 && slideItems <= smItems) {
+                isNav =  false;
+                isLoop = false;
+              }
+
+              const $carousel = $modalWrapper.find(".recommended-products-slider").owlCarousel({
+                autoplayHoverPause: true,
+                navElement: 'div',
+                mouseDrag: false,
+                autoplay: autoPlay,
+                autoplayTimeout: parseInt(autoPlaySpeed),
+                margin: parseInt(columnGap),              
+                loop: isLoop,
+                items: smItems,
+                slideBy: slideBy,
+                smartSpeed: parseInt(smartSpeed),
+                navText: [prevNavIcon, nextNavIcon],
+                nav: true,
+                responsive: {
+                  768: {
+                    items: mdItems,
+                  },
+                  992: {
+                    items: lgItems
+                  }
+                },
+                onInitialize: () => {
+                  $('#lpr-modal').lprModal();
+                }
+              });
+              
+              //$(document.body).on('after_close_lpr_modal', $carousel.trigger('destroy.owl.carousel'));
+            }else {
+              $('#lpr-modal').lprModal();
+            }
+
             setTimeout(() =>{
               //message animation
               $modalWrapper.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
@@ -127,7 +194,7 @@
             }, 700);
           }
         }catch(e) {
-          //error occurred to fetch template
+
         }
 
       }else {

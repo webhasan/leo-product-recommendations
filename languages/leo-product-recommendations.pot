@@ -250,7 +250,7 @@ msgid ""
 msgstr ""
 
 #: includes/class-product-recommendations.php:1625
-msgid "Leo Product Recommendations Settings"
+msgid "Product Recommendations Settings"
 msgstr ""
 
 #: includes/class-product-recommendations.php:1626

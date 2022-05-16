@@ -358,6 +358,9 @@ body.lpr-modal-opened {
 .lpr-modal .lpr-modal-content .owl-carousel .owl-nav {
   display: block !important;
 }
+.lpr-modal .lpr-modal-content .owl-carousel .owl-nav.disabled {
+  display: none !important;
+}
 .lpr-modal .lpr-modal-content .owl-carousel .owl-dots {
   display: none !important;
 }
