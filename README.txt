@@ -1,6 +1,6 @@
 === Leo Product Recommendations for WooCommerce - WooCommerce Related Products Popup
 Contributors: webhasan, masum007
-Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell products, woocommerce grouped product, woocommerce mini cart, woocommerce cross sell, woocommerce popup
+Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell products, woocommerce grouped product, woocommerce mini cart, woocommerce cross-sell, woocommerce popup
 Requires at least: 5.0
 Tested up to: 6.0
 Requires PHP: 7.2
@@ -10,24 +10,24 @@ WC tested up to: 6.5.1
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Recommend products smartly for boosting WooCommerce sales by nice-looking ajax add to cart popup. Include up-sell, cross sell or related products and make sure quick checkout.
+Recommend products smartly for boosting WooCommerce sales with a nice-looking ajax Add to cart popup. Include up-sell, cross-sell, or related products and make sure quick checkout.
 
 == Description ==
 [youtube https://youtu.be/c20SsY1zsf8]
-Leo Product Recommendations is **sale boosting** plugin for WooCommerce with a great strategy. It helps to recommend products smartly in a nice looking popup. By suggesting products in an eye-catching popup after adding a product to a cart **directly influence customers to purchase more** related products. It comes with a fully customizable, powerful, and easy-to-use settings panel to recommend products manual and dynamic way based on your marketing need.
+Leo Product Recommendations is a **sale boosting** plugin for WooCommerce with a great strategy. It helps to recommend products smartly in a nice-looking popup. Suggesting products in an eye-catching popup after adding a product to a cart **directly influences customers to purchase more** related products. It comes with a fully customizable, powerful, and easy-to-use settings panel to recommend products manual and dynamic way based on your marketing need.
 
-After purchasing a smartphone definitely there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Leo Product Recommendations helps here to recommend that product instantly. 
+After purchasing a smartphone definitely, there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Leo Product Recommendations helps here to recommend that product instantly. 
 
 [youtube https://youtu.be/6ojRz6bK9Xo]
 
-In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of Jeans pant. Leo Product Recommendations helps here to sell T-Shirts with a pair of jeans pants.
+In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of jeans pants. Leo Product Recommendations helps here to sell T-Shirts with a pair of jeans pants.
 
 [youtube https://youtu.be/3t--SH1MjDw]
 
 Woo Products Recommendation does everything Ajax way to improve the shopping experience. Customers do not require to browse a lot of pages to purchase products. It also reduces the steps and time of shopping and increases the chances of selling. 
 
 ## How To Setup Leo Product Recommendations ##
-[youtube https://youtu.be/zKUoISoDj94]
+[youtube https://youtu.be/M5i8FDHge2s]
 
 [**See Details Documentation »**](https://cutt.ly/rjE8eiu)
 
@@ -46,7 +46,7 @@ Woo Products Recommendation does everything Ajax way to improve the shopping exp
 * Quick Checkout Button
 
 ## Pro Features ##
-Including all free features, Pro version provides more features and flexibility to recommend products.
+Including all free features, the Pro version provides more features and flexibility to recommend products.
 
 * Slider Layouts
 * Dynamic Selection
@@ -83,34 +83,34 @@ Leo Product Recommendations is perfectly feet for all types of WooCommerce shop.
 
 ### Automatic Installation ##
 
-1. From dashboard Navigate to **Plugins > Add New**
+1. From the dashboard Navigate to **Plugins > Add New**
 2. Search **Leo Product Recommendations for WooCommerce**
-5. Click on **Install Now** button
-5. When the installation is complete, click **Activate** button activate plugin.
+5. Click on the **Install Now** button
+5. When the installation is complete, click the **Activate** button to activate the plugin.
 
 ### Manual Installation ###
 
 #### Install From WordPress Dashboard: ####
-1. From dashboard Navigate to **Plugins > Add New**
-2. Click on **Upload Plugin** button at the top of the screen
+1. From the dashboard Navigate to **Plugins > Add New**
+2. Click on the **Upload Plugin** button at the top of the screen
 3. Select the zip file from your local filesystem
-4. Click on **Install Now** button
-5. When the installation is complete, you’ll see “Plugin installed successfully.” Click on **Activate Plugin** button at the bottom of the page.
+4. Click on the **Install Now** button
+5. When the installation is complete, you’ll see “Plugin installed successfully.” Click on the **Activate Plugin** button at the bottom of the page.
 
 #### Install Using FTP/SFTP: ####
-If you are unable to install the plugin from your WordPress dashboard you can install the plugin following method using FTP / SFTP
+If you are unable to install the plugin from your WordPress dashboard you can install the plugin by the following method using FTP / SFTP
 
-1. Unzip plugin file
+1. Unzip the plugin file
 2. Connect to your WordPress server with your FTP / SFTP client (Fileziall, Cyberduck, etc)
 3. Copy the plugin folder to the **wp-content/plugins** folder in your WordPress directory. This installs the plugin to your WordPress site.
-4. Navigate to your Plugins admin screen from WordPress dashboard and locate the newly uploaded plugin in the list.
+4. Navigate to your Plugins admin screen from the WordPress dashboard and locate the newly uploaded Plugin in the list.
 5. Click the plugin’s **Activate** link.
 
-<sub>Note: After activating the plugin it will automatically enable “Enable AJAX add to cart buttons on archives” setting and disable “Redirect to the cart page after successful addition” setting. It is required setting to work the plugin properly.</sub>
+<sub>Note: After activating the plugin it will automatically enable “Enable AJAX add to cart buttons on archives” setting and disable “Redirect to the cart page after successful addition” setting. It is a required setting to work the plugin properly.</sub>
 
 == Frequently Asked Questions ==
 = How to translate it to another language =
-The plugin is completely translation-ready for any language. You need to use **Loco Translate** plugin.
+The plugin is completely translation-ready for any language. You need to use the **Loco Translate** plugin.
 [**More Details Documentation »**](https://leocoder.com/docs/woocommerce-product-recommendations/translation/)
 
 = Does it work for product archive single and product single page? =
@@ -119,20 +119,20 @@ Yes, it works perfectly for a single product page and product archive page.
 = Does it work with WooCommerce Products shortcode and  Gutenberg Products Blocks?  =
 Yes, It works for  WooCommerce Products shortcode and all Gutenberg Products Blocks.
 
-= Does it work with DIVI (WooCommerce Builder), Elementor, WPBakery builder?  =
-Yes, This plugin is compatible with DIVI, WooCommerce Builder for DIVI, Elementor, WPBakery page builder.  
+= Does it work with DIVI (WooCommerce Builder), Elementor, and WPBakery builder?  =
+Yes, This plugin is compatible with DIVI, WooCommerce Builder for DIVI, Elementor, and WPBakery page builder.  
 
-= Beside Simple Product does it work for Variable Product & Grouped Product? =
-Yes, It works all types of products including  Simple Product, Variable Product  & Grouped Product
+= Besides Simple Product does it work for Variable Product & Grouped Product? =
+Yes, It works on all types of products including  Simple products, Variable products & Grouped Product
 
-= Does it work with quick view? =
-Yes, it works with quick view with all major quick view plugin. If it does not work for your quick view option please contact support quickly to fix it.
+= Does it work with a quick view? =
+Yes, it works with quick view of all major quick view plugins. If it does not work for your quick view option please contact support quickly to fix it.
 
 = How to override popup templates via a theme? =
-All template files are available in templates folder inside plugin files.
-In the templates files, filter and action hooks are available that allow you to add / edit popup template.
+All template files are available in the templates folder inside plugin files.
+In the templates files, filter and action hooks are available that allow you to add/edit popup templates.
 
-You also can overwrite templates files by your theme. Create a directory as `/lpr/templates/` and copy template file inside the directory.
+You also can overwrite template files with your theme. Create a directory as `/lpr/templates/` and copy the template file inside the directory.
 Example: To `overwrite template-modal.php` file by your theme then the file structure should be `wp-content/themes/yourtheme/lpr/templates/template-modal.php`
 
 <sub>Note: You need some development knowledge to overwrite template files or it may cause an error.</sub>
@@ -148,7 +148,7 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 == Changelog ==
 
 = 2.0 =
-* Removed preloader from popup
+* Removed preloader from the popup
 * Moved selection panel to WooCommerce data table as Recommendations tab
 * Improved performance 
 * Bug Fixed
@@ -178,7 +178,7 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Fixed theme compatibility
 
 = 1.8.0 =
-* Added animation in added to cart and recommendations heading
+* Added animation is added to cart and recommendations heading
 
 = 1.7.0 =
 * Improved plugin documentation
@@ -202,7 +202,7 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Improved theme compatibility.
 
 = 1.4 =
-* Add option to ajax add to cart for Variable & Group recommend products. Customers don't need to go to single product page to add to cart variable/group.
+* Add option to ajax add to cart for Variable & Group recommend products. Customers don't need to go to a single product page to add to a cart variable/group.
 
 = 1.3.2 =
 * Bug Fix
