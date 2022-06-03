@@ -459,7 +459,7 @@ final class Product_Recommendations {
 
 	public function product_data_tabs($tabs) {
 		$tabs['lpr-product-recommendations'] = [
-			'label' => __('Product Recommendations', 'leo-product-recommendations'),
+			'label' => __('Recommendations', 'leo-product-recommendations'),
 			'target' => 'lpr_product_recommendations_panel',
 			'class' => ['hide_if_external'],
 		];

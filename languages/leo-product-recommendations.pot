@@ -1,17 +1,17 @@
-# Copyright (C) 2021 LeoCoder
-# This file is distributed under the same license as the Leo Product Recommendations for WooCommerce plugin.
+# Copyright (C) 2022 LeoCoder
+# This file is distributed under the GPLv3 or later License.
 msgid ""
 msgstr ""
-"Project-Id-Version: Leo Product Recommendations for WooCommerce 1.6.1\n"
+"Project-Id-Version: Leo Product Recommendations for WooCommerce 1.9.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/leo-product-recommendations\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-02-22T11:27:28+00:00\n"
+"POT-Creation-Date: 2022-06-03T08:50:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.4.0\n"
+"X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: leo-product-recommendations\n"
 
 #. Plugin Name of the plugin
@@ -34,23 +34,23 @@ msgstr ""
 msgid "https://leocoder.com/"
 msgstr ""
 
-#: feedbacks/deactivation-feedback/class-deactivation-feedback.php:162
+#: feedbacks/deactivation-feedback/class-deactivation-feedback.php:163
 msgid "Please select a reason."
 msgstr ""
 
-#: feedbacks/deactivation-feedback/class-deactivation-feedback.php:162
+#: feedbacks/deactivation-feedback/class-deactivation-feedback.php:163
 msgid "Send & Deactive"
 msgstr ""
 
-#: feedbacks/deactivation-feedback/class-deactivation-feedback.php:163
-msgid "Skip & Deactive"
+#: feedbacks/deactivation-feedback/class-deactivation-feedback.php:164
+msgid "Skip & Deactivate"
 msgstr ""
 
-#: includes/class-ajax-add-to-cart.php:68
+#: includes/class-ajax-add-to-cart.php:66
 msgid "Product not found"
 msgstr ""
 
-#: includes/class-ajax-add-to-cart.php:153
+#: includes/class-ajax-add-to-cart.php:152
 msgid "Unable to add to cart. Something went wrong."
 msgstr ""
 
@@ -59,313 +59,322 @@ msgstr ""
 msgid "The Leo Product Recommendations for WooCommerce plugin requires <a href=\"%1$s\">WooCommerce</a> %2$s or greater to be installed and active."
 msgstr ""
 
-#. translators: 1. link of wordpress, 2. version of WordPress.
+#. translators: 1. link of wordpress 2. version of WordPress.
 #: includes/class-product-recommendations.php:184
 msgid "The Leo Product Recommendations for WooCommerce plugin requires <a href=\"%1$s\">WordPress</a> %2$s or greater to be installed and active."
 msgstr ""
 
 #. translators: 1. version of php
 #: includes/class-product-recommendations.php:193
-msgid "The Leo Product Recommendations for WooCommerce plugin requires <strong>php verion %s</strong> or greater. Please update your server php version."
+msgid "The Leo Product Recommendations for WooCommerce plugin requires <strong>php version %s</strong> or greater. Please update your server php version."
 msgstr ""
 
-#: includes/class-product-recommendations.php:245
+#: includes/class-product-recommendations.php:248
 msgid "Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:246
+#: includes/class-product-recommendations.php:249
 msgid "Docs"
 msgstr ""
 
-#: includes/class-product-recommendations.php:251
+#: includes/class-product-recommendations.php:254
 msgid "Go Pro"
 msgstr ""
 
-#: includes/class-product-recommendations.php:446
-msgid "Product Recommendations"
+#: includes/class-product-recommendations.php:462
+msgid "Recommendations"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1423
+#: includes/class-product-recommendations.php:1378
 msgid "Default Heading <small>Default will use for undefined heading & <a target=\"_blank\" href=\""
 msgstr ""
 
-#: includes/class-product-recommendations.php:1429
-#: assets/js/panel.js:112
+#: includes/class-product-recommendations.php:1384
+#: assets/js/panel.js:25
 msgid "Heading"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1431
+#: includes/class-product-recommendations.php:1386
 msgid "You may purchase following [item, items] with the %title%"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1435
-#: assets/js/panel.js:116
+#: includes/class-product-recommendations.php:1390
+#: assets/js/panel.js:29
 msgid "Heading & Description"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1439
+#: includes/class-product-recommendations.php:1394
 msgid "If you like to use the same heading patterns for all recommendations then use the default heading. Use pattern <strong>%title%</strong> for the product title. Pattern <strong>[item, items]</strong> is changeable. You can utilize <strong>[product, products]</strong> or all that makes sense. The particular expression for a single recommended item and the plural expression for more than one supported item."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1445
+#: includes/class-product-recommendations.php:1400
 msgid "Variable Products <br> Add To Cart"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1448
+#: includes/class-product-recommendations.php:1403
 msgid "To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href=\""
 msgstr ""
 
-#: includes/class-product-recommendations.php:1453
+#: includes/class-product-recommendations.php:1408
 msgid "Grid Options"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1458
+#: includes/class-product-recommendations.php:1413
 msgid "Desktop Items Per Row"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1467
+#: includes/class-product-recommendations.php:1422
 msgid "Tablet Items Per Row"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1476
+#: includes/class-product-recommendations.php:1431
 msgid "Mobile Items Per Row"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1484
+#: includes/class-product-recommendations.php:1439
 msgid "Column Gap"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1496
+#: includes/class-product-recommendations.php:1451
 msgid "Layout Type <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1503
+#: includes/class-product-recommendations.php:1458
 msgid "Slider Options <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1510
+#: includes/class-product-recommendations.php:1465
 msgid "Popup Size <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1517
-msgid "Buttons Visiblity <br> <span class=\"badge\">PRO FEATURE</span>"
+#: includes/class-product-recommendations.php:1472
+msgid "Buttons Visibility <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1527
+#: includes/class-product-recommendations.php:1482
 msgid "Popup Color Settings <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1534
+#: includes/class-product-recommendations.php:1489
 msgid "Product Color Settings <br> <span class=\"badge\">PRO FEATURE</span>"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1541
+#: includes/class-product-recommendations.php:1496
 msgid "Custom CSS"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1543
+#: includes/class-product-recommendations.php:1498
 msgid "Write custom css to change style of modal."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1551
+#: includes/class-product-recommendations.php:1506
 msgid "Active Global Setting"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1558
+#: includes/class-product-recommendations.php:1514
 msgid "Recommendation Options"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1563
+#: includes/class-product-recommendations.php:1519
 msgid "Categories"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1566
+#: includes/class-product-recommendations.php:1522
 msgid "Product Related Category"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1567
+#: includes/class-product-recommendations.php:1523
 msgid "Manual"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1573
+#: includes/class-product-recommendations.php:1529
 msgid "Choose Categories"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1579
+#: includes/class-product-recommendations.php:1535
 msgid "Choose Tags"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1585
+#: includes/class-product-recommendations.php:1541
 msgid "Products Filtering"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1588
+#: includes/class-product-recommendations.php:1544
 msgid "Random Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1589
+#: includes/class-product-recommendations.php:1545
 msgid "Newest Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1590
+#: includes/class-product-recommendations.php:1546
 msgid "Oldest Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1591
+#: includes/class-product-recommendations.php:1547
 msgid "Low Price Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1592
+#: includes/class-product-recommendations.php:1548
 msgid "High Price Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1593
+#: includes/class-product-recommendations.php:1549
 msgid "Best Selling Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1594
+#: includes/class-product-recommendations.php:1550
 msgid "Top Rated Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1599
+#: includes/class-product-recommendations.php:1555
 msgid "On-Sale Only"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1604
+#: includes/class-product-recommendations.php:1560
 msgid "Numbers of Products"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1613
+#: includes/class-product-recommendations.php:1569
 msgid "Skip"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1614
+#: includes/class-product-recommendations.php:1570
 msgid "Skip Manual Selection"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1616
+#: includes/class-product-recommendations.php:1572
 msgid ""
 "It will ignore individual recommendations of what you have done from the Woo-Commerce Edit Product page using the WPR configuration panel. <br>\n"
 "                It is helpful for a quick campaign. For example: In your Black Friday campaign, you want to temporarily skip individual product-specific recommendations. And recommend certain or several categories of products. Simply select the categories of the previous configuration from above and check this <strong>Skip</strong> check box."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1625
+#: includes/class-product-recommendations.php:1581
 msgid "Product Recommendations Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1626
+#: includes/class-product-recommendations.php:1582
 msgid "LPR Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1634
+#: includes/class-product-recommendations.php:1590
 msgid "General"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1635
+#: includes/class-product-recommendations.php:1591
 msgid "General Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1641
+#: includes/class-product-recommendations.php:1597
 msgid "Style"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1642
+#: includes/class-product-recommendations.php:1598
 msgid "Colors & Styles Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1648
+#: includes/class-product-recommendations.php:1604
 msgid "Global"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1649
+#: includes/class-product-recommendations.php:1605
 msgid "Global Settings"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1655
+#: includes/class-product-recommendations.php:1611
 msgid "Tutorials"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1656
+#: includes/class-product-recommendations.php:1612
 msgid "Tutorial & Documentation"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1692
+#: includes/class-product-recommendations.php:1649
+msgid "Need Help?"
+msgstr ""
+
+#: includes/class-product-recommendations.php:1652
 msgid "Quick Feedback"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1693
+#: includes/class-product-recommendations.php:1653
 msgid "May we have a little info about why you are deactivating?"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1699
+#: includes/class-product-recommendations.php:1659
 msgid "It's a temporary deactivation."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1708
-msgid "I couldn't understand how to use it."
+#: includes/class-product-recommendations.php:1667
+msgid "Does not show product image or add to cart button."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1709
-msgid "Please check details documentations »"
-msgstr ""
-
-#: includes/class-product-recommendations.php:1717
-msgid "It doesn't work with my website."
-msgstr ""
-
-#: includes/class-product-recommendations.php:1718
+#: includes/class-product-recommendations.php:1668
+#: includes/class-product-recommendations.php:1686
 msgid "Please contact with our support we will try fix it quickly for you »"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1726
+#: includes/class-product-recommendations.php:1676
+msgid "I couldn't understand how to use it."
+msgstr ""
+
+#: includes/class-product-recommendations.php:1677
+msgid "Please check details documentations »"
+msgstr ""
+
+#: includes/class-product-recommendations.php:1685
+msgid "It doesn't work with my website."
+msgstr ""
+
+#: includes/class-product-recommendations.php:1694
 msgid "It looks bad on my website."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1727
+#: includes/class-product-recommendations.php:1695
 msgid "Please contact with our support we will help you to fix the issues »"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1735
+#: includes/class-product-recommendations.php:1703
 msgid "It works nicely but I don’t need it now."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1736
-msgid "Please incourse us by giving nice feedback  »"
+#: includes/class-product-recommendations.php:1704
+msgid "Please encourage us by giving nice feedback  »"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1744
+#: includes/class-product-recommendations.php:1712
 msgid "I need some help to set up the plugin."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1745
-msgid "Please provide your email address we will conact you soon."
+#: includes/class-product-recommendations.php:1713
+msgid "Please provide your email address we will contact you soon."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1753
+#: includes/class-product-recommendations.php:1721
 msgid "I found a better plugin."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1756
+#: includes/class-product-recommendations.php:1724
 msgid "Please share which plugin"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1762
+#: includes/class-product-recommendations.php:1730
 msgid "I need a specific feature that it doesn't support."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1763
+#: includes/class-product-recommendations.php:1731
 msgid "Please let us know feature details we will try add it ASAP"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1765
+#: includes/class-product-recommendations.php:1733
 msgid "Require feature details"
 msgstr ""
 
-#: includes/class-product-recommendations.php:1771
+#: includes/class-product-recommendations.php:1739
 msgid "Other."
 msgstr ""
 
-#: includes/class-product-recommendations.php:1774
+#: includes/class-product-recommendations.php:1742
 msgid "Please share the reason. We will try to fix / help you."
 msgstr ""
 
@@ -385,8 +394,8 @@ msgstr ""
 #: includes/settings-fields-type.php:473
 #: includes/settings-fields-type.php:509
 #: includes/settings-fields-type.php:543
-#: includes/settings-fields-type.php:572
-#: includes/settings-fields-type.php:640
+#: includes/settings-fields-type.php:570
+#: includes/settings-fields-type.php:638
 msgid "HELP"
 msgstr ""
 
@@ -397,8 +406,8 @@ msgstr ""
 #: includes/settings-fields-type.php:481
 #: includes/settings-fields-type.php:517
 #: includes/settings-fields-type.php:551
-#: includes/settings-fields-type.php:580
-#: includes/settings-fields-type.php:648
+#: includes/settings-fields-type.php:578
+#: includes/settings-fields-type.php:646
 msgid "Documentation »"
 msgstr ""
 
@@ -414,73 +423,64 @@ msgstr ""
 msgid "See Details Documentation"
 msgstr ""
 
-#: templates/template-modal.php:29
+#: templates/template-modal-content.php:39
 msgid "has been added to your cart."
 msgstr ""
 
-#: templates/template-modal.php:30
+#: templates/template-modal-content.php:40
 msgid "View cart"
 msgstr ""
 
-#: templates/template-modal.php:36
+#: templates/template-modal-content.php:46
 msgid "Continue Shopping"
 msgstr ""
 
-#: templates/template-modal.php:40
+#: templates/template-modal-content.php:50
 msgid "Checkout"
 msgstr ""
 
-#: assets/js/ajax-add-to-cart.js:61
+#: assets/js/ajax-add-to-cart.js:56
 msgid "Something went wrong"
 msgstr ""
 
-#: assets/js/modal.js:176
-msgid "has been added to cart."
-msgstr ""
-
-#: assets/js/modal.js:176
-msgid "Item has been added to cart."
-msgstr ""
-
-#: assets/js/panel.js:123
-msgid "Manual Selection"
-msgstr ""
-
-#: assets/js/panel.js:127
-msgid "Dynamic Selection"
-msgstr ""
-
-#: assets/js/panel.js:303
-msgid "Popup Heading"
-msgstr ""
-
-#: assets/js/panel.js:370
-#: assets/js/panel.js:395
-msgid "Documentation»"
-msgstr ""
-
-#: assets/js/panel.js:375
-msgid "Select By"
-msgstr ""
-
-#: assets/js/panel.js:400
-msgid "Select Products"
-msgstr ""
-
-#: assets/js/panel.js:413
-msgid "Search..."
-msgstr ""
-
-#: assets/js/panel.js:420
+#: assets/js/components/ManualSelection.js:47
 #: assets/js/settings.js:128
 msgid "All Categories"
 msgstr ""
 
-#: assets/js/panel.js:441
+#: assets/js/components/ManualSelection.js:67
 msgid "Not found selectable product"
 msgstr ""
 
-#: assets/js/panel.js:542
+#: assets/js/components/RadioSelection.js:30
+msgid "Documentation»"
+msgstr ""
+
+#: assets/js/modal.js:203
+msgid "has been added to cart."
+msgstr ""
+
+#: assets/js/modal.js:203
+msgid "Item has been added to cart."
+msgstr ""
+
+#: assets/js/panel.js:37
+msgid "Manual Selection"
+msgstr ""
+
+#: assets/js/panel.js:41
+msgid "Dynamic Selection"
+msgstr ""
+
+#: assets/js/panel.js:235
+msgid "Select Products"
+msgstr ""
+
+#: assets/js/panel.js:236
+msgid "Search..."
+msgstr ""
+
+#: assets/js/panel.js:262
 msgid "Get Pro Version »"
 msgstr ""
 

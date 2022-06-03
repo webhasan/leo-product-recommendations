@@ -2,11 +2,11 @@
 Contributors: webhasan, masum007
 Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell products, woocommerce grouped product, woocommerce mini cart, woocommerce cross sell, woocommerce popup
 Requires at least: 5.0
-Tested up to: 5.9.1
-Requires PHP: 7.0
-Stable tag: 1.9.2
-WC requires at least: 4.5
-WC tested up to: 6.2.1
+Tested up to: 6.0
+Requires PHP: 7.2
+Stable tag: 2.0
+WC requires at least: 5.0
+WC tested up to: 6.5.1
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,8 +15,6 @@ Recommend products smartly for boosting WooCommerce sales by nice-looking ajax a
 == Description ==
 [youtube https://youtu.be/c20SsY1zsf8]
 Leo Product Recommendations is **sale boosting** plugin for WooCommerce with a great strategy. It helps to recommend products smartly in a nice looking popup. By suggesting products in an eye-catching popup after adding a product to a cart **directly influence customers to purchase more** related products. It comes with a fully customizable, powerful, and easy-to-use settings panel to recommend products manual and dynamic way based on your marketing need.
-
-Harvard professor Gerald Zaltman says "95% of purchasing decisions are subconscious". So you have to just display the right product in front of the right customer, at the right time. Let me explain, how the great plugin does the things smartly.
 
 After purchasing a smartphone definitely there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Leo Product Recommendations helps here to recommend that product instantly. 
 
@@ -60,7 +58,7 @@ Including all free features, Pro version provides more features and flexibility 
 [**Pro Version Details »**](https://cutt.ly/LjE8qAj)
 
 ## Demos ##
-Leo Product Recommendations is prefectly feet for all types of WooCommerce shop. Check example bellow: 
+Leo Product Recommendations is perfectly feet for all types of WooCommerce shop. Check example bellow: 
 
 [ 👉SMARTPHONE](https://cutt.ly/EjE3JbC)
 [ 👉ELECTRONICS](https://cutt.ly/RjE3CKI)
@@ -112,7 +110,7 @@ If you are unable to install the plugin from your WordPress dashboard you can in
 
 == Frequently Asked Questions ==
 = How to translate it to another language =
-The plugin is completely translation-ready for any language. You need to use **Loco Translate** pluign.
+The plugin is completely translation-ready for any language. You need to use **Loco Translate** plugin.
 [**More Details Documentation »**](https://leocoder.com/docs/woocommerce-product-recommendations/translation/)
 
 = Does it work for product archive single and product single page? =
@@ -148,6 +146,12 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+
+= 2.0 =
+* Removed preloader from popup
+* Moved selection panel to WooCommerce data table as Recommendations tab
+* Improved performance 
+* Bug Fixed
 
 = 1.9.0 =
 * Bug fix
