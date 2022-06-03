@@ -97,7 +97,7 @@ Leo Product Recommendations is perfectly feet for all types of WooCommerce shop.
 4. Click on **Install Now** button
 5. When the installation is complete, you’ll see “Plugin installed successfully.” Click on **Activate Plugin** button at the bottom of the page.
 
-#### Insall Using FTP/SFTP: ####
+#### Install Using FTP/SFTP: ####
 If you are unable to install the plugin from your WordPress dashboard you can install the plugin following method using FTP / SFTP
 
 1. Unzip plugin file
@@ -184,10 +184,10 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Improved plugin documentation
 
 = 1.6.1 =
-* Fix for Safira theme quick view 
+* Fix for Safari theme quick view 
 
 = 1.6.0 =
-* Optimized coding & performacne 
+* Optimized coding & performance 
 * Added deactivation feedback 
 
 = 1.5.3 =
