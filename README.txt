@@ -1,5 +1,5 @@
-=== Leo Product Recommendations for WooCommerce - WooCommerce Related Products Popup
-Contributors: webhasan, masum007
+=== Leo Product Recommendations For WooCommerce - Recommended Products For WooCommerce, Upsell Product Popup, Related Product Lightbox ===
+Contributors: webhasan, masum007, emranahmed
 Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell products, woocommerce grouped product, woocommerce mini cart, woocommerce cross-sell, woocommerce popup
 Requires at least: 5.0
 Tested up to: 6.0
