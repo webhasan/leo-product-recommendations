@@ -398,6 +398,15 @@
  
      .owl-carousel .owl-nav {
        display: block !important;
+       background-color: transparent !important;
+       border-color: transparent !important;
+       position: static !important;
+     }
+
+     .owl-carousel .owl-nav:hover,
+     .owl-carousel .owl-nav [class*="owl-"]:hover {
+        background-color: transparent !important;
+        border-color: transparent !important;
      }
 
      .owl-carousel .owl-nav.disabled {
@@ -689,6 +698,40 @@
    a.button:after {
    line-height: 1.7em;
  }
+
+/* Porto theme Fix */
+
+body.wvs-theme-porto .single-lpr .img-effect {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+body.wvs-theme-porto .single-lpr .img-effect img {
+  position: relative;
+  opacity: 1;
+  transform: translateZ(0);
+  transition: all .4s;
+}
+
+body.wvs-theme-porto .single-lpr .img-effect .hover-image {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  opacity: 0;
+  transition: all .4s;
+}
+
+body.wvs-theme-porto .single-lpr .img-effect:hover img {
+  opacity: 0;
+}
+
+body.wvs-theme-porto .single-lpr .img-effect:hover .hover-image {
+  opacity: 1;
+}
 
 
  /*Fixing for davinciwoo theme */
