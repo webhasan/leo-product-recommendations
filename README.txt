@@ -4,7 +4,7 @@ Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell p
 Requires at least: 5.0
 Tested up to: 6.0.1
 Requires PHP: 7.2
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 WC requires at least: 5.0
 WC tested up to: 6.7.0
 License: GPLv3 or later License
@@ -146,6 +146,8 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 2.0.2 =
+* Bug fix
 
 = 2.0.1 =
 * Bug fix

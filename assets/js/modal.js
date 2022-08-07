@@ -198,9 +198,14 @@
         }
 
       }else {
-        const $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
+        let $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
+        //fix for woodmart theme
+        if(window.woodmartThemeModule) {
+            $productHeading = $(button).closest('.single-lpr').find('.wd-entities-title a:last-child');
+        }
 
         const  notificationText = ($productHeading.length) ? `${$productHeading.text()} ${__('has been added to cart.','leo-product-recommendations')}` : __('Item has been added to cart.','leo-product-recommendations'); 
+
         const topPosition = $(button).closest('.lpr-modal').find('.lpr-message').outerHeight();
 
         const $notification_bar = $(button).closest('.lpr-modal').find('.lpr-purchase-notification'); 
