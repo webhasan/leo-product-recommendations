@@ -223,6 +223,8 @@ final class Product_Recommendations {
 		if (!$this->is_pro_activated()) {
 			$this->plugin_settings($this); // Plugin settings page for free version
 		}
+
+		
 	}
 
 	/**
@@ -266,11 +268,30 @@ final class Product_Recommendations {
 	 * @return void
 	 */
 	public function plugin_settings($self) {
+		// old settings page
 		if (!class_exists(Settings_Page::class)) {
 			require_once $this->get_path('includes/class-settings-page.php');
 		}
+		new Settings_Page( $self );
 
-		new Settings_Page($self);
+
+		// new settings page
+		if( !class_exists( GetWooPlugins_Admin_Menus::class ) ) {
+			require_once $this->get_path('includes/getwooplugins/class-getwooplugins-admin-menus.php');
+		}
+
+		\GetWooPlugins_Admin_Menus::instance();
+
+		
+		//register fields of setting page
+		add_filter( 'getwooplugins_get_settings_pages', array( $this, 'init_settings' ) );
+	}
+
+	
+	public function init_settings( $settings ) {
+		require_once $this->get_path('includes/class-leo-product-recommendations-settings.php');
+		$settings[] = new \Leo_Product_Recommendations_Settings();
+		return $settings;
 	}
 
 	/**

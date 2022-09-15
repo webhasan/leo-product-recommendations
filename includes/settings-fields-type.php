@@ -24,6 +24,7 @@ function wrapper($field, $base, $setting_id) {
             <?php foreach ($chields as $child) :
 
                 $field_name = $setting_id . '[' . $child['id'] . ']';
+
                 $title = $child['title'];
                 $value = $base->get_setting($child['id']);
                 $id = $child['id'];
@@ -611,7 +612,9 @@ function heading_selection($field, $base, $setting_id) {
                 $display         = ($value === $heading_type['id']) ? 'block' : 'none';
 
                 if ($heading_type['type'] === 'text'):
+                    
                     $sub_field_value = ($value === 'default_heading') ? $sub_field_value : '';
+
                     printf(
                         '<div style="display:%1$s" class="%2$s"><input type="text" name="%3$s" value="%4$s"/></div>',
                         $display,

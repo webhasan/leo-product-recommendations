@@ -34,4 +34,3 @@ function leo_product_recommendations() {
     return Product_Recommendations::init(__FILE__);
 }
 leo_product_recommendations();
-
