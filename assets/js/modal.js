@@ -87,7 +87,7 @@
       if (!$(button).closest(".recommended-products-wrapper").length) {
       
         //hide existing popup, quick view etc
-        $('body, .quickview-wrapper .closeqv, .yith-quick-view-overlay, .mfp-wrap').click(); 
+        $('body, .quickview-wrapper .closeqv, .yith-quick-view-overlay, .mfp-wrap, .owp-qv-overlay, .owp-qv-close').click(); 
 
         try {
           const modal = await $.get(lc_ajax_modal.url, {
@@ -199,9 +199,15 @@
 
       }else {
         let $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
+        
         //fix for woodmart theme
         if(window.woodmartThemeModule) {
             $productHeading = $(button).closest('.single-lpr').find('.wd-entities-title a:last-child');
+        }
+
+        //fix for oceanwp theme
+        if(window.oceanwp) {
+          $productHeading = $(button).closest('.single-lpr').find('li.title a');
         }
 
         const  notificationText = ($productHeading.length) ? `${$productHeading.text()} ${__('has been added to cart.','leo-product-recommendations')}` : __('Item has been added to cart.','leo-product-recommendations'); 

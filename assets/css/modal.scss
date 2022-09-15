@@ -790,4 +790,18 @@ body.theme-twentytwentytwo .lpr-modal .lpr-modal-content .recommended-products-s
    -webkit-animation-name: lpr_headShake;
    animation-name: lpr_headShake;
  }
+
+
+// ocean wp theme fix
+.owp-qv-container {
+  z-index: 99999999 !important;
+}
+
+#owp-qv-wrap, #owp-qv-wrap .owp-qv-overlay {
+  z-index: 9999999 !important;
+}
+
+body.oceanwp-theme #lpr-modal ul.woo-entry-inner .btn-wrap {
+  display: none !important;
+}
  
