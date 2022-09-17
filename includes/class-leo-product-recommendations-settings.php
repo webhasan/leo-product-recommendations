@@ -547,6 +547,7 @@
                         'title' => esc_html__( 'Choose Categories', 'leo-product-recommendations' ),
                         'desc'  => 'Show products recommendations form same category or manually chooses from particular categories',
                         'options'    => $this->get_product_categories(),
+                        'require' => array(array( 'input[name="lpr_settings_test[global_categories]"]' => array( 'type' => 'equal', 'value' => array('manual_categories')) )) ,
                         'placeholder' => esc_html__( 'All Categories', 'leo-product-recommendations' ),
                     ),
 

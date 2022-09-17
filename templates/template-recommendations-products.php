@@ -12,18 +12,30 @@ if (!defined('ABSPATH')) {
 }
 
 $tag_classes = 'product single-lpr ';
+
 if($theme === 'Electro') {
     $tag_classes .= 'single-product';
 }
 
-$beginning_tag = '<li class="%s">';
-$beginning_tag = sprintf($beginning_tag, $tag_classes);
+if($theme === 'Electro') {
+    $tag_classes .= 'single-product';
+}
+
+if($theme === 'OceanWP') {
+    $tag_classes .= 'product-inner';
+}
+
+$beginning_tag = sprintf('<li class="%s">', $tag_classes);
 $ending_tag   = '</li>';
 ?>
 
 <?php echo $beginning_tag; ?>
     <?php do_action('lpr_before_recommended_product', get_the_ID()); ?>
-    
+
+    <?php if($theme === 'OceanWP') { // ocean wp theme archive product
+         wc_get_template( 'owp-archive-product.php' );
+    } ?>
+
     <a href="<?php the_permalink(); ?>">
         <?php
         if($theme === 'Flatsome') { //Flatsome product thumbnail
