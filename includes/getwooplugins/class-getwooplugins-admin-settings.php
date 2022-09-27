@@ -538,6 +538,7 @@ if ( ! class_exists( 'GetWooPlugins_Admin_Settings', false ) ) :
 
 					// Checkbox input.
 					case 'checkbox':
+						
 						$option_value     = $value['value'];
 						$visibility_class = array($class);
 
@@ -861,7 +862,10 @@ if ( ! class_exists( 'GetWooPlugins_Admin_Settings', false ) ) :
 					parse_str( $option['id'], $option_name_array );
 					$option_name  = current( array_keys( $option_name_array ) );
 					$setting_name = key( $option_name_array[ $option_name ] );
+
+
 					$raw_value    = isset( $data[ $option_name ][ $setting_name ] ) ? wp_unslash( $data[ $option_name ][ $setting_name ] ) : null;
+
 				} else {
 					$option_name  = $option['id'];
 					$setting_name = '';

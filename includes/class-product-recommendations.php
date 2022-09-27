@@ -67,6 +67,7 @@ final class Product_Recommendations {
 		self::$__FILE__ = $__FILE__;
 		register_activation_hook(self::$__FILE__, array($this, 'on_activation'));
 		register_deactivation_hook(self::$__FILE__, array($this, 'on_deactivation'));
+
 		add_action('plugins_loaded', array($this, 'on_plugins_loaded'));
 	}
 
@@ -79,7 +80,6 @@ final class Product_Recommendations {
 	public function on_activation() {
 		update_option('woocommerce_enable_ajax_add_to_cart', 'yes');
 		update_option('woocommerce_cart_redirect_after_add', 'no');
-		$this->add_default_settings();
 	}
 
 	/**
@@ -90,19 +90,6 @@ final class Product_Recommendations {
 	 */
 	public function on_deactivation() {
 		// do nothing
-	}
-
-	/**
-	 * Action after plugin deactivate
-	 *
-	 * @since      1.0.0
-	 * @return void
-	 */
-	public function add_default_settings() {
-		$settings = $this->get_settings();
-		$settings = !empty($settings) ? $settings : array();
-		$default_settings = $this->get_default_settings();
-		update_option($this->get_settings_id(), array_merge($default_settings, $settings));
 	}
 
 	/**
@@ -119,7 +106,6 @@ final class Product_Recommendations {
 			return;
 		}
 
-		// before going to action
 		// used this hook in pro plugin
 		do_action('lpr_before_action');
 
@@ -217,14 +203,7 @@ final class Product_Recommendations {
 	 */
 	public function includes() {
 		$this->admin_ajax(); // handle all admin ajax request
-
 		$this->plugin_action_links(); // add action link, example: Go Pro->, Settings->
-
-		if (!$this->is_pro_activated()) {
-			$this->plugin_settings($this); // Plugin settings page for free version
-		}
-
-		
 	}
 
 	/**
@@ -247,7 +226,7 @@ final class Product_Recommendations {
 	public function plugin_action_links() {
 		add_action('plugin_action_links_' . plugin_basename(self::$__FILE__), function ($links) {
 			$link_before = array(
-				'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=lpr-settings')) . '">' . __('Settings', 'leo-product-recommendations') . '</a>',
+				'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=getwooplugins-settings&tab=lc_lpr_settings')) . '">' . __('Settings', 'leo-product-recommendations') . '</a>',
 				'documentation' => '<a href="' . esc_url('https://cutt.ly/KjE8lEI') . '" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
 			);
 
@@ -267,30 +246,30 @@ final class Product_Recommendations {
 	 * @since      1.0.0
 	 * @return void
 	 */
-	public function plugin_settings($self) {
-		// old settings page
-		if (!class_exists(Settings_Page::class)) {
-			require_once $this->get_path('includes/class-settings-page.php');
-		}
-		new Settings_Page( $self );
+	public function plugin_settings() {
 
-
-		// new settings page
+		//include class for register Menu Page, Sub-Menu Page and Fields
 		if( !class_exists( GetWooPlugins_Admin_Menus::class ) ) {
 			require_once $this->get_path('includes/getwooplugins/class-getwooplugins-admin-menus.php');
 		}
-
 		\GetWooPlugins_Admin_Menus::instance();
 
 		
-		//register fields of setting page
+		//Register settings Tags, Sections, and Fields
 		add_filter( 'getwooplugins_get_settings_pages', array( $this, 'init_settings' ) );
 	}
 
-	
+	/**
+	 * Class of settings fields
+	 *
+	 * @since 2.5.0
+	 * @param arr $settings array for previous settings
+	 * @return arr of all settings fields including new one
+	 */
 	public function init_settings( $settings ) {
+		//setting class including settings fields 
 		require_once $this->get_path('includes/class-leo-product-recommendations-settings.php');
-		$settings[] = new \Leo_Product_Recommendations_Settings();
+		$settings[] = new \Leo_Product_Recommendations_Settings(); 
 		return $settings;
 	}
 
@@ -357,32 +336,6 @@ final class Product_Recommendations {
 			));
 			wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
 		}
-
-		//load script in setting page
-		if ($screen->id === 'toplevel_page_lpr-settings') {
-			// color picker
-			wp_enqueue_script('spectrum', $this->get_url('assets/js/color-picker/spectrum.js'), array('jquery'), $version, true);
-			wp_enqueue_style('lpr-spectrum', $this->get_url('assets/js/color-picker/spectrum.css'), array(), $version);
-
-			//help popup
-			wp_enqueue_script('lity-popup', $this->get_url('assets/js/lity-popup/lity.min.js'), array('jquery'), '2.4.1', true);
-			wp_enqueue_style('lity-popup', $this->get_url('assets/js/lity-popup/lity.min.css'), array(), '2.4.1');
-
-			//select 2 
-			wp_enqueue_script('lpr-select2', $this->get_url('assets/js/select2/select2.min.js'), array('spectrum'), $version, true);
-			wp_enqueue_style('lpr-select2', $this->get_url('assets/js/select2/select2.min.css'), array(), $version);
-
-			//setting 
-			wp_enqueue_script('lpr-settings', $this->get_url('assets/js/settings.min.js'), array('jquery', 'spectrum', 'wp-i18n'), $version, true);
-			wp_enqueue_style('lpr-settings', $this->get_url('assets/css/settings.css'), array(), $version);
-
-			//css editor
-			$cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
-			wp_localize_script('lpr-settings', 'lpr_css_editor', $cm_settings);
-			wp_enqueue_style('wp-codemirror');
-			wp_enqueue_script('wp-theme-plugin-editor');
-
-		}
 	}
 
 	/**
@@ -394,6 +347,7 @@ final class Product_Recommendations {
 	public function wp_enqueue_scripts() {
 		$version = $this->script_version();
 		$settings = $this->get_settings();
+
 		$layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
 		wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery', 'wp-i18n'), $version, true);
@@ -427,11 +381,14 @@ final class Product_Recommendations {
 	 * @since      1.0.0
 	 */
 	public function settings_css() {
+
 		// grid
 		$items_desktop = $this->get_setting('grid_lg_items');
+
 		$items_tablet = $this->get_setting('grid_md_items');
 		$items_mobile = $this->get_setting('grid_sm_items');
 		$grid_column_gap = (int) $this->get_setting('grid_column_gap') + 1;
+
 		$desktop_item_width = 100 / $items_desktop;
 		$tablet_item_width = 100 / $items_tablet;
 		$mobile_item_width = 100 / $items_mobile;
@@ -782,19 +739,19 @@ final class Product_Recommendations {
 		$template_data['modal_heading'] = $modal_heading;
 
 		//show_close_icon
-		$template_data['show_close_icon'] = $this->get_setting('show_close_icon');
+		$template_data['show_close_icon'] = $this->get_setting('show_close_icon') === 'yes' ? true : false;
 
 		//show_continue_shopping
-		$template_data['show_continue_shopping'] = $this->get_setting('show_continue_shopping');
+		$template_data['show_continue_shopping'] = $this->get_setting('show_continue_shopping') === 'yes' ? true : false;
 
 		//show_go_check_out
-		$template_data['show_go_check_out'] = $this->get_setting('show_go_check_out');
+		$template_data['show_go_check_out'] = $this->get_setting('show_go_check_out') === 'yes' ? true : false;
 
 		//layout_type
-		$template_data['layout_type'] = !empty($this->get_setting('layout_type')) ? $this->get_setting('layout_type') : 'grid';
+		$template_data['layout_type'] = $this->get_setting('layout_type', 'grid');
 
 		//variable_add_to_cart
-		$template_data['variable_add_to_cart'] = $this->get_setting('variable_add_to_cart');
+		$template_data['variable_add_to_cart'] = $this->get_setting('variable_add_to_cart')  === 'yes' ? true : false;
 
 		//theme
 		$theme_info = wp_get_theme();
@@ -870,10 +827,9 @@ final class Product_Recommendations {
 	 */
 	public function is_active_global($id) {
 
-		$settings = $this->get_settings();
-		$has_global = !empty($settings['active_global_settings']) ? true : false;
-		$disable_overwrite = !empty($settings['disable_global_override']) ? true : false;
-
+		$has_global = $this->get_setting('active_global_settings','no') === 'yes' ? true : false;
+		$disable_overwrite = $this->get_setting('disable_global_override','no') === 'yes' ? true : false;
+		
 		// active global and not overwrite by local
 		if ($has_global && $disable_overwrite) {
 			return true;
@@ -905,7 +861,7 @@ final class Product_Recommendations {
 	 * Get dynamic selection data 
 	 *
 	 * @since      1.0.0
-	 * @return array of dynamically selection data
+	 * @return array of dynamic selection product data
 	 */
 	public function dynamic_query_products($product_id, $data) {
 		$args = array(
@@ -1112,49 +1068,10 @@ final class Product_Recommendations {
 	 * @return  array all settings values of the plugins settings.
 	 */
 	public function get_settings() {
-		if (is_null(self::$settings)) {
-			self::$settings = get_option($this->get_settings_id());
+		if(!class_exists('GetWooPlugins_Admin_Settings')) {
+			include_once('getwooplugins/class-getwooplugins-admin-settings.php');
 		}
-		return self::$settings;
-	}
-
-	/**
-	 * Get default settings
-	 *
-	 * @since      1.0.0
-	 * @return  array of default value of all fields in setting page
-	 */
-	public function get_default_settings() {
-		$default_settings = array();
-		$pages = $this->settings_pages();
-
-		foreach ($pages as $page) {
-			if (isset($page['sections']) && !empty($page['sections'])) {
-
-				foreach ($page['sections'] as $section) {
-
-					if (isset($section['fields']) && !empty($section['fields'])) {
-
-						foreach ($section['fields'] as $field) {
-							if (isset($field['default'])) {
-								$default_settings[$field['id']] = $field['default'];
-							}
-
-							if (!empty($field['chields'])) {
-								foreach ($field['chields'] as $child_field) {
-									if (isset($child_field['default'])) {
-										$default_settings[$child_field['id']] = $child_field['default'];
-									}
-
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return $default_settings;
+		return \GetWooPlugins_Admin_Settings::get_option( $this->get_settings_id() );
 	}
 
 	/**
@@ -1189,6 +1106,7 @@ final class Product_Recommendations {
 		return self::$pr_meta[$id];
 	}
 
+
 	/**
 	 * Count total items in cart in Ajax way 
 	 *
@@ -1207,28 +1125,22 @@ final class Product_Recommendations {
 	/**
 	 * Get global recommendations data from setting page
 	 * 
-	 * @since      1.0.0
+	 * @since  1.0.0
+	 * @return array of global setting 
 	 */
 	public function get_global_pr_data() {
-		$settings = $this->get_settings();
-		if (empty($settings['active_global_settings'])) {
-			return array();
+		$data = array();
+
+		if ($this->get_setting('active_global_settings') !== 'yes') {
+			return $data;
 		}
 
-		$category_type = !empty($settings['global_categories']) ? $settings['global_categories'] : 'same_categories';
-		$categories = !empty($settings['global_custom_categories']) ? $settings['global_custom_categories'] : array();
-		$tags = !empty($settings['global_tags']) ? $settings['global_tags'] : array();
-		$filtering = !empty($settings['global_filtering']) ? $settings['global_filtering'] : 'rand';
-		$onsale = !empty($settings['global_on_sale']) ? $settings['global_on_sale'] : false;
-		$number_of_posts = !empty($settings['global_products_number']) ? $settings['global_products_number'] : 12;
-
-		$data = array();
-		$data['category_type'] = $category_type;
-		$data['categories'] = $categories;
-		$data['number'] = $number_of_posts;
-		$data['tags'] = $tags;
-		$data['orderby'] = $filtering;
-		$data['sale'] = $onsale;
+		$data['category_type'] 	= $this->get_setting('global_categories', 'same_categories');
+		$data['categories'] 	= $this->get_setting('global_custom_categories', array());
+		$data['number'] 		= $this->get_setting('global_products_number', 12);
+		$data['tags'] 			= $this->get_setting('global_tags', array());
+		$data['orderby'] 		= $this->get_setting('global_filtering', 'rand');
+		$data['sale'] 			= $this->get_setting('global_on_sale', 'no') === 'yes' ? true : false;
 
 		return $data;
 	}
@@ -1240,405 +1152,10 @@ final class Product_Recommendations {
 	 * @param id settings field id
 	 * @return  mixed value of setting field
 	 */
-	public function get_setting($id) {
+	public function get_setting($id, $default = null) {
 
-		$settings = $this->get_settings();
-		$field_type = $this->get_field_type($id);
-		$value = isset($settings[$id]) ? $settings[$id] : $this->get_default_setting($id);
-
-		if ($field_type === 'checkbox' && $settings && !isset($settings[$id])) {
-			$value = null;
-		}
-
-		if (!$value) {
-			return $value;
-		}
-
-		// text field allowed tag
-		$html_permission = array(
-			'span' => array('class'),
-			'b' => array(),
-			'strong' => array(),
-			'i' => array(),
-			'br' => array(),
-		);
-
-		switch ($field_type) {
-		case 'text':
-			$value = wp_kses($value, $html_permission);
-			break;
-
-		case 'color_picker':
-			$value = esc_attr($value);
-			break;
-
-		case 'number':
-			$value = (int) $value;
-			break;
-
-		case 'checkbox':
-			$value = (bool) $value;
-			break;
-
-		case 'radio':
-			$value = esc_attr($value);
-			break;
-
-		case 'categories_select':
-			$value = (array) $value;
-			$value = array_map(function ($id) {
-				return (int) $id;
-			}, $value);
-			break;
-
-		case 'tags_select':
-			$value = (array) $value;
-			$value = array_map(function ($id) {
-				return (int) $id;
-			}, $value);
-			break;
-
-		case 'css':
-			$value = sanitize_textarea_field($value);
-			break;
-
-		case 'editor':
-			$value = wp_kses_post($value);
-			break;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Get default value setting input field
-	 *
-	 * @since      1.0.0
-	 * @param id settings field id
-	 * @return mixed value of default setting
-	 */
-	public function get_default_setting($id) {
-		$pages = $this->settings_pages();
-
-		foreach ($pages as $page) {
-			if (isset($page['sections']) && !empty($page['sections'])) {
-
-				foreach ($page['sections'] as $section) {
-
-					if (isset($section['fields']) && !empty($section['fields'])) {
-
-						foreach ($section['fields'] as $field) {
-							if ($field['id'] === $id && isset($field['default'])) {
-								return $field['default'];
-							}
-
-							if (!empty($field['chields'])) {
-								foreach ($field['chields'] as $child_field) {
-
-									if ($child_field['id'] === $id && isset($child_field['default'])) {
-										return $child_field['default'];
-									}
-
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Get setting field type by setting ID
-	 *
-	 * @since      1.0.0
-	 * @param id setting field ID
-	 * @return mixed value of setting field type
-	 */
-	public function get_field_type($id) {
-		$pages = $this->settings_pages();
-
-		foreach ($pages as $page) {
-			if (isset($page['sections']) && !empty($page['sections'])) {
-
-				foreach ($page['sections'] as $section) {
-
-					if (isset($section['fields']) && !empty($section['fields'])) {
-						foreach ($section['fields'] as $field) {
-							if ($field['id'] === $id) {
-								return isset($field['type']) ? $field['type'] : false;
-							}
-
-							if (!empty($field['chields'])) {
-								foreach ($field['chields'] as $child_field) {
-									if ($child_field['id'] === $id) {
-										return isset($child_field['type']) ? $child_field['type'] : false;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * All settings pages including sections and fields
-	 *
-	 * @since      1.0.0
-	 * @return  array of settings pages data
-	 */
-	public function settings_pages() {
-		$general_settings_fields = array(
-			array(
-				'id' => 'heading_type',
-				'title' => __('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="' . home_url() . '/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings">Global Setting</a></small>', 'leo-product-recommendations'),
-				'type' => 'heading_selection',
-				'default' => 'default_heading',
-				'chields' => array(
-					array(
-						'id' => 'default_heading',
-						'title' => __('Heading', 'leo-product-recommendations'),
-						'type' => 'text',
-						'default' => __('You may purchase following [item, items] with the %title%', 'leo-product-recommendations'),
-					),
-					array(
-						'id' => 'default_heading_description',
-						'title' => __('Heading & Description', 'leo-product-recommendations'),
-						'type' => 'editor',
-					),
-				),
-				'description' => __('If you like to use the same heading patterns for all recommendations then use the default heading. Use pattern <strong>%title%</strong> for the product title. Pattern <strong>[item, items]</strong> is changeable. You can utilize <strong>[product, products]</strong> or all that makes sense. The particular expression for a single recommended item and the plural expression for more than one supported item.', 'leo-product-recommendations'),
-				'doc' 		  => 'https://cutt.ly/Ek3t5AJ',
-			),
-			array(
-				'id' => 'variable_add_to_cart',
-				'default' => 1,
-				'title' => __('Variable Products <br> Add To Cart', 'leo-product-recommendations'),
-				'label' => __('Add To Cart'),
-				'type' => 'checkbox',
-				'description' => __('To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href="' . esc_url("https://cutt.ly/QjE8s8y") . '" target="_blank">Example» </a>', 'leo-product-recommendations'),
-				'doc'         => 'https://cutt.ly/QjE8s8y',
-			),
-			array(
-				'id' => 'grid_options',
-				'title' => __('Grid Options', 'leo-product-recommendations'),
-				'type' => 'wrapper',
-				'chields' => array(
-					array(
-						'id' => 'grid_lg_items',
-						'title' => __('Desktop Items Per Row', 'leo-product-recommendations'),
-						'type' => 'number',
-						'min' => 2,
-						'max' => 5,
-						'default' => 4,
-					),
-
-					array(
-						'id' => 'grid_md_items',
-						'title' => __('Tablet Items Per Row', 'leo-product-recommendations'),
-						'type' => 'number',
-						'min' => 2,
-						'max' => 5,
-						'default' => 3,
-					),
-
-					array(
-						'id' => 'grid_sm_items',
-						'title' => __('Mobile Items Per Row', 'leo-product-recommendations'),
-						'type' => 'number',
-						'min' => 1,
-						'max' => 3,
-						'default' => 2,
-					),
-					array(
-						'id' => 'grid_column_gap',
-						'title' => __('Column Gap', 'leo-product-recommendations'),
-						'type' => 'number',
-						'suffix' => 'px',
-						'min' => 0,
-						'max' => 60,
-						'default' => 20,
-					),
-				),
-				'doc' => 'https://cutt.ly/Vk3a9kC'
-			),
-			array(
-				'id' => 'layout_image',
-				'title' => __('Layout Type <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/layout-type.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
-			),
-			array(
-				'id' => 'slider_options_image',
-				'title' => __('Slider Options <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/slider-options.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
-			),
-			array(
-				'id' => 'popup_size_image',
-				'title' => __('Popup Size <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/popup-size.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
-			),
-			array(
-				'id' => 'button_visibility_image',
-				'title' => __('Buttons Visibility <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/button-visibility.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
-			),
-		);
-
-		$style_settings = array(
-			array(
-				'id' => 'popup_color_image',
-				'title' => __('Popup Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/modal-color.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
-			),
-			array(
-				'id' => 'product_color_image',
-				'title' => __('Product Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/product-color-setting.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
-			),
-			array(
-				'id' => 'custom_style',
-				'title' => __('Custom CSS', 'leo-product-recommendations'),
-				'type' => 'css',
-				'description' => __('Write custom css to change style of modal.', 'leo-product-recommendations'),
-				'doc' 		  => 'https://cutt.ly/Uk3sC4R',
-			),
-		);
-
-		$global_settings_fields = array(
-			array(
-				'id' => 'active_global_settings',
-				'title' => __('Active Global Setting', 'leo-product-recommendations'),
-				'type' => 'checkbox',
-				'description' => __('If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.'),
-				'doc' 		  => 'https://cutt.ly/Rk3dWPA',
-				'default' => 1,
-			),
-			array(
-				'id' => 'selection_options',
-				'title' => __('Recommendation Options', 'leo-product-recommendations'),
-				'type' => 'wrapper_extend',
-				'chields' => array(
-					array(
-						'id' => 'global_categories',
-						'title' => __('Categories', 'leo-product-recommendations'),
-						'type' => 'radio',
-						'options' => array(
-							'same_categories' => __('Product Related Category', 'leo-product-recommendations'),
-							'manual_categories' => __('Manual', 'leo-product-recommendations'),
-						),
-						'default' => 'same_categories',
-					),
-					array(
-						'id' => 'global_custom_categories',
-						'title' => __('Choose Categories', 'leo-product-recommendations'),
-						'type' => 'categories_select',
-					),
-
-					array(
-						'id' => 'global_tags',
-						'title' => __('Choose Tags', 'leo-product-recommendations'),
-						'type' => 'tags_select',
-					),
-
-					array(
-						'id' => 'global_filtering',
-						'title' => __('Products Filtering', 'leo-product-recommendations'),
-						'type' 	=> 'select',
-						'options' => array(
-							'rand' 		 => __('Random Products', 'leo-product-recommendations'),
-							'newest' 	 => __('Newest Products', 'leo-product-recommendations'),
-							'oldest' 	 => __('Oldest Products', 'leo-product-recommendations'),
-							'lowprice' 	 => __('Low Price Products', 'leo-product-recommendations'),
-							'highprice'  => __('High Price Products', 'leo-product-recommendations'),
-							'popularity' => __('Best Selling Products', 'leo-product-recommendations'),
-							'rating' 	 => __('Top Rated Products', 'leo-product-recommendations'),
-						),
-					),
-					array(
-						'id' 	=> 'global_on_sale',
-						'title' => __('On-Sale Only', 'leo-product-recommendations'),
-						'type' 	=> 'checkbox',
-					),
-					array(
-						'id' 	  => 'global_products_number',
-						'title'   => __('Numbers of Products', 'leo-product-recommendations'),
-						'type' 	  => 'number',
-						'default' => 12,
-					),
-				),
-				'doc' => 'https://cutt.ly/sk3d7sE',
-			),
-			array(
-				'id' => 'disable_global_override',
-				'label' => __('Skip', 'leo-product-recommendations'),
-				'title' => __('Skip Manual Selection', 'leo-product-recommendations'),
-				'type' => 'checkbox',
-				'description' => __('It will ignore individual recommendations of what you have done from the Woo-Commerce Edit Product page using the WPR configuration panel. <br>
-                It is helpful for a quick campaign. For example: In your Black Friday campaign, you want to temporarily skip individual product-specific recommendations. And recommend certain or several categories of products. Simply select the categories of the previous configuration from above and check this <strong>Skip</strong> check box.','leo-product-recommendations'),
-				'doc' => 'https://cutt.ly/zk3fi4g',
-			),
-		);
-
-		$setting_pages = array(
-			array(
-				'id' => $this->get_settings_id(),
-				'page_title' => __('Product Recommendations Settings', 'leo-product-recommendations'),
-				'menu_title' => __('LPR Settings', 'leo-product-recommendations'),
-				'slug' => 'lpr-settings',
-				'icon' => 'dashicons-cart',
-				'position' => 60,
-				
-				'sections' => array(
-					array(
-						'id' => 'lpr-general-settings',
-						'tab_title' => __('General', 'leo-product-recommendations'),
-						'title' => __('General Settings', 'leo-product-recommendations'),
-						'fields' => $general_settings_fields,
-					),
-
-					array(
-						'id' => 'lpr-style-settings',
-						'tab_title' => __('Style', 'leo-product-recommendations'),
-						'title' => __('Colors & Styles Settings', 'leo-product-recommendations'),
-						'fields' => $style_settings,
-					),
-
-					array(
-						'id' => 'lpr-global-settings',
-						'tab_title' => __('Global', 'leo-product-recommendations'),
-						'title' => __('Global Settings', 'leo-product-recommendations'),
-						'fields' => $global_settings_fields,
-					),
-
-					array(
-						'id' => 'lpr-documentation',
-						'tab_title' => __('Tutorials', 'leo-product-recommendations'),
-						'title' => __('Tutorial & Documentation', 'leo-product-recommendations'),
-						'type' => 'article',
-						'template' => $this->get_path('includes/tutorials.php'),
-					),
-				),
-			),
-		);
-
-		return $setting_pages;
+		$options = \GetWooPlugins_Admin_Settings::get_option( $this->get_settings_id() );
+		return isset( $options[ $id ] ) ? $options[ $id ] : $default;
 	}
 
 	/**

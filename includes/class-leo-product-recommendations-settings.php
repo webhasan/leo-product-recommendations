@@ -18,7 +18,7 @@
             }
             
             public function get_id() {
-                return 'lpr_settings_test';
+                return 'lc_lpr_settings';
             }
             
             public function get_label() {
@@ -38,6 +38,44 @@
                 add_action( 'getwooplugins_sidebar', array( $this, 'sidebar' ) );
                 add_filter( 'show_getwooplugins_save_button', array( $this, 'save_button' ), 10, 3 );
                 add_filter( 'show_getwooplugins_sidebar', array( $this, 'save_button' ), 10, 3 );
+
+                // include require scripts
+                if($this->is_own_settings_page()) {
+                    add_action('admin_enqueue_scripts', function() {
+                        $lpr = leo_product_recommendations();
+
+                        wp_enqueue_script( 'lpr-settings-script', $lpr->get_url('assets/js/settings.min.js'), array('jquery','wp-i18n'), filemtime($lpr->get_path('assets/js/settings.min.js')), true );
+                        wp_enqueue_style('lpr-settings-style', $lpr->get_url('assets/css/settings.css'), array(), filemtime( $lpr->get_path('assets/css/settings.css')));
+    
+                        //css editor
+                        $cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
+                        wp_localize_script('lpr-settings', 'lpr_css_editor', $cm_settings);
+                        wp_enqueue_style('wp-codemirror');
+                        wp_enqueue_script('wp-theme-plugin-editor');
+                    });
+                }
+
+                // mapping old checkbox value "1" to yes 
+                add_filter( "option_".$this->get_id(), function($value) {
+                    $checkbox_fields = array(
+                        'variable_add_to_cart', 
+                        'show_go_check_out',
+                        'show_close_icon',
+                        'active_global_settings',
+                        'global_on_sale',
+                        'disable_global_override'
+                    );
+
+                    foreach($checkbox_fields as $field) {
+                        if(isset($value[$field]) && $value[$field] === '1') {
+                            $value[$field] = 'yes';
+                        }else if(!empty($value) && !isset($value[$field])) {
+                            $value[$field] = 'no';
+                        }
+                    }
+
+                    return $value;
+                }, 10, 2);  
             }
             
             public function save_button( $default, $current_tab, $current_section ) {
@@ -313,50 +351,272 @@
                 $settings = array(
                     
                     array(
-                        'id'    => 'general_options',
+                        'id'    => 'general_options_title',
                         'type'  => 'title',
-                        'title' => esc_html__( 'General options', 'leo-product-recommendations' ),
-                        'desc'  => 'Default will be used as a fallback heading for undefined heading & Global Setting recommendations heading.',
+                        'title' => __( 'General options', 'leo-product-recommendations' ),
                     ),
                     
                     array(
-                        'id'       => 'shape_style',
-                        'title'    => esc_html__( 'Shape Style', 'leo-product-recommendations' ),
-                        'type'     => 'radio',
-                        'desc'     => esc_html__( 'This controls which shape style used by default.', 'leo-product-recommendations' ),
-                        'desc_tip' => true,
-                        'default'  => 'squared',
-                        /*'is_pro'       => true,
-                        'is_new'       => true,*/
-                        
-                        'options'      => array(
-                            'rounded' => esc_html__( 'Rounded Shape', 'leo-product-recommendations' ),
-                            'squared' => esc_html__( 'Squared Shape', 'leo-product-recommendations' ),
+                        'id'       => 'variable_add_to_cart',
+                        'title'    => __( 'Variable Add To Cart', 'leo-product-recommendations' ),
+                        'type'     => 'checkbox',
+                        'desc'     => __( 'Show Add To Card for variable and group products.', 'leo-product-recommendations'),
+                        'default'  => 'yes',
+                    ),
+
+                    array(
+                        'id' => 'layout_type',
+                        'title' => __('Layout Type', 'leo-product-recommendations'),
+                        'type' => 'radio',
+                        'options' => array(
+                            'grid' => __('Grid', 'leo-product-recommendations'),
+                            'slider' => __('Slider', 'leo-product-recommendations'),
                         ),
-                        'help_preview' => true,
+                        'default' => 'grid',
+                        'is_pro'  => !$this->is_pro_activated(),
                     ),
-                    
+
                     array(
-                        'id'           => 'default_to_button',
-                        'title'        => esc_html__( 'Dropdowns to Button', 'leo-product-recommendations' ),
-                        'desc'         => esc_html__( 'Convert default dropdowns to button.', 'leo-product-recommendations' ),
-                        'default'      => 'yes',
-                        'type'         => 'checkbox',
-                        'help_preview' => true,
+                        'type' => 'sectionend',
+                        'id'   => 'general_options_title',
                     ),
-                    
+
                     array(
-                        'id'      => 'default_to_image',
-                        'type'    => 'checkbox',
-                        'title'   => esc_html__( 'Dropdowns to Image', 'leo-product-recommendations' ),
-                        'desc'    => esc_html__( 'Convert default dropdowns to image type if variation has an image.', 'leo-product-recommendations' ),
-                        'default' => 'yes',
-                        'is_pro'  => true,
+                        'id'    => 'layout_settings_title',
+                        'type'  => 'title',
+                        'title' => __( 'Layout Settings', 'leo-product-recommendations' ),
+                        'desc'  => __('Settings for grid / slider layouts of recommended products', 'leo-product-recommendations'),
                     ),
+
+                    array(
+						'id' => 'grid_lg_items',
+						'title' => __('Desktop Items Per Row', 'leo-product-recommendations'),
+						'type' => 'number',
+						'default' => 4,
+                        'css' => 'width: 80px;',
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('grid')) )),
+                        'custom_attributes' => array(
+                            'min' => 2,
+                            'max' => 5,
+                        ),
+					),
+                    array(
+						'id' => 'grid_md_items',
+						'title' => __('Tablet Items Per Row', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'default' => 3,
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('grid')) )),
+                        'custom_attributes' => array(
+                            'min' => 2,
+                            'max' => 5,
+                        ),
+					),
+
+					array(
+						'id' => 'grid_sm_items',
+						'title' => __('Mobile Items Per Row', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'default' => 2,
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('grid')) )),
+                        'custom_attributes' => array(
+                            'min' => 1,
+                            'max' => 3,
+                        ),
+					),
+					array(
+						'id' => 'grid_column_gap',
+						'title' => __('Column Gap', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'suffix' => 'px',
+						'default' => 20,
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('grid')) )),
+                        'custom_attributes' => array(
+                            'min' => 0,
+                            'max' => 60,
+                        ),
+					),
+
+                    array(
+						'id' => 'is_autoplay',
+						'title' => __('Auto Play', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+						'default' => 'yes',
+                        'desc' => 'Enable Slider Auto Play',
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+					),
+
+					array(
+						'id' => 'autoplay_speed',
+						'title' => __('Auto Play Speed', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'default' => 2000,
+						'suffix' => 'ms',
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+					),
+
+					array(
+						'id' => 'smart_speed',
+						'title' => __('Smart Speed', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'default' => 1200,
+						'suffix' => 'ms',
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+					),
+
+					array(
+						'id' => 'is_loop',
+						'title' => __('Loop', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+						'default' => 'yes',
+                        'desc' => 'Enable Slider Loop',
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+					),
+
+					array(
+						'id' => 'slide_by',
+						'title' => __('Slider By', 'leo-product-recommendations'),
+						'type' => 'select',
+						'default' => 1,
+						'options' => array(
+							'1' => __('1 Item', 'leo-product-recommendations'),
+							'2' => __('2 Items', 'leo-product-recommendations'),
+							'page' => __('Page', 'leo-product-recommendations'),
+						),
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+					),
+
+					array(
+						'id' => 'slider_lg_items',
+						'title' => __('Desktop Items', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'default' => 4,
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+                        'custom_attributes' => array(
+                            'min' => 2,
+                            'max' => 5,
+                        ),
+					),
+
+					array(
+						'id' => 'slider_md_items',
+						'title' => __('Tablet Items', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'default' => 3,
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+                        'custom_attributes' => array(
+                            'min' => 2,
+                            'max' => 5,
+                        ),
+					),
+
+					array(
+						'id' => 'slider_sm_items',
+						'title' => __('Mobile Items', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'default' => 2,
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+                        'custom_attributes' => array(
+                            'min' => 1,
+                            'max' => 3,
+                        ),
+					),
+					array(
+						'id' => 'slider_column_gap',
+						'title' => __('Column Gap', 'leo-product-recommendations'),
+						'type' => 'number',
+                        'css' => 'width: 80px;',
+						'suffix' => 'px',
+						'default' => 20,
+                        'require' => array(array( 'input[name="lc_lpr_settings[layout_type]"]' => array( 'type' => 'equal', 'value' => array('slider')) )),
+                        'custom_attributes' => array(
+                            'min' => 0,
+                            'max' => 60,
+                        ),
+					),
                     
                     array(
                         'type' => 'sectionend',
-                        'id'   => 'general_options',
+                        'id'   => 'layout_settings_title',
+                    ),
+
+                    array(
+                        'id'    => 'popup_size_heading',
+                        'type'  => 'title',
+                        'title' => __( 'Popup Size', 'leo-product-recommendations' ),
+                        'desc'  => __('Size of the recommendations popup modal.', 'leo-product-recommendations'),
+                    ),
+
+                    array(
+						'id' => 'popup_lg_size',
+						'title' => __('Desktop Size', 'leo-product-recommendations'),
+						'type' => 'number',
+						'suffix' => 'px',
+						'default' => 1000,
+                        'css' => 'width: 70px;',
+					),
+					array(
+						'id' => 'popup_md_size',
+						'title' => __('Tablet Size', 'leo-product-recommendations'),
+						'type' => 'number',
+						'suffix' => 'px',
+						'default' => 720,
+                        'css' => 'width: 70px;',
+					),
+					array(
+						'id' => 'popup_sm_size',
+						'title' => __('Mobile Size', 'leo-product-recommendations'),
+						'type' => 'number',
+						'suffix' => 'px',
+						'default' => 600,
+                        'css' => 'width: 70px;',
+                    ),
+
+                    array(
+                        'type' => 'sectionend',
+                        'id'   => 'popup_size_heading',
+                    ),
+
+                    array(
+                        'id'    => 'button_visibility_title',
+                        'type'  => 'title',
+                        'title' => __( 'Button Visibility', 'leo-product-recommendations' ),
+                        'desc'  => __('Show hide button of the popup heading.', 'leo-product-recommendations'),
+                    ),
+
+                    array(
+						'id' => 'show_continue_shopping',
+						'title' => __('Continue Shopping Button', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+						'default' => 'yes',
+                        'desc' => 'Show Continue Shopping Button',
+					),
+
+					array(
+						'id' => 'show_go_check_out',
+						'title' => __('Go Checkout Button', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+						'default' => 'yes',
+                        'desc' => 'Show Go Checkout Button',
+					),
+
+					array(
+						'id' => 'show_close_icon',
+						'title' => __('Popup Close Icon', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+                        'desc' => 'Show Popup Close Icon',
+					),
+
+                    array(
+                        'type' => 'sectionend',
+                        'id'   => 'button_visibility_title',
                     ),
                 
                 );
@@ -368,100 +628,364 @@
             protected function get_settings_for_style_new_section() {
                 
                 $settings = array(
-                    
-                    // Start swatches tick and cross coloring
                     array(
-                        'id'    => 'style_icons_options',
+                        'id'    => 'popup_color_settings_title',
                         'type'  => 'title',
-                        'title' => esc_html__( 'Swatches indicator', 'leo-product-recommendations' ),
-                        'desc'  => esc_html__( 'Change swatches indicator color', 'leo-product-recommendations' ),
+                        'title' => esc_html__( 'Popup Color Settings', 'leo-product-recommendations' ),
                     ),
                     
                     array(
-                        'id'                => 'tick_color',
-                        'type'              => 'color',
-                        'title'             => esc_html__( 'Tick Color', 'leo-product-recommendations' ),
-                        'desc'              => esc_html__( 'Swatches Selected tick color. Default is: #ffffff', 'leo-product-recommendations' ),
-                        'css'               => 'width: 6em;',
-                        'default'           => '#ffffff',
-                        // 'is_new'            => true,
-                        'custom_attributes' => array(//    'data-alpha-enabled' => 'true'
-                        )
-                    ),
-                    
-                    array(
-                        'id'                => 'cross_color',
-                        'type'              => 'color',
-                        'title'             => esc_html__( 'Cross Color', 'leo-product-recommendations' ),
-                        'desc'              => esc_html__( 'Swatches cross color. Default is: #ff0000', 'leo-product-recommendations' ),
-                        'css'               => 'width: 6em;',
-                        'default'           => '#ff0000',
-                        //'is_new'            => true,
-                        'custom_attributes' => array(//    'data-alpha-enabled' => 'true'
-                        )
-                    ),
+						'id' => 'modal_bg_color',
+						'title' => __('Modal Background', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#fff',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'notification_bar_bg',
+						'title' => __('Notification Bar Background', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#f5f5f5',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'notification_icon_color',
+						'title' => __('Notification Icon Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#46C28E',
+                        'css' => 'width: 6em;',
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'notification_text_color',
+						'title' => __('Notification Text Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#555555',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'view_cart_color',
+						'title' => __('View Cart Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#46C28E',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'continue_shopping_bg',
+						'title' => __('Continue Shopping Background', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#4cc491',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+					array(
+						'id' => 'continue_shopping_hover_bg',
+						'title' => __('Continue Shopping Hover Bg', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#35a073',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'checkout_bg',
+						'title' => __('Checkout Background', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#4cc491',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'checkout_hover_bg',
+						'title' => __('Checkout Hover Background', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#35a073',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'cart_color',
+						'title' => __('Cart Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#35a073',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'modal_close_icon_color',
+						'title' => __('Popup Close Background', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#46C28E',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'heading_text_color',
+						'title' => __('Heading Text Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#555555',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'heading_background_color',
+						'title' => __('Heading Background Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#ffffff',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'heading_border_color',
+						'title' => __('Heading Border Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#f1f1f1',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'slider_nav_color',
+						'title' => __('Slider Nav Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => '#46C28E',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'overlay_color',
+						'title' => __('Body Overlay Color', 'leo-product-recommendations'),
+						'type' => 'color',
+						'default' => 'rgba(0,0,0,.5)',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
                     
                     array(
                         'type' => 'sectionend',
-                        'id'   => 'style_icons_options',
+                        'id'   => 'popup_color_settings_title',
                     ),
-                    
-                    // Start single page swatches style
+
                     array(
-                        'id'    => 'single_style_options',
+                        'id'    => 'popup_products_color_title',
                         'type'  => 'title',
-                        'title' => esc_html__( 'Product Page Swatches Size', 'leo-product-recommendations' ),
-                        'desc'  => esc_html__( 'Change swatches style on product page', 'leo-product-recommendations' ),
+                        'title' =>  __( 'Recommended Products Color Settings', 'leo-product-recommendations' ),
+                        'desc'  => __( 'The default colors are inherited colors of the theme colors', 'leo-product-recommendations' ),
                     ),
-                    
+
                     array(
-                        'id'                => 'width',
-                        'type'              => 'number',
-                        'title'             => esc_html__( 'Width', 'leo-product-recommendations' ),
-                        'desc'              => esc_html__( 'Single product variation item width. Default is: 30', 'leo-product-recommendations' ),
-                        'css'               => 'width: 50px;',
-                        'default'           => '30',
-                        'suffix'            => 'px',
+						'id' => 'product_title_color',
+						'title' => __('Product Title Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
                         'custom_attributes' => array(
-                            'min'  => 10,
-                            'max'  => 200,
-                            'step' => 5,
+                            'data-alpha-enabled' => 'true'
                         ),
-                    ),
-                    
-                    array(
-                        'id'                => 'height',
-                        'type'              => 'number',
-                        'title'             => esc_html__( 'Height', 'leo-product-recommendations' ),
-                        'desc'              => esc_html__( 'Single product variation item height. Default is: 30', 'leo-product-recommendations' ),
-                        'css'               => 'width: 50px;',
-                        'default'           => 30,
-                        'suffix'            => 'px',
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'product_title_hove_color',
+						'title' => __('Hover Product Title Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
                         'custom_attributes' => array(
-                            'min'  => 10,
-                            'max'  => 200,
-                            'step' => 5,
+                            'data-alpha-enabled' => 'true'
                         ),
-                    ),
-                    
-                    array(
-                        'id'                => 'single_font_size',
-                        'type'              => 'number',
-                        'title'             => esc_html__( 'Font Size', 'leo-product-recommendations' ),
-                        'desc'              => esc_html__( 'Single product variation item font size. Default is: 16', 'leo-product-recommendations' ),
-                        'css'               => 'width: 50px;',
-                        'default'           => 16,
-                        'suffix'            => 'px',
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'price_color',
+						'title' => __('Price Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
                         'custom_attributes' => array(
-                            'min'  => 8,
-                            'max'  => 48,
-                            'step' => 2,
+                            'data-alpha-enabled' => 'true'
                         ),
-                    ),
-                    
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'offer_price_color',
+						'title' => __('Offer Price Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'button_text_color',
+						'title' => __('Button Text Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'hover_button_text_color',
+						'title' => __('Hover Button Text Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'button_background_color',
+						'title' => __('Button Background', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'hover_button_background',
+						'title' => __('Hover Button Background', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'on_sale_text_color',
+						'title' => __('On-sale Badge Text Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'on_sale_background',
+						'title' => __('On-sale Background Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
+					array(
+						'id' => 'product_border_color',
+						'title' => __('Product Border Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+					array(
+						'id' => 'product_background_color',
+						'title' => __('Product Background Color', 'leo-product-recommendations'),
+						'type' => 'color',
+                        'css' => 'width: 6em;',
+                        'custom_attributes' => array(
+                            'data-alpha-enabled' => 'true'
+                        ),
+                        'is_pro'  => !$this->is_pro_activated(),
+					),
+
                     array(
                         'type' => 'sectionend',
-                        'id'   => 'single_style_options',
+                        'id'   => 'popup_products_color_title',
+                    ),
+
+                    array(
+                        'id'    => 'custom_css_title',
+                        'type'  => 'title',
+                        'title' =>  __( 'Custom CSS', 'leo-product-recommendations' ),
+                    ),
+
+                    array(
+                        'id' => 'custom_style',
+                        'title' => __('Custom CSS', 'leo-product-recommendations'),
+                        'type' => 'textarea',
+                        'desc' => __('Write custom css to change style of modal.', 'leo-product-recommendations'),
+                    ),
+
+                    array(
+                        'type' => 'sectionend',
+                        'id'   => 'custom_css_title',
                     ),
                 
                 );
@@ -547,8 +1071,8 @@
                         'title' => esc_html__( 'Choose Categories', 'leo-product-recommendations' ),
                         'desc'  => 'Show products recommendations form same category or manually chooses from particular categories',
                         'options'    => $this->get_product_categories(),
-                        'require' => array(array( 'input[name="lpr_settings_test[global_categories]"]' => array( 'type' => 'equal', 'value' => array('manual_categories')) )) ,
                         'placeholder' => esc_html__( 'All Categories', 'leo-product-recommendations' ),
+                        'require' => array(array( 'input[name="lc_lpr_settings[global_categories]"]' => array( 'type' => 'equal', 'value' => array('manual_categories')) )) ,
                     ),
 
                     array(
@@ -653,6 +1177,30 @@
 
                 return $product_tags;
             }
-            
+
+            /**
+             * Check current page is leo product recommendations settings page. 
+             * @since 2.2.0
+             * @return bool of current is leo products recommendations page or not. 
+             */
+            function is_own_settings_page() {
+                $page = !empty($_GET['page']) ? sanitize_key($_GET['page']) : null;
+                $tab = !empty($_GET['tab']) ? sanitize_key($_GET['tab']) : null;
+
+                if($tab === 'lc_lpr_settings' || (!$tab && $page === 'getwooplugins-settings')) {
+                    return true;
+                }
+                return false;
+            }
+
+            /**
+             * Check is pro version of the plugin is activated
+             * @since 2.2.0
+             * @return bool 
+             */
+            public function is_pro_activated() {
+                $lpr = leo_product_recommendations();
+                return $lpr->is_pro_activated();
+            } 
         }
     endif;

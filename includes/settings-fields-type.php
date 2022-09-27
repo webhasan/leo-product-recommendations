@@ -422,7 +422,9 @@ function radio($field, $base, $setting_id) {
  */
 function checkbox($field, $base, $setting_id) {
     extract($field);
+    
     $value = $base->get_setting($id);
+    echo ($value);
     $field_name = $setting_id . '[' . $id . ']';
     ?>
     <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
