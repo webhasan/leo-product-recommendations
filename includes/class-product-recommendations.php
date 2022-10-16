@@ -204,6 +204,7 @@ final class Product_Recommendations {
 	public function includes() {
 		$this->admin_ajax(); // handle all admin ajax request
 		$this->plugin_action_links(); // add action link, example: Go Pro->, Settings->
+		$this->plugin_settings();
 	}
 
 	/**
@@ -254,7 +255,6 @@ final class Product_Recommendations {
 		}
 		\GetWooPlugins_Admin_Menus::instance();
 
-		
 		//Register settings Tags, Sections, and Fields
 		add_filter( 'getwooplugins_get_settings_pages', array( $this, 'init_settings' ) );
 	}
@@ -370,7 +370,7 @@ final class Product_Recommendations {
 
 		wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
 		//recommend variable and group product add to cart
-		if ($this->get_setting('variable_add_to_cart')) {
+		if ($this->get_setting('variable_add_to_cart', 'yes')) {
 			wp_enqueue_script('wc-add-to-cart-variation');
 		}
 	}
@@ -383,18 +383,18 @@ final class Product_Recommendations {
 	public function settings_css() {
 
 		// grid
-		$items_desktop = $this->get_setting('grid_lg_items');
+		$items_desktop = $this->get_setting('grid_lg_items', 4);
 
-		$items_tablet = $this->get_setting('grid_md_items');
-		$items_mobile = $this->get_setting('grid_sm_items');
-		$grid_column_gap = (int) $this->get_setting('grid_column_gap') + 1;
+		$items_tablet = $this->get_setting('grid_md_items', 3);
+		$items_mobile = $this->get_setting('grid_sm_items', 2);
+		$grid_column_gap = (int) $this->get_setting('grid_column_gap', 20) + 1;
 
 		$desktop_item_width = 100 / $items_desktop;
 		$tablet_item_width = 100 / $items_tablet;
 		$mobile_item_width = 100 / $items_mobile;
 
 		// custom css
-		$custom_css = $this->get_setting('custom_style') ? $this->get_setting('custom_style') : '';
+		$custom_css = $this->get_setting('custom_style', '');
 		?>
 		<style id="lpr-settings-css-front-end">
 			.lpr-modal .lpr-modal-content ul.recommended-products-list {
@@ -717,8 +717,8 @@ final class Product_Recommendations {
 		//modal_heading
 		$pr_data = $this->get_pr_data($product_id); //recommendations data for product
 		$modal_heading = (!!$pr_data && isset($pr_data['heading'])) ? $pr_data['heading'] : '';
-		$is_article_heading = ($this->get_setting('heading_type') === 'default_heading_description');
-		$default_heading = $is_article_heading ? $this->get_setting('default_heading_description') : $this->get_setting('default_heading');
+		$is_article_heading = ($this->get_setting('heading_type', 'default_heading') === 'default_heading_description');
+		$default_heading = $is_article_heading ? $this->get_setting('default_heading_description','') : $this->get_setting('default_heading', 'You may purchase following [product, products] with the %title%');
 		$default_heading = !empty($default_heading) ? $default_heading : '';
 		$html_permission = array(
 			'span' => array('class'),
@@ -739,19 +739,19 @@ final class Product_Recommendations {
 		$template_data['modal_heading'] = $modal_heading;
 
 		//show_close_icon
-		$template_data['show_close_icon'] = $this->get_setting('show_close_icon') === 'yes' ? true : false;
+		$template_data['show_close_icon'] = $this->get_setting('show_close_icon','no') === 'yes' ? true : false;
 
 		//show_continue_shopping
-		$template_data['show_continue_shopping'] = $this->get_setting('show_continue_shopping') === 'yes' ? true : false;
+		$template_data['show_continue_shopping'] = $this->get_setting('show_continue_shopping','yes') === 'yes' ? true : false;
 
 		//show_go_check_out
-		$template_data['show_go_check_out'] = $this->get_setting('show_go_check_out') === 'yes' ? true : false;
+		$template_data['show_go_check_out'] = $this->get_setting('show_go_check_out','yes') === 'yes' ? true : false;
 
 		//layout_type
 		$template_data['layout_type'] = $this->get_setting('layout_type', 'grid');
 
 		//variable_add_to_cart
-		$template_data['variable_add_to_cart'] = $this->get_setting('variable_add_to_cart')  === 'yes' ? true : false;
+		$template_data['variable_add_to_cart'] = $this->get_setting('variable_add_to_cart','yes')  === 'yes' ? true : false;
 
 		//theme
 		$theme_info = wp_get_theme();
@@ -827,7 +827,7 @@ final class Product_Recommendations {
 	 */
 	public function is_active_global($id) {
 
-		$has_global = $this->get_setting('active_global_settings','no') === 'yes' ? true : false;
+		$has_global = $this->get_setting('active_global_settings','yes') === 'yes' ? true : false;
 		$disable_overwrite = $this->get_setting('disable_global_override','no') === 'yes' ? true : false;
 		
 		// active global and not overwrite by local
@@ -1075,6 +1075,23 @@ final class Product_Recommendations {
 	}
 
 	/**
+	 * Get setting field data
+	 *
+	 * @since      1.0.0
+	 * @param id settings field id
+	 * @return  mixed value of setting field
+	 */
+	public function get_setting($id, $default = null) {
+		if(!class_exists('GetWooPlugins_Admin_Settings')) {
+			include_once('getwooplugins/class-getwooplugins-admin-settings.php');
+		}
+
+		$options = \GetWooPlugins_Admin_Settings::get_option( $this->get_settings_id() );
+		return isset( $options[ $id ] ) ? $options[ $id ] : $default;
+	}
+
+
+	/**
 	 * Is pro version activated or not
 	 *
 	 * @since      1.0.0
@@ -1131,7 +1148,7 @@ final class Product_Recommendations {
 	public function get_global_pr_data() {
 		$data = array();
 
-		if ($this->get_setting('active_global_settings') !== 'yes') {
+		if ($this->get_setting('active_global_settings', 'yes') !== 'yes') {
 			return $data;
 		}
 
@@ -1143,19 +1160,6 @@ final class Product_Recommendations {
 		$data['sale'] 			= $this->get_setting('global_on_sale', 'no') === 'yes' ? true : false;
 
 		return $data;
-	}
-
-	/**
-	 * Get setting field data
-	 *
-	 * @since      1.0.0
-	 * @param id settings field id
-	 * @return  mixed value of setting field
-	 */
-	public function get_setting($id, $default = null) {
-
-		$options = \GetWooPlugins_Admin_Settings::get_option( $this->get_settings_id() );
-		return isset( $options[ $id ] ) ? $options[ $id ] : $default;
 	}
 
 	/**

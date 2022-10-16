@@ -13,5 +13,8 @@
 .getwooplugins-admin-form-table tr .CodeMirror {
   border: 1px solid #f2f2f2;
 }
+.getwooplugins-admin-form-table tr #lc_lpr_settings_default_heading {
+  width: 100%;
+}
 
 /*# sourceMappingURL=settings.css.map */

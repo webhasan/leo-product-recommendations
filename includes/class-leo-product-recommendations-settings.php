@@ -1,5 +1,5 @@
 <?php
-    
+
     defined( 'ABSPATH' ) || exit;
     
     if ( ! class_exists( 'Leo_Product_Recommendations_Settings' ) ):
@@ -561,6 +561,7 @@
 						'suffix' => 'px',
 						'default' => 1000,
                         'css' => 'width: 70px;',
+                        'is_pro'  => !$this->is_pro_activated(),
 					),
 					array(
 						'id' => 'popup_md_size',
@@ -569,6 +570,7 @@
 						'suffix' => 'px',
 						'default' => 720,
                         'css' => 'width: 70px;',
+                        'is_pro'  => !$this->is_pro_activated(),
 					),
 					array(
 						'id' => 'popup_sm_size',
@@ -577,6 +579,7 @@
 						'suffix' => 'px',
 						'default' => 600,
                         'css' => 'width: 70px;',
+                        'is_pro'  => !$this->is_pro_activated(),
                     ),
 
                     array(
@@ -597,6 +600,7 @@
 						'type' => 'checkbox',
 						'default' => 'yes',
                         'desc' => 'Show Continue Shopping Button',
+                        'is_pro'  => !$this->is_pro_activated(),
 					),
 
 					array(
@@ -605,6 +609,7 @@
 						'type' => 'checkbox',
 						'default' => 'yes',
                         'desc' => 'Show Go Checkout Button',
+                        'is_pro'  => !$this->is_pro_activated(),
 					),
 
 					array(
@@ -612,6 +617,7 @@
 						'title' => __('Popup Close Icon', 'leo-product-recommendations'),
 						'type' => 'checkbox',
                         'desc' => 'Show Popup Close Icon',
+                        'is_pro'  => !$this->is_pro_activated(),
 					),
 
                     array(
@@ -1007,27 +1013,29 @@
                         'id'        => 'heading_type',
                         'type'      => 'radio',
                         'default'   => 'default_heading',
-                        'title'     => esc_html__( 'Global Heading Type', 'leo-product-recommendations' ),
-                        'desc'      => esc_html__( 'Choose whether you like a single line heading or a descriptive heading.', 'leo-product-recommendations' ),
+                        'title'     => __( 'Global Heading Type', 'leo-product-recommendations' ),
+                        'desc'      => __( 'Choose whether you like a single line heading or a descriptive heading.', 'leo-product-recommendations' ),
                         'options'      => array(
-                            'default_heading' => esc_html__( 'Heading', 'leo-product-recommendations' ),
-                            'default_heading_description' => esc_html__( 'Heading & Description', 'leo-product-recommendations' ),
+                            'default_heading' => __( 'Heading', 'leo-product-recommendations' ),
+                            'default_heading_description' => __( 'Heading & Description', 'leo-product-recommendations' ),
                         ),
                     ),
                     
                     array(
                         'id'      => 'default_heading',
                         'type'    => 'text',
-                        'title'   => esc_html__( 'Single Line Heading', 'leo-product-recommendations' ),
-                        'desc'    => esc_html__( 'Write single line heading. Use pattern %title% for the product title. And [item, items] for singular and plural of item type.', 'leo-product-recommendations' ),
+                        'title'   => __( 'Single Line Heading', 'leo-product-recommendations' ),
+                        'desc'    => __( 'Write single line heading. Use pattern %title% for the product title. And [item, items] for singular and plural of item type.', 'leo-product-recommendations' ),
                         'default' => 'You may purchase following [product, products] with the %title%',
+                        'require' => array(array( 'input[name="lc_lpr_settings[heading_type]"]' => array( 'type' => 'equal', 'value' => array('default_heading')) )),
                     ),
-
+                    
                     array(
                         'id'      => 'default_heading_description',
                         'type'    => 'textarea',
-                        'title'   => esc_html__( 'Descriptive Heading', 'leo-product-recommendations' ),
-                        'desc'    => esc_html__( 'Write descriptive heading.', 'leo-product-recommendations' ),
+                        'title'   => __( 'Descriptive Heading', 'leo-product-recommendations' ),
+                        'desc'    => __( 'Write descriptive heading.', 'leo-product-recommendations' ),
+                        'require' => array(array( 'input[name="lc_lpr_settings[heading_type]"]' => array( 'type' => 'equal', 'value' => array('default_heading_description')) )),
                     ),
 
                     array(
@@ -1035,31 +1043,30 @@
                         'id'   => 'global_heading_title',
                     ),
 
-
                     array(
                         'id'    => 'global_recommendations_title',
                         'type'  => 'title',
-                        'title' => esc_html__( 'Global Product Recommendation', 'leo-product-recommendations' ),
-                        'desc'  => 'If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.',
+                        'title' => __( 'Global Product Recommendation', 'leo-product-recommendations' ),
+                        'desc'  => __('If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.', 'leo-product-recommendations')
                     ),
 
                     array(
                         'id'     => 'active_global_settings',
                         'type'   => 'checkbox',
-                        'title'  => esc_html__( 'Global Recommendations', 'leo-product-recommendations' ),
+                        'title'  => __( 'Global Recommendations', 'leo-product-recommendations' ),
                         'default' => 'yes',
-                        'desc'  => 'Enable global recommendations'
+                        'desc'  => __('Enable global recommendations','leo-product-recommendations')
                     ),
 
                     array(
                         'id'    => 'global_categories',
                         'type' => 'radio',
-                        'title' => esc_html__( 'Category Type', 'leo-product-recommendations' ),
+                        'title' => __( 'Category Type', 'leo-product-recommendations' ),
                         'default' => 'same_categories',
-                        'desc'  => 'Show products recommendations form same category or manually chooses from particular categories',
+                        'desc'  => __('Show products recommendations form same category or manually chooses from particular categories', 'leo-product-recommendations'),
                         'options'      => array(
-                            'same_categories' => esc_html__( 'Product Related Category', 'leo-product-recommendations' ),
-                            'manual_categories' => esc_html__( 'Choose Categories', 'leo-product-recommendations' ),
+                            'same_categories' => __( 'Product Related Category', 'leo-product-recommendations' ),
+                            'manual_categories' => __( 'Choose Categories', 'leo-product-recommendations' ),
                         ),
                         'require' => $this->normalize_required_attribute( array( 'active_global_settings' => array( 'type' => '!empty' ) ) ),
                     ),
@@ -1068,10 +1075,10 @@
                         'id'    => 'global_custom_categories',
                         'type'     => 'multiselect',
                         'multiselect' => 'true',
-                        'title' => esc_html__( 'Choose Categories', 'leo-product-recommendations' ),
-                        'desc'  => 'Show products recommendations form same category or manually chooses from particular categories',
+                        'title' => __( 'Choose Categories', 'leo-product-recommendations' ),
+                        'desc'  => __('Show products recommendations form same category or manually chooses from particular categories','leo-product-recommendations'),
                         'options'    => $this->get_product_categories(),
-                        'placeholder' => esc_html__( 'All Categories', 'leo-product-recommendations' ),
+                        'placeholder' => __( 'All Categories', 'leo-product-recommendations' ),
                         'require' => array(array( 'input[name="lc_lpr_settings[global_categories]"]' => array( 'type' => 'equal', 'value' => array('manual_categories')) )) ,
                     ),
 
@@ -1080,9 +1087,9 @@
                         'type'     => 'multiselect',
                         'size' => 'tiny',
                         'multiselect' => 'true',
-                        'title' => esc_html__( 'Choose Tags', 'leo-product-recommendations' ),
-                        'desc'  => 'Show products recommendations form same category or manually chooses from particular categories',
-                        'placeholder' => esc_html__( 'All Tags', 'leo-product-recommendations' ),
+                        'title' => __( 'Choose Tags', 'leo-product-recommendations' ),
+                        'desc'  => __('Show products recommendations form same category or manually chooses from particular categories', 'leo-product-recommendations'),
+                        'placeholder' => __( 'All Tags', 'leo-product-recommendations' ),
                         'options'    => $this->get_product_tags(),
                         'require' => $this->normalize_required_attribute( array( 'active_global_settings' => array( 'type' => '!empty' ) ) ),
                     ),
@@ -1107,7 +1114,7 @@
 						'id' 	=> 'global_on_sale',
 						'title' => __('On-Sale Only', 'leo-product-recommendations'),
 						'type' 	=> 'checkbox',
-                        'desc' => 'Only show discount products',
+                        'desc' => __('Only show discount products','leo-product-recommendations'),
                         'require' => $this->normalize_required_attribute( array( 'active_global_settings' => array( 'type' => '!empty' ) ) ),
 					),
 
@@ -1116,7 +1123,7 @@
 						'title'   => __('Numbers of Products', 'leo-product-recommendations'),
 						'type' 	  => 'number',
 						'default' => 12,
-                        'desc' => 'How many product to show in popup',
+                        'desc' => __('How many product to show in popup','leo-product-recommendations'),
                         'require' => $this->normalize_required_attribute( array( 'active_global_settings' => array( 'type' => '!empty' ) ) ),
 					),
                     array(
