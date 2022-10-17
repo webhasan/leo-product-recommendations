@@ -616,6 +616,7 @@
 						'id' => 'show_close_icon',
 						'title' => __('Popup Close Icon', 'leo-product-recommendations'),
 						'type' => 'checkbox',
+                        'default' => 'no',
                         'desc' => 'Show Popup Close Icon',
                         'is_pro'  => !$this->is_pro_activated(),
 					),
@@ -1029,7 +1030,7 @@
                         'default' => 'You may purchase following [product, products] with the %title%',
                         'require' => array(array( 'input[name="lc_lpr_settings[heading_type]"]' => array( 'type' => 'equal', 'value' => array('default_heading')) )),
                     ),
-                    
+
                     array(
                         'id'      => 'default_heading_description',
                         'type'    => 'textarea',
