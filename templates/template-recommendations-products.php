@@ -7,6 +7,8 @@
  * @global $theme
  */
 
+ global $product;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -30,6 +32,7 @@ $ending_tag   = '</li>';
 ?>
 
 <?php echo $beginning_tag; ?>
+    <div class="rey-productInner">
     <?php do_action('lpr_before_recommended_product', get_the_ID()); ?>
 
     <?php if($theme === 'OceanWP') { // ocean wp theme archive product
@@ -46,31 +49,40 @@ $ending_tag   = '</li>';
             medibazar_shop_thumbnail();
         }
         
-        //fixed not showing image issue
-        $no_thumbnail_themes = apply_filters('lpr_show_image', ['DavinciWoo']);
+        //fixing not showing product image
+        $no_thumbnail_themes = apply_filters('lpr_fix_thumb', ['DavinciWoo','Rey']);
         if(in_array($theme, $no_thumbnail_themes)) {
             echo woocommerce_get_product_thumbnail();
         }
 
         do_action('woocommerce_before_shop_loop_item_title');
         do_action('woocommerce_shop_loop_item_title');
+
+        //fixing for not showing title 
+        $no_product_title = apply_filters('lpr_title_price', ['Rey']);
+        if(in_array($theme, $no_product_title)) {
+            woocommerce_template_loop_product_title();
+        }
         do_action('woocommerce_after_shop_loop_item_title');
+
         ?>
     </a>
 
     <?php 
-    // Fixing for Sneaker & Safira theme
-        if($theme === 'Sneaker' || $theme === 'Safira' || $theme === 'Plantmore') {
+        //fixing for not showing price 
+        $no_product_price = apply_filters('lpr_fix_price', ['Sneaker','Rey','Safira','Plantmore']);
+        if(in_array($theme, $no_product_price)) {
             woocommerce_template_single_price();
         }
     ?>
 
     <?php 
-    if($variable_add_to_cart) {
-        woocommerce_template_single_add_to_cart();
-    }else {
-        woocommerce_template_loop_add_to_cart();
-    }
-    do_action('lpr_after_recommended_product', get_the_ID()); ?>
+        if($variable_add_to_cart) {
+            woocommerce_template_single_add_to_cart();
+        }else {
+            woocommerce_template_loop_add_to_cart();    
+        }
+        
+        do_action('lpr_after_recommended_product', get_the_ID()); ?>
+    </div>
 <?php echo $ending_tag; ?>
-

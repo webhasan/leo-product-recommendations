@@ -428,6 +428,9 @@
        font-size: 14px;
        line-height: 22.5px;
        border: none !important;
+       padding-left: 0 !important;
+       padding-right: 0 !important;
+       margin-top: 0 !important;
  
        .mf-product-thumbnail .footer-button {
          display: none;
@@ -790,4 +793,22 @@ body.theme-twentytwentytwo .lpr-modal .lpr-modal-content .recommended-products-s
    -webkit-animation-name: lpr_headShake;
    animation-name: lpr_headShake;
  }
+
+
+// ocean wp theme fix
+.owp-qv-container {
+  z-index: 99999999 !important;
+}
+
+#owp-qv-wrap, #owp-qv-wrap .owp-qv-overlay {
+  z-index: 9999999 !important;
+}
+
+body.oceanwp-theme #lpr-modal ul.woo-entry-inner .btn-wrap {
+  display: none !important;
+}
  
+
+.single-lpr .rey-lineLoader {
+  display: none;
+}
