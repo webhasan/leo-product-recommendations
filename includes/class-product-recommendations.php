@@ -877,7 +877,31 @@ final class Product_Recommendations {
 	 * @return array of manually selection data
 	 */
 	public function manual_query_products($data) {
-		return !empty($data['products']) ? $data['products'] : array();
+		if(empty($data['products'])) {
+			return array();
+		}
+
+		$products_id = array_filter($data['products'], function($id) {
+
+			$product = wc_get_product($id);
+
+			if($product->get_catalog_visibility() === 'hidden') {
+				return false;
+			}
+
+			if ( $product->get_status() !== 'publish' ) {
+				return false;
+			};
+
+			$product = wc_get_product($id);
+			if ( $product->managing_stock() && ! $product->is_in_stock() ) {
+				return false;
+			}
+			
+			return true;
+		});
+
+		return $products_id;
 	}
 
 	/**
@@ -890,6 +914,7 @@ final class Product_Recommendations {
 		$args = array(
 			'post_type' => 'product',
 			'post__not_in' => array($product_id),
+			'post_status' => 'publish',
 		);
 
 		if (!empty($data['number'])) {
@@ -913,6 +938,10 @@ final class Product_Recommendations {
 			return (int) $tag;
 		}, $tags);
 
+		$product_visibility_terms  = wc_get_product_visibility_term_ids();
+		$product_visibility_not_in[] = $product_visibility_terms['exclude-from-catalog'];
+		$product_visibility_not_in[] = $product_visibility_terms['outofstock'];
+
 		if (!empty($categories) && !empty($tags)) {
 			$args['tax_query'] = array(
 				'relation' => 'AND',
@@ -926,24 +955,44 @@ final class Product_Recommendations {
 					'field' => 'term_id',
 					'terms' => $tags,
 				),
+				array(
+					'taxonomy' => 'product_visibility',
+					'field'    => 'term_taxonomy_id',
+					'terms'    => $product_visibility_not_in,
+					'operator' => 'NOT IN',
+				)
 			);
 		} else if (!empty($categories)) {
 			$args['tax_query'] = array(
+				'relation' => 'AND',
 				array(
 					'taxonomy' => 'product_cat',
 					'field' => 'term_id',
 					'terms' => $categories,
 				),
+				array(
+					'taxonomy' => 'product_visibility',
+					'field'    => 'term_taxonomy_id',
+					'terms'    => $product_visibility_not_in,
+					'operator' => 'NOT IN',
+				)
 			);
 		} else if (!empty($tags)) {
 			$args['tax_query'] = array(
+				'relation' => 'AND',
 				array(
 					'taxonomy' => 'product_tag',
 					'field' => 'term_id',
 					'terms' => $tags,
 				),
+				array(
+					'taxonomy' => 'product_visibility',
+					'field'    => 'term_taxonomy_id',
+					'terms'    => $product_visibility_not_in,
+					'operator' => 'NOT IN',
+				)
 			);
-		}
+		} 
 
 		$orderby = 'date';
 		$meta_key = '';
