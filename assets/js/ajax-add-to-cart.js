@@ -21,11 +21,7 @@
 
             data.product_id = $submitButton.val() ? $submitButton.val() : productId;
 
-            // recommendation products modal.
-            var $targetModal = $('#lpr-modal-' + data.product_id);
-            //$targetModal.length || $form.closest('.lpr-modal-body').length
-
-            if( true ) {
+            if( !!parseInt(data.product_id) ) {
                 // add product id to button to catch it by modal.
                 $submitButton.attr('data-product_id', data.product_id);
                 $submitButton.removeClass( 'added' );
@@ -39,7 +35,6 @@
                     url: lc_ajax.url,
                     data: {
                         action: 'lc_ajax_add_to_cart',
-                        nonce: lc_ajax.nonce,
                         ...data
                     }
                 }).done(function(response) {

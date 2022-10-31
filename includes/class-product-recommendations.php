@@ -388,8 +388,7 @@ final class Product_Recommendations {
 		wp_enqueue_script('lpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), array('jquery', 'wp-i18n'), $version, true);
 		wp_set_script_translations( 'lpr-ajax-add-to-cart', 'leo-product-recommendations' );
 		wp_localize_script('lpr-ajax-add-to-cart', 'lc_ajax', array(
-			'url' => admin_url('admin-ajax.php'),
-			'nonce' => wp_create_nonce('lc-add-to-cart'),
+			'url' => admin_url('admin-ajax.php')
 		));
 		// }
 
@@ -679,15 +678,10 @@ final class Product_Recommendations {
 	 * @return  json
 	 */
 	public function ajax_add_to_cart() {
-
-		if (!empty($_POST) && $_POST['nonce'] && wp_verify_nonce($_POST['nonce'], 'lc-add-to-cart')) {
-			if (!class_exists(Ajax_Add_To_Cart::class)) {
-				include $this->get_path('includes/class-ajax-add-to-cart.php');
-			}
-			new Ajax_Add_To_Cart($_POST);
-		} else {
-			wp_send_json_error(array('message' => 'Bad request'), 400);
+		if (!class_exists(Ajax_Add_To_Cart::class)) {
+			include $this->get_path('includes/class-ajax-add-to-cart.php');
 		}
+		new Ajax_Add_To_Cart($_POST);
 	}
 
 	/**
