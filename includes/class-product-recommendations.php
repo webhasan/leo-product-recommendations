@@ -390,7 +390,6 @@ final class Product_Recommendations {
 		wp_localize_script('lpr-ajax-add-to-cart', 'lc_ajax', array(
 			'url' => admin_url('admin-ajax.php')
 		));
-		// }
 
 		wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
 		//recommend variable and group product add to cart
