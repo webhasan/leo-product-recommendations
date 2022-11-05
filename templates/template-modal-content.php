@@ -66,7 +66,7 @@ extract($template_data);
 
         <?php echo $modal_heading; ?>
 
-        <?php if(apply_filters('lpr_show_close_icon', false)): ?>
+        <?php if(apply_filters('lpr_show_close_icon', true)): ?>
             <span aria-hidden="true" class="lpr-modal-close"></span>
         <?php endif; ?>
 
