@@ -381,6 +381,7 @@ final class Product_Recommendations {
 		wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
 			'url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('lc-ajax-modal'),
+			'popup_view_times' => $this->get_setting('popup_view_times'),
 			'layout_type' => $layout_type
 		));
 
@@ -1435,6 +1436,20 @@ final class Product_Recommendations {
 				),
 				'description' => __('If you like to use the same heading patterns for all recommendations then use the default heading. Use pattern <strong>%title%</strong> for the product title. Pattern <strong>[item, items]</strong> is changeable. You can utilize <strong>[product, products]</strong> or all that makes sense. The particular expression for a single recommended item and the plural expression for more than one supported item.', 'leo-product-recommendations'),
 				'doc' 		  => 'https://cutt.ly/Ek3t5AJ',
+			),
+			array(
+				'id' => 'popup_view_times',
+				'title' => __('Popup Show', 'leo-product-recommendations'),
+				'type' 	=> 'select',
+				'options' => array(
+					'always' 		 => __('Every Time', 'leo-product-recommendations'),
+					'1' 		 	 =>  __('1 Time', 'leo-product-recommendations'),
+					'2' 		 	 =>  __('2 Times', 'leo-product-recommendations'),
+					'3' 		 	 =>  __('3 Times', 'leo-product-recommendations'),
+					'4' 		 	 =>  __('4 Times', 'leo-product-recommendations'),
+					'5' 		 	 =>  __('5 Times', 'leo-product-recommendations'),
+				),
+				'description' => 'If you think showing a popup every time will bother your customers, then you can limit it.'
 			),
 			array(
 				'id' => 'variable_add_to_cart',

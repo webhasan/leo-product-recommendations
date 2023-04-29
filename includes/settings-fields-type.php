@@ -413,6 +413,39 @@ function radio($field, $base, $setting_id) {
         <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
+/**
+ * Input type select
+ * 
+ * @since 1.0.0
+ */
+function select($field, $base, $setting_id) {
+    extract($field);
+    $value = $base->get_setting($id);
+    $field_name = $setting_id . '[' . $id . ']';
+    ?>
+    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+        <select name="<?php echo $field_name; ?>">
+            <?php foreach( $options as $key => $option): ?>
+                <option 
+                    value="<?php echo $key; ?>"
+                    <?php echo ($key == $value) ? ' selected' : ''; ?>
+                ><?php echo $option; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </fieldset>
+
+    <?php if (isset($help)): ?>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+    <?php endif; ?>
+
+    <?php if (isset($description)) : ?>
+        <p class="description"><?php echo wp_kses_post($description); ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($doc)): ?>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+    <?php endif;
+}
 
 /**
  * Input type checkbox
