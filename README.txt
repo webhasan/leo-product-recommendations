@@ -4,9 +4,9 @@ Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell p
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 2.5.0
+Stable tag: 2.6.0
 WC requires at least: 5.0
-WC tested up to: 7.6.1
+WC tested up to: 7.7.0
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -146,6 +146,9 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 2.6.0 =
+* Bug Fix: Bug for for pro version for popup limit.
+
 = 2.5.0 =
 * Feature Added: Limit to show recommendation popup (Every time, 1, 2, 3, 5 times)
 

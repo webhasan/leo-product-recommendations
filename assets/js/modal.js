@@ -89,6 +89,10 @@
     // call modal
     $(document.body).on("added_to_cart", async function (e, ...data) {
       const popupCount = getPopupCount();
+
+      // fallback for older version of pro plugin
+      if(!lc_ajax_modal.popup_view_times) lc_ajax_modal.popup_view_times = 'always';
+
       const popupShowTimes = lc_ajax_modal.popup_view_times === 'always' ? Infinity : +lc_ajax_modal.popup_view_times;
 
       if(popupShowTimes > popupCount){

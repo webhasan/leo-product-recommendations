@@ -389,7 +389,8 @@ final class Product_Recommendations {
 		wp_enqueue_script('lpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), array('jquery', 'wp-i18n'), $version, true);
 		wp_set_script_translations( 'lpr-ajax-add-to-cart', 'leo-product-recommendations' );
 		wp_localize_script('lpr-ajax-add-to-cart', 'lc_ajax', array(
-			'url' => admin_url('admin-ajax.php')
+			'url' => admin_url('admin-ajax.php'),
+			'popup_view_times' => $this->get_setting('popup_view_times')
 		));
 
 		wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
