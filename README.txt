@@ -4,7 +4,7 @@ Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell p
 Requires at least: 5.0
 Tested up to: 6.3.1
 Requires PHP: 7.4
-Stable tag: 2.6.1
+Stable tag: 2.6.2
 WC requires at least: 6.0
 WC tested up to: 8.1.1
 License: GPLv3 or later License
