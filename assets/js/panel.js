@@ -157,10 +157,10 @@ import ManualSelection from './components/ManualSelection';
         if(data) {
           let { products: newProducts, max_page: maxPage } = data;
           if (page === 1) {
-            setProducts(newProducts);
+            setProducts(newProducts.filter(product => !!product));
           } else {
             // setProducts([...products, ...newProducts]);
-            setProducts(oldProducts => [...oldProducts, ...newProducts]);
+            setProducts(oldProducts => [...oldProducts, ...newProducts.filter(product => !!product)]);
           }
 
           setMaxPage(maxPage);

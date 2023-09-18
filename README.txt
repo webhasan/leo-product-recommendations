@@ -2,11 +2,11 @@
 Contributors: webhasan, masum007, emranahmed, getwooplugins, fizanzvai
 Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell products, woocommerce grouped product, woocommerce mini cart, woocommerce cross-sell, woocommerce popup
 Requires at least: 5.0
-Tested up to: 6.2
+Tested up to: 6.3.1
 Requires PHP: 7.4
-Stable tag: 2.6.0
-WC requires at least: 5.0
-WC tested up to: 7.7.0
+Stable tag: 2.6.1
+WC requires at least: 6.0
+WC tested up to: 8.1.1
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -146,6 +146,9 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 2.6.1 =
+* Bug Fix: Fix when product data null
+
 = 2.6.0 =
 * Bug Fix: Bug for for pro version for popup limit.
 

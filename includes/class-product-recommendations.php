@@ -89,7 +89,7 @@ final class Product_Recommendations {
 	 * @return void
 	 */
 	public function on_deactivation() {
-		// do nothing
+		//do nothing
 	}
 
 	/**
