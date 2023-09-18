@@ -117,7 +117,7 @@ import ManualSelection from './components/ManualSelection';
     // loading initial app data
     fetchAppData(apiEndPoint, nonce, postId).then(data => {
       if (data) {
-        let products = data.products || [];
+        let products = data.products ? data.products.filter(product => !!product) : [];
         let heading = data.heading || "";
         let heading_article = data.heading_article || "";
         let heading_type = data.heading_type || "heading";
