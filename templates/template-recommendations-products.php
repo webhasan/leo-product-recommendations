@@ -15,8 +15,10 @@ if (!defined('ABSPATH')) {
 
 $tag_classes = 'product single-lpr ';
 
-if($theme === 'Electro') {
-    $tag_classes .= 'single-product';
+
+if($theme === 'Blocksy') {
+    $shop_cart = get_theme_mod('shop_cards_type');
+    $theme .=  '-' . $shop_cart;
 }
 
 if($theme === 'Electro') {
@@ -50,7 +52,7 @@ $ending_tag   = '</li>';
         }
         
         //fixing not showing product image
-        $no_thumbnail_themes = apply_filters('lpr_fix_thumb', ['DavinciWoo','Rey']);
+        $no_thumbnail_themes = apply_filters('lpr_fix_thumb', ['DavinciWoo','Rey', 'Blocksy-type-2']);
         if(in_array($theme, $no_thumbnail_themes)) {
             echo woocommerce_get_product_thumbnail();
         }
@@ -59,7 +61,7 @@ $ending_tag   = '</li>';
         do_action('woocommerce_shop_loop_item_title');
 
         //fixing for not showing title 
-        $no_product_title = apply_filters('lpr_title_price', ['Rey']);
+        $no_product_title = apply_filters('lpr_title_price', ['Rey','Blocksy-type-2']);
         if(in_array($theme, $no_product_title)) {
             woocommerce_template_loop_product_title();
         }
@@ -70,7 +72,7 @@ $ending_tag   = '</li>';
 
     <?php 
         //fixing for not showing price 
-        $no_product_price = apply_filters('lpr_fix_price', ['Sneaker','Rey','Safira','Plantmore']);
+        $no_product_price = apply_filters('lpr_fix_price', ['Sneaker','Rey','Safira','Plantmore','Blocksy-type-2']);
         if(in_array($theme, $no_product_price)) {
             woocommerce_template_single_price();
         }
