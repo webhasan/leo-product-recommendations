@@ -52,7 +52,7 @@ $ending_tag   = '</li>';
         }
         
         //fixing not showing product image
-        $no_thumbnail_themes = apply_filters('lpr_fix_thumb', ['DavinciWoo','Rey', 'Blocksy-type-2']);
+        $no_thumbnail_themes = apply_filters('lpr_fix_thumb', ['DavinciWoo','Rey', 'Blocksy-type-2', 'Betheme']);
         if(in_array($theme, $no_thumbnail_themes)) {
             echo woocommerce_get_product_thumbnail();
         }
