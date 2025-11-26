@@ -1,12 +1,12 @@
-=== Leo Product Recommendations For WooCommerce - Recommended Products For WooCommerce, Upsell Product Popup, Related Product Lightbox ===
-Contributors: webhasan, masum007, emranahmed, getwooplugins, fizanzvai
+=== Leo Product Recommendations for WooCommerce ===
+Contributors: webhasan, masum007
 Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell products, woocommerce grouped product, woocommerce mini cart, woocommerce cross-sell, woocommerce popup
 Requires at least: 5.7
-Tested up to: 6.6.2
+Tested up to: 6.8.3
 Requires PHP: 7.4
-Stable tag: 2.8.0
+Stable tag: 3.0.0
 WC requires at least: 7.0
-WC tested up to: 9.3.3
+WC tested up to: 10.3.5
 License: GPLv3 or later License
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -146,6 +146,9 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 3.0.0 =
+* Fix plugin compatibility issue
+
 = 2.8.0 =
 * Compatible with HPOS
 
