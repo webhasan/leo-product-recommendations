@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 function wrapper($field, $base, $setting_id) {
     extract($field);
     ?>
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
         <div class="fields-container">
             <?php foreach ($chields as $child) :
 
@@ -30,24 +30,24 @@ function wrapper($field, $base, $setting_id) {
   
                 if ($child['type'] == 'color_picker') :
             ?>
-                    <div class="color-selection" id="<?php echo $id; ?>">
+                    <div class="color-selection" id="<?php echo esc_attr($id); ?>">
                         <?php
                         printf(
                             '<input type="text" name="%1$s" class="color-picker" value="%2$s">',
-                            $field_name,
-                            $value
+                            esc_attr($field_name),
+                            esc_attr($value)
                         ); ?>
-                        <label><?php echo $title; ?></label>
+                        <label><?php echo esc_html($title); ?></label>
                     </div>
 
                 <?php
                 elseif ($child['type'] == 'reset_color') : ?>
-                    <div class="reset-colors" id="<?php echo $child['id'] ?>">
+                    <div class="reset-colors" id="<?php echo esc_attr($child['id']); ?>">
                         <?php
                         printf(
                             '<a href="%1$s">%2$s</a></div>',
                             esc_url($child['action_url']),
-                            $title
+                            esc_html($title)
                         );
                         ?>
                     </div>
@@ -56,14 +56,14 @@ function wrapper($field, $base, $setting_id) {
                 elseif ($child['type'] == 'checkbox') : 
                     $checked = $value ? 'checked' : '';
                 ?>
-                    <div class="child-checkbox" id="<?php echo $id; ?>">
+                    <div class="child-checkbox" id="<?php echo esc_attr($id); ?>">
                         <label>
                             <?php 
                             printf(
                                 '<input type="checkbox" value="1" %1$s name="%2$s"/> %3$s',
-                                $checked,
-                                $field_name,
-                                $title
+                                esc_attr($checked),
+                                esc_attr($field_name),
+                                esc_html($title)
                             )
                             ?>
                         </label>
@@ -75,17 +75,17 @@ function wrapper($field, $base, $setting_id) {
                     $min = !empty($child['min']) ? $child['min'] : '';
                     $max = !empty($child['max']) ? $child['max'] : '';
                 ?>
-                    <div class="child-number" id="<?php echo $id; ?>">
+                    <div class="child-number" id="<?php echo esc_attr($id); ?>">
                         <label>
                             <?php 
                                 printf(
                                     '<input type="number" value="%1$s" name="%2$s" min="%3$s" max="%4$s"/> %5$s <br> %6$s',
-                                    $value,
-                                    $field_name,
-                                    $min,
-                                    $max,
-                                    $suffix,
-                                    $title
+                                    esc_attr($value),
+                                    esc_attr($field_name),
+                                    esc_attr($min),
+                                    esc_attr($max),
+                                    esc_html($suffix),
+                                    esc_html($title)
                                 )
                             ?>
                         </label>
@@ -95,8 +95,8 @@ function wrapper($field, $base, $setting_id) {
                     elseif ($child['type'] == 'radio') : 
                     $options = $child['options'];
                 ?>
-                    <div class="child-radio" id="<?php echo $id; ?>">
-                        <strong><?php echo $title; ?></strong>
+                    <div class="child-radio" id="<?php echo esc_attr($id); ?>">
+                        <strong><?php echo esc_html($title); ?></strong>
                         <?php foreach ($options as $key => $option) : ?>
                             
                             <label>
@@ -104,10 +104,10 @@ function wrapper($field, $base, $setting_id) {
                                 $is_checked = ($key === $value) ? ' checked' : '';
                                 printf(
                                     '<input type="radio"  name="%1$s" value="%2$s" %3$s>%4$s',
-                                    $field_name,
-                                    $key,
-                                    $is_checked,
-                                    $option
+                                    esc_attr($field_name),
+                                    esc_attr($key),
+                                    esc_attr($is_checked),
+                                    esc_html($option)
                                 );
                                 ?>
                             </label>
@@ -123,9 +123,9 @@ function wrapper($field, $base, $setting_id) {
                             'hide_empty' => false
                         ));
                     ?>
-                    <div class="category-selector" id="<?php echo $id; ?>">
-                        <label><?php echo $title; ?></label>
-                        <select name="<?php  $field_name.'[]'; ?>" multiple>
+                    <div class="category-selector" id="<?php echo esc_attr($id); ?>">
+                        <label><?php echo esc_html($title); ?></label>
+                        <select name="<?php echo esc_attr($field_name.'[]'); ?>" multiple>
                             <?php foreach($product_cats as $cat): ?>
                                 <option value="<?php echo esc_attr( $cat->term_id ); ?>"><?php echo esc_html( $cat->name ); ?></option>
                             <?php endforeach; ?>
@@ -141,9 +141,9 @@ function wrapper($field, $base, $setting_id) {
                             'hide_empty' => false
                         ));
                     ?>
-                    <div class="tags-selector" id="<?php echo $id; ?>">
-                        <label><?php echo $title; ?></label>
-                        <select name="<?php  $field_name.'[]'; ?>" multiple>
+                    <div class="tags-selector" id="<?php echo esc_attr($id); ?>">
+                        <label><?php echo esc_html($title); ?></label>
+                        <select name="<?php echo esc_attr($field_name.'[]'); ?>" multiple>
                             <?php foreach($product_tags as $tag): ?>
                                 <option value="<?php echo esc_attr( $tag->term_id ); ?>"><?php echo esc_html( $tag->name ); ?></option>
                             <?php endforeach; ?>
@@ -155,16 +155,16 @@ function wrapper($field, $base, $setting_id) {
                          $options = $child['options'];
 
                     ?>
-                    <div class="child-select" id="<?php echo $id; ?>">
-                        <select name="<?php echo $field_name; ?>">
+                    <div class="child-select" id="<?php echo esc_attr($id); ?>">
+                        <select name="<?php echo esc_attr($field_name); ?>">
                             <?php foreach( $options as $key => $option): ?>
                                 <option 
-                                    value="<?php echo $key; ?>"
+                                    value="<?php echo esc_attr($key); ?>"
                                     <?php echo ($key == $value) ? ' selected' : ''; ?>
-                                ><?php echo $option; ?></option>
+                                ><?php echo esc_html($option); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <label><?php echo $title; ?></label>
+                        <label><?php echo esc_html($title); ?></label>
                     </div>
 
                 <?php endif; ?>
@@ -174,7 +174,7 @@ function wrapper($field, $base, $setting_id) {
         </div>
 
         <?php if (isset($help)): ?>
-            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
         <?php endif; ?>
         
         <?php if (isset($description)) : ?>
@@ -182,7 +182,7 @@ function wrapper($field, $base, $setting_id) {
         <?php endif; ?>
 
         <?php if (isset($doc)): ?>
-            <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+            <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
         <?php endif; ?>
     </fieldset>
     <?php
@@ -197,7 +197,7 @@ function wrapper_extend($field, $base, $setting_id) {
     extract($field);
     ?>
 
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
         <div class="fields-container">
             <?php foreach ($chields as $child) :
 
@@ -208,24 +208,24 @@ function wrapper_extend($field, $base, $setting_id) {
   
                 if ($child['type'] == 'color_picker') :
             ?>
-                    <div class="color-selection" id="<?php echo $id; ?>">
+                    <div class="color-selection" id="<?php echo esc_attr($id); ?>">
                         <?php
                         printf(
                             '<input type="text" name="%1$s" class="color-picker" value="%2$s">',
-                            $field_name,
-                            $value
+                            esc_attr($field_name),
+                            esc_attr($value)
                         ); ?>
-                        <label><?php echo $title; ?></label>
+                        <label><?php echo esc_html($title); ?></label>
                     </div>
 
                 <?php
                 elseif ($child['type'] == 'reset_color') : ?>
-                    <div class="reset-colors" id="<?php echo $child['id'] ?>">
+                    <div class="reset-colors" id="<?php echo esc_attr($child['id']); ?>">
                         <?php
                         printf(
                             '<a href="%1$s">%2$s</a></div>',
                             esc_url($child['action_url']),
-                            $title
+                            esc_html($title)
                         );
                         ?>
                     </div>
@@ -234,14 +234,14 @@ function wrapper_extend($field, $base, $setting_id) {
                 elseif ($child['type'] == 'checkbox') : 
                     $checked = $value ? 'checked' : '';
                 ?>
-                    <div class="child-checkbox" id="<?php echo $id; ?>">
+                    <div class="child-checkbox" id="<?php echo esc_attr($id); ?>">
                         <label>
                             <?php 
                             printf(
                                 '<input type="checkbox" value="1" %1$s name="%2$s"/> %3$s',
-                                $checked,
-                                $field_name,
-                                $title
+                                esc_attr($checked),
+                                esc_attr($field_name),
+                                esc_html($title)
                             )
                             ?>
                         </label>
@@ -251,14 +251,14 @@ function wrapper_extend($field, $base, $setting_id) {
                     elseif ($child['type'] == 'number') : 
                     $suffix = !empty($child['suffix']) ? $child['suffix'] : '';
                 ?>
-                    <div class="child-number" id="<?php echo $id; ?>">
-                        <label><?php echo $title; ?></label>
+                    <div class="child-number" id="<?php echo esc_attr($id); ?>">
+                        <label><?php echo esc_html($title); ?></label>
                         <?php 
                             printf(
                                 '<input type="number" value="%1$s" name="%2$s"/> %3$s',
-                                $value,
-                                $field_name,
-                                $suffix
+                                esc_attr($value),
+                                esc_attr($field_name),
+                                esc_html($suffix)
                             )
                         ?>
                     </div>
@@ -267,8 +267,8 @@ function wrapper_extend($field, $base, $setting_id) {
                     elseif ($child['type'] == 'radio') : 
                     $options = $child['options'];
                 ?>
-                    <div class="child-radio" id="<?php echo $id; ?>">
-                        <strong><?php echo $title; ?></strong>
+                    <div class="child-radio" id="<?php echo esc_attr($id); ?>">
+                        <strong><?php echo esc_html($title); ?></strong>
                         <?php foreach ($options as $key => $option) : ?>
                             
                             <label>
@@ -276,10 +276,10 @@ function wrapper_extend($field, $base, $setting_id) {
                                 $is_checked = ($key === $value) ? ' checked' : '';
                                 printf(
                                     '<input type="radio"  name="%1$s" value="%2$s" %3$s>%4$s',
-                                    $field_name,
-                                    $key,
-                                    $is_checked,
-                                    $option
+                                    esc_attr($field_name),
+                                    esc_attr($key),
+                                    esc_attr($is_checked),
+                                    esc_html($option)
                                 );
                                 ?>
                             </label>
@@ -294,9 +294,9 @@ function wrapper_extend($field, $base, $setting_id) {
                             'hide_empty' => false
                         ));
                     ?>
-                    <div class="category-selector" id="<?php echo $id; ?>">
-                        <label><?php echo $title; ?></label>
-                        <select name="<?php echo $field_name.'[]'; ?>" multiple>
+                    <div class="category-selector" id="<?php echo esc_attr($id); ?>">
+                        <label><?php echo esc_html($title); ?></label>
+                        <select name="<?php echo esc_attr($field_name.'[]'); ?>" multiple>
                             <?php foreach($product_cats as $cat): ?>
                                 <option 
                                     <?php echo (!empty($value) && in_array($cat->term_id, $value)) ? ' selected' : ''; ?>
@@ -317,9 +317,9 @@ function wrapper_extend($field, $base, $setting_id) {
                             'hide_empty' => false
                         ));
                     ?>
-                    <div class="tags-selector" id="<?php echo $id; ?>">
-                        <label><?php echo $title; ?></label>
-                        <select name="<?php echo $field_name.'[]'; ?>"  multiple>
+                    <div class="tags-selector" id="<?php echo esc_attr($id); ?>">
+                        <label><?php echo esc_html($title); ?></label>
+                        <select name="<?php echo esc_attr($field_name.'[]'); ?>"  multiple>
                             <?php foreach($product_tags as $tag): ?>
                                 <option 
                                     <?php echo (!empty($value) && in_array($tag->term_id, $value)) ? ' selected' : ''; ?>
@@ -335,15 +335,15 @@ function wrapper_extend($field, $base, $setting_id) {
                          $options = $child['options'];
 
                     ?>
-                    <div class="child-select" id="<?php echo $id; ?>">
-                        <label><?php echo $title; ?></label>
-                        <select name="<?php echo $field_name; ?>" value="<?php echo $value; ?>">
+                    <div class="child-select" id="<?php echo esc_attr($id); ?>">
+                        <label><?php echo esc_html($title); ?></label>
+                        <select name="<?php echo esc_attr($field_name); ?>" value="<?php echo esc_attr($value); ?>">
                             <?php foreach( $options as $key => $option): ?>
                                 <option 
-                                    value="<?php echo $key; ?>" 
+                                    value="<?php echo esc_attr($key); ?>" 
                                     <?php echo ($key === $value) ? ' selected': ''; ?>
                                 >
-                                    <?php echo $option; ?>
+                                    <?php echo esc_html($option); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -356,7 +356,7 @@ function wrapper_extend($field, $base, $setting_id) {
         </div>
 
         <?php if (isset($help)): ?>
-            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
         <?php endif; ?>
 
         <?php if (isset($description)) : ?>
@@ -364,7 +364,7 @@ function wrapper_extend($field, $base, $setting_id) {
         <?php endif; ?>
 
         <?php if (isset($doc)): ?>
-        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
         <?php endif; ?>
     </fieldset>
 <?php
@@ -383,17 +383,17 @@ function radio($field, $base, $setting_id) {
 
     ?>
 
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
         <?php foreach ($options as $key => $option) : ?>
             <label>
                 <?php
                 $is_checked = ($key === $value) ? ' checked' : '';
                 printf(
                     '<input type="radio"  name="%1$s" value="%2$s" %3$s>%4$s',
-                    $field_name,
-                    $key,
-                    $is_checked,
-                    $option
+                    esc_attr($field_name),
+                    esc_attr($key),
+                    esc_attr($is_checked),
+                    esc_html($option)   
                 );
                 ?>
             </label>
@@ -402,7 +402,7 @@ function radio($field, $base, $setting_id) {
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
@@ -410,7 +410,7 @@ function radio($field, $base, $setting_id) {
     <?php endif; ?>
 
     <?php if (isset($doc)): ?>
-        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 /**
@@ -423,19 +423,19 @@ function select($field, $base, $setting_id) {
     $value = $base->get_setting($id);
     $field_name = $setting_id . '[' . $id . ']';
     ?>
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
-        <select name="<?php echo $field_name; ?>">
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
+        <select name="<?php echo esc_attr($field_name); ?>">
             <?php foreach( $options as $key => $option): ?>
                 <option 
-                    value="<?php echo $key; ?>"
+                    value="<?php echo esc_attr($key); ?>"
                     <?php echo ($key == $value) ? ' selected' : ''; ?>
-                ><?php echo $option; ?></option>
+                ><?php echo esc_html($option); ?></option>
             <?php endforeach; ?>
         </select>
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
@@ -443,7 +443,7 @@ function select($field, $base, $setting_id) {
     <?php endif; ?>
 
     <?php if (isset($doc)): ?>
-        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -457,22 +457,22 @@ function checkbox($field, $base, $setting_id) {
     $value = $base->get_setting($id);
     $field_name = $setting_id . '[' . $id . ']';
     ?>
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
         <label>
             <?php 
             $checked = !empty($value) ? ' checked' : '';
             $title = isset($label) ? $label : $title;
             printf(
                 '<input type="checkbox" value="1" %1$s name="%2$s"/> %3$s',
-                $checked,
-                $field_name,
-                $title
+                esc_attr($checked),
+                esc_attr($field_name),    
+                esc_html($title)
             )
             ?>
         </label>
 
         <?php if (isset($help)): ?>
-            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+            <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
         <?php endif; ?>
         
         <?php if (isset($description)) : ?>
@@ -480,7 +480,7 @@ function checkbox($field, $base, $setting_id) {
         <?php endif; ?>
 
         <?php if (isset($doc)): ?>
-            <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+            <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
         <?php endif; ?>
     </fieldset>
     <?php
@@ -498,12 +498,12 @@ function text($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
     ?>
 
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
-        <input type="text" name="<?php echo $field_name; ?>" value="<?php echo $value; ?>">
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
+        <input type="text" name="<?php echo esc_attr($field_name); ?>" value="<?php echo esc_attr($value); ?>">
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
@@ -511,7 +511,7 @@ function text($field, $base, $setting_id) {
     <?php endif;?>
 
     <?php if (isset($doc)): ?>
-        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -530,16 +530,16 @@ function info($field, $baser, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
     ?>
 
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
         <?php if (isset($link)) : ?>
-            <a href="<?php esc_url($link); ?>" target="_blank"><?php echo $label; ?></a>
+            <a href="<?php echo esc_url($link); ?>" target="_blank"><?php echo esc_html($label); ?></a>
         <?php else : ?>
-            <label><?php echo sanitize_title($label); ?></label>
+            <label><?php echo esc_html(sanitize_title($label)); ?></label>
         <?php endif; ?>
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
@@ -547,7 +547,7 @@ function info($field, $baser, $setting_id) {
     <?php endif; ?>
 
     <?php if (isset($doc)): ?>
-        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -562,18 +562,18 @@ function css($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
 
     ?>
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
         <?php 
             printf(
                 '<textarea class="css-editor" name="%1$s">%2$s</textarea>',
-                $field_name,
-                $value
+                esc_attr($field_name),
+                esc_textarea($value)
             );
         ?>
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)) : ?>
@@ -581,7 +581,7 @@ function css($field, $base, $setting_id) {
     <?php endif; ?>
 
     <?php if (isset($doc)): ?>
-        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -594,13 +594,13 @@ function pro_image($field, $base, $setting_id) {
     extract($field);
 
     ?>
-    <fieldset class="lpr-field-<?php echo $type; ?>" id="lpr-field-<?php echo $id; ?>">
-    <div class="pro-link"><a href="<?php echo esc_url($link); ?>" target="_blank"><?php _e('Get Pro Version »'); ?></a></div>
+    <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
+    <div class="pro-link"><a href="<?php echo esc_url($link); ?>" target="_blank"><?php esc_html_e('Get Pro Version »', 'leo-product-recommendations'); ?></a></div>
     <div class="field-image"><img src="<?php echo esc_url($image_url); ?>" alt=""></div>
     </fieldset>
 
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)): ?>
@@ -608,7 +608,7 @@ function pro_image($field, $base, $setting_id) {
     <?php endif; ?>
 
     <?php if (isset($doc)): ?>
-        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }
 
@@ -626,13 +626,13 @@ function heading_selection($field, $base, $setting_id) {
     }
     $field_name = $setting_id . '[' . $id . ']';
     ?>
-    <fieldset class="lpr-field-heading_type" id="lpr-field-<?php echo $id; ?>">
+    <fieldset class="lpr-field-heading_type" id="lpr-field-<?php echo esc_attr($id); ?>">
         <?php foreach ($chields as $heading_type):
         $checked = ($value === $heading_type['id']) ? ' checked ' : '';
         ?>
             <label>
-                <input type="radio" <?php echo $checked; ?> name="<?php echo $field_name; ?>" value="<?php echo $heading_type['id']; ?>">
-                <?php echo $heading_type['title']; ?>
+                <input type="radio" <?php echo esc_attr($checked); ?> name="<?php echo esc_attr($field_name); ?>" value="<?php echo esc_attr($heading_type['id']); ?>">
+                <?php echo esc_html($heading_type['title']); ?>
             </label>
 	    <?php endforeach;?>
 
@@ -647,20 +647,20 @@ function heading_selection($field, $base, $setting_id) {
                     $sub_field_value = ($value === 'default_heading') ? $sub_field_value : '';
                     printf(
                         '<div style="display:%1$s" class="%2$s"><input type="text" name="%3$s" value="%4$s"/></div>',
-                        $display,
-                        $heading_type['id'],
-                        $sub_field_name,
-                        $sub_field_value
+                        esc_attr($display),
+                        esc_attr($heading_type['id']),
+                        esc_attr($sub_field_name),
+                        esc_attr($sub_field_value)
                     );
 
                 elseif ($heading_type['type'] === 'editor'):
                     $sub_field_value = ($value === 'default_heading_description') ? $sub_field_value : '';
                     printf(
                         '<div style="display:%1$s" class="%2$s"><textarea id="default-heading-editor" name="%3$s">%4$s</textarea></div>',
-                        $display,
-                        $heading_type['id'],
-                        $sub_field_name,
-                        $sub_field_value
+                        esc_attr($display),
+                        esc_attr($heading_type['id']),
+                        esc_attr($sub_field_name),
+                        esc_textarea($sub_field_value)
                     );
                 endif;
             endforeach;?>
@@ -668,7 +668,7 @@ function heading_selection($field, $base, $setting_id) {
     </fieldset>
             
     <?php if (isset($help)): ?>
-        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php _e('HELP','leo-product-recommendations'); ?></a>
+        <a href="<?php echo esc_url($help); ?>" class="help" data-lity><?php esc_html_e('HELP','leo-product-recommendations'); ?></a>
     <?php endif; ?>
 
     <?php if (isset($description)): ?>
@@ -676,6 +676,6 @@ function heading_selection($field, $base, $setting_id) {
     <?php endif; ?>
 
     <?php if (isset($doc)): ?>
-        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php _e('Documentation »','leo-product-recommendations'); ?></a></p>
+        <p><a href="<?php echo esc_url($doc); ?>" target="_blank"><?php esc_html_e('Documentation »','leo-product-recommendations'); ?></a></p>
     <?php endif;
 }

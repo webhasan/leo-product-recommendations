@@ -112,8 +112,6 @@ final class Product_Recommendations {
 	 * @return void
 	 */
 	public function on_plugins_loaded() {
-		$this->load_textdomain();
-
 		if (!$this->has_satisfied_dependencies()) {
 			add_action('admin_notices', array($this, 'render_dependencies_notice'));
 			return;
@@ -128,16 +126,6 @@ final class Product_Recommendations {
 
 		//deactivation feedback
 		$this->deactivation_feedback();
-	}
-
-	/**
-	 * Load Localization files
-	 *
-	 * @since      1.0.0
-	 * @return void
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain('leo-product-recommendations', false, dirname(plugin_basename(self::$__FILE__)) . '/languages');
 	}
 
 	/**
@@ -206,7 +194,7 @@ final class Product_Recommendations {
 	 */
 	public function render_dependencies_notice() {
 		$message = $this->get_dependency_errors();
-		printf('<div class="error"><p>%s</p></div>', implode(' ', $message));
+		printf('<div class="error"><p>%s</p></div>', wp_kses_post(implode(' ', $message)));
 	}
 
 	/**
@@ -292,8 +280,8 @@ final class Product_Recommendations {
 		add_action('save_post', array($this, 'on_save_post'));
 
 		// Fetch popup modal data
-		add_action('wp_ajax_get_popup_data', array($this, 'get_popup_data'));
-		add_action('wp_ajax_nopriv_get_popup_data', array($this, 'get_popup_data'));
+		add_action('wp_ajax_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
+		add_action('wp_ajax_nopriv_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
 
 		// Ajax add to cart
 		add_action('wp_ajax_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
@@ -420,31 +408,31 @@ final class Product_Recommendations {
 		?>
 		<style id="lpr-settings-css-front-end">
 			.lpr-modal .lpr-modal-content ul.recommended-products-list {
-				margin: 0 <?php echo -$grid_column_gap / 2; ?>px !important;
+				margin: 0 <?php echo esc_attr(-$grid_column_gap / 2); ?>px !important;
 			}
 			.lpr-modal .lpr-modal-content ul.recommended-products-list li.single-lpr {
-				flex: 0 0 calc(<?php echo $desktop_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
-				width: calc(<?php echo $desktop_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
-				margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
-				margin-right: <?php echo $grid_column_gap / 2; ?>px !important;
+				flex: 0 0 calc(<?php echo esc_attr($desktop_item_width . '% - ' . $grid_column_gap . 'px'); ?>);
+				width: calc(<?php echo esc_attr($desktop_item_width . '% - ' . $grid_column_gap . 'px'); ?>);
+				margin-left: <?php echo esc_attr($grid_column_gap / 2); ?>px !important;
+				margin-right: <?php echo esc_attr($grid_column_gap / 2); ?>px !important;
 			}
 			@media screen and (max-width: 991px) {
 				.lpr-modal .lpr-modal-content ul.recommended-products-list li.single-lpr {
-					flex: 0 0 calc(<?php echo $tablet_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
-					width: calc(<?php echo $tablet_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
-					margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
-					margin-right: <?php echo $grid_column_gap / 2; ?>px !important;
+					flex: 0 0 calc(<?php echo esc_attr($tablet_item_width . '% - ' . $grid_column_gap . 'px'); ?>);
+					width: calc(<?php echo esc_attr($tablet_item_width . '% - ' . $grid_column_gap . 'px'); ?>);
+					margin-left: <?php echo esc_attr($grid_column_gap / 2); ?>px !important;
+					margin-right: <?php echo esc_attr($grid_column_gap / 2); ?>px !important;
 				}
 			}
 			@media screen and (max-width: 767px) {
 				.lpr-modal .lpr-modal-content ul.recommended-products-list li.single-lpr {
-					flex: 0 0 calc(<?php echo $mobile_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
-					width: calc(<?php echo $mobile_item_width . '% - ' . $grid_column_gap . 'px'; ?>);
-					margin-left: <?php echo $grid_column_gap / 2; ?>px !important;
-					margin-right: <?php echo $grid_column_gap / 2; ?>px !important;
+					flex: 0 0 calc(<?php echo esc_attr($mobile_item_width . '% - ' . $grid_column_gap . 'px'); ?>);
+					width: calc(<?php echo esc_attr($mobile_item_width . '% - ' . $grid_column_gap . 'px'); ?>);
+					margin-left: <?php echo esc_attr($grid_column_gap / 2); ?>px !important;
+					margin-right: <?php echo esc_attr($grid_column_gap / 2); ?>px !important;
 				}
 			}
-			<?php echo $custom_css; ?>
+			<?php echo esc_html($custom_css); ?>
 		</style>
 	<?php
 
@@ -553,10 +541,12 @@ final class Product_Recommendations {
 	 * @return  void;
 	 */
 	public function on_save_post($id) {
-		$is_secure = !empty($_POST['_lc_lpr_data']) && !empty($_POST['lc_pr_panel_nonce']) && wp_verify_nonce($_POST['lc_pr_panel_nonce'], 'lc-panel-security');
+		$nonce = isset($_POST['lc_pr_panel_nonce']) ? sanitize_text_field(wp_unslash($_POST['lc_pr_panel_nonce'])) : '';
+		$is_secure = !empty($_POST['_lc_lpr_data']) && !empty($nonce) && wp_verify_nonce($nonce, 'lc-panel-security');
 
 		if ($is_secure) {
-			$panel_data = (array) $_POST['_lc_lpr_data'];
+			$panel_data = isset($_POST['_lc_lpr_data']) ? wp_unslash($_POST['_lc_lpr_data']) : array();
+			$panel_data = is_array($panel_data) ? $panel_data : array();
 			$entry_data = array();
 
 			// heading type
@@ -650,11 +640,11 @@ final class Product_Recommendations {
 	 * @return  void;
 	 */
 
-	public function get_popup_data() {
-		$nonce = $_GET['nonce'];
-		$product_id  = $_GET['product_id'];
+	public function lpr_get_popup_data() {
+		$nonce = isset($_GET['nonce']) ? sanitize_text_field(wp_unslash($_GET['nonce'])) : '';
+		$product_id = isset($_GET['product_id']) ? absint($_GET['product_id']) : 0;
 
-		if (!isset($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || !isset($product_id)) {
+		if (empty($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || empty($product_id)) {
 			wp_send_json_error(array('message' => 'Bad request'), 400);
 		}
 
@@ -747,7 +737,13 @@ final class Product_Recommendations {
 		$modal_heading = (!$this->is_active_global($product_id) && !empty(trim($modal_heading))) ? $modal_heading : $default_heading;
 		$modal_heading = wp_kses($modal_heading, $html_permission);
 		$modal_heading = str_replace('%title%', get_the_title($product_id), $modal_heading);
-		$modal_heading = preg_replace('/\[(.+),(.+)\]/', _n('${1}', '${2}', count($recommended_products_id)), $modal_heading);
+		$modal_heading = preg_replace_callback('/\[(.+),(.+)\]/', function($matches) use ($recommended_products_id) {
+			$single = $matches[1];
+			$plural = $matches[2];
+			$count = count($recommended_products_id);
+			// Use ternary operator since these are user-defined patterns, not standard translatable strings
+			return (1 === $count) ? $single : $plural;
+		}, $modal_heading);
 		$heading_type = isset($pr_data['heading_type']) ? $pr_data['heading_type'] : 'heading';
 		$heading_article = isset($pr_data['heading_article']) ? $pr_data['heading_article'] : '';
 		$modal_heading = ($heading_type === 'heading') || $this->is_active_global($product_id)
@@ -1221,7 +1217,7 @@ final class Product_Recommendations {
 	public function cart_items_count($fragments) {
 		ob_start();
 		?>
-		<span class="lpr-total-items"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+		<span class="lpr-total-items"><?php echo esc_html(WC()->cart->get_cart_contents_count()); ?></span>
 		<?php
 		$fragments['a.lpr-cart-count .lpr-total-items'] = ob_get_clean();
 		return $fragments;
@@ -1419,7 +1415,11 @@ final class Product_Recommendations {
 		$general_settings_fields = array(
 			array(
 				'id' => 'heading_type',
-				'title' => __('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="' . home_url() . '/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings">Global Setting</a></small>', 'leo-product-recommendations'),
+				'title' => sprintf(
+					/* translators: %s: Link to global settings page */
+					__('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="%s">Global Setting</a></small>', 'leo-product-recommendations'),
+					home_url('/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings')
+				),
 				'type' => 'heading_selection',
 				'default' => 'default_heading',
 				'chields' => array(
@@ -1456,9 +1456,13 @@ final class Product_Recommendations {
 				'id' => 'variable_add_to_cart',
 				'default' => 1,
 				'title' => __('Variable Products <br> Add To Cart', 'leo-product-recommendations'),
-				'label' => __('Add To Cart'),
+				'label' => __('Add To Cart', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => __('To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href="' . esc_url("https://cutt.ly/QjE8s8y") . '" target="_blank">Example» </a>', 'leo-product-recommendations'),
+				// translators: %s: Example URL link
+				'description' => sprintf(
+					__('To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href="%s" target="_blank">Example» </a>', 'leo-product-recommendations'),
+					esc_url("https://cutt.ly/QjE8s8y")
+				),
 				'doc'         => 'https://cutt.ly/QjE8s8y',
 			),
 			array(
@@ -1563,7 +1567,7 @@ final class Product_Recommendations {
 				'id' => 'active_global_settings',
 				'title' => __('Active Global Setting', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => __('If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.'),
+				'description' => __('If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.', 'leo-product-recommendations'),
 				'doc' 		  => 'https://cutt.ly/Rk3dWPA',
 				'default' => 1,
 			),
@@ -1714,7 +1718,7 @@ final class Product_Recommendations {
 			'fields' => array(
 				array(
 					'category' => 'temporary_deactivation',
-					'reason' => __('It\'s a temporary deactivation.', 'leo-product-recommendations', 'leo-product-recommendations'),
+					'reason' => __('It\'s a temporary deactivation.', 'leo-product-recommendations'),
 					'instruction' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -1722,7 +1726,7 @@ final class Product_Recommendations {
 
 				array(
 					'category' => 'not_show_image_button',
-					'reason' => __('Does not show product image or add to cart button.', 'leo-product-recommendations', 'leo-product-recommendations'),
+					'reason' => __('Does not show product image or add to cart button.', 'leo-product-recommendations'),
 					'instruction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',

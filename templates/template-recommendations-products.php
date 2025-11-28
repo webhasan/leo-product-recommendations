@@ -29,11 +29,11 @@ if($theme === 'OceanWP') {
     $tag_classes .= 'product-inner';
 }
 
-$beginning_tag = sprintf('<li class="%s">', $tag_classes);
+$beginning_tag = sprintf('<li class="%s">', esc_attr($tag_classes));
 $ending_tag   = '</li>';
 ?>
 
-<?php echo $beginning_tag; ?>
+<?php echo wp_kses_post($beginning_tag); ?>
     <div class="rey-productInner">
     <?php do_action('lpr_before_recommended_product', get_the_ID()); ?>
 
@@ -54,7 +54,7 @@ $ending_tag   = '</li>';
         //fixing not showing product image
         $no_thumbnail_themes = apply_filters('lpr_fix_thumb', ['DavinciWoo','Rey', 'Blocksy-type-2', 'Betheme']);
         if(in_array($theme, $no_thumbnail_themes)) {
-            echo woocommerce_get_product_thumbnail();
+            echo wp_kses_post(woocommerce_get_product_thumbnail());
         }
 
         do_action('woocommerce_before_shop_loop_item_title');
@@ -87,4 +87,4 @@ $ending_tag   = '</li>';
         
         do_action('lpr_after_recommended_product', get_the_ID()); ?>
     </div>
-<?php echo $ending_tag; ?>
+<?php echo wp_kses_post($ending_tag); ?>

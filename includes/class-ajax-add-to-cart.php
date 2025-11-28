@@ -97,7 +97,7 @@ class Ajax_Add_To_Cart {
 
 			// Do we have a variation ID?
 			if (empty($variation_id)) {
-				$this->response_add_to_cart_fail(__('Please choose product options', 'woocommerce'));
+				$this->response_add_to_cart_fail(__('Please choose product options', 'leo-product-recommendations'));
 			}
 
 			// Check the data we have is valid.
@@ -128,7 +128,7 @@ class Ajax_Add_To_Cart {
 						$variations[$attribute_key] = $value;
 					} else {
 						/* translators: %s: Attribute name. */
-						$this->response_add_to_cart_fail(sprintf(__('Invalid value posted for %s', 'woocommerce'), wc_attribute_label($attribute['name'])));
+						$this->response_add_to_cart_fail(sprintf(__('Invalid value posted for %s', 'leo-product-recommendations'), wc_attribute_label($attribute['name'])));
 					}
 				} elseif ('' === $valid_value) {
 					$missing_attributes[] = wc_attribute_label($attribute['name']);
@@ -136,7 +136,7 @@ class Ajax_Add_To_Cart {
 			}
 			if (!empty($missing_attributes)) {
 				/* translators: %s: Attribute name. */
-				$this->response_add_to_cart_fail(sprintf(_n('%s is a required field', '%s are required fields', count($missing_attributes), 'woocommerce'), wc_format_list_of_items($missing_attributes)));
+				$this->response_add_to_cart_fail(sprintf(_n('%s is a required field', '%s are required fields', count($missing_attributes), 'leo-product-recommendations'), wc_format_list_of_items($missing_attributes)));
 			}
 		} catch (\Exception $e) {
 			$this->response_add_to_cart_fail($e->getMessage());
@@ -185,7 +185,7 @@ class Ajax_Add_To_Cart {
 			}
 
 			if (!$was_added_to_cart && !$quantity_set) {
-				$this->response_add_to_cart_fail(__('Please choose the quantity of items you wish to add to your cart.', 'woocommerce'));
+				$this->response_add_to_cart_fail(__('Please choose the quantity of items you wish to add to your cart.', 'leo-product-recommendations'));
 			} elseif ($was_added_to_cart) {
 				$message = wc_add_to_cart_message($added_to_cart, false, true);
 				WC()->cart->calculate_totals();
@@ -193,7 +193,7 @@ class Ajax_Add_To_Cart {
 				$this->response_add_to_cart_success($message);
 			}
 		} elseif ($product_id) {
-			$this->response_add_to_cart_fail(__('Please choose a product to add to your cart.', 'woocommerce'));
+			$this->response_add_to_cart_fail(__('Please choose a product to add to your cart.', 'leo-product-recommendations'));
 		}
 	}
 
@@ -207,7 +207,7 @@ class Ajax_Add_To_Cart {
 			$this->response_add_to_cart_success(wc_add_to_cart_message(array($product_id => $quantity), true, true));
 		}
 
-		$this->response_add_to_cart_fail(__('Unable to add to cart. Something went wrong.', 'woocommerce'));
+		$this->response_add_to_cart_fail(__('Unable to add to cart. Something went wrong.', 'leo-product-recommendations'));
 	}
 
 	/**

@@ -113,7 +113,7 @@
 
           try {
             const modal = await $.get(lc_ajax_modal.url, {
-              action: "get_popup_data",
+              action: "lpr_get_popup_data",
               nonce: lc_ajax_modal.nonce,
               product_id: addedProductId,
             });

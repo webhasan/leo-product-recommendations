@@ -1,16 +1,16 @@
 === Leo Product Recommendations for WooCommerce ===
 Contributors: webhasan, masum007
-Tags: woocommerce related products, ajax add to cart popup, woocommerce upsell products, woocommerce grouped product, woocommerce mini cart, woocommerce cross-sell, woocommerce popup
+Tags: woocommerce related products, add to cart popup, woocommerce upsell products, woocommerce cross-sell, woocommerce popup
 Requires at least: 5.7
-Tested up to: 6.8.3
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.0.0
+Stable tag: 3.1.0
 WC requires at least: 7.0
-WC tested up to: 10.3.5
-License: GPLv3 or later License
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+WC tested up to: 10.3
+License: GPL-3.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Recommend products smartly for boosting WooCommerce sales with a nice-looking ajax Add to cart popup. Include up-sell, cross-sell, or related products and make sure quick checkout.
+Boost WooCommerce sales with smart product recommendation popups on add to cart.
 
 == Description ==
 [youtube https://youtu.be/c20SsY1zsf8]

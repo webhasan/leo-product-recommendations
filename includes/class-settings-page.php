@@ -100,17 +100,19 @@ class Settings_Page {
 
             if ($this->hook[$screen->id] === $page) {
                 // rest color settings
-                if (isset($_GET['action']) && $_GET['action'] === 'rest_color' && $_GET['color_ids']) {
-                    $color_ids = sanitize_key($_GET['color_ids']);
+                $action = isset($_GET['action']) ? sanitize_text_field(wp_unslash($_GET['action'])) : '';
+                if ($action === 'rest_color' && isset($_GET['color_ids'])) {
+                    $color_ids = sanitize_key(wp_unslash($_GET['color_ids']));
                     
                     $color_fields = $this->get_sub_field($color_ids);
                     $this->remove_settings($color_fields);
-                    wp_redirect(get_admin_url(null, 'admin.php?page=lpr-settings&sec=lpr-style-settings'));
+                    wp_safe_redirect(get_admin_url(null, 'admin.php?page=lpr-settings&sec=lpr-style-settings'));
+                    exit;
                 }
                 ?>
 
 				<div class="wrap lpr-setting-page">
-					<h2><?php echo $page['page_title']; ?></h2>
+					<h2><?php echo esc_html($page['page_title']); ?></h2>
 					<?php settings_errors();?>
 
 					<form action="options.php" method="post">
@@ -120,7 +122,7 @@ class Settings_Page {
                             settings_fields($page['id']);
                         ?>
                         <p class="submit">
-                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save Settings', 'leo-product-recommendations')?>">
+                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e('Save Settings', 'leo-product-recommendations')?>">
                         </p>
 					</form>
 				</div>
@@ -142,6 +144,7 @@ class Settings_Page {
         }
     }
 
+
     /**
      * Add settings fields
      *
@@ -155,7 +158,10 @@ class Settings_Page {
                 continue;
             }
 
-            register_setting($page['id'], $page['id']);
+            register_setting($page['id'], $page['id'], array(
+                'type' => 'array',
+                'sanitize_callback' => array($this, 'sanitize_settings')
+            ));
 
             foreach ($this->get_fields($page) as $section => $field) {
                 add_settings_field($field['id'], $field['title'], array($this, 'display_field'), $field['section'], $field['section'], $field);
@@ -179,9 +185,9 @@ class Settings_Page {
         ?>
 		<div class="nav-tab-wrapper">
 			<?php foreach ($sections as $section): ?>
-				<a href="?page=<?php echo $page['slug']; ?>&sec=<?php echo $section['id']; ?>" class="nav-tab <?php if ($active_section == $section['id']) {
+				<a href="?page=<?php echo esc_attr($page['slug']); ?>&sec=<?php echo esc_attr($section['id']); ?>" class="nav-tab <?php if ($active_section == $section['id']) {
                 echo ' nav-tab-active'; }?>">
-                <?php echo $section['tab_title'] ?></a>
+                <?php echo esc_html($section['tab_title']); ?></a>
 			<?php endforeach;?>
 		</div>
 		<?php
@@ -229,7 +235,7 @@ class Settings_Page {
             $field_type($field, $this->base, $this->base->get_settings_id());
         } else {
             /* translators: %s: Name of field type */
-            printf(__('<strong>%s</strong> field type not found!','leo-product-recommendations'), $field_type);
+            printf(esc_html__('<strong>%s</strong> field type not found!','leo-product-recommendations'), esc_html($field_type));
         }
     }
 
@@ -308,6 +314,65 @@ class Settings_Page {
         }
 
         return array();
+    }
+
+    /**
+     * Sanitize settings before saving
+     *
+     * @since      1.0.0
+     * @param array $input The unsanitized input array
+     * @return array The sanitized settings array
+     */
+    public function sanitize_settings($input) {
+        if (!is_array($input)) {
+            return array();
+        }
+
+        $sanitized = array();
+
+        foreach ($input as $key => $value) {
+            $field_type = $this->base->get_field_type($key);
+
+            $key = sanitize_key($key);
+
+            if (is_array($value)) {
+                $sanitized[$key] = array_map('absint', array_filter($value));
+                continue;
+            }
+
+            switch ($field_type) {
+                case 'color_picker':
+                    $color = sanitize_hex_color($value);
+                    $sanitized[$key] = $color ? $color : '';
+                    break;
+
+                case 'number':
+                    $sanitized[$key] = absint($value);
+                    break;
+
+                case 'checkbox':
+                    $sanitized[$key] = !empty($value) ? 1 : '';
+                    break;
+
+                case 'css':
+                    $sanitized[$key] = wp_strip_all_tags($value);
+                    break;
+
+                case 'editor':
+                case 'textarea':
+                    $sanitized[$key] = wp_kses_post($value);
+                    break;
+
+                case 'text':
+                case 'radio':
+                case 'select':
+                default:
+                    $sanitized[$key] = sanitize_text_field($value);
+                    break;
+            }
+        }
+
+        return $sanitized;
     }
 
     /**

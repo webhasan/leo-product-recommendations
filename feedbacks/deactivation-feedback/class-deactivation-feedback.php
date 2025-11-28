@@ -87,7 +87,7 @@ class Deactivation_Feedback {
      * Deactivation popup modal view.
      */
     public function add_modal() {
-        echo $this->modal();
+        echo wp_kses_post($this->modal());
     }
 
     /**
@@ -98,8 +98,8 @@ class Deactivation_Feedback {
     public function modal() {
         $settings = $this->settings;
 
-        $modal_id   = 'lprw-feedback-modal-' . $settings['plugin_slug'];
-        $form_id    = 'feedback-form-' . $settings['plugin_slug'];
+        $modal_id   = 'lprw-feedback-modal-' . esc_attr($settings['plugin_slug']);
+        $form_id    = 'feedback-form-' . esc_attr($settings['plugin_slug']);
         $modal_html = '';
 
         $modal_html .= '<div class="lprw-feedback-modal" id="' . $modal_id . '">';
@@ -109,8 +109,8 @@ class Deactivation_Feedback {
         $modal_html .= '<header class="lprw-feedback-modal-card-head">';
 
         if ($settings['feedback_heading']) {
-            $modal_html .= '<p class="lprw-feedback-modal-card-title">' . $settings['feedback_heading'] . '</p>';
-            $modal_html .= '<a href="'.$settings['support']['support_url'].'" class="button" target="_blank">'.$settings['support']['title'].'</a>';
+            $modal_html .= '<p class="lprw-feedback-modal-card-title">' . esc_html($settings['feedback_heading']) . '</p>';
+            $modal_html .= '<a href="' . esc_url($settings['support']['support_url']) . '" class="button" target="_blank">' . esc_html($settings['support']['title']) . '</a>';
             $modal_html .= '<button class="lprw-feedback-modal-close" aria-label="close"></button>';
         }
 
@@ -119,7 +119,7 @@ class Deactivation_Feedback {
         $modal_html .= '<section class="lprw-feedback-modal-card-body">';
 
         if (isset($settings['form_heading']) && $settings['form_heading'] !== ''):
-            $modal_html .= '<h3 class="lprw-feedback-form-heading">' . $settings['form_heading'] . '</h3>';
+            $modal_html .= '<h3 class="lprw-feedback-form-heading">' . esc_html($settings['form_heading']) . '</h3>';
         endif;
 
         $modal_html .= '<div class="lprw-feedback-modal-body">';
@@ -134,20 +134,20 @@ class Deactivation_Feedback {
             $instruction    = (isset($field['instruction']) && $field['instruction'] !== '') ? $field['instruction'] : false;
 
             $modal_html .= '<fieldset>';
-            $modal_html .= sprintf('<label><input type="radio" class="reason" name="reason" value="%1$s"/>%2$s</label>', $category, $reason);
+            $modal_html .= sprintf('<label><input type="radio" class="reason" name="reason" value="%1$s"/>%2$s</label>', esc_attr($category), esc_html($reason));
 
             if ($input_field || $instruction):
 
                 $modal_html .= '<div class="lprw-inner-field">';
 
                 if ($input_field && $input_field === 'textarea'):
-                    $modal_html .= sprintf('<textarea  name="%1$s" placeholder="%2$s" value="%3$s"></textarea>', $category, $placeholder, $input_default);
+                    $modal_html .= sprintf('<textarea  name="%1$s" placeholder="%2$s" value="%3$s"></textarea>', esc_attr($category), esc_attr($placeholder), esc_attr($input_default));
                 elseif ($input_field):
-                    $modal_html .= sprintf('<input type="%1$s" name="%2$s" placeholder="%3$s" value="%4$s" />', $input_field, $category, $placeholder, $input_default);
+                    $modal_html .= sprintf('<input type="%1$s" name="%2$s" placeholder="%3$s" value="%4$s" />', esc_attr($input_field), esc_attr($category), esc_attr($placeholder), esc_attr($input_default));
                 endif;
 
                 if ($instruction):
-                    $modal_html .= '<p>' . $field['instruction'] . '</p>';
+                    $modal_html .= '<p>' . wp_kses_post($field['instruction']) . '</p>';
                 endif;
 
                 $modal_html .= '</div>';
@@ -160,8 +160,8 @@ class Deactivation_Feedback {
         $modal_html .= '</section>';
 
         $modal_html .= '<footer class="lprw-feedback-modal-card-foot">';
-        $modal_html .= '<div class="lprw-submit-wrap"><span class="error">'.__('Please select a reason.','leo-product-recommendations').'</span><button class="button button-primary">'.__('Send & Deactive','leo-product-recommendations').'</button><span class="loading" style="background-image: url(' . home_url() . '/wp-admin/images/spinner.gif)"></span></div>';
-        $modal_html .= '<a href="" class="lprw-feedback-deactivation-link">'.__('Skip & Deactivate','leo-product-recommendations').'</a>';
+        $modal_html .= '<div class="lprw-submit-wrap"><span class="error">' . esc_html__('Please select a reason.','leo-product-recommendations') . '</span><button class="button button-primary">' . esc_html__('Send & Deactive','leo-product-recommendations') . '</button><span class="loading" style="background-image: url(' . esc_url(home_url('/wp-admin/images/spinner.gif')) . ')"></span></div>';
+        $modal_html .= '<a href="" class="lprw-feedback-deactivation-link">' . esc_html__('Skip & Deactivate','leo-product-recommendations') . '</a>';
         $modal_html .= '</footer>';
 
         $modal_html .= '</div>';
@@ -181,15 +181,18 @@ class Deactivation_Feedback {
      * Submit feedback data to remote server
      */
     public function deactivation_feedback() {
-
-        if ((!isset($_POST['formData']) || !wp_verify_nonce($_POST['security'], 'valid-feedback-submit'))) {
+        $security = isset($_POST['security']) ? sanitize_text_field(wp_unslash($_POST['security'])) : '';
+        
+        if ((!isset($_POST['formData']) || !wp_verify_nonce($security, 'valid-feedback-submit'))) {
             wp_send_json_error('Invalid  Request!');
         }
 
         $settings        = $this->settings;
-        $form_data       = $_POST['formData'];
-        $reason_category = $form_data['reason'];
-        $reason_text     = isset($form_data[$reason_category]) ? esc_html($form_data[$reason_category]) : '';
+        $form_data       = isset($_POST['formData']) ? wp_unslash($_POST['formData']) : array();
+        $form_data       = is_array($form_data) ? $form_data : array();
+        $reason_category = isset($form_data['reason']) ? sanitize_text_field($form_data['reason']) : '';
+        $reason_text     = isset($form_data[$reason_category]) ? sanitize_text_field($form_data[$reason_category]) : '';
+        $reason_text     = !empty($reason_text) ? esc_html($reason_text) : '';
 
         if ('temporary_deactivation' === $reason_category) {
             wp_send_json_success(true);

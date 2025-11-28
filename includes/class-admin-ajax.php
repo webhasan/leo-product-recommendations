@@ -39,13 +39,13 @@ class Admin_Ajax {
      */
     public function initial_data() {
         // nonce validation
-        $nonce_validation =  isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
+        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
         if(!$nonce_validation) {
             wp_send_json_error(array('message' => 'Bad request'), 400);
         }
 
         // post ID
-        $post_id = (int) $_GET['post_id'];
+        $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;
 
         // include post id
         if ( FALSE === get_post_status( $post_id ) ) {
@@ -131,7 +131,7 @@ class Admin_Ajax {
      */
     public function fetch_categories() {
         // nonce validation
-        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
+        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
         if (!$nonce_validation) {
             wp_send_json_error(array('message' => 'Bad request'), 400);
         }
@@ -160,7 +160,7 @@ class Admin_Ajax {
      */
     public function fetch_tags() {
         // nonce validation
-        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
+        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
         if (!$nonce_validation) {
             wp_send_json_error(array('message' => 'Bad request'), 400);
         }
@@ -188,16 +188,16 @@ class Admin_Ajax {
      */
     public function fetch_products() {
         // nonce validation
-        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'lc-panel-security');
+        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
         if (!$nonce_validation) {
             wp_send_json_error(array('message' => 'Bad request'), 400);
         }
 
         // post ID
-        $post_id = (int) $_GET['post_id'];
+        $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;
 
         // page
-        $paged = !empty($_GET['page']) ? (int) $_GET['page'] : 1;
+        $paged = !empty($_GET['page']) ? absint($_GET['page']) : 1;
 
         $args = array(
             'post_type'   => 'product',
@@ -211,13 +211,13 @@ class Admin_Ajax {
                 array(
                     'taxonomy' => 'product_cat',
                     'field'    => 'term_id',
-                    'terms'    => (int) $_GET['category'],
+                    'terms'    => absint($_GET['category']),
                 ),
             );
         }
 
         if (!empty($_GET['query'])) {
-            $args['s'] = sanitize_text_field($_GET['query']);
+            $args['s'] = sanitize_text_field(wp_unslash($_GET['query']));
         }
 
         $products      = get_posts($args);
