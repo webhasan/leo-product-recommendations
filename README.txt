@@ -1,6 +1,6 @@
 === Leo Product Recommendations for WooCommerce ===
 Contributors: webhasan, masum007
-Tags: woocommerce related products, add to cart popup, woocommerce upsell products, woocommerce cross-sell, woocommerce popup
+Tags: woocommerce product recommendations, woocommerce related products, woocommerce upsell, woocommerce cross-sell, add to cart popup
 Requires at least: 5.7
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -10,43 +10,56 @@ WC tested up to: 11.1.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Boost WooCommerce sales with smart product recommendation popups on add to cart.
+Suggest related products in a popup after customers add to cart. Boost sales with WooCommerce upsells and cross-sells.
 
 == Description ==
 [youtube https://youtu.be/c20SsY1zsf8]
-Leo Product Recommendations is a **sale boosting** plugin for WooCommerce with a great strategy. It helps to recommend products smartly in a nice-looking popup. Suggesting products in an eye-catching popup after adding a product to a cart **directly influences customers to purchase more** related products. It comes with a fully customizable, powerful, and easy-to-use settings panel to recommend products manual and dynamic way based on your marketing need.
+Leo Product Recommendations is a WooCommerce upsell and cross-sell plugin for store owners who want to show relevant products at the moment customers are most ready to buy. After a shopper adds a product to the cart, a responsive recommendation popup can present compatible accessories, complementary products, or a higher-value alternative without taking the shopper away from the current page.
 
-After purchasing a smartphone definitely, there is a high possibility that the customer will be interested to purchase mobile accessories like a mobile cover, screen protector, headphones, etc. Leo Product Recommendations helps here to recommend that product instantly. 
+It is useful for online stores selling electronics, fashion, beauty products, food, software, and other product types where customers may need an accessory, matching item, replacement, or upgrade. For example, suggest a phone case and screen protector after a smartphone is added to the cart, or show a matching T-shirt after a customer chooses jeans.
+
+== How It Works ==
+1. Choose the products or rules that should trigger a recommendation.
+2. Display the offer in a customizable popup after the customer adds an item to the cart.
+3. Let the customer add the recommended product with AJAX and continue shopping or check out.
+
+== Build Your Recommendation Strategy ==
+Use manual selection when you want complete control over the products shown for a specific item. Use dynamic selection to recommend products by category, tag, upsell, cross-sell, best-selling products, top-rated products, sale items, product range, and other WooCommerce criteria. Global recommendations can provide a store-wide default, while product-level settings can be used for more precise offers.
+
+Customize the popup heading, description, product layout, colors, typography, background, and other styling options to match your store. Choose a product grid in the free version, with additional layout and styling options available in Pro.
 
 [youtube https://youtu.be/6ojRz6bK9Xo]
 
-In another scenario, customers usually search for the best matching T-Shirt after purchasing a pair of jeans pants. Leo Product Recommendations helps here to sell T-Shirts with a pair of jeans pants.
-
 [youtube https://youtu.be/3t--SH1MjDw]
 
-Woo Products Recommendation does everything Ajax way to improve the shopping experience. Customers do not require to browse a lot of pages to purchase products. It also reduces the steps and time of shopping and increases the chances of selling. 
+Recommendations are loaded with AJAX so customers can review and add products with fewer page loads. This keeps the offer close to the original purchase and creates a faster shopping experience.
 
-## How To Setup Leo Product Recommendations ##
+## How to Set Up Leo Product Recommendations ##
 [youtube https://youtu.be/M5i8FDHge2s]
 
 [**See Details Documentation »**](https://cutt.ly/rjE8eiu)
 
 ## Key Features ##
-* Responsive Popup 
-* Flexible Recommendation Popup Heading (Heading & Description)
-* Recommended Products Grid Settings
-* Manual Selection 
-* Global Selection
-* Custom CSS 
-* Ajax Add to Cart
-* Simple, Variable, Grouped Products Support
-* Override templates via theme files (Like WooCommerce)
-* Single & Product Archive page support
-* Gutenberg blocks and page builder (Elementor, Divi, WpBakery)
-* Quick Checkout Button
+* Responsive WooCommerce product recommendation popup
+* Related product, upsell, and cross-sell offers after add to cart
+* Manual product selection for curated offers
+* Dynamic selection by product data and WooCommerce rules
+* Global recommendations with product-level control
+* Customizable popup heading and description
+* Product grid display settings
+* AJAX add to cart
+* Simple, variable, and grouped product support
+* Single product and product archive page support
+* Custom CSS options
+* Template overrides through your theme
+* Gutenberg blocks and page builder support, including Elementor, Divi, and WPBakery
+* Quick checkout button
+
+## For Developers and Advanced Store Builds ##
+Developers can override popup templates from a theme and use the plugin's action and filter hooks to customize or extend the recommendation experience. The plugin is designed to work with popular WooCommerce themes and page builders, including Elementor, Divi, and WPBakery.
 
 ## Pro Features ##
-Including all free features, the Pro version provides more features and flexibility to recommend products.
+The Pro version adds more layout, targeting, visibility, and styling options for WooCommerce product recommendations.
 
 * Slider Layouts
 * Dynamic Selection
@@ -58,7 +71,7 @@ Including all free features, the Pro version provides more features and flexibil
 [**Pro Version Details »**](https://cutt.ly/LjE8qAj)
 
 ## Demos ##
-Leo Product Recommendations is perfectly feet for all types of WooCommerce shop. Check example bellow: 
+Explore product recommendation popup examples for different types of WooCommerce stores:
 
 [ 👉SMARTPHONE](https://cutt.ly/EjE3JbC)
 [ 👉ELECTRONICS](https://cutt.ly/RjE3CKI)
