@@ -2,11 +2,11 @@
 Contributors: webhasan, masum007
 Tags: woocommerce related products, add to cart popup, woocommerce upsell products, woocommerce cross-sell, woocommerce popup
 Requires at least: 5.7
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.1.0
+Stable tag: 3.2.0
 WC requires at least: 7.0
-WC tested up to: 10.3
+WC tested up to: 11.1.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -75,11 +75,11 @@ Leo Product Recommendations is perfectly feet for all types of WooCommerce shop.
 
 == Installation ==
 
-### MINIMUM REQUIREMENTS ##
+### Minimum Requirements ##
 
-* WordPress Version 5.0 or greater is required
-* WooCommerce Plugin 3.5 or greater is required
-* PHP 5.6 or greater is required
+* WordPress version 5.7 or greater is required
+* WooCommerce version 7.0 or greater is required
+* PHP version 7.4 or greater is required
 
 ### Automatic Installation ##
 
@@ -146,6 +146,9 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 3.2.0 =
+* Updated compatibility metadata for WordPress 7.1 and WooCommerce 11.1.1.
+
 = 3.0.0 =
 * Fix plugin compatibility issue
 
