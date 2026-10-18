@@ -183,6 +183,12 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
 
 ### Server side
 
+- Since 3.4.0 `modal.js` (`getPopupHtml()`) POSTs to `?wc-ajax=lpr_get_popup_data` and
+  falls back to admin-ajax GET if that fails. Reason: GTM4WP boots its front-end modules
+  only when `is_admin()` is false, and admin-ajax is `is_admin()`, so popup products had
+  no `.gtm4wp_single_productdata` / `data-gtm4wp_product_data` and GTM4WP pushed no
+  `add_to_cart` for popup adds. On Astra the wc-ajax markup is identical apart from the
+  GTM4WP spans. Watch other themes: their front-end loop hooks now run inside the popup.
 - `lpr_get_popup_data` builds `$template_data` (`get_template_data()`), runs a
   `WP_Query` with `post__in`, and includes `template-modal-content.php`, which loops
   `template-recommendations-products.php` per product.

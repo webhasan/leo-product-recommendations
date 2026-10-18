@@ -61,6 +61,8 @@ Run each with **Pro active** and **Pro inactive**.
 17. A named non add-to-cart submit button (Buy now) is not intercepted.
 18. `?add-to-cart=ID` link: popup after load. Cart/checkout pages never show the
     after-reload popup.
+19. With GTM4WP active: adding from the popup pushes `add_to_cart` (simple and
+    variable, variable also `view_item` on option choice). Check `dataLayer`.
 Tip: a temporary helper plugin that maps a product to a custom handler type
 (`woocommerce_add_to_cart_handler` filter) and prints test fields is the quickest way to
 cover 15 to 16. Remove it afterwards.

@@ -37,7 +37,7 @@ Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`)
 
 | Action | Who | Purpose |
 |---|---|---|
-| `lpr_get_popup_data` | front end (priv + nopriv), nonce `lc-ajax-modal` | Returns popup HTML for `product_id` |
+| `lpr_get_popup_data` | `?wc-ajax=lpr_get_popup_data` (POST, used by modal.js since 3.4.0) plus admin-ajax priv + nopriv (fallback), nonce `lc-ajax-modal` | Returns popup HTML for `product_id`. Rendered as a front-end request on wc-ajax so front-end-only plugins (GTM4WP, pixel plugins) add their product data |
 | `lc_ajax_add_to_cart` | front end (priv + nopriv) | Adds simple, variable and grouped products, returns fragments and cart hash. For types with their own `woocommerce_add_to_cart_handler_{type}` it adds nothing and returns `{success:false, data:{fallback:true}}`, and the JS posts the form normally |
 | `lpr_initial_data`, `lpr_fetch_products`, `lpr_fetch_categories`, `wpr_fetch_tags` | product panel, nonce `lc-panel-security` | Panel data |
 
@@ -47,7 +47,7 @@ Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`)
   from the single product AJAX submit.
 - Plugin: `before_open_lpr_modal` and `after_close_lpr_modal` on `body`.
 - Localized objects: `lc_ajax_modal` (url, nonce, `popup_view_times`, `layout_type`,
-  `added_cookie` {name, path, domain}, `popup_on_cart`, `is_cart_page`),
+  `added_cookie` {name, path, domain}, `popup_on_cart`, `is_cart_page`, `popup_url`),
   `lc_ajax`, `lc_pr_panel_data`, `lc_slider_setting` (Pro).
 
 ## PHP hooks
