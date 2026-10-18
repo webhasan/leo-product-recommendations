@@ -269,5 +269,5 @@ import ManualSelection from './components/ManualSelection';
     );
   };
 
-  React.render(<SelectProduct />, app);
+  React.createRoot(app).render(<SelectProduct />);
 })(wp.element, wp.i18n.__, document.getElementById("pr-app"));

@@ -5,5 +5,5 @@
 		'react-jsx-runtime',
 		'wp-components'
 	),
-	'version' => '6d7a469aaf0616f921f8'
+	'version' => '692b55248f408f63abb9'
 );

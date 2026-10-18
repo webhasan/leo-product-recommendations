@@ -27,8 +27,15 @@ const initWPEditor = (id) => {
 
 const WPEditor = ({ onChange, id, ...options }) => {
 	useEffect(function () {
-		document.addEventListener("DOMContentLoaded", () => initWPEditor(id));
-		// window.addEventListener("load", () => initWPEditor(id));
+		// createRoot renders asynchronously, so DOMContentLoaded may already have fired.
+		const init = () => initWPEditor(id);
+
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", init);
+			return () => document.removeEventListener("DOMContentLoaded", init);
+		}
+
+		init();
 	}, []);
 
 	return (

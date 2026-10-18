@@ -1,10 +1,82 @@
 import DebounceInput from "./DebounceInput";
 import { TreeSelect } from "@wordpress/components";
 import buildTermsTree from "../functions/tree";
-import Reorder, {reorder} from "react-reorder";
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core";
+import {
+    SortableContext,
+    arrayMove,
+    sortableKeyboardCoordinates,
+    useSortable,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import classNames from "classnames";
 
 const __ = wp.i18n.__;
+
+/**
+ * One selected product: draggable with mouse, touch and keyboard (space + arrows).
+ * The hidden input keeps the saved order (products are posted in DOM order).
+ */
+const SortableProduct = ({ product, onRemoveProduct }) => {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: product.id });
+
+    return (
+        <li
+            ref={setNodeRef}
+            style={{
+                transform: CSS.Transform.toString(transform),
+                transition,
+            }}
+            className={classNames({ dragged: isDragging })}
+            {...attributes}
+            {...listeners}
+        >
+            <input
+                type="hidden"
+                name="_lc_lpr_data[products][]"
+                value={product.id}
+            />
+            <span className="single-list">
+                <div className="thumb">
+                    <img
+                        src={!!product.feature_image ? product.feature_image : ""}
+                        alt=""
+                    />
+                </div>
+                {product.title}
+                <span
+                    className="remove-item"
+                    role="button"
+                    aria-label={__("Remove", "leo-product-recommendations")}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onRemoveProduct(product.id);
+                    }}
+                >
+                    -
+                </span>
+            </span>
+        </li>
+    );
+};
 
 const ManualSelection = (props) => {
     const { 
@@ -23,6 +95,23 @@ const ManualSelection = (props) => {
         initialProducts,
         onReorder
     } = props;
+
+    // Small move threshold so a click on "-" or a product is not treated as a drag.
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    );
+
+    const handleDragEnd = ({ active, over }) => {
+        if (!over || active.id === over.id) {
+            return;
+        }
+        const from = initialProducts.findIndex((product) => product.id === active.id);
+        const to = initialProducts.findIndex((product) => product.id === over.id);
+        if (from !== -1 && to !== -1) {
+            onReorder(arrayMove(initialProducts, from, to));
+        }
+    };
 
     return <>
         <div className="rp-panel-title">
@@ -109,60 +198,26 @@ const ManualSelection = (props) => {
                 </div>
 
                 <div className="select-item-panel">
-                    <Reorder
-                        component="ul"
-                        reorderId="my-list"
-                        placeholderClassName="placeholder"
-                        holdTime={50}
-                        touchHoldTime={50}
-                        onReorder={(event, previousIndex, nextIndex) => {
-                            let reorderProducts = reorder(
-                                initialProducts,
-                                previousIndex,
-                                nextIndex
-                            );
-                            onReorder(reorderProducts);
-                        }}
-                        autoScroll={false}
-                        placeholder={<li className="custom-placeholder" />}
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
                     >
-                        {initialProducts.map((product) => (
-                            <li key={product.id}>
-                                <input
-                                    type="hidden"
-                                    name="_lc_lpr_data[products][]"
-                                    value={product.id}
-                                />
-                                <span className="single-list" data-id="10">
-                                    <div className="thumb">
-                                        <img
-                                            src={
-                                                !!product.feature_image
-                                                    ? product.feature_image
-                                                    : ""
-                                            }
-                                            alt=""
-                                        />
-                                    </div>
-                                    {product.title}
-                                    <span
-                                        className="remove-item"
-                                        onMouseDown={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            onRemoveProduct(product.id);
-                                        }}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                        }}
-                                    >
-                                        -
-                                    </span>
-                                </span>
-                            </li>
-                        ))}
-                    </Reorder>
+                        <SortableContext
+                            items={initialProducts.map((product) => product.id)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            <ul>
+                                {initialProducts.map((product) => (
+                                    <SortableProduct
+                                        key={product.id}
+                                        product={product}
+                                        onRemoveProduct={onRemoveProduct}
+                                    />
+                                ))}
+                            </ul>
+                        </SortableContext>
+                    </DndContext>
                 </div>
 
                 
