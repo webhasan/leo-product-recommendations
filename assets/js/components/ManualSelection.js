@@ -1,4 +1,4 @@
-import { DebounceInput } from "react-debounce-input";
+import DebounceInput from "./DebounceInput";
 import { TreeSelect } from "@wordpress/components";
 import buildTermsTree from "../functions/tree";
 import Reorder, {reorder} from "react-reorder";

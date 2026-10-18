@@ -1,7 +1,7 @@
 === Leo Product Recommendations for WooCommerce ===
 Contributors: webhasan, masum007
 Tags: woocommerce product recommendations, woocommerce related products, woocommerce upsell, woocommerce cross-sell, add to cart popup
-Requires at least: 5.7
+Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 3.3.0

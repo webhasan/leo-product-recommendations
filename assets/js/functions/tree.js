@@ -1,7 +1,19 @@
 /**
  * External dependencies
  */
-import { groupBy } from 'lodash';
+/**
+ * Group terms by a key (replacement for lodash groupBy).
+ *
+ * @param {Array}  items Terms.
+ * @param {string} key   Property name.
+ * @return {Object} Items grouped by String( item[ key ] ).
+ */
+const groupBy = ( items, key ) =>
+	items.reduce( ( groups, item ) => {
+		const group = String( item[ key ] );
+		( groups[ group ] = groups[ group ] || [] ).push( item );
+		return groups;
+	}, {} );
 
 /**
  * Returns terms in a tree form.

@@ -335,7 +335,8 @@ final class Product_Recommendations {
 		wp_enqueue_editor();
 
 		if (!$this->is_pro_activated()) {
-			wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), array('lodash', 'wp-element', 'wp-components', 'wp-polyfill', 'wp-i18n', 'jquery'), $version, true);
+			$panel_asset = $this->script_asset('panel', array('wp-element', 'wp-components', 'wp-i18n', 'jquery'));
+			wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), $panel_asset['dependencies'], $panel_asset['version'], true);
 			wp_set_script_translations( 'selection-panel-script', 'leo-product-recommendations' );
 			wp_localize_script('selection-panel-script', 'lc_pr_panel_data', array(
 				'ajax_url' => admin_url('admin-ajax.php'),
@@ -361,7 +362,8 @@ final class Product_Recommendations {
 			wp_enqueue_style('lpr-select2', $this->get_url('assets/js/select2/select2.min.css'), array(), $version);
 
 			//setting 
-			wp_enqueue_script('lpr-settings', $this->get_url('assets/js/settings.min.js'), array('jquery', 'spectrum', 'wp-i18n'), $version, true);
+			$settings_asset = $this->script_asset('settings', array('jquery', 'spectrum', 'wp-i18n'));
+			wp_enqueue_script('lpr-settings', $this->get_url('assets/js/settings.min.js'), $settings_asset['dependencies'], $settings_asset['version'], true);
 			wp_enqueue_style('lpr-settings', $this->get_url('assets/css/settings.css'), array(), $version);
 
 			//css editor
@@ -384,7 +386,8 @@ final class Product_Recommendations {
 		$settings = $this->get_settings();
 		$layout_type = ($this->is_pro_activated() && !empty($settings['layout_type'])) ? $settings['layout_type'] : 'grid';
 
-		wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), array('jquery', 'wp-i18n'), $version, true);
+		$modal_asset = $this->script_asset('modal', array('jquery', 'wp-i18n'));
+		wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), $modal_asset['dependencies'], $modal_asset['version'], true);
 		wp_set_script_translations( 'lpr-modal', 'leo-product-recommendations' );
 
 		wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
@@ -395,7 +398,8 @@ final class Product_Recommendations {
 		));
 
 		// if (is_product()) { // disabled condition so that it work for quick view
-		wp_enqueue_script('lpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), array('jquery', 'wp-i18n'), $version, true);
+		$ajax_add_to_cart_asset = $this->script_asset('ajax-add-to-cart', array('jquery', 'wp-i18n'));
+		wp_enqueue_script('lpr-ajax-add-to-cart', $this->get_url('assets/js/ajax-add-to-cart.min.js'), $ajax_add_to_cart_asset['dependencies'], $ajax_add_to_cart_asset['version'], true);
 		wp_set_script_translations( 'lpr-ajax-add-to-cart', 'leo-product-recommendations' );
 		wp_localize_script('lpr-ajax-add-to-cart', 'lc_ajax', array(
 			'url' => admin_url('admin-ajax.php'),
@@ -2000,6 +2004,29 @@ final class Product_Recommendations {
 	public function admin_email() {
 		$admin_email = wp_get_current_user();
 		return (0 !== $admin_email->ID) ? $admin_email->data->user_email : '';
+	}
+
+	/**
+	 * Dependencies and version of a built script, read from the `*.asset.php` file
+	 * that @wordpress/scripts writes next to it. The version is a content hash, so
+	 * browsers pick up every new build.
+	 *
+	 * @since 3.3.0
+	 * @param string $name       Script name, e.g. 'panel' for assets/js/panel.min.js.
+	 * @param array  $extra_deps Globals the script uses without importing them (jQuery, wp.i18n, ...).
+	 * @return array { dependencies: string[], version: string }
+	 */
+	public function script_asset($name, $extra_deps = array()) {
+		$file  = $this->get_path('assets/js/' . $name . '.min.asset.php');
+		$asset = file_exists($file) ? include $file : array();
+
+		$dependencies = isset($asset['dependencies']) ? $asset['dependencies'] : array();
+		$version      = isset($asset['version']) ? $asset['version'] : $this->script_version();
+
+		return array(
+			'dependencies' => array_values(array_unique(array_merge($dependencies, $extra_deps))),
+			'version'      => $version,
+		);
 	}
 
 	/**

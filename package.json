@@ -1,21 +1,19 @@
 {
-  "name": "js",
-  "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
+  "name": "leo-product-recommendations",
+  "version": "3.3.0",
+  "private": true,
+  "description": "Build tools for Leo Product Recommendations for WooCommerce",
+  "license": "GPL-3.0-or-later",
   "scripts": {
-    "start": "NODE_OPTIONS=--openssl-legacy-provider wp-scripts start & sass --watch assets/css/",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider sass assets/css/ --style=compressed & wp-scripts build"
+    "start": "sass --watch assets/css:assets/css & wp-scripts start",
+    "build": "sass assets/css:assets/css --style=compressed --no-source-map && wp-scripts build"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "^6.1.1",
-    "sass": "^1.26.9"
+    "@wordpress/scripts": "^36.1.0",
+    "sass": "^1.105.2"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
-    "react-debounce-input": "^3.2.2",
+    "classnames": "^2.5.1",
     "react-reorder": "^3.0.0-alpha.7"
   }
 }

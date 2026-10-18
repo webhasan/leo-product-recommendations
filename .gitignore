@@ -1,16 +1,9 @@
 .DS_Store
-*.DS_Store
 node_modules
-assets/js/settings.min.asset.php
-assets/js/panel.min.asset.php
-assets/js/modal.min.asset.php
-assets/js/ajax-add-to-cart.min.asset.php
-assets/js/ajax-add-to-cart.min.js.map
-assets/js/modal.min.js.map
-assets/js/panel.min.js.map
-assets/js/settings.min.js.map
-assets/css/settings.css.map
-assets/css/panel.css.map
-assets/css/modal.css.map
-/*.log
+*.log
 *.lock
+
+# Source maps (development builds only)
+*.map
+
+# Built files ARE committed: assets/js/*.min.js, *.min.asset.php, assets/css/*.css

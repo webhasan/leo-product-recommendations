@@ -16,5 +16,8 @@ module.exports = {
   output: {
     filename: "[name].min.js",
     path: path.resolve(__dirname, "assets/js"),
+    // Builds go next to the sources and vendored libraries in assets/js:
+    // never let webpack empty this folder.
+    clean: false,
   },
 };
