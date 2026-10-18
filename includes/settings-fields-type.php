@@ -21,7 +21,7 @@ function wrapper($field, $base, $setting_id) {
     ?>
     <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
         <div class="fields-container">
-            <?php foreach ($chields as $child) :
+            <?php foreach ($children as $child) :
 
                 $field_name = $setting_id . '[' . $child['id'] . ']';
                 $title = $child['title'];
@@ -45,8 +45,8 @@ function wrapper($field, $base, $setting_id) {
                     <div class="reset-colors" id="<?php echo esc_attr($child['id']); ?>">
                         <?php
                         printf(
-                            '<a href="%1$s">%2$s</a></div>',
-                            esc_url($child['action_url']),
+                            '<a href="%1$s">%2$s</a>',
+                            esc_url(wp_nonce_url($child['action_url'], 'lpr_reset_colors')),
                             esc_html($title)
                         );
                         ?>
@@ -199,7 +199,7 @@ function wrapper_extend($field, $base, $setting_id) {
 
     <fieldset class="lpr-field-<?php echo esc_attr($type); ?>" id="lpr-field-<?php echo esc_attr($id); ?>">
         <div class="fields-container">
-            <?php foreach ($chields as $child) :
+            <?php foreach ($children as $child) :
 
                 $field_name = $setting_id . '[' . $child['id'] . ']';
                 $title = $child['title'];
@@ -223,8 +223,8 @@ function wrapper_extend($field, $base, $setting_id) {
                     <div class="reset-colors" id="<?php echo esc_attr($child['id']); ?>">
                         <?php
                         printf(
-                            '<a href="%1$s">%2$s</a></div>',
-                            esc_url($child['action_url']),
+                            '<a href="%1$s">%2$s</a>',
+                            esc_url(wp_nonce_url($child['action_url'], 'lpr_reset_colors')),
                             esc_html($title)
                         );
                         ?>
@@ -326,6 +326,7 @@ function wrapper_extend($field, $base, $setting_id) {
                                     value="<?php echo esc_attr( $tag->term_id ); ?>">
                                     <?php echo esc_html( $tag->name ); 
                                 ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -627,7 +628,7 @@ function heading_selection($field, $base, $setting_id) {
     $field_name = $setting_id . '[' . $id . ']';
     ?>
     <fieldset class="lpr-field-heading_type" id="lpr-field-<?php echo esc_attr($id); ?>">
-        <?php foreach ($chields as $heading_type):
+        <?php foreach ($children as $heading_type):
         $checked = ($value === $heading_type['id']) ? ' checked ' : '';
         ?>
             <label>
@@ -638,7 +639,7 @@ function heading_selection($field, $base, $setting_id) {
 
         <div class="heading-field">
             
-            <?php foreach ($chields as $heading_type):
+            <?php foreach ($children as $heading_type):
                 $sub_field_name  = $setting_id . '[' . $heading_type['id'] . ']';
                 $sub_field_value = $base->get_setting($heading_type['id']);
                 $display         = ($value === $heading_type['id']) ? 'block' : 'none';

@@ -14,6 +14,7 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 // Delete plugin settings option.
 $lc_pr_settings_id = 'lc_lpr_settings';
 delete_option($lc_pr_settings_id);
+delete_option('lc_lpr_settings_backup');
 
 // For multisite installations, delete from all sites.
 if (is_multisite()) {
@@ -23,6 +24,7 @@ if (is_multisite()) {
 	foreach ($lc_pr_blog_ids as $lc_pr_blog_id) {
 		switch_to_blog($lc_pr_blog_id);
 		delete_option($lc_pr_settings_id);
+delete_option('lc_lpr_settings_backup');
 		restore_current_blog();
 	}
 }

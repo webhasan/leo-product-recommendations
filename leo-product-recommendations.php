@@ -29,6 +29,14 @@ add_action('before_woocommerce_init', function(){
     }
 });
 
+/**
+ * Shared settings framework API (3.3.0+).
+ * Pro 3.2.0+ checks this to know it can register its settings with the free plugin.
+ */
+if (!defined('LPR_SETTINGS_API_VERSION')) {
+    define('LPR_SETTINGS_API_VERSION', 1);
+}
+
 use LoeCoder\Plugin\ProductRecommendations\Product_Recommendations;
 
 if (!class_exists(Product_Recommendations::class)) {

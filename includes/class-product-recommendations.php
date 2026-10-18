@@ -30,6 +30,22 @@ final class Product_Recommendations {
 	static protected $settings;
 
 	/**
+	 * Per-request cache of the settings schema (pages, sections, fields).
+	 *
+	 * @var array|null
+	 * @since 3.3.0
+	 */
+	static protected $settings_pages_cache = null;
+
+	/**
+	 * Per-request cache of all fields keyed by field id.
+	 *
+	 * @var array|null
+	 * @since 3.3.0
+	 */
+	static protected $field_map_cache = null;
+
+	/**
 	 * Array of all products recommendations meta data
 	 *
 	 * @var array
@@ -208,8 +224,10 @@ final class Product_Recommendations {
 
 		$this->plugin_action_links(); // add action link, example: Go Pro->, Settings->
 
-		if (!$this->is_pro_activated()) {
-			$this->plugin_settings($this); // Plugin settings page for free version
+		// One settings framework for Free and Pro. An older Pro (3.1.x and below) ships its
+		// own copy of the framework, so Free must stay out of its way in that case.
+		if ($this->use_shared_settings()) {
+			$this->plugin_settings($this);
 		}
 	}
 
@@ -270,6 +288,9 @@ final class Product_Recommendations {
 	public function hooks() {
 		// Include required admin scripts
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
+
+		// One-time safety copy of the settings before the shared framework saves anything.
+		add_action('admin_init', array($this, 'maybe_backup_settings'));
 
 		// Include required front-end scripts
 		add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts')); 
@@ -395,9 +416,10 @@ final class Product_Recommendations {
 	 */
 	public function settings_css() {
 		// grid
-		$items_desktop = $this->get_setting('grid_lg_items');
-		$items_tablet = $this->get_setting('grid_md_items');
-		$items_mobile = $this->get_setting('grid_sm_items');
+		// max(1, ...) prevents a DivisionByZeroError when a value is saved as 0 or empty.
+		$items_desktop = max(1, (int) $this->get_setting('grid_lg_items'));
+		$items_tablet = max(1, (int) $this->get_setting('grid_md_items'));
+		$items_mobile = max(1, (int) $this->get_setting('grid_sm_items'));
 		$grid_column_gap = (int) $this->get_setting('grid_column_gap') + 1;
 		$desktop_item_width = 100 / $items_desktop;
 		$tablet_item_width = 100 / $items_tablet;
@@ -1115,6 +1137,19 @@ final class Product_Recommendations {
 	}
 
 	/**
+	 * Replace all settings and refresh the in-request cache.
+	 *
+	 * @since 3.3.0
+	 * @param array|null $value New settings array.
+	 * @return bool
+	 */
+	public function set_settings($value) {
+		$updated = update_option($this->get_settings_id(), $value);
+		self::$settings = get_option($this->get_settings_id());
+		return $updated;
+	}
+
+	/**
 	 * Get default settings
 	 *
 	 * @since      1.0.0
@@ -1122,31 +1157,10 @@ final class Product_Recommendations {
 	 */
 	public function get_default_settings() {
 		$default_settings = array();
-		$pages = $this->settings_pages();
 
-		foreach ($pages as $page) {
-			if (isset($page['sections']) && !empty($page['sections'])) {
-
-				foreach ($page['sections'] as $section) {
-
-					if (isset($section['fields']) && !empty($section['fields'])) {
-
-						foreach ($section['fields'] as $field) {
-							if (isset($field['default'])) {
-								$default_settings[$field['id']] = $field['default'];
-							}
-
-							if (!empty($field['chields'])) {
-								foreach ($field['chields'] as $child_field) {
-									if (isset($child_field['default'])) {
-										$default_settings[$child_field['id']] = $child_field['default'];
-									}
-
-								}
-							}
-						}
-					}
-				}
+		foreach ($this->get_field_map() as $id => $field) {
+			if (isset($field['default'])) {
+				$default_settings[$id] = $field['default'];
 			}
 		}
 
@@ -1314,35 +1328,8 @@ final class Product_Recommendations {
 	 * @return mixed value of default setting
 	 */
 	public function get_default_setting($id) {
-		$pages = $this->settings_pages();
-
-		foreach ($pages as $page) {
-			if (isset($page['sections']) && !empty($page['sections'])) {
-
-				foreach ($page['sections'] as $section) {
-
-					if (isset($section['fields']) && !empty($section['fields'])) {
-
-						foreach ($section['fields'] as $field) {
-							if ($field['id'] === $id && isset($field['default'])) {
-								return $field['default'];
-							}
-
-							if (!empty($field['chields'])) {
-								foreach ($field['chields'] as $child_field) {
-
-									if ($child_field['id'] === $id && isset($child_field['default'])) {
-										return $child_field['default'];
-									}
-
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
+		$map = $this->get_field_map();
+		return isset($map[$id]['default']) ? $map[$id]['default'] : false;
 	}
 
 	/**
@@ -1353,25 +1340,137 @@ final class Product_Recommendations {
 	 * @return mixed value of setting field type
 	 */
 	public function get_field_type($id) {
-		$pages = $this->settings_pages();
+		$map = $this->get_field_map();
+		return isset($map[$id]['type']) ? $map[$id]['type'] : false;
+	}
 
-		foreach ($pages as $page) {
-			if (isset($page['sections']) && !empty($page['sections'])) {
+	/**
+	 * All settings pages including sections and fields.
+	 *
+	 * Pro (3.2.0+) adds its pages and fields through the `lpr_settings_pages` filter.
+	 * The result is normalized (sub-fields always under `children`) and cached once
+	 * per request after all plugins are loaded.
+	 *
+	 * @since      1.0.0
+	 * @return  array of settings pages data
+	 */
+	public function settings_pages() {
+		if (!is_null(self::$settings_pages_cache)) {
+			return self::$settings_pages_cache;
+		}
 
-				foreach ($page['sections'] as $section) {
+		$pages = $this->default_settings_pages();
 
-					if (isset($section['fields']) && !empty($section['fields'])) {
-						foreach ($section['fields'] as $field) {
-							if ($field['id'] === $id) {
-								return isset($field['type']) ? $field['type'] : false;
-							}
+		if ($this->use_shared_settings()) {
+			$pages = apply_filters('lpr_settings_pages', $pages, $this);
+		}
 
-							if (!empty($field['chields'])) {
-								foreach ($field['chields'] as $child_field) {
-									if ($child_field['id'] === $id) {
-										return isset($child_field['type']) ? $child_field['type'] : false;
-									}
-								}
+		$pages = self::normalize_settings_pages($pages);
+
+		// Do not freeze the schema before plugins (and their filters) are loaded.
+		if (did_action('plugins_loaded')) {
+			self::$settings_pages_cache = $pages;
+		}
+
+		return $pages;
+	}
+
+	/**
+	 * Normalize a settings schema: sub-fields are read from `children`, `chields`
+	 * (Free 2022-2026) or `childs` (Pro up to 3.1) and stored under `children`.
+	 *
+	 * @since 3.3.0
+	 * @param array $pages Settings pages.
+	 * @return array
+	 */
+	public static function normalize_settings_pages($pages) {
+		if (!is_array($pages)) {
+			return array();
+		}
+
+		foreach ($pages as $p => $page) {
+			if (empty($page['sections']) || !is_array($page['sections'])) {
+				continue;
+			}
+
+			foreach ($page['sections'] as $s => $section) {
+				if (empty($section['fields']) || !is_array($section['fields'])) {
+					continue;
+				}
+
+				foreach ($section['fields'] as $f => $field) {
+					$pages[$p]['sections'][$s]['fields'][$f] = self::normalize_settings_field($field);
+				}
+			}
+		}
+
+		return $pages;
+	}
+
+	/**
+	 * Normalize one field definition (see normalize_settings_pages()).
+	 *
+	 * @since 3.3.0
+	 * @param array $field Field definition.
+	 * @return array
+	 */
+	public static function normalize_settings_field($field) {
+		$children = array();
+
+		foreach (array('children', 'chields', 'childs') as $key) {
+			if (!empty($field[$key]) && is_array($field[$key])) {
+				$children = $field[$key];
+				break;
+			}
+		}
+
+		unset($field['chields'], $field['childs']);
+
+		if (!empty($children)) {
+			$field['children'] = $children;
+		}
+
+		return $field;
+	}
+
+	/**
+	 * All fields (including sub-fields) keyed by field id, with the id of the
+	 * settings page (option name) they belong to in `_page`.
+	 *
+	 * @since 3.3.0
+	 * @return array
+	 */
+	public function get_field_map() {
+		if (!is_null(self::$field_map_cache)) {
+			return self::$field_map_cache;
+		}
+
+		$map = array();
+
+		foreach ($this->settings_pages() as $page) {
+			if (empty($page['sections'])) {
+				continue;
+			}
+
+			foreach ($page['sections'] as $section) {
+				if (empty($section['fields'])) {
+					continue;
+				}
+
+				foreach ($section['fields'] as $field) {
+					if (empty($field['id'])) {
+						continue;
+					}
+
+					$field['_page'] = $page['id'];
+					$map[$field['id']] = $field;
+
+					if (!empty($field['children'])) {
+						foreach ($field['children'] as $child) {
+							if (!empty($child['id'])) {
+								$child['_page'] = $page['id'];
+								$child['_parent'] = $field['id'];
+								$map[$child['id']] = $child;
 							}
 						}
 					}
@@ -1379,16 +1478,59 @@ final class Product_Recommendations {
 			}
 		}
 
-		return false;
+		if (!is_null(self::$settings_pages_cache)) {
+			self::$field_map_cache = $map;
+		}
+
+		return $map;
 	}
 
 	/**
-	 * All settings pages including sections and fields
+	 * Should Free run the settings framework?
+	 *
+	 * Yes when Pro is not active, or when the active Pro uses the shared framework
+	 * (it defines LPR_PRO_SHARED_SETTINGS). An older Pro brings its own copy of the
+	 * framework; loading both in one request would declare the same functions twice.
+	 *
+	 * @since 3.3.0
+	 * @return bool
+	 */
+	public function use_shared_settings() {
+		return !$this->is_pro_activated() || defined('LPR_PRO_SHARED_SETTINGS');
+	}
+
+	/**
+	 * Keep a one-time copy of the settings, taken before the shared framework
+	 * (3.3.0) saves them for the first time. Not autoloaded.
+	 *
+	 * @since 3.3.0
+	 * @return void
+	 */
+	public function maybe_backup_settings() {
+		if (false !== get_option('lc_lpr_settings_backup')) {
+			return;
+		}
+
+		$settings = get_option($this->get_settings_id());
+
+		if (empty($settings) || !is_array($settings)) {
+			return;
+		}
+
+		add_option('lc_lpr_settings_backup', array(
+			'time' => time(),
+			'version' => $this->plugin_version(),
+			'settings' => $settings,
+		), '', 'no');
+	}
+
+	/**
+	 * Settings schema of the free plugin (before the `lpr_settings_pages` filter)
 	 *
 	 * @since      1.0.0
 	 * @return  array of settings pages data
 	 */
-	public function settings_pages() {
+	public function default_settings_pages() {
 		$general_settings_fields = array(
 			array(
 				'id' => 'heading_type',
@@ -1399,7 +1541,7 @@ final class Product_Recommendations {
 				),
 				'type' => 'heading_selection',
 				'default' => 'default_heading',
-				'chields' => array(
+				'children' => array(
 					array(
 						'id' => 'default_heading',
 						'title' => __('Heading', 'leo-product-recommendations'),
@@ -1446,7 +1588,7 @@ final class Product_Recommendations {
 				'id' => 'grid_options',
 				'title' => __('Grid Options', 'leo-product-recommendations'),
 				'type' => 'wrapper',
-				'chields' => array(
+				'children' => array(
 					array(
 						'id' => 'grid_lg_items',
 						'title' => __('Desktop Items Per Row', 'leo-product-recommendations'),
@@ -1552,7 +1694,7 @@ final class Product_Recommendations {
 				'id' => 'selection_options',
 				'title' => __('Recommendation Options', 'leo-product-recommendations'),
 				'type' => 'wrapper_extend',
-				'chields' => array(
+				'children' => array(
 					array(
 						'id' => 'global_categories',
 						'title' => __('Categories', 'leo-product-recommendations'),
