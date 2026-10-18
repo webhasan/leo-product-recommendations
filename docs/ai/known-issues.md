@@ -23,9 +23,8 @@ Remove an item when it is fixed. Add new items as you find them.
    it through `wp_kses()` with only span/b/strong/i/br and wraps it in `<h2>`.
 8. **Switching heading type in settings blanks the other heading** on save
    (`heading_selection` renders the non-selected value as empty).
-9. **Custom product types in AJAX add to cart** (bundles, subscriptions, etc.) get no
-    JSON reply from `class-ajax-add-to-cart.php`; the JS alerts and reloads. Repeated
-    field names and file inputs in product forms are dropped by `ajax-add-to-cart.js`.
+9. ~~Custom product types / repeated fields / file inputs in AJAX add to cart~~ Fixed in
+    3.4.0 (fallback to a normal post plus popup after reload, FormData).
 10. **Possible race in `WPEditor`** (panel): TinyMCE inits on a 400ms timer, independent of
     when saved data loads. To verify on a slow server.
 11. **Pro update check does not cache failures.** Without a valid license, every read of

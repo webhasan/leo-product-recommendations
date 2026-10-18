@@ -57,7 +57,12 @@ Manual selection has no count limit.
   `[products]` shortcode, Elementor/Divi/WPBakery widgets, and quick view plugins.
   (**Owner intent:** it should work for product widgets and quick view.)
 - Single product page: `ajax-add-to-cart.js` intercepts `form.cart` submit and adds to
-  cart via the `lc_ajax_add_to_cart` AJAX action, then triggers `added_to_cart`.
+  cart via the `lc_ajax_add_to_cart` AJAX action, then triggers `added_to_cart`. This is
+  why the plugin exists in that form: WooCommerce itself reloads the page there.
+- Products the AJAX call can't add (bundles, subscriptions, bookings, file uploads) and
+  Buy now buttons post normally. After the reload the popup opens once for that product
+  (cookie `lpr_added_product`), not on cart or checkout pages (since 3.4.0). The same
+  happens for `?add-to-cart=ID` links.
 - The popup asks the server for content (`lpr_get_popup_data`). If there are no
   recommendations after exclusions, the server returns nothing and **no popup is shown**
   (**Owner intent**). The product is still added to the cart.

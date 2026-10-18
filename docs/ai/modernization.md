@@ -57,7 +57,7 @@ and Pro PHP frameworks.
 |---|---|---|
 | Owl Carousel 2.3.4 (Pro) | Unmaintained since 2018, jQuery-based | Swiper 14, Embla 8, Splide 4, or CSS scroll-snap |
 | jQuery modal (`$.fn.lprModal`) | Own small code, works | Native `<dialog>` element |
-| `ajax-add-to-cart.js` + `class-ajax-add-to-cart.php` | Copy of WooCommerce core logic, intercepts every `form.cart` | WooCommerce Store API (`/wc/store/v1/cart/add-item`) or limit interception to supported product types |
+| `ajax-add-to-cart.js` + `class-ajax-add-to-cart.php` | Copy of WooCommerce core logic. Since 3.4.0 unsupported types fall back to a normal post with the popup after reload | Later: call WooCommerce's own handler instead of the copy (watch for the double add on `wp_loaded`) |
 | jQuery itself | Required by WooCommerce classic templates anyway | Keep while WooCommerce classic add-to-cart events are the trigger |
 | localStorage popup counter | Works | Keep |
 

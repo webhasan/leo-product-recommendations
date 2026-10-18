@@ -29,6 +29,7 @@
 | `lc_lpr_settings_backup` | option (not autoloaded) | One-time copy taken before 3.3.0 first saves: `{time, version, settings}` |
 | `_lc_lpr_data` | product post meta | `heading_type`, `heading`, `heading_article`, `type` (`manual-selection` / `dynamic-selection`), `products`, `categories`, `tags`, `orderby`, `sale`, `number` |
 | `lpr-popup-count` | browser localStorage | `{count, time}` for the Popup Show limit |
+| `lpr_added_product` | cookie (5 min, COOKIEPATH, not HttpOnly) | Product ID added with a normal form post; `modal.js` opens the popup on the next page load and deletes it (since 3.4.0) |
 
 Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`).
 
@@ -37,7 +38,7 @@ Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`)
 | Action | Who | Purpose |
 |---|---|---|
 | `lpr_get_popup_data` | front end (priv + nopriv), nonce `lc-ajax-modal` | Returns popup HTML for `product_id` |
-| `lc_ajax_add_to_cart` | front end (priv + nopriv) | Adds to cart, returns fragments and cart hash |
+| `lc_ajax_add_to_cart` | front end (priv + nopriv) | Adds simple, variable and grouped products, returns fragments and cart hash. For types with their own `woocommerce_add_to_cart_handler_{type}` it adds nothing and returns `{success:false, data:{fallback:true}}`, and the JS posts the form normally |
 | `lpr_initial_data`, `lpr_fetch_products`, `lpr_fetch_categories`, `wpr_fetch_tags` | product panel, nonce `lc-panel-security` | Panel data |
 
 ## JS events
@@ -45,7 +46,8 @@ Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`)
 - WooCommerce: listens to `added_to_cart`; triggers `adding_to_cart` and `added_to_cart`
   from the single product AJAX submit.
 - Plugin: `before_open_lpr_modal` and `after_close_lpr_modal` on `body`.
-- Localized objects: `lc_ajax_modal` (url, nonce, `popup_view_times`, `layout_type`),
+- Localized objects: `lc_ajax_modal` (url, nonce, `popup_view_times`, `layout_type`,
+  `added_cookie` {name, path, domain}, `popup_on_cart`, `is_cart_page`),
   `lc_ajax`, `lc_pr_panel_data`, `lc_slider_setting` (Pro).
 
 ## PHP hooks
@@ -62,6 +64,10 @@ Actions: `lpr_before_action` (Free/Pro bridge), `lpr_before_modal_content`,
 Filters: `lpr_show_buttons`, `lpr_show_continue_shopping`, `lpr_go_checkout`,
 `lpr_cart_count`, `lpr_show_close_icon`, `lpr_checked_icon`, `lpr_cart_icon`,
 `lpr_fix_thumb`, `lpr_title_price`, `lpr_fix_price` (theme compatibility lists).
+
+Add to cart (3.4.0): `lpr_ajax_add_to_cart_supported` (`$supported, $product, $handler`),
+`lpr_popup_after_reload` (`true, $added_id, $product_id`), `lpr_popup_after_reload_on_cart`
+(`false`). Form class `lpr-no-ajax` opts a `form.cart` out of the AJAX submit.
 
 ## Template override
 

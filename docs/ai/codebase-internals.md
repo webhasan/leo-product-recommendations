@@ -159,9 +159,20 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
 
 1. Any WooCommerce `added_to_cart` jQuery event (archive buttons, blocks, widgets, quick
    view) is caught in `modal.js`.
-2. On single product pages, `ajax-add-to-cart.js` intercepts **every** `form.cart`
-   submit site-wide, serializes it, posts `lc_ajax_add_to_cart`, then triggers
-   `added_to_cart` itself.
+2. On single product pages, `ajax-add-to-cart.js` catches `form.cart` submits, sends the
+   form as `FormData` (minus `add-to-cart` and file fields) to `lc_ajax_add_to_cart`, then
+   triggers `added_to_cart` itself. It lets the form post normally when: the popup limit
+   is reached, the clicked button has a name other than `add-to-cart` (Buy now), a file is
+   selected, the form has class `lpr-no-ajax`, or the server answers `fallback`.
+   `add-to-cart` is left out on purpose: WooCommerce's form handler runs on `wp_loaded`
+   for any request with that field and would add the product a second time. The PHP
+   puts it back into `$_REQUEST`/`$_POST` for validation code.
+2b. Normal (page reload) adds: `remember_added_product()` on `woocommerce_add_to_cart`
+   sets cookie `lpr_added_product` (skipped for AJAX, REST, admin and when there is no
+   `add-to-cart` in the request). On the next page load `modal.js` reads it, deletes it,
+   and calls `openRecommendationPopup()` unless the limit is reached or it's a cart or
+   checkout page (`is_cart_or_checkout_page()`, which also detects Cart/Checkout blocks).
+   A cookie, not page HTML, so page caching can't show it to other visitors.
 3. `modal.js` checks the Popup Show limit (localStorage), closes known quick-view
    popups, requests `lpr_get_popup_data`, injects the HTML into `#lpr-modal-content`
    (empty shell printed in `wp_footer`), initializes Owl Carousel when the layout is
@@ -181,11 +192,9 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
 - In-popup add to cart uses `woocommerce_template_single_add_to_cart()` when
   "Variable / Group Products Add To Cart" is on (real product forms), else the loop button.
 - `class-ajax-add-to-cart.php` is a **copy of WooCommerce core's form handler**
-  (simple, variable, grouped). Custom product types (`woocommerce_add_to_cart_handler_*`,
-  e.g. bundles, subscriptions) run their handler but get no JSON reply, so the JS
-  alerts and reloads the page.
-- `ajax-add-to-cart.js` builds a flat object from `serializeArray()`, so repeated field
-  names (multi-checkbox add-ons) keep only the last value, and file inputs are lost.
+  (simple, variable, grouped). Since 3.4.0, types with their own
+  `woocommerce_add_to_cart_handler_{type}` (bundles, subscriptions...) get the `fallback`
+  reply before anything is added, so WooCommerce handles them with a normal post.
 
 ### Pro additions on the front end
 

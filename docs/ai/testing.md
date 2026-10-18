@@ -54,6 +54,16 @@ Run each with **Pro active** and **Pro inactive**.
 12. Responsive: desktop, tablet (991px and below), mobile (767px and below).
 13. Pro only: slider, popup size, button visibility, colors.
 14. Browser console has no errors; network calls to `admin-ajax.php` return 200.
+15. Product with its own add to cart handler (bundle-type): page posts normally, product
+    added once, popup opens after the reload and not again on the next page view.
+16. Form with a selected file: posts normally, popup after reload. Checkbox group: all
+    checked values reach the server.
+17. A named non add-to-cart submit button (Buy now) is not intercepted.
+18. `?add-to-cart=ID` link: popup after load. Cart/checkout pages never show the
+    after-reload popup.
+Tip: a temporary helper plugin that maps a product to a custom handler type
+(`woocommerce_add_to_cart_handler` filter) and prints test fields is the quickest way to
+cover 15 to 16. Remove it afterwards.
 
 ## Tools
 
