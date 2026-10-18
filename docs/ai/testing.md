@@ -1,0 +1,61 @@
+# Local environment and testing
+
+## Local environment
+
+- Site: http://localhost/woocommerce (admin: http://localhost/woocommerce/wp-admin)
+- Path on disk (macOS): `/Users/webhasan/Sites/woocommerce/wp-content/plugins/`
+- Stack seen in October 2026: WordPress 7.1.x, WooCommerce 11.1.x, theme Astra with
+  Elementor. Also active: CartFlows, GTM4WP (no container ID yet), Variation Swatches.
+- Currency: BDT (৳). Categories: Accessories, Men, Women, Uncategorized.
+- `/shop` is an Elementor page without a product grid. Use a category archive instead,
+  e.g. http://localhost/woocommerce/product-category/men/
+
+### Useful test products
+
+| ID | Product | Type |
+|---|---|---|
+| 324 | Dark Gray Jeans | simple, Men |
+| 307 | Black Hoodie | simple, Men |
+| 362 | DNK Yellow Shoes | simple, on sale |
+| 375 | DNK Black Shoes | variable |
+| 211 | Gray Pattern Tshirt | variable |
+| 169 | Boho Bangle Bracelet | variable, Accessories |
+
+## Testing rules
+
+Owner's own rules: _to be added by Hasan._
+
+Default safety rules until then:
+
+- Note the current settings before changing them, and restore them after the test.
+- Do not save product edits unless the test needs it; restore them after.
+- Test cart items are fine. Empty the cart at the start of a test that depends on it,
+  because cart items are excluded from recommendations.
+- Never change WooCommerce core settings, payments, or other plugins without asking.
+- Clear `localStorage` key `lpr-popup-count` (or use a private window) when testing the
+  Popup Show limit.
+
+## End-to-end checklist
+
+Run each with **Pro active** and **Pro inactive**.
+
+1. Archive page: AJAX add to cart opens the popup.
+2. Single product page: form submit is AJAX, popup opens, no page reload.
+3. Popup: heading, `%title%` and `[item, items]` render correctly.
+4. Add a simple product from the popup: flash bar, cart count updates, no second popup.
+5. Add a variable product from the popup: button disabled until a variation is chosen,
+   price updates, item added.
+6. Add a grouped product from the popup.
+7. Products already in the cart do not appear in the next popup.
+8. Manual picks on a product override Global when Skip Manual Selection is off.
+9. Skip Manual Selection on: Global is used for every product.
+10. Global off and no product picks: no popup, product still added.
+11. Popup Show limit (e.g. 2 times): popup stops after 2; single product page reloads normally.
+12. Responsive: desktop, tablet (991px and below), mobile (767px and below).
+13. Pro only: slider, popup size, button visibility, colors.
+14. Browser console has no errors; network calls to `admin-ajax.php` return 200.
+
+## Tools
+
+- AI agents with browser access can run this checklist through Chrome on the local site.
+- For tracking work, watch `window.dataLayer` and the `added_to_cart` event.

@@ -1,0 +1,108 @@
+# Known issues and open questions
+
+Found during code review and local testing, October 2026 (Free 3.2.0, Pro 3.1.0).
+Remove an item when it is fixed. Add new items as you find them.
+
+## Behavior and bugs
+
+1. **Price sorting uses `_regular_price`.** Ignores sale prices; variable parents usually
+   have no `_regular_price`. `_price` is likely the intended key.
+2. **Deleted products in manual picks.** `manual_query_products()` calls methods on
+   `wc_get_product($id)` without checking for `false`, which can fatal if a picked product
+   was deleted.
+3. **Custom CSS escaped with `esc_html()`** in Free `settings_css()`. Selectors with `>`
+   become `&gt;` and break. Pro prints custom CSS raw (works, but unescaped).
+4. **Grid showed 4 per row with Desktop Items Per Row = 5** (Free, Pro inactive). Likely a
+   CSS specificity clash between `modal.css` (`width: calc(25% - 21px)`) and the inline
+   settings CSS. To confirm.
+5. **Free honors product-level dynamic data saved under Pro.** `is_dynamic_selection()` is
+   not gated by `is_pro_activated()`. Decide if this is intended.
+6. **"View cart" link after adding from the popup** shows in Free but not with Pro. Trace
+   which template or CSS removes it and decide the intended behavior.
+7. **Pro product template fires the wrong hook.** It ends with
+   `do_action('lpr_before_recommended_product')`; `lpr_after_recommended_product` never
+   fires when Pro is active.
+8. **Default "Heading & Description" loses its formatting.** `get_template_data()` runs
+   it through `wp_kses()` with only span/b/strong/i/br and wraps it in `<h2>`.
+9. **Switching heading type in settings blanks the other heading** on save
+   (`heading_selection` renders the non-selected value as empty).
+10. **Custom product types in AJAX add to cart** (bundles, subscriptions, etc.) get no
+    JSON reply from `class-ajax-add-to-cart.php`; the JS alerts and reloads. Repeated
+    field names and file inputs in product forms are dropped by `ajax-add-to-cart.js`.
+11. **Pro panel infinite scroll** uses stale state (`[...products, ...new]`); Free fixed it.
+12. **Possible race in `WPEditor`** (panel): TinyMCE inits on a 400ms timer, independent of
+    when saved data loads. To verify on a slow server.
+13. **Pro update check does not cache failures.** Without a valid license, every read of
+    the update transient in admin triggers a request to leocoder.com.
+14. **Plugin load order dependency.** Pro works only because its folder name sorts
+    before Free's. See `codebase-internals.md` section 4.
+
+## Security and hardening
+
+1. Pro REST `lpr/v1/settings` and `lpr/v1/product-recommendations/{id}` are public
+   (`__return_true`). Settings exposure is probably unnecessary.
+2. Panel AJAX actions are also registered `nopriv`. They need a nonce, but should be
+   admin-only (`current_user_can('edit_products')`).
+3. `lpr/v1/product-recommendations/{id}` returns the raw saved meta and product titles
+   for any post ID, including private products.
+4. Deactivation feedback sends site URL, active plugins and server info with
+   `sslverify => false`. Make sure the readme discloses it (WordPress.org guideline 7).
+5. License key is "encrypted" with a key hard-coded in the source (`leo_crypt()`).
+
+## Admin UI and copy
+
+1. Free's locked color teaser (image) does not match Pro's real fields.
+2. Locked Dynamic Selection demo uses sample categories and tags that do not exist in the store.
+3. Typos: "Continue Shoping", "Gird Or Slider", "WPR configuration panel" in the Skip
+   Manual Selection help text.
+4. Label differs: "Variable Products Add To Cart" (Free) vs "Variable / Group Products" (Pro).
+5. License page button reads "Active Lincese" / "Deactive Lincese".
+7. Untranslatable strings in the panel (`'Popup Heading'`, `'Select By'` passed as
+   variables); `__('Documentation»', { textDomain })` passes an object as the domain.
+
+## Build and housekeeping
+
+1. Free's committed `panel.min.js`, `settings.min.js`, `ajax-add-to-cart.min.js` are
+   development builds (unminified). Rebuild in production mode before release.
+2. `fetch_products` runs the same product query twice (`get_posts` + `WP_Query`).
+3. `uninstall.php` leaves `_lc_lpr_data` product meta and Pro license options.
+4. Pro's activation defaults add a meaningless `reset_colors` key (the reset link field has
+   a `default`). Harmless.
+5. Pro `settings_css()` still echoes setting values without escaping. Values are
+   sanitized on save since 3.3.0, but values stored earlier are printed as they are.
+
+## Public docs out of date (leocoder.com)
+
+1. Template override path is `<theme>/lpr/templates/`, not `/wpr/templates/`.
+2. REST routes are `lpr/v1/product-recommendations/{id}` and `lpr/v1/settings`
+   (docs show `product-recommend` and `wpr/v1`).
+3. Filters `wc_pr_show_in_product_archives`, `wc_pr_show_in_singe_product`,
+   `wc_pr_show_in_gutenberg_product_block` **do not exist** in the code.
+4. Popup Show limit, close icon, `%title%` and `[item, items]` are not documented.
+5. WordPress.org lists "Dynamic selection" as a free key feature; only Global dynamic
+   rules are free.
+
+## Fixed (October 2026)
+
+Shared settings framework (Free 3.3.0 + Pro 3.2.0, see `codebase-internals.md`):
+
+- Grid `100 / items` division by zero guarded in Free and Pro `settings_css()`; empty
+  numbers fall back to defaults.
+- Reset Colors: nonce + capability, unknown group no longer wipes all settings, Free no
+  longer calls a missing `set_settings()`.
+- Pro settings now saved through Free's sanitizer and rendered with escaping.
+- Saving on the Free-only settings screen no longer erases Pro settings.
+- Settings markup: double `</div>` and unclosed tag `<option>` fixed.
+
+Earlier:
+
+- Pro manual picker label "Select Products Pro" changed to "Select Products".
+- Pro `lpr_license` AJAX: admin only (`manage_options`), no logged-out access, server URL,
+  API name, plugin data and instance taken from the server, action limited to
+  status / activate / deactivate. Only product ID and API key come from the form.
+- Dynamic and Global queries always exclude hidden and out-of-stock products.
+
+## Unknowns to verify
+
+- Exact behavior of grouped products inside the popup (quantity per child).
+- Whether quick view plugins other than the ones in `modal.js` close correctly.
