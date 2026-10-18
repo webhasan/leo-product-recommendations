@@ -547,6 +547,42 @@ final class Product_Recommendations {
 	}
 
 	/**
+	 * Allowed tags and attributes for the inline SVG icons in the popup templates
+	 * (wp_kses_post() strips <svg>, which hid the cart and check icons).
+	 *
+	 * @since 3.3.1
+	 * @return array wp_kses() allowed HTML.
+	 */
+	public static function svg_allowed_html() {
+		$common = array(
+			'id' => true,
+			'class' => true,
+			'fill' => true,
+			'transform' => true,
+			'data-name' => true,
+		);
+
+		return array(
+			'svg' => array_merge($common, array(
+				'xmlns' => true,
+				'version' => true,
+				'viewbox' => true,
+				'width' => true,
+				'height' => true,
+				'aria-hidden' => true,
+				'focusable' => true,
+				'role' => true,
+			)),
+			'g' => $common,
+			'path' => array_merge($common, array('d' => true)),
+			'circle' => array_merge($common, array('cx' => true, 'cy' => true, 'r' => true)),
+			'rect' => array_merge($common, array('x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true, 'ry' => true)),
+			'polygon' => array_merge($common, array('points' => true)),
+			'title' => array(),
+		);
+	}
+
+	/**
 	 * Get plugin slug
 	 *
 	 * @since      1.0.0

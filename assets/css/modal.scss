@@ -346,6 +346,8 @@
        list-style: none !important;
        margin: 0 -10px !important;
        padding: 0 !important;
+       // Themes (e.g. Astra) add `gap` to `.woocommerce ul.products`; items are spaced with margins.
+       gap: 0 !important;
  
        li.single-lpr {
          flex: 0 0 calc(25% - 21px);
