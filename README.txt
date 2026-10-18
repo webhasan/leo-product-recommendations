@@ -4,7 +4,7 @@ Tags: woocommerce product recommendations, woocommerce related products, woocomm
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.3.1
+Stable tag: 3.4.0
 WC requires at least: 7.0
 WC tested up to: 11.1.1
 License: GPL-3.0-or-later
@@ -159,6 +159,13 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 3.4.0 =
+* New: The popup also opens after a normal (page reload) add to cart, for example for product bundles, subscriptions, bookings, products with file uploads and add to cart links.
+* Fix: Product types with their own add to cart handler (bundles, composites, subscriptions...) showed "Something went wrong" on the product page. They now add to cart the normal WooCommerce way.
+* Fix: Product options sent as checkbox groups or multi-selects kept only the last choice.
+* Fix: "Buy now" buttons in the product form now work instead of opening the popup.
+* Developer: Filters `lpr_ajax_add_to_cart_supported`, `lpr_popup_after_reload`, `lpr_popup_after_reload_on_cart`, and the `lpr-no-ajax` form class to opt a form out of AJAX add to cart.
+
 = 3.3.1 =
 * Fix: Cart and check icons were missing in the popup, so the cart count badge overlapped the Checkout button.
 * Fix: The popup grid showed one product fewer per row than set with themes that add a gap to product lists (for example Astra).

@@ -15,6 +15,13 @@ if (!defined('ABSPATH')) {
 
 final class Product_Recommendations {
 	/**
+	 * Cookie that carries a product added with a normal form post to the next page load.
+	 *
+	 * @since 3.4.0
+	 */
+	const ADDED_PRODUCT_COOKIE = 'lpr_added_product';
+
+	/**
 	 * Instance of class
 	 *
 	 * @var instance
@@ -308,6 +315,9 @@ final class Product_Recommendations {
 		add_action('wp_ajax_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 		add_action('wp_ajax_nopriv_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
 
+		// Remember a product added with a normal form post so the popup opens after the reload
+		add_action('woocommerce_add_to_cart', array($this, 'remember_added_product'), 10, 2);
+
 		// fix woocommerce nonce issue logged out user
 		add_filter('nonce_user_logged_out', array($this, 'nonce_fix'), 100, 2);
 
@@ -394,7 +404,18 @@ final class Product_Recommendations {
 			'url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('lc-ajax-modal'),
 			'popup_view_times' => $this->get_setting('popup_view_times'),
-			'layout_type' => $layout_type
+			'layout_type' => $layout_type,
+			'added_cookie' => array(
+				'name' => self::ADDED_PRODUCT_COOKIE,
+				'path' => COOKIEPATH ? COOKIEPATH : '/',
+				'domain' => COOKIE_DOMAIN ? COOKIE_DOMAIN : '',
+			),
+			/**
+			 * Show the after-reload popup on the cart and checkout pages too
+			 * (for stores that redirect to the cart after adding). Off by default.
+			 */
+			'popup_on_cart' => (bool) apply_filters('lpr_popup_after_reload_on_cart', false),
+			'is_cart_page' => $this->is_cart_or_checkout_page(),
 		));
 
 		// if (is_product()) { // disabled condition so that it work for quick view
@@ -730,6 +751,52 @@ final class Product_Recommendations {
 	 * @since      1.0.0
 	 * @return  json
 	 */
+	/**
+	 * When a product is added with a normal form post (or an ?add-to-cart= link) there is no
+	 * AJAX added_to_cart event, so save the product ID in a short-lived cookie. modal.js reads
+	 * it on the next page load, opens the popup once and deletes it. A cookie (not the page
+	 * HTML) carries it so page caching can't show the popup to other visitors.
+	 *
+	 * @since 3.4.0
+	 * @param string $cart_item_key
+	 * @param int $product_id
+	 * @return void
+	 */
+	public function remember_added_product($cart_item_key, $product_id) {
+		// AJAX adds (archive buttons, this plugin's own call) open the popup straight away.
+		if (wp_doing_ajax() || (defined('REST_REQUEST') && REST_REQUEST) || is_admin() || headers_sent()) {
+			return;
+		}
+
+		// Only for adds the visitor asked for, not products other code adds on page load.
+		if (!isset($_REQUEST['add-to-cart']) || !is_numeric(wp_unslash($_REQUEST['add-to-cart']))) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
+		}
+
+		$added_id = absint(wp_unslash($_REQUEST['add-to-cart'])); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if (!$added_id || !apply_filters('lpr_popup_after_reload', true, $added_id, $product_id)) {
+			return;
+		}
+
+		setcookie(self::ADDED_PRODUCT_COOKIE, (string) $added_id, time() + 5 * MINUTE_IN_SECONDS, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, is_ssl(), false);
+	}
+
+	/**
+	 * Cart or checkout page, including pages that use the Cart/Checkout blocks
+	 * but aren't the page set in WooCommerce settings.
+	 *
+	 * @since 3.4.0
+	 * @return bool
+	 */
+	public function is_cart_or_checkout_page() {
+		if ((function_exists('is_cart') && is_cart()) || (function_exists('is_checkout') && is_checkout())) {
+			return true;
+		}
+
+		return is_singular() && (has_block('woocommerce/cart') || has_block('woocommerce/checkout'));
+	}
+
 	public function ajax_add_to_cart() {
 		if (!class_exists(Ajax_Add_To_Cart::class)) {
 			include $this->get_path('includes/class-ajax-add-to-cart.php');

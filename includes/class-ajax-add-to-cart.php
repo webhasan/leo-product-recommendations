@@ -37,6 +37,28 @@ class Ajax_Add_To_Cart {
 
 		$add_to_cart_handler = apply_filters('woocommerce_add_to_cart_handler', $adding_to_cart->get_type(), $adding_to_cart);
 
+		/**
+		 * Product types with their own add to cart handler (bundles, composites, subscriptions,
+		 * bookings...) can't be added here. Tell the browser to post the form normally so
+		 * WooCommerce runs that handler; the popup then opens after the page reload.
+		 */
+		$supported = in_array($add_to_cart_handler, array('variable', 'variation', 'grouped'), true) || !has_action('woocommerce_add_to_cart_handler_' . $add_to_cart_handler);
+		$supported = apply_filters('lpr_ajax_add_to_cart_supported', $supported, $adding_to_cart, $add_to_cart_handler);
+
+		if (!$supported) {
+			wp_send_json_error(array(
+				'fallback' => true,
+				'message' => '',
+			));
+		}
+
+		// Some validation code reads the posted add-to-cart field. The browser leaves it out
+		// (so WooCommerce doesn't add the product a second time), so restore it here.
+		if (!isset($_REQUEST['add-to-cart'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$_REQUEST['add-to-cart'] = $product_id;
+			$_POST['add-to-cart'] = $product_id; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		}
+
 		if ('variable' === $add_to_cart_handler || 'variation' === $add_to_cart_handler) {
 			$this->add_to_cart_variable_product($product_id);
 		} elseif ('grouped' === $add_to_cart_handler) {
