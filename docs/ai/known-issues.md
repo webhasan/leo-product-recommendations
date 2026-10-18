@@ -31,6 +31,9 @@ Remove an item when it is fixed. Add new items as you find them.
     the update transient in admin triggers a request to leocoder.com.
 12. **Plugin load order dependency.** Pro works only because its folder name sorts
     before Free's. See `codebase-internals.md` section 4.
+13. **Blocksy: two "Add to cart" buttons per popup card** when "Variable / Group Products
+    Add To Cart" is on. The admin-ajax popup HTML has both Blocksy's loop button and the
+    product form (seen Oct 2026, Blocksy 2.1.60). Not caused by 3.4.0.
 
 ## Security and hardening
 
@@ -73,9 +76,6 @@ Remove an item when it is fixed. Add new items as you find them.
    `wc_pr_show_in_gutenberg_product_block` **do not exist** in the code.
 4. Popup Show limit, close icon, `%title%` and `[item, items]` are not documented.
 5. WordPress.org lists "Dynamic selection" as a free key feature; only Global dynamic
-13. **Blocksy: two "Add to cart" buttons per popup card** when "Variable / Group Products
-    Add To Cart" is on. The admin-ajax popup HTML has both Blocksy's loop button and the
-    product form (seen Oct 2026, Blocksy 2.1.60). Not caused by 3.4.0.
    rules are free.
 
 ## Fixed (October 2026)
