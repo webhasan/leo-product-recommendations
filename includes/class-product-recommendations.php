@@ -933,57 +933,34 @@ final class Product_Recommendations {
 		$product_visibility_not_in[] = $product_visibility_terms['exclude-from-catalog'];
 		$product_visibility_not_in[] = $product_visibility_terms['outofstock'];
 
-		if (!empty($categories) && !empty($tags)) {
-			$args['tax_query'] = array(
-				'relation' => 'AND',
-				array(
-					'taxonomy' => 'product_cat',
-					'field' => 'term_id',
-					'terms' => $categories,
-				),
-				array(
-					'taxonomy' => 'product_tag',
-					'field' => 'term_id',
-					'terms' => $tags,
-				),
-				array(
-					'taxonomy' => 'product_visibility',
-					'field'    => 'term_taxonomy_id',
-					'terms'    => $product_visibility_not_in,
-					'operator' => 'NOT IN',
-				)
+		// Always exclude hidden and out-of-stock products, with or without category/tag filters.
+		$tax_query = array(
+			'relation' => 'AND',
+			array(
+				'taxonomy' => 'product_visibility',
+				'field'    => 'term_taxonomy_id',
+				'terms'    => $product_visibility_not_in,
+				'operator' => 'NOT IN',
+			),
+		);
+
+		if (!empty($categories)) {
+			$tax_query[] = array(
+				'taxonomy' => 'product_cat',
+				'field' => 'term_id',
+				'terms' => $categories,
 			);
-		} else if (!empty($categories)) {
-			$args['tax_query'] = array(
-				'relation' => 'AND',
-				array(
-					'taxonomy' => 'product_cat',
-					'field' => 'term_id',
-					'terms' => $categories,
-				),
-				array(
-					'taxonomy' => 'product_visibility',
-					'field'    => 'term_taxonomy_id',
-					'terms'    => $product_visibility_not_in,
-					'operator' => 'NOT IN',
-				)
+		}
+
+		if (!empty($tags)) {
+			$tax_query[] = array(
+				'taxonomy' => 'product_tag',
+				'field' => 'term_id',
+				'terms' => $tags,
 			);
-		} else if (!empty($tags)) {
-			$args['tax_query'] = array(
-				'relation' => 'AND',
-				array(
-					'taxonomy' => 'product_tag',
-					'field' => 'term_id',
-					'terms' => $tags,
-				),
-				array(
-					'taxonomy' => 'product_visibility',
-					'field'    => 'term_taxonomy_id',
-					'terms'    => $product_visibility_not_in,
-					'operator' => 'NOT IN',
-				)
-			);
-		} 
+		}
+
+		$args['tax_query'] = $tax_query;
 
 		$orderby = 'date';
 		$meta_key = '';
