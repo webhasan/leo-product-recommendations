@@ -49,11 +49,12 @@ without leaving the page, then continue shopping or go to checkout.
 - Main file `leo-product-recommendations.php`, core class
   `includes/class-product-recommendations.php` (`Product_Recommendations`, singleton,
   namespace `LoeCoder\Plugin\ProductRecommendations`; the "Loe" typo is real, keep it).
-- Requires WP 5.7+, WC 7.0+, PHP 7.4+. HPOS compatible.
+- Requires WP 6.6+, WC 7.0+, PHP 7.4+. HPOS compatible.
 - Settings page: `wp-admin/admin.php?page=lpr-settings` (tabs: General, Style, Global, Tutorials).
 - Product panel: "Recommendations" tab in WooCommerce Product data (React app, `assets/js/panel.js`).
 - Front end: `assets/js/modal.js` (popup) and `assets/js/ajax-add-to-cart.js` (single product AJAX submit).
-- Build: `npm install`, then `npm run build` (wp-scripts + sass). Commit the built `.min.js` and `.css`.
+- Build (Node 22.22+): `npm install` once, `npm start` to watch, `npm run build` for production.
+  Always run `npm run build` before committing (`npm start` writes development builds).
 
 ## Keeping these docs up to date (required)
 

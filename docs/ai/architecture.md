@@ -70,10 +70,24 @@ Lookup order: theme, Pro plugin, Free plugin.
 
 ## Build
 
-- `npm install`, `npm start` (watch) or `npm run build`.
-- Uses `@wordpress/scripts` and `sass`. The Free build sets
-  `NODE_OPTIONS=--openssl-legacy-provider` (old webpack).
-- Built `.min.js` and `.css` files are committed and shipped.
+Needs Node 22.22+ or 24.15+ (required by `@wordpress/scripts` 36).
+
+| Command | What it does |
+|---|---|
+| `npm install` | Once, after cloning or when `package.json` changes |
+| `npm start` | Watch mode: Sass recompiles `assets/css/*.scss`, webpack rebuilds `assets/js/*.min.js` (development build, with source maps). Ctrl+C stops both |
+| `npm run build` | Production: compressed CSS without source maps, then minified JS and `*.min.asset.php` |
+
+- **Always run `npm run build` before committing.** `npm start` writes development builds
+  into the same `.min.js` files.
+- Built files are committed and shipped: `assets/js/*.min.js`, `assets/js/*.min.asset.php`,
+  `assets/css/*.css`. Source maps (`*.map`) are git-ignored.
+- `webpack.config.js` keeps the output in `assets/js` (next to sources and the vendored
+  Select2, Spectrum, Lity) and sets `clean: false`. Never remove it: the default config
+  empties the output folder.
+- Scripts are enqueued with `script_asset()`, which reads dependencies and a content-hash
+  version from `*.min.asset.php`. The panel needs `react-jsx-runtime` (WordPress 6.6+).
+- CSS files still use the plugin version for cache busting.
 
 ## Repos
 

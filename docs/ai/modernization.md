@@ -7,21 +7,21 @@ Nothing here is decided yet; "Options" are candidates to evaluate.
 
 | Item | Free | Pro | Latest | Notes |
 |---|---|---|---|---|
-| `@wordpress/scripts` | 6.1.1 | 6.2.0 | 36.1.0 | 30 major versions behind. Webpack 4 era. Free build needs `--openssl-legacy-provider` on modern Node. Latest needs Node 22.22+ / 24.15+. |
-| `sass` | ^1.26 | ^1.30 | 1.105 | Fine to bump. Old `@import` style will need `@use` eventually. |
-| Lockfiles | v2 | v2 | | Regenerate after the bump. |
-| `*.asset.php` | ignored | partly committed | | Use them for script dependencies and versions instead of hard-coded arrays. |
+| `@wordpress/scripts` | **36.1** (was 6.1) | **36.1** (was 6.2) | 36.1.0 | Done in Free 3.3.1 / Pro 3.2.1. Needs Node 22.22+ / 24.15+. |
+| `sass` | **1.105** | **1.105** | 1.105 | Done. `darken()` replaced by a fixed color. |
+| Lockfiles | v3 | v3 | | Regenerated. |
+| `*.asset.php` | committed, used | committed, used | | `script_asset()` reads dependencies and version. |
 
 ## Product panel (React)
 
 | Package | Used for | Installed | Latest | Status | Options |
 |---|---|---|---|---|---|
 | `react-reorder` | Drag to sort selected products | 3.0.0-alpha.7 | same | Abandoned alpha, needs `create-react-class`, uses `findDOMNode` and legacy lifecycles | `@dnd-kit/sortable` (10.x), or `@wordpress/components` drag helpers |
-| `react-debounce-input` | Search box debounce | 3.2.x | 3.3.0 (2022) | Peer dep React 15/16 only | `useDebounce` from `@wordpress/compose`, or a small custom hook |
-| `react-select` (Pro) | Category/tag multi-select | 3.1.1 | 5.10.2 | Peer dep React 16 only, bundles emotion | `FormTokenField` / `ComboboxControl` from `@wordpress/components`, or react-select 5 |
+| `react-debounce-input` | Search box debounce | removed | | **Done:** local `components/DebounceInput.js` | |
+| `react-select` (Pro) | Category/tag multi-select | **5.10.2** | 5.10.2 | **Done** (bundles emotion, panel is ~116 KB) | Later: `FormTokenField` to drop it |
 | `classnames` | CSS classes | 2.2.6 | 2.5.1 | Fine | `clsx` or keep |
 | `@wordpress/components` `TreeSelect` | Category filter | external (`wp.components`) | | Fine | Keep |
-| `lodash` (`groupBy` in `tree.js`) | Category tree | WP global | | WordPress is moving away from lodash | Plain JS |
+| `lodash` (`groupBy` in `tree.js`) | Category tree | removed | | **Done:** plain JS `groupBy` | |
 | `wp.element.render` | Mounting | | | Legacy React render API | `createRoot` from `@wordpress/element` |
 | jQuery `$.ajax` | Panel requests | | | Works | `@wordpress/api-fetch` + REST routes |
 
@@ -66,8 +66,9 @@ and Pro PHP frameworks.
 
 ## Suggested order (proposal)
 
-1. Bump `@wordpress/scripts` and `sass`; get a clean production build; use `*.asset.php`.
-2. Replace `react-reorder`, `react-debounce-input`, `react-select`; move to `createRoot`.
+1. ~~Bump `@wordpress/scripts` and `sass`; production build; use `*.asset.php`.~~ Done (3.3.1 / 3.2.1).
+2. Replace `react-reorder` (still on 3.0.0-alpha.7) and move to `createRoot`.
+   (`react-debounce-input` and lodash are gone; `react-select` is on 5.)
 3. ~~Merge the Free and Pro settings framework into Free; cache the schema.~~ Done.
    Release rules: Free 3.3.0 ships before Pro 3.2.0; keep Pro `$require_free_version`
    at 3.2.0 (see `codebase-internals.md`, version-aware loading).

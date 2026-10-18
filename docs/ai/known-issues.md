@@ -12,29 +12,26 @@ Remove an item when it is fixed. Add new items as you find them.
    was deleted.
 3. **Custom CSS escaped with `esc_html()`** in Free `settings_css()`. Selectors with `>`
    become `&gt;` and break. Pro prints custom CSS raw (works, but unescaped).
-4. **Grid showed 4 per row with Desktop Items Per Row = 5** (Free, Pro inactive). Likely a
-   CSS specificity clash between `modal.css` (`width: calc(25% - 21px)`) and the inline
-   settings CSS. To confirm.
-5. **Free honors product-level dynamic data saved under Pro.** `is_dynamic_selection()` is
+4. **Free honors product-level dynamic data saved under Pro.** `is_dynamic_selection()` is
    not gated by `is_pro_activated()`. Decide if this is intended.
-6. **"View cart" link after adding from the popup** shows in Free but not with Pro. Trace
+5. **"View cart" link after adding from the popup** shows in Free but not with Pro. Trace
    which template or CSS removes it and decide the intended behavior.
-7. **Pro product template fires the wrong hook.** It ends with
+6. **Pro product template fires the wrong hook.** It ends with
    `do_action('lpr_before_recommended_product')`; `lpr_after_recommended_product` never
    fires when Pro is active.
-8. **Default "Heading & Description" loses its formatting.** `get_template_data()` runs
+7. **Default "Heading & Description" loses its formatting.** `get_template_data()` runs
    it through `wp_kses()` with only span/b/strong/i/br and wraps it in `<h2>`.
-9. **Switching heading type in settings blanks the other heading** on save
+8. **Switching heading type in settings blanks the other heading** on save
    (`heading_selection` renders the non-selected value as empty).
-10. **Custom product types in AJAX add to cart** (bundles, subscriptions, etc.) get no
+9. **Custom product types in AJAX add to cart** (bundles, subscriptions, etc.) get no
     JSON reply from `class-ajax-add-to-cart.php`; the JS alerts and reloads. Repeated
     field names and file inputs in product forms are dropped by `ajax-add-to-cart.js`.
-11. **Pro panel infinite scroll** uses stale state (`[...products, ...new]`); Free fixed it.
-12. **Possible race in `WPEditor`** (panel): TinyMCE inits on a 400ms timer, independent of
+10. **Pro panel infinite scroll** uses stale state (`[...products, ...new]`); Free fixed it.
+11. **Possible race in `WPEditor`** (panel): TinyMCE inits on a 400ms timer, independent of
     when saved data loads. To verify on a slow server.
-13. **Pro update check does not cache failures.** Without a valid license, every read of
+12. **Pro update check does not cache failures.** Without a valid license, every read of
     the update transient in admin triggers a request to leocoder.com.
-14. **Plugin load order dependency.** Pro works only because its folder name sorts
+13. **Plugin load order dependency.** Pro works only because its folder name sorts
     before Free's. See `codebase-internals.md` section 4.
 
 ## Security and hardening
@@ -62,13 +59,11 @@ Remove an item when it is fixed. Add new items as you find them.
 
 ## Build and housekeeping
 
-1. Free's committed `panel.min.js`, `settings.min.js`, `ajax-add-to-cart.min.js` are
-   development builds (unminified). Rebuild in production mode before release.
-2. `fetch_products` runs the same product query twice (`get_posts` + `WP_Query`).
-3. `uninstall.php` leaves `_lc_lpr_data` product meta and Pro license options.
-4. Pro's activation defaults add a meaningless `reset_colors` key (the reset link field has
+1. `fetch_products` runs the same product query twice (`get_posts` + `WP_Query`).
+2. `uninstall.php` leaves `_lc_lpr_data` product meta and Pro license options.
+3. Pro's activation defaults add a meaningless `reset_colors` key (the reset link field has
    a `default`). Harmless.
-5. Pro `settings_css()` still echoes setting values without escaping. Values are
+4. Pro `settings_css()` still echoes setting values without escaping. Values are
    sanitized on save since 3.3.0, but values stored earlier are printed as they are.
 
 ## Public docs out of date (leocoder.com)
@@ -93,6 +88,16 @@ Shared settings framework (Free 3.3.0 + Pro 3.2.0, see `codebase-internals.md`):
 - Pro settings now saved through Free's sanitizer and rendered with escaping.
 - Saving on the Free-only settings screen no longer erases Pro settings.
 - Settings markup: double `</div>` and unclosed tag `<option>` fixed.
+
+- Grid showed one item fewer per row than set: themes such as Astra add `gap: 20px` to
+  `.woocommerce ul.products`, on top of the plugin's margins. `modal.css` now sets
+  `gap: 0 !important` on the popup list.
+- Free popup lost its cart and check icons (the cart badge then overlapped the Checkout
+  button): the template printed the SVG icons through `wp_kses_post()`, which strips
+  `<svg>`. Now `wp_kses()` with `Product_Recommendations::svg_allowed_html()`.
+
+- Build tools updated to `@wordpress/scripts` 36 (Free 3.3.1 / Pro 3.2.1); Free's
+  committed bundles were development builds, now production.
 
 Earlier:
 
