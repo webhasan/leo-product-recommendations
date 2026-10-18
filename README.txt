@@ -4,7 +4,7 @@ Tags: woocommerce product recommendations, woocommerce related products, woocomm
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 WC requires at least: 7.0
 WC tested up to: 11.1.1
 License: GPL-3.0-or-later
@@ -159,6 +159,12 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 3.3.1 =
+* Fix: Cart and check icons were missing in the popup, so the cart count badge overlapped the Checkout button.
+* Fix: The popup grid showed one product fewer per row than set with themes that add a gap to product lists (for example Astra).
+* Improvement: Modern build tools (@wordpress/scripts 36). Admin scripts are smaller and load with automatic cache busting.
+* Requires WordPress 6.6 or later.
+
 = 3.3.0 =
 * New: One settings framework shared with the Pro version. Settings are kept as they are.
 * New: One-time backup of the plugin settings before the first save with this version.

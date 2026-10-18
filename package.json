@@ -1,6 +1,6 @@
 {
   "name": "leo-product-recommendations",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "private": true,
   "description": "Build tools for Leo Product Recommendations for WooCommerce",
   "license": "GPL-3.0-or-later",
