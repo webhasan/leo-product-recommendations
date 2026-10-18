@@ -36,15 +36,20 @@ Remove an item when it is fixed. Add new items as you find them.
 
 ## Security and hardening
 
-1. Pro REST `lpr/v1/settings` and `lpr/v1/product-recommendations/{id}` are public
-   (`__return_true`). Settings exposure is probably unnecessary.
-2. Panel AJAX actions are also registered `nopriv`. They need a nonce, but should be
-   admin-only (`current_user_can('edit_products')`).
-3. `lpr/v1/product-recommendations/{id}` returns the raw saved meta and product titles
-   for any post ID, including private products.
-4. Deactivation feedback sends site URL, active plugins and server info with
-   `sslverify => false`. Make sure the readme discloses it (WordPress.org guideline 7).
-5. License key is "encrypted" with a key hard-coded in the source (`leo_crypt()`).
+Security review (Oct 2026, Free 3.4.0 / Pro 3.2.2) fixed: public REST routes, `nopriv`
+panel AJAX, popup/REST/tracking data for non-public posts, unescaped Pro CSS and
+templates, `%title%` in the heading, custom CSS output, save handler without capability
+or post type checks, deactivation feedback (`sslverify => false`, no capability check,
+no disclosure), license messages via `.html()`, API key in GET URLs, uncached failed
+update checks. Details in `docs/ai/security.md`.
+
+Still open:
+1. License key is "encrypted" with a key hard-coded in the source (`leo_crypt()`). It is
+   obfuscation only. Changing it needs a migration (decrypt with the old key on read).
+2. The license page prints the full API key into the input's `value` (admins only).
+   Deactivation reads it from there; moving deactivation to the stored key would avoid it.
+3. `lc_ajax_add_to_cart` has no nonce, like WooCommerce's own add to cart (CSRF can only
+   add products to the visitor's own cart).
 
 ## Admin UI and copy
 
