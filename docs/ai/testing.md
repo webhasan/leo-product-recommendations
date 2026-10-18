@@ -72,6 +72,11 @@ Run each with **Pro active** and **Pro inactive**.
 22. Woodmart / Flatsome need a licensed copy to test for real. Without one, simulate
     Woodmart by setting `window.woodmart_settings = {ajax_add_to_cart: '1'}` on a product
     page: the plugin must not call `lc_ajax_add_to_cart`.
+23. dataLayer: with GTM4WP (or any `window.dataLayer`), opening the popup pushes
+    `lpr_popup_view_item_list`, clicking a product link `lpr_popup_select_item`, adding
+    from the popup `lpr_popup_add_to_cart` (after GTM4WP's own `add_to_cart`), each after
+    `{ecommerce: null}`. Variable adds carry the variation ID, variant and price. With
+    `window.dataLayer` undefined nothing is pushed and nothing is created.
 Tip: a temporary helper plugin that maps a product to a custom handler type
 (`woocommerce_add_to_cart_handler` filter) and prints test fields is the quickest way to
 cover 15 to 16. Remove it afterwards.

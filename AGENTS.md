@@ -39,6 +39,7 @@ without leaving the page, then continue shopping or go to checkout.
 | How recommendations are chosen, popup behavior | `docs/ai/plugin-behavior.md` |
 | What is Free vs Pro, how Pro features are locked | `docs/ai/free-vs-pro.md` |
 | Code map, hooks, AJAX actions, data storage, build | `docs/ai/architecture.md` |
+| dataLayer events (GA4) | `docs/ai/datalayer.md` |
 | Local environment and end-to-end testing | `docs/ai/testing.md` |
 | Known bugs, doc mismatches, open questions | `docs/ai/known-issues.md` |
 | How the code works inside (settings framework, React panel, jQuery popup, boot) | `docs/ai/codebase-internals.md` |

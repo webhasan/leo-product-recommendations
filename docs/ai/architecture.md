@@ -47,6 +47,8 @@ Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`)
 - WooCommerce: listens to `added_to_cart`; triggers `adding_to_cart` and `added_to_cart`
   from the single product AJAX submit.
 - Plugin: `before_open_lpr_modal` and `after_close_lpr_modal` on `body`.
+- dataLayer (since 3.4.0, see `docs/ai/datalayer.md`): `lpr_popup_view_item_list`,
+  `lpr_popup_select_item`, `lpr_popup_add_to_cart`. Only when `window.dataLayer` exists.
 - Localized objects: `lc_ajax_modal` (url, nonce, `popup_view_times`, `layout_type`,
   `added_cookie` {name, path, domain}, `popup_on_cart`, `is_cart_page`, `tracking_url`),
   `lc_ajax`, `lc_pr_panel_data`, `lc_slider_setting` (Pro).
