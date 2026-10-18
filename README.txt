@@ -164,7 +164,8 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Fix: Product types with their own add to cart handler (bundles, composites, subscriptions...) showed "Something went wrong" on the product page. They now add to cart the normal WooCommerce way.
 * Fix: Product options sent as checkbox groups or multi-selects kept only the last choice.
 * Fix: "Buy now" buttons in the product form now work instead of opening the popup.
-* Fix: Tracking plugins such as GTM4WP did not record add to cart for products added from the popup. The popup is now loaded through WooCommerce's front-end AJAX endpoint, so their product data is included.
+* Fix: GTM4WP did not record add to cart for products added from the popup. The popup now loads GTM4WP's product data for its products.
+* Developer: Filter `lpr_popup_tracking_data` (on by default when GTM4WP is active).
 * Developer: Filters `lpr_ajax_add_to_cart_supported`, `lpr_popup_after_reload`, `lpr_popup_after_reload_on_cart`, and the `lpr-no-ajax` form class to opt a form out of AJAX add to cart.
 
 = 3.3.1 =

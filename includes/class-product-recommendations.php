@@ -310,10 +310,8 @@ final class Product_Recommendations {
 		// Fetch popup modal data
 		add_action('wp_ajax_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
 		add_action('wp_ajax_nopriv_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
-		// Same handler on WooCommerce's front-end AJAX endpoint (?wc-ajax=). The popup is
-		// rendered as a front-end request there, so plugins that only load on the front end
-		// (GTM4WP, pixel plugins) can add their product data to the popup markup.
-		add_action('wc_ajax_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
+		// Tracking data for the popup products (GTM4WP), built in a front-end request
+		add_action('wc_ajax_lpr_tracking_data', array($this, 'lpr_tracking_data'));
 
 		// Ajax add to cart
 		add_action('wp_ajax_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
@@ -406,8 +404,11 @@ final class Product_Recommendations {
 
 		wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
 			'url' => admin_url('admin-ajax.php'),
-			// Front-end endpoint for the popup HTML (falls back to admin-ajax in modal.js)
-			'popup_url' => class_exists('WC_AJAX') ? \WC_AJAX::get_endpoint('lpr_get_popup_data') : '',
+			/**
+			 * Load tracking data for the popup products from a front-end request.
+			 * On by default when GTM4WP is active.
+			 */
+			'tracking_url' => (class_exists('WC_AJAX') && apply_filters('lpr_popup_tracking_data', defined('GTM4WP_VERSION'))) ? \WC_AJAX::get_endpoint('lpr_tracking_data') : '',
 			'nonce' => wp_create_nonce('lc-ajax-modal'),
 			'popup_view_times' => $this->get_setting('popup_view_times'),
 			'layout_type' => $layout_type,
@@ -749,6 +750,66 @@ final class Product_Recommendations {
 		$template_data = $this->get_template_data($product_id, $recommended_products_id);
 		include $this->get_templates_path('templates/template-modal-content.php');
 		wp_die();
+	}
+
+	/**
+	 * Tracking markup for the popup products, for plugins such as GTM4WP.
+	 *
+	 * The popup HTML comes from admin-ajax, where GTM4WP (and similar plugins) don't load
+	 * their front-end code, so the popup products have no tracking data and adding them
+	 * pushes no add_to_cart. This runs on WooCommerce's front-end endpoint (?wc-ajax=)
+	 * and returns what the standard WooCommerce hooks output for each product. modal.js
+	 * copies only GTM4WP's own elements and data attributes into the popup, so the popup
+	 * layout never changes. The popup itself stays on admin-ajax: themes such as Astra
+	 * rearrange the product loop hooks on front-end requests, which would drop the title
+	 * and price from the popup cards.
+	 *
+	 * @since 3.4.0
+	 * @return void
+	 */
+	public function lpr_tracking_data() {
+		$nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+
+		if (empty($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal')) {
+			wp_send_json_error(array('message' => 'Bad request'), 400);
+		}
+
+		$ids = isset($_POST['product_ids']) ? (array) wp_unslash($_POST['product_ids']) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$ids = array_slice(array_unique(array_filter(array_map('absint', $ids))), 0, 30);
+
+		global $product, $post;
+		$original_product = $product;
+		$original_post = $post;
+		$data = array();
+
+		foreach ($ids as $id) {
+			$item = wc_get_product($id);
+
+			if (!$item || 'publish' !== get_post_status($id)) {
+				continue;
+			}
+
+			$post = get_post($id); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			setup_postdata($post);
+			$product = $item; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+			ob_start();
+			do_action('woocommerce_after_add_to_cart_button');
+			$form = ob_get_clean();
+
+			$link = apply_filters('woocommerce_loop_add_to_cart_link', '<a href="#" class="lpr-tracking-probe"></a>', $item, array());
+
+			$data[$id] = array(
+				'form' => $form,
+				'link' => is_string($link) ? $link : '',
+			);
+		}
+
+		$product = $original_product; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = $original_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		wp_reset_postdata();
+
+		wp_send_json_success($data);
 	}
 
 	/**

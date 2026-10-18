@@ -85,25 +85,68 @@
   }
 
 
-  // Popup HTML comes from WooCommerce's front-end AJAX endpoint (?wc-ajax=), so plugins that
-  // only load on the front end (GTM4WP and similar) add their tracking data to the products.
-  // POST so page caches never store it. Falls back to admin-ajax if that request fails.
   async function getPopupHtml(productId) {
-    const data = {
+    return await $.get(lc_ajax_modal.url, {
       action: "lpr_get_popup_data",
       nonce: lc_ajax_modal.nonce,
       product_id: productId,
-    };
+    });
+  }
 
-    if (lc_ajax_modal.popup_url) {
-      try {
-        return await $.ajax({ type: "POST", url: lc_ajax_modal.popup_url, data: data, dataType: "html" });
-      } catch (e) {
-        // fall through to admin-ajax
-      }
-    }
+  // GTM4WP only adds its product data on front-end requests, and the popup HTML comes from
+  // admin-ajax. Fetch that data from a front-end request and copy only GTM4WP's own
+  // elements/attributes into the popup, so its add_to_cart tracking works there too.
+  function addTrackingData($wrapper) {
+    if (!lc_ajax_modal.tracking_url) return;
 
-    return await $.get(lc_ajax_modal.url, data);
+    const cards = [];
+
+    $wrapper.find(".single-lpr").each(function () {
+      const $card = $(this);
+      const $form = $card.find("form.cart").first();
+      const $button = $card.find(".add_to_cart_button[data-product_id]").first();
+      const id = parseInt(
+        $button.data("product_id") ||
+          $form.find('[name="add-to-cart"]').val() ||
+          $form.data("product_id"),
+        10
+      );
+
+      if (id) cards.push({ id: id, $form: $form, $button: $button });
+    });
+
+    if (!cards.length) return;
+
+    $.post(lc_ajax_modal.tracking_url, {
+      nonce: lc_ajax_modal.nonce,
+      product_ids: cards.map(function (card) { return card.id; }),
+    }).done(function (response) {
+      if (!response || !response.success || !response.data) return;
+
+      cards.forEach(function (card) {
+        const item = response.data[card.id];
+        if (!item) return;
+
+        if (card.$form.length && item.form) {
+          $("<div>").html(item.form).find('[class^="gtm4wp"], [class*=" gtm4wp"]').each(function () {
+            if (!card.$form.find("." + this.classList[0]).length) {
+              card.$form.append(this);
+            }
+          });
+        }
+
+        if (card.$button.length && item.link) {
+          const probe = $("<div>").html(item.link).children().get(0);
+          if (!probe) return;
+
+          Array.prototype.forEach.call(probe.attributes, function (attribute) {
+            if (attribute.name.indexOf("data-gtm4wp") === 0 && !card.$button.attr(attribute.name)) {
+              card.$button.attr(attribute.name, attribute.value);
+            }
+          });
+        }
+      });
+    });
   }
 
   // Load the recommendations for a product and open the popup.
@@ -117,6 +160,7 @@
       if(modal) {
         const $modalWrapper = $('#lpr-modal-content');
         $modalWrapper.html(modal);
+        addTrackingData($modalWrapper);
 
         if (lc_ajax_modal.layout_type === "slider") {
 
