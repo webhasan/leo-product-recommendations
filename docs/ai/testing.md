@@ -63,6 +63,9 @@ Run each with **Pro active** and **Pro inactive**.
     after-reload popup.
 19. With GTM4WP active: adding from the popup pushes `add_to_cart` (simple and
     variable, variable also `view_item` on option choice). Check `dataLayer`.
+20. Any change to how the popup HTML is loaded: compare the popup markup on several
+    themes (Astra, Storefront, Kadence, OceanWP, Blocksy, a block theme). Titles and
+    prices must still show on every card.
 Tip: a temporary helper plugin that maps a product to a custom handler type
 (`woocommerce_add_to_cart_handler` filter) and prints test fields is the quickest way to
 cover 15 to 16. Remove it afterwards.

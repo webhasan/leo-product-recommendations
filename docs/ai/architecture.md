@@ -37,7 +37,8 @@ Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`)
 
 | Action | Who | Purpose |
 |---|---|---|
-| `lpr_get_popup_data` | `?wc-ajax=lpr_get_popup_data` (POST, used by modal.js since 3.4.0) plus admin-ajax priv + nopriv (fallback), nonce `lc-ajax-modal` | Returns popup HTML for `product_id`. Rendered as a front-end request on wc-ajax so front-end-only plugins (GTM4WP, pixel plugins) add their product data |
+| `lpr_get_popup_data` | front end (priv + nopriv), nonce `lc-ajax-modal` | Returns popup HTML for `product_id`. Must stay on admin-ajax (see `codebase-internals.md`, wc-ajax breaks Astra) |
+| `lpr_tracking_data` | `?wc-ajax=lpr_tracking_data` (POST), nonce `lc-ajax-modal`, since 3.4.0 | For `product_ids[]` returns `{id: {form, link}}`: output of `woocommerce_after_add_to_cart_button` and the filtered `woocommerce_loop_add_to_cart_link`, built in a front-end request so GTM4WP adds its data. modal.js copies only GTM4WP elements/attributes into the popup |
 | `lc_ajax_add_to_cart` | front end (priv + nopriv) | Adds simple, variable and grouped products, returns fragments and cart hash. For types with their own `woocommerce_add_to_cart_handler_{type}` it adds nothing and returns `{success:false, data:{fallback:true}}`, and the JS posts the form normally |
 | `lpr_initial_data`, `lpr_fetch_products`, `lpr_fetch_categories`, `wpr_fetch_tags` | product panel, nonce `lc-panel-security` | Panel data |
 
@@ -47,7 +48,7 @@ Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`)
   from the single product AJAX submit.
 - Plugin: `before_open_lpr_modal` and `after_close_lpr_modal` on `body`.
 - Localized objects: `lc_ajax_modal` (url, nonce, `popup_view_times`, `layout_type`,
-  `added_cookie` {name, path, domain}, `popup_on_cart`, `is_cart_page`, `popup_url`),
+  `added_cookie` {name, path, domain}, `popup_on_cart`, `is_cart_page`, `tracking_url`),
   `lc_ajax`, `lc_pr_panel_data`, `lc_slider_setting` (Pro).
 
 ## PHP hooks
@@ -67,7 +68,7 @@ Filters: `lpr_show_buttons`, `lpr_show_continue_shopping`, `lpr_go_checkout`,
 
 Add to cart (3.4.0): `lpr_ajax_add_to_cart_supported` (`$supported, $product, $handler`),
 `lpr_popup_after_reload` (`true, $added_id, $product_id`), `lpr_popup_after_reload_on_cart`
-(`false`). Form class `lpr-no-ajax` opts a `form.cart` out of the AJAX submit.
+(`false`), `lpr_popup_tracking_data` (`defined('GTM4WP_VERSION')`). Form class `lpr-no-ajax` opts a `form.cart` out of the AJAX submit.
 
 ## Template override
 

@@ -183,12 +183,21 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
 
 ### Server side
 
-- Since 3.4.0 `modal.js` (`getPopupHtml()`) POSTs to `?wc-ajax=lpr_get_popup_data` and
-  falls back to admin-ajax GET if that fails. Reason: GTM4WP boots its front-end modules
-  only when `is_admin()` is false, and admin-ajax is `is_admin()`, so popup products had
-  no `.gtm4wp_single_productdata` / `data-gtm4wp_product_data` and GTM4WP pushed no
-  `add_to_cart` for popup adds. On Astra the wc-ajax markup is identical apart from the
-  GTM4WP spans. Watch other themes: their front-end loop hooks now run inside the popup.
+- **The popup HTML must stay on admin-ajax.** The template relies on WooCommerce's
+  default loop hooks, and the theme lists (`lpr_fix_thumb`, `lpr_title_price`,
+  `lpr_fix_price`) were tuned for admin-ajax, where themes don't load their front-end
+  loop changes. Tested Oct 2026: rendering it via `?wc-ajax=` drops the title and price
+  on Astra (Astra moves them off `woocommerce_shop_loop_item_title` /
+  `woocommerce_after_shop_loop_item_title` on front-end requests).
+- GTM4WP boots its front-end modules only when `is_admin()` is false, so admin-ajax popup
+  products have no `.gtm4wp_single_productdata` / `data-gtm4wp_product_data` and GTM4WP
+  pushes no `add_to_cart` for popup adds. Since 3.4.0 `addTrackingData()` in modal.js
+  posts the popup product IDs to `?wc-ajax=lpr_tracking_data` after the popup opens and
+  copies only `gtm4wp*` elements (into `form.cart`) and `data-gtm4wp*` attributes (onto
+  `.add_to_cart_button`). Variable products only need the parent span; GTM4WP reads the
+  variation from WooCommerce's `found_variation` event. Only on when GTM4WP is active
+  (`lpr_popup_tracking_data`). Tested on Astra, Storefront, Kadence, OceanWP, Blocksy,
+  Twenty Twenty-Three/Four/Five, Pro on and off, GTM4WP 2.0.x.
 - `lpr_get_popup_data` builds `$template_data` (`get_template_data()`), runs a
   `WP_Query` with `post__in`, and includes `template-modal-content.php`, which loops
   `template-recommendations-products.php` per product.
