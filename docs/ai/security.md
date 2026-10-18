@@ -16,7 +16,7 @@ Rules every change must keep. Reviewed Oct 2026.
 | Pro `lpr_license` (admin-ajax, POST) | `manage_options` | nonce `license-nonce`, action whitelist, server-side URL/instance |
 | Pro REST `lpr/v1/settings` | `manage_options` | |
 | Pro REST `lpr/v1/product-recommendations/{id}` | public for published products, otherwise `edit_post` | product list filtered the same way |
-| Deactivation feedback (admin-ajax) | `activate_plugins` | nonce `valid-feedback-submit`, TLS verified, disclosed in the form and readme |
+| Deactivation feedback (admin-ajax) | `activate_plugins` | nonce `valid-feedback-submit`, TLS verified. Sends only plugin, version, reason, comment (owner decision Oct 2026: no site URL, theme, plugins or environment) |
 
 ## Output
 
@@ -33,4 +33,4 @@ Rules every change must keep. Reviewed Oct 2026.
 
 - leocoder.com license/update API via `wp_safe_remote_get` (TLS verified). Failed update
   checks are cached 1 hour.
-- Deactivation feedback via `wp_remote_post` (TLS verified), only when the admin submits it.
+- Deactivation feedback via `wp_remote_post` (TLS verified), only when the admin submits it: plugin name, version, reason key, comment. Nothing else.

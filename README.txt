@@ -88,7 +88,7 @@ Explore product recommendation popup examples for different types of WooCommerce
 
 == Privacy ==
 
-The plugin does not collect any data by itself. If you choose to send feedback when you deactivate it, your feedback is sent to LeoCoder together with your site URL, your WordPress, WooCommerce, PHP and MySQL versions, your theme and your list of active plugins. You can skip the feedback form.
+The plugin does not collect any data by itself. If you choose to send feedback when you deactivate it, only the reason you pick, any comment you write and the plugin version are sent to LeoCoder. No site URL or other site details are sent. You can skip the feedback form.
 
 == Installation ==
 
@@ -169,7 +169,8 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Security: Recommendations are saved only for products, only by users who can edit them, and not on autosaves or revisions.
 * Security: The product title in the popup heading is escaped. Custom CSS is printed without tags (so it can't leave the style element) and selectors like `a > b` now work.
 * Fix: The deactivation feedback form showed no radio buttons or text fields since 3.1.0, so feedback could not be sent.
-* Security: Deactivation feedback is sent with TLS certificate checks on, only by users who can manage plugins, and the form now says which technical data is shared.
+* Privacy: Deactivation feedback now sends only the reason, your comment and the plugin version. The site URL, theme, plugin list and server details are no longer sent.
+* Security: Deactivation feedback is sent with TLS certificate checks on and only by users who can manage plugins.
 * New: GA4-ready dataLayer events for the popup: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`, with product data, so you can measure the revenue the popup brings in. Pushed only when the site already has a dataLayer (for example Google Tag Manager). Your existing add_to_cart tracking is not changed.
 * New: The popup also opens after a normal (page reload) add to cart, for example for product bundles, subscriptions, bookings, products with file uploads and add to cart links.
 * Fix: Product types with their own add to cart handler (bundles, composites, subscriptions...) showed "Something went wrong" on the product page. They now add to cart the normal WooCommerce way.

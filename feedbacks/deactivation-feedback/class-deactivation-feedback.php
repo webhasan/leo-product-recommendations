@@ -178,7 +178,6 @@ class Deactivation_Feedback {
         endforeach;
 
         $modal_html .= '</form>';
-        $modal_html .= '<p class="lprw-feedback-privacy">' . esc_html__('We also send your site URL, versions, theme and active plugins to help us find and fix the problem.','leo-product-recommendations') . '</p>';
         $modal_html .= '</div>';
         $modal_html .= '</section>';
 
@@ -228,46 +227,17 @@ class Deactivation_Feedback {
         $plugin         = $settings['plugin_name'];
         $plugin_version = isset($settings['plugin_version']) ? $settings['plugin_version'] : '1.0.0';
 
-        $theme = [
-            'is_child_theme'   => is_child_theme(),
-            'parent_theme'     => wp_get_theme(get_template())->get('Name'),
-            'theme_name'       => wp_get_theme()->get('Name'),
-            'theme_version'    => wp_get_theme()->get('Version'),
-            'theme_uri'        => wp_get_theme(get_template())->get('ThemeURI'),
-            'theme_author'     => wp_get_theme(get_template())->get('Author'),
-            'theme_author_uri' => wp_get_theme(get_template())->get('AuthorURI'),
-        ];
-
-        $database_version = wc_get_server_database_version();
-        $active_plugins   = (array) get_option('active_plugins', []);
-
-        if (is_multisite()) {
-            $network_activated_plugins = array_keys(get_site_option('active_sitewide_plugins', []));
-            $active_plugins            = array_merge($active_plugins, $network_activated_plugins);
-        }
-
-        $environment = [
-            'is_multisite'         => is_multisite(),
-            'site_url'             => get_option('siteurl'),
-            'home_url'             => get_option('home'),
-            'php_version'          => phpversion(),
-            'mysql_version'        => $database_version['number'],
-            'mysql_version_string' => $database_version['string'],
-            'wc_version'           => WC()->version,
-            'wp_version'           => get_bloginfo('version'),
-            'server_info'          => isset($_SERVER['SERVER_SOFTWARE']) ? wc_clean(wp_unslash($_SERVER['SERVER_SOFTWARE'])) : '',
-        ];
-
         $response = wp_remote_post($settings['api_url'], [
-            'timeout'   => 30,
+            'timeout'    => 30,
+            // WordPress puts the site URL in its default user agent; send a neutral one.
+            'user-agent' => 'LeoCoder-Feedback/' . $plugin_version,
+            // Only the plugin, its version and the reason. No site URL, theme,
+            // plugin list or server details.
             'body'      => [
                 'plugin'          => $plugin,
                 'version'         => $plugin_version,
                 'reason_category' => $reason_category,
                 'reason_text'     => $reason_text,
-                'theme'           => $theme,
-                'plugins'         => $active_plugins,
-                'environment'     => $environment,
             ],
         ]);
 
