@@ -156,7 +156,7 @@ class Deactivation_Feedback {
         endforeach;
 
         $modal_html .= '</form>';
-        $modal_html .= '<p class="lprw-feedback-privacy">' . esc_html__('We also send your site URL, versions, theme and active plugins.','leo-product-recommendations') . '</p>';
+        $modal_html .= '<p class="lprw-feedback-privacy">' . esc_html__('We also send your site URL, versions, theme and active plugins to help us find and fix the problem.','leo-product-recommendations') . '</p>';
         $modal_html .= '</div>';
         $modal_html .= '</section>';
 
