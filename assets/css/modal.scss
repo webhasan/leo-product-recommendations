@@ -814,3 +814,10 @@ body.oceanwp-theme #lpr-modal ul.woo-entry-inner .btn-wrap {
 .single-lpr .rey-lineLoader {
   display: none;
 }
+
+// Blocksy prints its own archive button (.ct-woo-card-actions) on every card. When the
+// popup shows the real product form ("Variable / Group Products Add To Cart"), hide it
+// so there is one add to cart button.
+.single-lpr:has(form.cart) .ct-woo-card-actions {
+  display: none !important;
+}

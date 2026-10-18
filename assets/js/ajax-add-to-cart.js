@@ -44,6 +44,13 @@
                 return;
             }
 
+            // The theme adds this form to the cart with its own AJAX call and fires
+            // added_to_cart itself (Blocksy: data-add-to-cart="ajax"), so the popup opens
+            // anyway. Handling it here too would send two add to cart requests.
+            if (lc_ajax.theme_ajax_selector && $form.find(lc_ajax.theme_ajax_selector).length) {
+                return;
+            }
+
             const popupCount = getPopupCount();
             // fallback for older version of pro version 
             if(!lc_ajax.popup_view_times) lc_ajax.popup_view_times = 'always';

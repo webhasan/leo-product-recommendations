@@ -431,7 +431,14 @@ final class Product_Recommendations {
 		wp_set_script_translations( 'lpr-ajax-add-to-cart', 'leo-product-recommendations' );
 		wp_localize_script('lpr-ajax-add-to-cart', 'lc_ajax', array(
 			'url' => admin_url('admin-ajax.php'),
-			'popup_view_times' => $this->get_setting('popup_view_times')
+			'popup_view_times' => $this->get_setting('popup_view_times'),
+			/**
+			 * Marker of themes that add the single product form to the cart with their own
+			 * AJAX call. Forms containing it are left to the theme.
+			 *
+			 * @since 3.4.0
+			 */
+			'theme_ajax_selector' => (string) apply_filters('lpr_theme_ajax_add_to_cart_selector', '[data-add-to-cart="ajax"]'),
 		));
 
 		wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
@@ -829,6 +836,12 @@ final class Product_Recommendations {
 			return;
 		}
 
+		// A form posted in the background by a theme script (Blocksy's AJAX add to cart,
+		// fetch() or XHR) is not a page load; that script fires added_to_cart itself.
+		if ($this->is_background_request()) {
+			return;
+		}
+
 		// Only for adds the visitor asked for, not products other code adds on page load.
 		if (!isset($_REQUEST['add-to-cart']) || !is_numeric(wp_unslash($_REQUEST['add-to-cart']))) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
@@ -841,6 +854,32 @@ final class Product_Recommendations {
 		}
 
 		setcookie(self::ADDED_PRODUCT_COOKIE, (string) $added_id, time() + 5 * MINUTE_IN_SECONDS, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, is_ssl(), false);
+	}
+
+	/**
+	 * Request sent by a script (fetch/XHR) rather than a page load in the browser.
+	 *
+	 * @since 3.4.0
+	 * @return bool
+	 */
+	private function is_background_request() {
+		if (isset($_REQUEST['blocksy_add_to_cart'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return true;
+		}
+
+		$requested_with = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? strtolower(sanitize_text_field(wp_unslash($_SERVER['HTTP_X_REQUESTED_WITH']))) : '';
+		if ('xmlhttprequest' === $requested_with) {
+			return true;
+		}
+
+		// Browsers send Sec-Fetch-Mode "navigate" for page loads and form posts,
+		// "cors"/"same-origin"/"no-cors" for fetch() and XHR.
+		$fetch_mode = isset($_SERVER['HTTP_SEC_FETCH_MODE']) ? strtolower(sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_FETCH_MODE']))) : '';
+		if ('' !== $fetch_mode && 'navigate' !== $fetch_mode) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

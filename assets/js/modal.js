@@ -284,6 +284,10 @@
   $(function () {
     // call modal
     $(document.body).on("added_to_cart", async function (e, ...data) {
+      // This add opens the popup now; drop any after-reload cookie a background form
+      // post (theme AJAX add to cart) may have set, so it doesn't open again later.
+      readAddedProductCookie();
+
       const popupCount = getPopupCount();
 
       // fallback for older version of pro plugin
