@@ -96,6 +96,19 @@
   // GTM4WP only adds its product data on front-end requests, and the popup HTML comes from
   // admin-ajax. Fetch that data from a front-end request and copy only GTM4WP's own
   // elements/attributes into the popup, so its add_to_cart tracking works there too.
+  // Product ID of a popup card (from its add to cart button or form).
+  function getCardProductId($card) {
+    const $form = $card.find("form.cart").first();
+    const $button = $card.find(".add_to_cart_button[data-product_id]").first();
+
+    return parseInt(
+      $button.data("product_id") ||
+        $form.find('[name="add-to-cart"]').val() ||
+        $form.data("product_id"),
+      10
+    ) || 0;
+  }
+
   function addTrackingData($wrapper) {
     if (!lc_ajax_modal.tracking_url) return;
 
@@ -105,12 +118,7 @@
       const $card = $(this);
       const $form = $card.find("form.cart").first();
       const $button = $card.find(".add_to_cart_button[data-product_id]").first();
-      const id = parseInt(
-        $button.data("product_id") ||
-          $form.find('[name="add-to-cart"]').val() ||
-          $form.data("product_id"),
-        10
-      );
+      const id = getCardProductId($card);
 
       if (id) cards.push({ id: id, $form: $form, $button: $button });
     });
@@ -149,6 +157,180 @@
     });
   }
 
+  /*
+   * dataLayer events for the popup, in GA4 ecommerce format:
+   * lpr_popup_view_item_list (popup opens), lpr_popup_select_item (product link clicked),
+   * lpr_popup_add_to_cart (product added from the popup). Only pushed when the site
+   * already has window.dataLayer (GTM); the plugin never creates it. The standard
+   * add_to_cart of other tracking plugins is left as it is.
+   */
+  let datalayerData = null;
+
+  function datalayerReady() {
+    return !!lc_ajax_modal.datalayer && Array.isArray(window.dataLayer) && !!datalayerData;
+  }
+
+  function datalayerPush(event, ecommerce) {
+    if (!datalayerReady()) return;
+
+    window.dataLayer.push({ ecommerce: null });
+    window.dataLayer.push({
+      event: event,
+      ecommerce: ecommerce,
+      lpr: $.extend({}, datalayerData.source),
+    });
+  }
+
+  // Popup cards in display order, without the slider's cloned copies.
+  function popupCards() {
+    const seen = {};
+
+    return $("#lpr-modal .single-lpr")
+      .filter(function () {
+        if ($(this).closest(".owl-item.cloned").length) return false;
+        const id = getCardProductId($(this));
+        if (!id || seen[id]) return false;
+        seen[id] = true;
+        return true;
+      })
+      .get();
+  }
+
+  function cardItem(card, extra) {
+    const id = getCardProductId($(card));
+    const base = datalayerData && datalayerData.items && datalayerData.items[id];
+    if (!base) return null;
+
+    const item = $.extend({}, base, {
+      index: popupCards().indexOf($(card).closest(".single-lpr").get(0)),
+      item_list_id: datalayerData.item_list_id,
+      item_list_name: datalayerData.item_list_name,
+    }, extra || {});
+
+    delete item.children;
+    if (item.index < 0) delete item.index;
+
+    return item;
+  }
+
+  function ecommerceFor(items) {
+    const value = items.reduce(function (sum, item) {
+      return sum + (parseFloat(item.price) || 0) * (parseFloat(item.quantity) || 1);
+    }, 0);
+
+    return {
+      currency: datalayerData.currency,
+      value: Math.round(value * 100) / 100,
+      item_list_id: datalayerData.item_list_id,
+      item_list_name: datalayerData.item_list_name,
+      items: items,
+    };
+  }
+
+  function readDatalayerData($wrapper) {
+    datalayerData = null;
+    const $json = $wrapper.find("script.lpr-datalayer-data").first();
+    if (!$json.length) return;
+
+    try {
+      datalayerData = JSON.parse($json.text());
+    } catch (e) {
+      datalayerData = null;
+    }
+  }
+
+  function pushViewItemList() {
+    if (!datalayerReady()) return;
+
+    const items = popupCards().map(function (card) { return cardItem(card); }).filter(Boolean);
+    if (!items.length) return;
+
+    const ecommerce = ecommerceFor(items);
+    delete ecommerce.value;
+    delete ecommerce.currency;
+    datalayerPush("lpr_popup_view_item_list", ecommerce);
+  }
+
+  // Items added from a popup card (quantity, chosen variation, grouped children).
+  function addedItems($card, $button) {
+    const $form = $button.closest("form.cart").length ? $button.closest("form.cart") : $card.find("form.cart").first();
+    const id = getCardProductId($card);
+    const base = datalayerData && datalayerData.items && datalayerData.items[id];
+    if (!base) return [];
+
+    // grouped product: one item per child with a quantity
+    if ($form.length && base.children) {
+      const items = [];
+      $form.find('input[name^="quantity["]').each(function () {
+        const childId = (this.name.match(/quantity\[(\d+)\]/) || [])[1];
+        const qty = parseFloat(this.value) || 0;
+        const child = childId && base.children[childId];
+        if (child && qty > 0) {
+          items.push($.extend({}, child, {
+            quantity: qty,
+            item_list_id: datalayerData.item_list_id,
+            item_list_name: datalayerData.item_list_name,
+          }));
+        }
+      });
+      return items;
+    }
+
+    let quantity = parseFloat($form.find('[name="quantity"]').val()) || parseFloat($button.data("quantity")) || 1;
+    const extra = { quantity: quantity };
+
+    // variable product: the chosen variation
+    const variationId = parseInt($form.find('[name="variation_id"]').val(), 10);
+    if (variationId) {
+      const variations = $form.data("product_variations") || [];
+      const variation = Array.isArray(variations)
+        ? variations.find(function (v) { return parseInt(v.variation_id, 10) === variationId; })
+        : null;
+
+      extra.item_id = datalayerData.id_type === "sku" && variation && variation.sku ? String(variation.sku) : String(variationId);
+
+      if (variation) {
+        if (variation.display_price !== undefined) extra.price = parseFloat(variation.display_price);
+        const values = Object.keys(variation.attributes || {}).map(function (key) {
+          return variation.attributes[key] || $form.find('[name="' + key + '"]').val();
+        }).filter(Boolean);
+        if (values.length) extra.item_variant = values.join(", ");
+      }
+    }
+
+    const item = cardItem($card.get(0), extra);
+    return item ? [item] : [];
+  }
+
+  $(document).on("click", "#lpr-modal .single-lpr a[href]", function () {
+    if (!datalayerReady()) return;
+
+    const $link = $(this);
+    const href = $link.attr("href") || "";
+    if ($link.is(".button, .add_to_cart_button, .added_to_cart") || href.charAt(0) === "#") return;
+
+    const item = cardItem($link.closest(".single-lpr").get(0));
+    if (!item) return;
+
+    const ecommerce = ecommerceFor([item]);
+    delete ecommerce.value;
+    delete ecommerce.currency;
+    datalayerPush("lpr_popup_select_item", ecommerce);
+  });
+
+  $(document.body).on("added_to_cart", function (e, fragments, cartHash, buttonInfo) {
+    if (!datalayerReady() || !buttonInfo) return;
+
+    const button = buttonInfo.jquery ? buttonInfo[0] : buttonInfo.nodeType ? buttonInfo : buttonInfo[0];
+    if (!button || !$(button).closest("#lpr-modal").length) return;
+
+    const $card = $(button).closest(".single-lpr");
+    if (!$card.length) return;
+
+    const items = addedItems($card, $(button));
+    if (items.length) datalayerPush("lpr_popup_add_to_cart", ecommerceFor(items));
+  });
+
   // Load the recommendations for a product and open the popup.
   async function openRecommendationPopup(addedProductId) {
     //hide existing popup, quick view etc
@@ -161,6 +343,7 @@
         const $modalWrapper = $('#lpr-modal-content');
         $modalWrapper.html(modal);
         addTrackingData($modalWrapper);
+        readDatalayerData($modalWrapper);
 
         if (lc_ajax_modal.layout_type === "slider") {
 
@@ -224,6 +407,7 @@
             onInitialize: () => {
               $('#lpr-modal').lprModal();
               setPopupCount();
+              setTimeout(pushViewItemList, 0);
             }
           });
           
@@ -231,6 +415,7 @@
         }else {
           $('#lpr-modal').lprModal();
           setPopupCount();
+          pushViewItemList();
         }
 
         setTimeout(() =>{

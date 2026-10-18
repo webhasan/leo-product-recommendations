@@ -160,6 +160,7 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 
 == Changelog ==
 = 3.4.0 =
+* New: GA4-ready dataLayer events for the popup: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`, with product data, so you can measure the revenue the popup brings in. Pushed only when the site already has a dataLayer (for example Google Tag Manager). Your existing add_to_cart tracking is not changed.
 * New: The popup also opens after a normal (page reload) add to cart, for example for product bundles, subscriptions, bookings, products with file uploads and add to cart links.
 * Fix: Product types with their own add to cart handler (bundles, composites, subscriptions...) showed "Something went wrong" on the product page. They now add to cart the normal WooCommerce way.
 * Fix: Product options sent as checkbox groups or multi-selects kept only the last choice.
@@ -169,6 +170,7 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Fix (Blocksy): two add to cart requests on the product page when Blocksy's AJAX add to cart is on, the popup opening again on the next page, and two add to cart buttons on each popup product.
 * Fix (Woodmart): with Woodmart's AJAX add to cart on, the product page sent two add to cart requests. The plugin now leaves those forms to Woodmart.
 * Fix: No JavaScript error when a theme fires added_to_cart without a button (Flatsome mini cart).
+* Developer: Filters `lpr_popup_datalayer`, `lpr_datalayer_item`, `lpr_datalayer_item_id_type` (`id` or `sku`) and `lpr_datalayer_item_list_name`.
 * Developer: Filter `lpr_theme_ajax_add_to_cart_selector` for themes that add the product form to the cart with their own AJAX call.
 * Developer: Filters `lpr_ajax_add_to_cart_supported`, `lpr_popup_after_reload`, `lpr_popup_after_reload_on_cart`, and the `lpr-no-ajax` form class to opt a form out of AJAX add to cart.
 

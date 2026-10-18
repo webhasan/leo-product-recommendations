@@ -408,6 +408,7 @@ final class Product_Recommendations {
 			 * Load tracking data for the popup products from a front-end request.
 			 * On by default when GTM4WP is active.
 			 */
+			'datalayer' => $this->datalayer_enabled(),
 			'tracking_url' => (class_exists('WC_AJAX') && apply_filters('lpr_popup_tracking_data', defined('GTM4WP_VERSION'))) ? \WC_AJAX::get_endpoint('lpr_tracking_data') : '',
 			'nonce' => wp_create_nonce('lc-ajax-modal'),
 			'popup_view_times' => $this->get_setting('popup_view_times'),
@@ -756,7 +757,144 @@ final class Product_Recommendations {
 
 		$template_data = $this->get_template_data($product_id, $recommended_products_id);
 		include $this->get_templates_path('templates/template-modal-content.php');
+
+		if ($this->datalayer_enabled()) {
+			$this->print_datalayer_data($product_id, $recommended_products_id);
+		}
+
 		wp_die();
+	}
+
+	/**
+	 * Push the lpr_popup_* dataLayer events (only when window.dataLayer exists).
+	 *
+	 * @since 3.4.0
+	 * @return bool
+	 */
+	public function datalayer_enabled() {
+		return (bool) apply_filters('lpr_popup_datalayer', true);
+	}
+
+	/**
+	 * Which rule picked the recommendations for a product.
+	 *
+	 * @since 3.4.0
+	 * @param int $product_id
+	 * @return string global, manual, dynamic or empty
+	 */
+	public function get_recommendation_type($product_id) {
+		if ($this->is_active_global($product_id)) {
+			return 'global';
+		}
+		if ($this->is_manually_selection($product_id)) {
+			return 'manual';
+		}
+		if ($this->is_dynamic_selection($product_id)) {
+			return 'dynamic';
+		}
+		return '';
+	}
+
+	/**
+	 * GA4 item for a product, used by the lpr_popup_* dataLayer events.
+	 *
+	 * @since 3.4.0
+	 * @param \WC_Product $product
+	 * @return array
+	 */
+	public function get_datalayer_item($product) {
+		$id_type = $this->get_datalayer_id_type();
+		$item_id = ('sku' === $id_type && $product->get_sku()) ? $product->get_sku() : (string) $product->get_id();
+		$parent_id = $product->get_parent_id() ? $product->get_parent_id() : $product->get_id();
+
+		$item = array(
+			'item_id' => $item_id,
+			'item_name' => html_entity_decode(wp_strip_all_tags($product->get_name()), ENT_QUOTES, get_bloginfo('charset')),
+			'price' => (float) wc_format_decimal(wc_get_price_to_display($product), wc_get_price_decimals()),
+			'quantity' => 1,
+		);
+
+		$categories = wc_get_product_terms($parent_id, 'product_cat', array('fields' => 'names'));
+		foreach (array_slice((array) $categories, 0, 5) as $i => $name) {
+			$item[0 === $i ? 'item_category' : 'item_category' . ($i + 1)] = html_entity_decode($name, ENT_QUOTES, get_bloginfo('charset'));
+		}
+
+		if (taxonomy_exists('product_brand')) {
+			$brands = wc_get_product_terms($parent_id, 'product_brand', array('fields' => 'names'));
+			if (!empty($brands)) {
+				$item['item_brand'] = html_entity_decode($brands[0], ENT_QUOTES, get_bloginfo('charset'));
+			}
+		}
+
+		/**
+		 * Filters a GA4 item in the lpr_popup_* dataLayer events.
+		 *
+		 * @since 3.4.0
+		 * @param array       $item
+		 * @param \WC_Product $product
+		 */
+		return apply_filters('lpr_datalayer_item', $item, $product);
+	}
+
+	/**
+	 * Product ID or SKU as item_id in the dataLayer events.
+	 *
+	 * @since 3.4.0
+	 * @return string id or sku
+	 */
+	public function get_datalayer_id_type() {
+		return 'sku' === apply_filters('lpr_datalayer_item_id_type', 'id') ? 'sku' : 'id';
+	}
+
+	/**
+	 * Data for the lpr_popup_* dataLayer events, printed with the popup HTML as JSON.
+	 * modal.js builds the events from it and from the popup cards.
+	 *
+	 * @since 3.4.0
+	 * @param int   $product_id              Product added to the cart (popup source).
+	 * @param array $recommended_products_id
+	 * @return void
+	 */
+	public function print_datalayer_data($product_id, $recommended_products_id) {
+		$items = array();
+
+		foreach ($recommended_products_id as $id) {
+			$product = wc_get_product($id);
+			if (!$product) {
+				continue;
+			}
+
+			$item = $this->get_datalayer_item($product);
+
+			if ($product->is_type('grouped')) {
+				$item['children'] = array();
+				foreach ($product->get_children() as $child_id) {
+					$child = wc_get_product($child_id);
+					if ($child) {
+						$item['children'][$child_id] = $this->get_datalayer_item($child);
+					}
+				}
+			}
+
+			$items[$id] = $item;
+		}
+
+		$source = wc_get_product($product_id);
+
+		$data = array(
+			'currency' => get_woocommerce_currency(),
+			'item_list_id' => 'lpr_popup',
+			'item_list_name' => (string) apply_filters('lpr_datalayer_item_list_name', 'Product Recommendations Popup'),
+			'id_type' => $this->get_datalayer_id_type(),
+			'source' => array(
+				'source_product_id' => (string) $product_id,
+				'source_product_name' => $source ? html_entity_decode(wp_strip_all_tags($source->get_name()), ENT_QUOTES, get_bloginfo('charset')) : '',
+				'recommendation_type' => $this->get_recommendation_type($product_id),
+			),
+			'items' => (object) $items,
+		);
+
+		echo '<script type="application/json" class="lpr-datalayer-data">' . wp_json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . '</script>';
 	}
 
 	/**
