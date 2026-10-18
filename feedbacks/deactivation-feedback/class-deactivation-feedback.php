@@ -87,7 +87,29 @@ class Deactivation_Feedback {
      * Deactivation popup modal view.
      */
     public function add_modal() {
-        echo wp_kses_post($this->modal());
+        // Each part of the form is escaped where it's built. wp_kses_post() alone would
+        // strip the form controls (radio buttons, text fields), so allow those too.
+        echo wp_kses($this->modal(), $this->allowed_modal_html());
+    }
+
+    /**
+     * Allowed HTML for the feedback form: post HTML plus its form controls.
+     *
+     * @since 3.4.0
+     * @return array
+     */
+    private function allowed_modal_html() {
+        $allowed = wp_kses_allowed_html('post');
+
+        $allowed['form'] = array('class' => true, 'id' => true, 'action' => true, 'method' => true);
+        $allowed['input'] = array('type' => true, 'class' => true, 'id' => true, 'name' => true, 'value' => true, 'placeholder' => true, 'checked' => true, 'required' => true);
+        $allowed['textarea'] = array('class' => true, 'id' => true, 'name' => true, 'value' => true, 'placeholder' => true, 'rows' => true, 'cols' => true, 'required' => true);
+        $allowed['button'] = array('type' => true, 'class' => true, 'id' => true, 'aria-label' => true, 'disabled' => true);
+        $allowed['fieldset'] = array('class' => true, 'id' => true, 'data-reason' => true);
+        $allowed['label'] = array('class' => true, 'for' => true);
+        $allowed['span'] = array('class' => true, 'id' => true, 'style' => true);
+
+        return $allowed;
     }
 
     /**
@@ -123,7 +145,7 @@ class Deactivation_Feedback {
         endif;
 
         $modal_html .= '<div class="lprw-feedback-modal-body">';
-        $modal_html .= '<form class="' . $form_id . '">';
+        $modal_html .= '<form class="' . esc_attr($form_id) . '">';
 
         foreach ($settings['fields'] as $field):
             $reason        = isset($field['reason']) ? $field['reason'] : '';

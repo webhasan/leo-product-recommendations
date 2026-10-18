@@ -168,6 +168,7 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Security: The popup only loads for published, visible products, so it can no longer show the title or image of a draft, private or non-product post.
 * Security: Recommendations are saved only for products, only by users who can edit them, and not on autosaves or revisions.
 * Security: The product title in the popup heading is escaped. Custom CSS is printed without tags (so it can't leave the style element) and selectors like `a > b` now work.
+* Fix: The deactivation feedback form showed no radio buttons or text fields (removed by the output filter since 3.2.0), so feedback could not be sent.
 * Security: Deactivation feedback is sent with TLS certificate checks on, only by users who can manage plugins, and the form now says which technical data is shared.
 * New: GA4-ready dataLayer events for the popup: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`, with product data, so you can measure the revenue the popup brings in. Pushed only when the site already has a dataLayer (for example Google Tag Manager). Your existing add_to_cart tracking is not changed.
 * New: The popup also opens after a normal (page reload) add to cart, for example for product bundles, subscriptions, bookings, products with file uploads and add to cart links.
