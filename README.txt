@@ -4,7 +4,7 @@ Tags: woocommerce product recommendations, woocommerce related products, woocomm
 Requires at least: 5.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.2.0
+Stable tag: 3.3.0
 WC requires at least: 7.0
 WC tested up to: 11.1.1
 License: GPL-3.0-or-later
@@ -159,6 +159,15 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 6. Popup Layouts
 
 == Changelog ==
+= 3.3.0 =
+* New: One settings framework shared with the Pro version. Settings are kept as they are.
+* New: One-time backup of the plugin settings before the first save with this version.
+* Fix: Saving settings without Pro active no longer removes Pro settings.
+* Fix: Hidden and out-of-stock products are always excluded from dynamic recommendations.
+* Fix: An empty or zero "items per row" value no longer causes a PHP error.
+* Security: "Reset colors" now requires a valid nonce and only resets the color settings.
+* Improvement: Settings are loaded once per request (faster pages).
+
 = 3.2.0 =
 * Updated compatibility metadata for WordPress 7.1 and WooCommerce 11.1.1.
 
