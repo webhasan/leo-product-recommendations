@@ -66,6 +66,9 @@ Run each with **Pro active** and **Pro inactive**.
 20. Any change to how the popup HTML is loaded: compare the popup markup on several
     themes (Astra, Storefront, Kadence, OceanWP, Blocksy, a block theme). Titles and
     prices must still show on every card.
+21. Blocksy with its AJAX add to cart on (default): product page add sends no
+    `lc_ajax_add_to_cart`, adds one item, opens the popup once, and the next page shows
+    no popup. One add to cart button per popup card.
 Tip: a temporary helper plugin that maps a product to a custom handler type
 (`woocommerce_add_to_cart_handler` filter) and prints test fields is the quickest way to
 cover 15 to 16. Remove it afterwards.

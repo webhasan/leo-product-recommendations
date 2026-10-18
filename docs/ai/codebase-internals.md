@@ -167,9 +167,17 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
    `add-to-cart` is left out on purpose: WooCommerce's form handler runs on `wp_loaded`
    for any request with that field and would add the product a second time. The PHP
    puts it back into `$_REQUEST`/`$_POST` for validation code.
+   Themes with their own single product AJAX add to cart are left alone: forms that
+   contain `lc_ajax.theme_ajax_selector` (filter `lpr_theme_ajax_add_to_cart_selector`,
+   default `[data-add-to-cart="ajax"]`, Blocksy's marker) are skipped. Blocksy POSTs the
+   form to `product-url?blocksy_add_to_cart=yes` with fetch() and fires `added_to_cart`
+   itself; before 3.4.0 both ran, two requests per click (the cart session race usually
+   hid the double add).
 2b. Normal (page reload) adds: `remember_added_product()` on `woocommerce_add_to_cart`
-   sets cookie `lpr_added_product` (skipped for AJAX, REST, admin and when there is no
-   `add-to-cart` in the request). On the next page load `modal.js` reads it, deletes it,
+   sets cookie `lpr_added_product` (skipped for AJAX, REST, admin, background requests
+   (`is_background_request()`: `blocksy_add_to_cart`, X-Requested-With, Sec-Fetch-Mode
+   other than navigate) and when there is no `add-to-cart` in the request). Every
+   `added_to_cart` event also clears the cookie in `modal.js`. On the next page load `modal.js` reads it, deletes it,
    and calls `openRecommendationPopup()` unless the limit is reached or it's a cart or
    checkout page (`is_cart_or_checkout_page()`, which also detects Cart/Checkout blocks).
    A cookie, not page HTML, so page caching can't show it to other visitors.

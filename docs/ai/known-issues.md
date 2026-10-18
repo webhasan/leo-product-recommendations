@@ -31,9 +31,8 @@ Remove an item when it is fixed. Add new items as you find them.
     the update transient in admin triggers a request to leocoder.com.
 12. **Plugin load order dependency.** Pro works only because its folder name sorts
     before Free's. See `codebase-internals.md` section 4.
-13. **Blocksy: two "Add to cart" buttons per popup card** when "Variable / Group Products
-    Add To Cart" is on. The admin-ajax popup HTML has both Blocksy's loop button and the
-    product form (seen Oct 2026, Blocksy 2.1.60). Not caused by 3.4.0.
+13. ~~Blocksy: two "Add to cart" buttons per popup card~~ Fixed in 3.4.0 with CSS
+    (`.single-lpr:has(form.cart) .ct-woo-card-actions { display: none }`).
 
 ## Security and hardening
 
