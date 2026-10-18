@@ -297,7 +297,11 @@
 
       if(popupShowTimes > popupCount){
         const [, , buttonInfo] = data;
-        const button = buttonInfo[0];
+        const button = buttonInfo && (buttonInfo.jquery ? buttonInfo[0] : (buttonInfo.nodeType ? buttonInfo : buttonInfo[0]));
+
+        // Some themes fire added_to_cart without a button (Flatsome's mini cart
+        // quantity change); there is no product to show recommendations for.
+        if (!button) return;
 
         let addedProductId = $(button).data("product_id");
         //if don't find product id from button data

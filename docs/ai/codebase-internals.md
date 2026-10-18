@@ -172,7 +172,15 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
    default `[data-add-to-cart="ajax"]`, Blocksy's marker) are skipped. Blocksy POSTs the
    form to `product-url?blocksy_add_to_cart=yes` with fetch() and fires `added_to_cart`
    itself; before 3.4.0 both ran, two requests per click (the cart session race usually
-   hid the double add).
+   hid the double add). Woodmart has no marker: when `woodmart_settings.ajax_add_to_cart`
+   is on (`"1"`), its `body` submit handler for every `form.cart` posts
+   `woodmart_ajax_add_to_cart` to admin-ajax and fires `added_to_cart`, so the plugin
+   skips all forms (Woodmart itself leaves Buy now, external, gift card and Zakeke
+   products to a normal post). Flatsome (checked on its demo, Oct 2026) has no single
+   product AJAX add to cart, so the plugin handles it; Flatsome fires `added_to_cart`
+   without a button on mini cart quantity changes, which `modal.js` ignores.
+   Woodmart and Flatsome were checked on their public demos only (paid themes, not
+   installed locally).
 2b. Normal (page reload) adds: `remember_added_product()` on `woocommerce_add_to_cart`
    sets cookie `lpr_added_product` (skipped for AJAX, REST, admin, background requests
    (`is_background_request()`: `blocksy_add_to_cart`, X-Requested-With, Sec-Fetch-Mode

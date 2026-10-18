@@ -51,6 +51,14 @@
                 return;
             }
 
+            // Woodmart's "AJAX add to cart" option handles every form.cart submit itself
+            // (admin-ajax woodmart_ajax_add_to_cart) and fires added_to_cart. The forms it
+            // skips (Buy now, external and gift card products) post normally and get the
+            // popup after the reload.
+            if (window.woodmart_settings && woodmart_settings.ajax_add_to_cart && String(woodmart_settings.ajax_add_to_cart) !== '0') {
+                return;
+            }
+
             const popupCount = getPopupCount();
             // fallback for older version of pro version 
             if(!lc_ajax.popup_view_times) lc_ajax.popup_view_times = 'always';

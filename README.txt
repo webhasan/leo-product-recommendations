@@ -167,6 +167,8 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Fix: GTM4WP did not record add to cart for products added from the popup. The popup now loads GTM4WP's product data for its products.
 * Developer: Filter `lpr_popup_tracking_data` (on by default when GTM4WP is active).
 * Fix (Blocksy): two add to cart requests on the product page when Blocksy's AJAX add to cart is on, the popup opening again on the next page, and two add to cart buttons on each popup product.
+* Fix (Woodmart): with Woodmart's AJAX add to cart on, the product page sent two add to cart requests. The plugin now leaves those forms to Woodmart.
+* Fix: No JavaScript error when a theme fires added_to_cart without a button (Flatsome mini cart).
 * Developer: Filter `lpr_theme_ajax_add_to_cart_selector` for themes that add the product form to the cart with their own AJAX call.
 * Developer: Filters `lpr_ajax_add_to_cart_supported`, `lpr_popup_after_reload`, `lpr_popup_after_reload_on_cart`, and the `lpr-no-ajax` form class to opt a form out of AJAX add to cart.
 
