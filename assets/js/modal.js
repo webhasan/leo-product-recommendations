@@ -109,6 +109,11 @@
     ) || 0;
   }
 
+  // Parse HTML without running anything in it (no scripts, no onerror handlers).
+  function inertFragment(html) {
+    return new DOMParser().parseFromString("<body>" + html + "</body>", "text/html").body;
+  }
+
   function addTrackingData($wrapper) {
     if (!lc_ajax_modal.tracking_url) return;
 
@@ -136,15 +141,22 @@
         if (!item) return;
 
         if (card.$form.length && item.form) {
-          $("<div>").html(item.form).find('[class^="gtm4wp"], [class*=" gtm4wp"]').each(function () {
+          $(inertFragment(item.form)).find('[class^="gtm4wp"], [class*=" gtm4wp"]').each(function () {
             if (!card.$form.find("." + this.classList[0]).length) {
-              card.$form.append(this);
+              // Copy only the tag, its classes and data-* attributes (no event handlers).
+              const copy = document.createElement(this.tagName === "INPUT" ? "input" : "span");
+              Array.prototype.forEach.call(this.attributes, function (attribute) {
+                if (/^(class|style|type|name|value|data-[\w-]+)$/.test(attribute.name)) {
+                  copy.setAttribute(attribute.name, attribute.value);
+                }
+              });
+              card.$form.append(copy);
             }
           });
         }
 
         if (card.$button.length && item.link) {
-          const probe = $("<div>").html(item.link).children().get(0);
+          const probe = inertFragment(item.link).firstElementChild;
           if (!probe) return;
 
           Array.prototype.forEach.call(probe.attributes, function (attribute) {

@@ -494,7 +494,7 @@ final class Product_Recommendations {
 					margin-right: <?php echo esc_attr($grid_column_gap / 2); ?>px !important;
 				}
 			}
-			<?php echo esc_html($custom_css); ?>
+			<?php echo wp_strip_all_tags($custom_css); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS: no tags, so it can't leave the style element; esc_html would break selectors like a > b. ?>
 		</style>
 	<?php
 
@@ -639,6 +639,11 @@ final class Product_Recommendations {
 	 * @return  void;
 	 */
 	public function on_save_post($id) {
+		// Products only, not autosaves or revisions, and only for users who can edit this product.
+		if ('product' !== get_post_type($id) || wp_is_post_autosave($id) || wp_is_post_revision($id) || !current_user_can('edit_post', $id)) {
+			return;
+		}
+
 		$nonce = isset($_POST['lc_pr_panel_nonce']) ? sanitize_text_field(wp_unslash($_POST['lc_pr_panel_nonce'])) : '';
 		$is_secure = !empty($_POST['_lc_lpr_data']) && !empty($nonce) && wp_verify_nonce($nonce, 'lc-panel-security');
 
@@ -744,6 +749,11 @@ final class Product_Recommendations {
 
 		if (empty($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || empty($product_id)) {
 			wp_send_json_error(array('message' => 'Bad request'), 400);
+		}
+
+		// Public endpoint: only products a visitor can see (no drafts, private or other post types).
+		if (!$this->is_public_product($product_id)) {
+			wp_die();
 		}
 
 		$recommended_products_id = $this->get_recommended_products_id($product_id);
@@ -930,7 +940,7 @@ final class Product_Recommendations {
 		foreach ($ids as $id) {
 			$item = wc_get_product($id);
 
-			if (!$item || 'publish' !== get_post_status($id)) {
+			if (!$item || !$this->is_public_product($id)) {
 				continue;
 			}
 
@@ -1018,6 +1028,30 @@ final class Product_Recommendations {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Product that anyone may see: a published product (or variation of one) that is
+	 * not hidden from the catalog, or any product the current user can edit.
+	 *
+	 * @since 3.4.0
+	 * @param int $product_id
+	 * @return bool
+	 */
+	public function is_public_product($product_id) {
+		$product = wc_get_product($product_id);
+		if (!$product) {
+			return false;
+		}
+
+		if (current_user_can('edit_post', $product_id)) {
+			return true;
+		}
+
+		$check_id = $product->get_parent_id() ? $product->get_parent_id() : $product_id;
+		$check = $product->get_parent_id() ? wc_get_product($check_id) : $product;
+
+		return $check && 'publish' === get_post_status($check_id) && !post_password_required($check_id) && 'hidden' !== $check->get_catalog_visibility();
 	}
 
 	/**
@@ -1109,7 +1143,7 @@ final class Product_Recommendations {
 		);
 		$modal_heading = (!$this->is_active_global($product_id) && !empty(trim($modal_heading))) ? $modal_heading : $default_heading;
 		$modal_heading = wp_kses($modal_heading, $html_permission);
-		$modal_heading = str_replace('%title%', get_the_title($product_id), $modal_heading);
+		$modal_heading = str_replace('%title%', esc_html(wp_strip_all_tags(get_the_title($product_id))), $modal_heading);
 		$modal_heading = preg_replace_callback('/\[(.+),(.+)\]/', function($matches) use ($recommended_products_id) {
 			$single = $matches[1];
 			$plural = $matches[2];

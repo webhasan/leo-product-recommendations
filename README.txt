@@ -86,6 +86,10 @@ Explore product recommendation popup examples for different types of WooCommerce
 [ 👉FASHION](https://cutt.ly/EjE345n)
 [ 👉SPORTS](https://cutt.ly/7jE35lO)
 
+== Privacy ==
+
+The plugin does not collect any data by itself. If you choose to send feedback when you deactivate it, your feedback is sent to LeoCoder together with your site URL, your WordPress, WooCommerce, PHP and MySQL versions, your theme and your list of active plugins. You can skip the feedback form.
+
 == Installation ==
 
 ### Minimum Requirements ##
@@ -160,6 +164,11 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 
 == Changelog ==
 = 3.4.0 =
+* Security: The product panel requests now need a logged-in user who can edit products. They were also open to logged-out visitors (protected only by a nonce).
+* Security: The popup only loads for published, visible products, so it can no longer show the title or image of a draft, private or non-product post.
+* Security: Recommendations are saved only for products, only by users who can edit them, and not on autosaves or revisions.
+* Security: The product title in the popup heading is escaped. Custom CSS is printed without tags (so it can't leave the style element) and selectors like `a > b` now work.
+* Security: Deactivation feedback is sent with TLS certificate checks on, only by users who can manage plugins, and the form now says which technical data is shared.
 * New: GA4-ready dataLayer events for the popup: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`, with product data, so you can measure the revenue the popup brings in. Pushed only when the site already has a dataLayer (for example Google Tag Manager). Your existing add_to_cart tracking is not changed.
 * New: The popup also opens after a normal (page reload) add to cart, for example for product bundles, subscriptions, bookings, products with file uploads and add to cart links.
 * Fix: Product types with their own add to cart handler (bundles, composites, subscriptions...) showed "Something went wrong" on the product page. They now add to cart the normal WooCommerce way.

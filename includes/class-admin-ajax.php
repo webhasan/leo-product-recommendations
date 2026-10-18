@@ -19,17 +19,29 @@ class Admin_Ajax {
      * @return void
      */
     public function __construct() {
+        // Product edit panel only: logged-in users who can edit products (no nopriv).
         add_action('wp_ajax_lpr_initial_data', array($this, 'initial_data'));
-        add_action('wp_ajax_nopriv_lpr_initial_data', array($this, 'initial_data'));
-
         add_action('wp_ajax_lpr_fetch_categories', array($this, 'fetch_categories'));
-        add_action('wp_ajax_nopriv_lpr_fetch_categories', array($this, 'fetch_categories'));
-
         add_action('wp_ajax_wpr_fetch_tags', array($this, 'fetch_tags'));
-        add_action('wp_ajax_nopriv_wpr_fetch_tags', array($this, 'fetch_tags'));
-
         add_action('wp_ajax_lpr_fetch_products', array($this, 'fetch_products'));
-        add_action('wp_ajax_nopriv_lpr_fetch_products', array($this, 'fetch_products'));
+    }
+
+    /**
+     * Nonce and capability check shared by the panel requests.
+     *
+     * @since 3.4.0
+     * @param int $post_id Product being edited (0 when not product specific).
+     * @return void Sends a JSON error and exits when the request is not allowed.
+     */
+    private function verify_request($post_id = 0) {
+        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
+        if (!$nonce_validation) {
+            wp_send_json_error(array('message' => 'Bad request'), 400);
+        }
+
+        if (!current_user_can('edit_products') || ($post_id && !current_user_can('edit_post', $post_id))) {
+            wp_send_json_error(array('message' => 'You are not allowed to do this.'), 403);
+        }
     }
 
     /**
@@ -38,14 +50,10 @@ class Admin_Ajax {
      * @since      1.0.0
      */
     public function initial_data() {
-        // nonce validation
-        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
-        if(!$nonce_validation) {
-            wp_send_json_error(array('message' => 'Bad request'), 400);
-        }
-
         // post ID
         $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;
+
+        $this->verify_request($post_id);
 
         // include post id
         if ( FALSE === get_post_status( $post_id ) ) {
@@ -130,11 +138,7 @@ class Admin_Ajax {
      * @return void
      */
     public function fetch_categories() {
-        // nonce validation
-        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
-        if (!$nonce_validation) {
-            wp_send_json_error(array('message' => 'Bad request'), 400);
-        }
+        $this->verify_request();
 
         $product_categories = get_terms(array(
             'taxonomy'   => "product_cat",
@@ -159,11 +163,7 @@ class Admin_Ajax {
      * @return void
      */
     public function fetch_tags() {
-        // nonce validation
-        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
-        if (!$nonce_validation) {
-            wp_send_json_error(array('message' => 'Bad request'), 400);
-        }
+        $this->verify_request();
 
         $product_tags = get_terms(array(
             'taxonomy'   => "product_tag",
@@ -187,11 +187,7 @@ class Admin_Ajax {
      * @return void
      */
     public function fetch_products() {
-        // nonce validation
-        $nonce_validation = isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'lc-panel-security');
-        if (!$nonce_validation) {
-            wp_send_json_error(array('message' => 'Bad request'), 400);
-        }
+        $this->verify_request();
 
         // post ID
         $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;

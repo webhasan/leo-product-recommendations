@@ -156,6 +156,7 @@ class Deactivation_Feedback {
         endforeach;
 
         $modal_html .= '</form>';
+        $modal_html .= '<p class="lprw-feedback-privacy">' . esc_html__('Sending your feedback also shares your site URL, your WordPress, WooCommerce, PHP and MySQL versions, your theme and your list of active plugins with LeoCoder, so we can find the cause. Skip if you prefer not to share this.','leo-product-recommendations') . '</p>';
         $modal_html .= '</div>';
         $modal_html .= '</section>';
 
@@ -185,6 +186,10 @@ class Deactivation_Feedback {
         
         if ((!isset($_POST['formData']) || !wp_verify_nonce($security, 'valid-feedback-submit'))) {
             wp_send_json_error('Invalid  Request!');
+        }
+
+        if (!current_user_can('activate_plugins')) {
+            wp_send_json_error('Invalid  Request!', 403);
         }
 
         $settings        = $this->settings;
@@ -232,8 +237,7 @@ class Deactivation_Feedback {
         ];
 
         $response = wp_remote_post($settings['api_url'], [
-            'sslverify' => false,
-            'timeout'   => 60,
+            'timeout'   => 30,
             'body'      => [
                 'plugin'          => $plugin,
                 'version'         => $plugin_version,

@@ -285,3 +285,10 @@
 .lprw-feedback-deactivation-link:hover {
   text-decoration: underline;
 }
+
+.lprw-feedback-privacy {
+  margin: 16px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #646970;
+}
