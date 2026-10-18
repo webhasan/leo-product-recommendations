@@ -156,12 +156,12 @@ class Deactivation_Feedback {
         endforeach;
 
         $modal_html .= '</form>';
-        $modal_html .= '<p class="lprw-feedback-privacy">' . esc_html__('Sending your feedback also shares your site URL, your WordPress, WooCommerce, PHP and MySQL versions, your theme and your list of active plugins with LeoCoder, so we can find the cause. Skip if you prefer not to share this.','leo-product-recommendations') . '</p>';
+        $modal_html .= '<p class="lprw-feedback-privacy">' . esc_html__('We also send your site URL, versions, theme and active plugins.','leo-product-recommendations') . '</p>';
         $modal_html .= '</div>';
         $modal_html .= '</section>';
 
         $modal_html .= '<footer class="lprw-feedback-modal-card-foot">';
-        $modal_html .= '<div class="lprw-submit-wrap"><span class="error">' . esc_html__('Please select a reason.','leo-product-recommendations') . '</span><button class="button button-primary">' . esc_html__('Send & Deactive','leo-product-recommendations') . '</button><span class="loading" style="background-image: url(' . esc_url(home_url('/wp-admin/images/spinner.gif')) . ')"></span></div>';
+        $modal_html .= '<div class="lprw-submit-wrap"><span class="error">' . esc_html__('Please select a reason.','leo-product-recommendations') . '</span><button class="button button-primary">' . esc_html__('Send & Deactivate','leo-product-recommendations') . '</button><span class="loading" style="background-image: url(' . esc_url(home_url('/wp-admin/images/spinner.gif')) . ')"></span></div>';
         $modal_html .= '<a href="" class="lprw-feedback-deactivation-link">' . esc_html__('Skip & Deactivate','leo-product-recommendations') . '</a>';
         $modal_html .= '</footer>';
 
