@@ -70,6 +70,9 @@ Manual selection has no count limit.
   "X has been added to cart." flash bar instead.
 - On activation the plugin forces WooCommerce settings "Enable AJAX add to cart buttons on
   archives" = yes and "Redirect to the cart page after successful addition" = no.
+  (**Owner decision, Oct 2026:** keep both as they are. Don't add a "popup on the cart
+  page" mode for stores that turn the redirect back on; with redirect on, archive adds go
+  straight to the cart and the after-reload popup is skipped there.)
 
 ### Popup Show limit (`popup_view_times`)
 
