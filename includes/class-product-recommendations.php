@@ -310,6 +310,10 @@ final class Product_Recommendations {
 		// Fetch popup modal data
 		add_action('wp_ajax_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
 		add_action('wp_ajax_nopriv_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
+		// Same handler on WooCommerce's front-end AJAX endpoint (?wc-ajax=). The popup is
+		// rendered as a front-end request there, so plugins that only load on the front end
+		// (GTM4WP, pixel plugins) can add their product data to the popup markup.
+		add_action('wc_ajax_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
 
 		// Ajax add to cart
 		add_action('wp_ajax_lc_ajax_add_to_cart', array($this, 'ajax_add_to_cart'));
@@ -402,6 +406,8 @@ final class Product_Recommendations {
 
 		wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
 			'url' => admin_url('admin-ajax.php'),
+			// Front-end endpoint for the popup HTML (falls back to admin-ajax in modal.js)
+			'popup_url' => class_exists('WC_AJAX') ? \WC_AJAX::get_endpoint('lpr_get_popup_data') : '',
 			'nonce' => wp_create_nonce('lc-ajax-modal'),
 			'popup_view_times' => $this->get_setting('popup_view_times'),
 			'layout_type' => $layout_type,
@@ -724,8 +730,8 @@ final class Product_Recommendations {
 	 */
 
 	public function lpr_get_popup_data() {
-		$nonce = isset($_GET['nonce']) ? sanitize_text_field(wp_unslash($_GET['nonce'])) : '';
-		$product_id = isset($_GET['product_id']) ? absint($_GET['product_id']) : 0;
+		$nonce = isset($_REQUEST['nonce']) ? sanitize_text_field(wp_unslash($_REQUEST['nonce'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$product_id = isset($_REQUEST['product_id']) ? absint($_REQUEST['product_id']) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if (empty($nonce) || !wp_verify_nonce($nonce, 'lc-ajax-modal') || empty($product_id)) {
 			wp_send_json_error(array('message' => 'Bad request'), 400);
@@ -745,12 +751,6 @@ final class Product_Recommendations {
 		wp_die();
 	}
 
-	/**
-	 * Ajax add to cart 
-	 *
-	 * @since      1.0.0
-	 * @return  json
-	 */
 	/**
 	 * When a product is added with a normal form post (or an ?add-to-cart= link) there is no
 	 * AJAX added_to_cart event, so save the product ID in a short-lived cookie. modal.js reads
@@ -797,6 +797,12 @@ final class Product_Recommendations {
 		return is_singular() && (has_block('woocommerce/cart') || has_block('woocommerce/checkout'));
 	}
 
+	/**
+	 * Ajax add to cart 
+	 *
+	 * @since      1.0.0
+	 * @return  json
+	 */
 	public function ajax_add_to_cart() {
 		if (!class_exists(Ajax_Add_To_Cart::class)) {
 			include $this->get_path('includes/class-ajax-add-to-cart.php');

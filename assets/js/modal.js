@@ -85,17 +85,34 @@
   }
 
 
+  // Popup HTML comes from WooCommerce's front-end AJAX endpoint (?wc-ajax=), so plugins that
+  // only load on the front end (GTM4WP and similar) add their tracking data to the products.
+  // POST so page caches never store it. Falls back to admin-ajax if that request fails.
+  async function getPopupHtml(productId) {
+    const data = {
+      action: "lpr_get_popup_data",
+      nonce: lc_ajax_modal.nonce,
+      product_id: productId,
+    };
+
+    if (lc_ajax_modal.popup_url) {
+      try {
+        return await $.ajax({ type: "POST", url: lc_ajax_modal.popup_url, data: data, dataType: "html" });
+      } catch (e) {
+        // fall through to admin-ajax
+      }
+    }
+
+    return await $.get(lc_ajax_modal.url, data);
+  }
+
   // Load the recommendations for a product and open the popup.
   async function openRecommendationPopup(addedProductId) {
     //hide existing popup, quick view etc
     $('body, .quickview-wrapper .closeqv, .yith-quick-view-overlay, .mfp-wrap, .owp-qv-overlay, .owp-qv-close').click(); 
 
     try {
-      const modal = await $.get(lc_ajax_modal.url, {
-        action: "lpr_get_popup_data",
-        nonce: lc_ajax_modal.nonce,
-        product_id: addedProductId,
-      });
+      const modal = await getPopupHtml(addedProductId);
 
       if(modal) {
         const $modalWrapper = $('#lpr-modal-content');
