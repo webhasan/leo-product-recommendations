@@ -26,12 +26,11 @@ Remove an item when it is fixed. Add new items as you find them.
 9. **Custom product types in AJAX add to cart** (bundles, subscriptions, etc.) get no
     JSON reply from `class-ajax-add-to-cart.php`; the JS alerts and reloads. Repeated
     field names and file inputs in product forms are dropped by `ajax-add-to-cart.js`.
-10. **Pro panel infinite scroll** uses stale state (`[...products, ...new]`); Free fixed it.
-11. **Possible race in `WPEditor`** (panel): TinyMCE inits on a 400ms timer, independent of
+10. **Possible race in `WPEditor`** (panel): TinyMCE inits on a 400ms timer, independent of
     when saved data loads. To verify on a slow server.
-12. **Pro update check does not cache failures.** Without a valid license, every read of
+11. **Pro update check does not cache failures.** Without a valid license, every read of
     the update transient in admin triggers a request to leocoder.com.
-13. **Plugin load order dependency.** Pro works only because its folder name sorts
+12. **Plugin load order dependency.** Pro works only because its folder name sorts
     before Free's. See `codebase-internals.md` section 4.
 
 ## Security and hardening
@@ -98,6 +97,9 @@ Shared settings framework (Free 3.3.0 + Pro 3.2.0, see `codebase-internals.md`):
 
 - Build tools updated to `@wordpress/scripts` 36 (Free 3.3.1 / Pro 3.2.1); Free's
   committed bundles were development builds, now production.
+
+- Product panel ready for React 19: `react-reorder` replaced by `@dnd-kit`, mounted with
+  `createRoot`; Pro panel infinite scroll uses functional state updates.
 
 Earlier:
 

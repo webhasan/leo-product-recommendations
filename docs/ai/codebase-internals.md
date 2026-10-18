@@ -109,7 +109,7 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
 
 - PHP prints `<div id="pr-app" data-id="POST_ID">` inside the WooCommerce
   "Recommendations" product data tab (`option-select-products.php`).
-- `panel.js` renders with `wp.element.render()` (legacy render API, not `createRoot`).
+- `panel.js` mounts with `wp.element.createRoot()` (React 18/19 API, since 3.3.1).
 - **There is no save API.** The React app renders hidden inputs named
   `_lc_lpr_data[...]`, plus nonce `lc_pr_panel_nonce`. They are submitted with the normal
   product form and saved by PHP in `on_save_post()` (`save_post` hook) into post meta
@@ -125,24 +125,23 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
 |---|---|
 | `panel.js` `SelectProduct` | One big component, all state in one `appData` object |
 | `RecommendationHeading` | Heading vs Heading & Description (TinyMCE) |
-| `WPEditor` | Textarea turned into TinyMCE on `DOMContentLoaded` + 400ms timeout |
+| `WPEditor` | Textarea turned into TinyMCE 400ms after mount (or after `DOMContentLoaded` if still loading) |
 | `RadioSelection` | Manual vs Dynamic |
-| `ManualSelection` | Search (`react-debounce-input`), category `TreeSelect` (`@wordpress/components`), product list, sortable selected list (`react-reorder`) |
+| `ManualSelection` | Search (local `DebounceInput`), category `TreeSelect` (`@wordpress/components`), product list, sortable selected list (`@dnd-kit`, `SortableProduct`; mouse, touch, keyboard) |
 | `DynamicSelection` (Pro) | `react-select` for categories/tags, orderby, on-sale, number |
 | `Loading` | SVG spinner |
 
 ### Free vs Pro
 
-- Pro's `panel.js` is a **fork** of Free's. They have drifted: Free fixed a stale-state bug
-  in infinite scroll (`setProducts(old => ...)`), Pro still uses `[...products, ...]`.
+- Pro's `panel.js` is a **fork** of Free's (Pro adds Dynamic Selection). Keep shared
+  components (`ManualSelection`, `DebounceInput`, `WPEditor`, `tree.js`) identical in both.
 - Free posts a hidden `_lc_lpr_data[type]=manual-selection`; Pro posts the radio value.
 - Free shows the Pro Dynamic Selection as a static image (`assets/images/pro-feature.jpg`).
 
 ### Known weak spots
 
-- `WPEditor` initializes TinyMCE on a timer, independent of when saved data arrives.
-  If `lpr_initial_data` is slower than the editor init, the editor may start empty.
-  To verify on a slow server before relying on it.
+- `WPEditor` initializes TinyMCE on a 400ms timer, independent of when saved data arrives.
+  If `lpr_initial_data` is slower, the editor may start empty. To verify on a slow server.
 - No request cancellation: fast typing in search can show results out of order.
 - Strings passed through variables to `__()` (`'Popup Heading'`, `'Select By'`) are not
   extractable for translation; `__('Documentation»', { textDomain })` passes an object
