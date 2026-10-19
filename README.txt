@@ -178,6 +178,8 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Fix: Cart and check icons were missing in the popup, so the cart count badge overlapped the Checkout button.
 * Fix: The popup grid showed one product fewer per row than set with themes that add a gap to product lists (for example Astra).
 * Fix: Hidden and out-of-stock products are always excluded from dynamic recommendations.
+* Fix: A PHP error in the popup when a hand-picked recommended product had been deleted.
+* Fix: "Low Price" and "High Price" sorting in dynamic recommendations left out most variable products and ignored sale prices. They now sort by the price shoppers see, like the shop's own price sorting.
 * Fix: Saving settings without Pro active no longer removes Pro settings.
 * Fix: An empty or zero "items per row" value no longer causes a PHP error.
 * Fix: No JavaScript error when a theme fires added_to_cart without a button (Flatsome mini cart).

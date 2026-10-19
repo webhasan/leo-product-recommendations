@@ -1283,6 +1283,11 @@ final class Product_Recommendations {
 
 			$product = wc_get_product($id);
 
+			// The product may have been deleted since it was picked.
+			if (!$product) {
+				return false;
+			}
+
 			if($product->get_catalog_visibility() === 'hidden') {
 				return false;
 			}
@@ -1291,7 +1296,6 @@ final class Product_Recommendations {
 				return false;
 			};
 
-			$product = wc_get_product($id);
 			if ( $product->managing_stock() && ! $product->is_in_stock() ) {
 				return false;
 			}
@@ -1405,15 +1409,14 @@ final class Product_Recommendations {
 			break;
 
 		case 'lowprice':
-			$orderby = 'meta_value_num';
-			$meta_key = '_regular_price';
-			$order = 'asc';
-			break;
-
 		case 'highprice':
-			$orderby = 'meta_value_num';
-			$meta_key = '_regular_price';
-			$order = 'desc';
+			// Sorted by WooCommerce's price lookup table in price_order_clauses(), like the shop's own
+			// price sorting. It covers variable products and sale prices, which _regular_price did not.
+			$orderby = '';
+			$meta_key = '';
+			$order = '';
+			$args['lpr_price_order'] = 'lowprice' === $data['orderby'] ? 'ASC' : 'DESC';
+			$args['suppress_filters'] = false;
 			break;
 
 		case 'title':
@@ -1439,13 +1442,49 @@ final class Product_Recommendations {
 			$args['post__in'] = array_merge(array(0), wc_get_product_ids_on_sale());
 		}
 
+		$price_order = !empty($args['lpr_price_order']);
+		if ($price_order) {
+			add_filter('posts_clauses', array($this, 'price_order_clauses'), 10, 2);
+		}
+
 		$posts = get_posts($args);
+
+		if ($price_order) {
+			remove_filter('posts_clauses', array($this, 'price_order_clauses'), 10);
+		}
 
 		$recommended_products_ids = array_map(function ($post) {
 			return $post->ID;
 		}, $posts);
 
 		return $recommended_products_ids;
+	}
+
+	/**
+	 * Order a dynamic selection query by price using WooCommerce's product lookup table.
+	 *
+	 * Only touches queries that carry the lpr_price_order argument set in dynamic_query_products().
+	 *
+	 * @since      3.4.0
+	 * @param array     $clauses SQL clauses.
+	 * @param \WP_Query $query   Current query.
+	 * @return array
+	 */
+	public function price_order_clauses($clauses, $query) {
+		$direction = $query->get('lpr_price_order');
+		if (!in_array($direction, array('ASC', 'DESC'), true)) {
+			return $clauses;
+		}
+
+		global $wpdb;
+		$lookup = $wpdb->prefix . 'wc_product_meta_lookup';
+
+		$clauses['join'] .= " LEFT JOIN {$lookup} lpr_price_lookup ON {$wpdb->posts}.ID = lpr_price_lookup.product_id ";
+		$clauses['orderby'] = 'ASC' === $direction
+			? "lpr_price_lookup.min_price ASC, {$wpdb->posts}.ID ASC"
+			: "lpr_price_lookup.max_price DESC, {$wpdb->posts}.ID DESC";
+
+		return $clauses;
 	}
 
 	/**

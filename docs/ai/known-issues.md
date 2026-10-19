@@ -5,11 +5,10 @@ Remove an item when it is fixed. Add new items as you find them.
 
 ## Behavior and bugs
 
-1. **Price sorting uses `_regular_price`.** Ignores sale prices; variable parents usually
-   have no `_regular_price`. `_price` is likely the intended key.
-2. **Deleted products in manual picks.** `manual_query_products()` calls methods on
-   `wc_get_product($id)` without checking for `false`, which can fatal if a picked product
-   was deleted.
+1. ~~Price sorting uses `_regular_price`~~ Fixed in 3.4.0: `lowprice`/`highprice` order by
+   `wc_product_meta_lookup` min/max price (`price_order_clauses()`), like WooCommerce's shop sort.
+2. ~~Deleted products in manual picks~~ Fixed in 3.4.0: `manual_query_products()` skips ids
+   where `wc_get_product()` returns false.
 3. **Custom CSS escaped with `esc_html()`** in Free `settings_css()`. Selectors with `>`
    become `&gt;` and break. Pro prints custom CSS raw (works, but unescaped).
 4. **Free honors product-level dynamic data saved under Pro.** `is_dynamic_selection()` is

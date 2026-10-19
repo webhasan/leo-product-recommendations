@@ -31,7 +31,8 @@ picks, even if there are fewer than the Global "Number of Products".
   categories) or Manual (chosen categories; empty = all categories).
 - Tags (empty = all tags). Categories and tags combine with AND.
 - Products Filtering (`global_filtering`): `rand`, `newest`, `oldest`, `lowprice`,
-  `highprice`, `popularity` (best selling, `total_sales`), `rating` (`_wc_average_rating`).
+  `highprice` (by the shown price from `wc_product_meta_lookup`, sale and variable prices
+  included), `popularity` (best selling, `total_sales`), `rating` (`_wc_average_rating`).
 - On-Sale Only, Number of Products (default 12).
 
 ### Exclusions
