@@ -11,7 +11,7 @@
  * Text Domain: leo-product-recommendations
  * Domain Path: /languages
  * WC requires at least: 7.0
- * WC tested up to: 11.1.1
+ * WC tested up to: 11.2.1
  * License: GPL-3.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -21,11 +21,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * HPOS compatibility declaration
+ * WooCommerce feature compatibility: HPOS (order tables) and the Cart & Checkout blocks.
  */
 add_action('before_woocommerce_init', function(){
     if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
         \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
     }
 });
 

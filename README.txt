@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 3.4.0
 WC requires at least: 7.0
-WC tested up to: 11.1.1
+WC tested up to: 11.2.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -197,6 +197,7 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 * Developer: Filters `lpr_ajax_add_to_cart_supported`, `lpr_popup_after_reload`, `lpr_popup_after_reload_on_cart`, and the `lpr-no-ajax` form class to opt a form out of AJAX add to cart.
 * Developer: Filter `lpr_theme_ajax_add_to_cart_selector` for themes that add the product form to the cart with their own AJAX call.
 * Developer: Filter `lpr_popup_tracking_data` (on by default when GTM4WP is active).
+* Compatibility: Tested with WordPress 7.1 and WooCommerce 11.2. Declares support for High-Performance Order Storage and the Cart & Checkout blocks.
 * Requires WordPress 6.6 or later.
 
 = 3.2.0 =
