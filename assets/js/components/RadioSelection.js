@@ -27,7 +27,7 @@ const RadioSelection = (pros) => {
             ))}
         </div>
         {docURL &&
-            <p><a href="https://cutt.ly/pk3hBPH" target="_blank">{__('Documentation»', 'leo-product-recommendations')}</a></p>
+            <p><a href="https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=product-panel" target="_blank">{__('Documentation»', 'leo-product-recommendations')}</a></p>
         }
     </>;
 }

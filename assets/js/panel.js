@@ -186,7 +186,7 @@ import ManualSelection from './components/ManualSelection';
             textDomain='leo-product-recommendations'
             heading='Popup Heading'
             headingTypes = {headingType}
-            docURL = 'https://cutt.ly/Lk3hveN'
+            docURL = 'https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=product-panel'
             initialType = {appData.heading_type}
             typeName = '_lc_lpr_data[heading_type]'
             headingFieldName = '_lc_lpr_data[heading]'
@@ -217,7 +217,7 @@ import ManualSelection from './components/ManualSelection';
             <RadioSelection 
               title = 'Select By'
               textDomain='leo-product-recommendations'
-              docURL = 'https://cutt.ly/pk3hBPH'
+              docURL = 'https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=product-panel'
               options={selectionMethods} 
               value = {appData.selectMethod}
               onChange = {(value) => {

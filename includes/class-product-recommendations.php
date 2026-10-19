@@ -60,6 +60,20 @@ final class Product_Recommendations {
 	static protected $pr_meta = array();
 
 	/**
+	 * Linked products (Upsells/Cross-sells) per product, cached for the request.
+	 *
+	 * @since 3.5.0
+	 */
+	static protected $linked_cache = array();
+
+	/**
+	 * Settings that turn on WooCommerce linked products as a source.
+	 *
+	 * @since 3.5.0
+	 */
+	const LINKED_SETTINGS = array('global_linked_upsells', 'global_linked_cross_sells');
+
+	/**
 	 * Plugin root file __FILE__
 	 *
 	 * @var string
@@ -125,6 +139,16 @@ final class Product_Recommendations {
 		$settings = $this->get_settings();
 		$settings = !empty($settings) ? $settings : array();
 		$default_settings = $this->get_default_settings();
+
+		// Linked products are on for new installs only. A store that already has settings
+		// keeps its current popups until the owner turns them on (also on reactivation).
+		if (!empty($settings)) {
+			foreach (self::LINKED_SETTINGS as $key) {
+				if (!array_key_exists($key, $settings)) {
+					$settings[$key] = '';
+				}
+			}
+		}
 		update_option($this->get_settings_id(), array_merge($default_settings, $settings));
 	}
 
@@ -183,7 +207,7 @@ final class Product_Recommendations {
 
 			$errors[] = sprintf(
 				/* translators: 1. link of plugin, 2. plugin version. */
-				__('The Leo Product Recommendations for WooCommerce plugin requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'leo-product-recommendations'),
+				__('Leo Product Recommendations requires <a href="%1$s">WooCommerce</a> %2$s or greater to be installed and active.', 'leo-product-recommendations'),
 				'https://wordpress.org/plugins/woocommerce/',
 				$minimum_woocommerce_version
 			);
@@ -192,7 +216,7 @@ final class Product_Recommendations {
 		if (!$wordpress_minimum_met) {
 			$errors[] = sprintf(
 				/* translators: 1. link of wordpress 2. version of WordPress. */
-				__('The Leo Product Recommendations for WooCommerce plugin requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'leo-product-recommendations'),
+				__('Leo Product Recommendations requires <a href="%1$s">WordPress</a> %2$s or greater to be installed and active.', 'leo-product-recommendations'),
 				'https://wordpress.org/',
 				$minimum_wordpress_version
 			);
@@ -201,7 +225,7 @@ final class Product_Recommendations {
 		if (!$php_minimum_met) {
 			$errors[] = sprintf(
 				/* translators: 1. version of php */
-				__('The Leo Product Recommendations for WooCommerce plugin requires <strong>php version %s</strong> or greater. Please update your server php version.', 'leo-product-recommendations'),
+				__('Leo Product Recommendations requires <strong>php version %s</strong> or greater. Please update your server php version.', 'leo-product-recommendations'),
 				$minium_php_version
 			);
 		}
@@ -259,12 +283,12 @@ final class Product_Recommendations {
 		add_action('plugin_action_links_' . plugin_basename(self::$__FILE__), function ($links) {
 			$link_before = array(
 				'settings' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=lpr-settings')) . '">' . __('Settings', 'leo-product-recommendations') . '</a>',
-				'documentation' => '<a href="' . esc_url('https://cutt.ly/KjE8lEI') . '" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
+				'documentation' => '<a href="' . esc_url('https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=plugins-list') . '" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
 			);
 
 			if (!$this->has_pro_plugin()) {
 				$link_after = array(
-					'go-pro' => '<a href="' . esc_url('https://cutt.ly/4jE8fxM') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
+					'go-pro' => '<a href="' . esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=plugins-list') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
 				);
 				return array_merge($link_before, $links, $link_after);
 			}
@@ -295,6 +319,12 @@ final class Product_Recommendations {
 	public function hooks() {
 		// Include required admin scripts
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
+
+		// LPR Settings > Analytics: preview of the Pro dashboard. No tracking in the free version.
+		if (is_admin()) {
+			require_once $this->get_path('includes/class-analytics-teaser.php');
+			new Analytics_Teaser($this);
+		}
 
 		// One-time safety copy of the settings before the shared framework saves anything.
 		add_action('admin_init', array($this, 'maybe_backup_settings'));
@@ -354,7 +384,7 @@ final class Product_Recommendations {
 				'ajax_url' => admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('lc-panel-security'),
 				'pro_image' => $this->get_url('assets/images/pro-feature.jpg'),
-				'pro_link' => esc_url('https://cutt.ly/4jE8fxM'),
+				'pro_link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=product-panel'),
 			));
 			wp_enqueue_style('selection-panel-style', $this->get_url('assets/css/panel.css'), '', $version);
 		}
@@ -793,6 +823,9 @@ final class Product_Recommendations {
 	 * @return string global, manual, dynamic or empty
 	 */
 	public function get_recommendation_type($product_id) {
+		if ($this->uses_linked_products($product_id)) {
+			return 'linked';
+		}
 		if ($this->is_active_global($product_id)) {
 			return 'global';
 		}
@@ -1144,9 +1177,9 @@ final class Product_Recommendations {
 		$modal_heading = (!$this->is_active_global($product_id) && !empty(trim($modal_heading))) ? $modal_heading : $default_heading;
 		$modal_heading = wp_kses($modal_heading, $html_permission);
 		$modal_heading = str_replace('%title%', esc_html(wp_strip_all_tags(get_the_title($product_id))), $modal_heading);
-		$modal_heading = preg_replace_callback('/\[(.+),(.+)\]/', function($matches) use ($recommended_products_id) {
-			$single = $matches[1];
-			$plural = $matches[2];
+		$modal_heading = preg_replace_callback('/\[([^\[\],]+),([^\[\]]+)\]/', function($matches) use ($recommended_products_id) {
+			$single = trim($matches[1]);
+			$plural = trim($matches[2]);
 			$count = count($recommended_products_id);
 			// Use ternary operator since these are user-defined patterns, not standard translatable strings
 			return (1 === $count) ? $single : $plural;
@@ -1196,7 +1229,86 @@ final class Product_Recommendations {
 		return $template_data;
 	}
 
+		/**
+	 * Use the product's WooCommerce Upsells/Cross-sells for this product?
+	 * Yes when the option is on, the product has nothing set in its own
+	 * Recommendations tab, "Skip Manual Selection" is off, and it has linked products.
+	 *
+	 * @since 3.5.0
+	 * @param int $product_id
+	 * @return bool
+	 */
+	public function uses_linked_products($product_id) {
+		$settings = $this->get_settings();
+
+		// A "Skip Manual Selection" campaign uses the global rule for every product.
+		if (!empty($settings['active_global_settings']) && !empty($settings['disable_global_override'])) {
+			return false;
+		}
+
+		$data = $this->get_pr_data($product_id);
+		if ($this->is_dynamic_selection($product_id) || !empty($data['products'])) {
+			return false;
+		}
+
+		return !empty($this->get_linked_product_ids($product_id));
+	}
+
 	/**
+	 * The product's Upsells and/or Cross-sells that can be shown: published,
+	 * visible in the catalog and in stock. Upsells first.
+	 *
+	 * @since 3.5.0
+	 * @param int $product_id
+	 * @return int[]
+	 */
+	public function get_linked_product_ids($product_id) {
+		$product_id = absint($product_id);
+		if (isset(self::$linked_cache[$product_id])) {
+			return self::$linked_cache[$product_id];
+		}
+
+		$ids     = array();
+		$product = wc_get_product($product_id);
+
+		if ($product) {
+			if ($this->get_setting('global_linked_upsells')) {
+				$ids = array_merge($ids, $product->get_upsell_ids());
+			}
+			if ($this->get_setting('global_linked_cross_sells')) {
+				$ids = array_merge($ids, $product->get_cross_sell_ids());
+			}
+		}
+
+		$ids = array_values(array_filter(array_unique(array_map('absint', $ids)), function ($id) use ($product_id) {
+			if (!$id || $id === $product_id) {
+				return false;
+			}
+			$linked = wc_get_product($id);
+			return $linked
+				&& 'publish' === $linked->get_status()
+				&& 'hidden' !== $linked->get_catalog_visibility()
+				&& $linked->is_in_stock();
+		}));
+
+		$limit = absint($this->get_setting('global_products_number'));
+		if ($limit) {
+			$ids = array_slice($ids, 0, $limit);
+		}
+
+		/**
+		 * Linked products shown in the popup for a product.
+		 *
+		 * @since 3.5.0
+		 * @param int[] $ids        Product IDs, Upsells first.
+		 * @param int   $product_id Product added to the cart.
+		 */
+		self::$linked_cache[$product_id] = array_values(array_map('absint', (array) apply_filters('lpr_linked_product_ids', $ids, $product_id)));
+
+		return self::$linked_cache[$product_id];
+	}
+
+/**
 	 * Check manual selection or not 
 	 *
 	 * @return bool manually selected or not
@@ -1226,6 +1338,10 @@ final class Product_Recommendations {
 	 * @since      1.0.0
 	 */
 	public function get_recommended_products_id($product_id) {
+		if ($this->uses_linked_products($product_id)) {
+			return $this->get_linked_product_ids($product_id);
+		}
+
 		if ($this->is_active_global($product_id)) {
 			return $this->dynamic_query_products($product_id, $this->get_global_pr_data());
 		}
@@ -1246,6 +1362,11 @@ final class Product_Recommendations {
 	 * @return bool 
 	 */
 	public function is_active_global($id) {
+
+		// The product's own WooCommerce Upsells/Cross-sells come before the global rule.
+		if ($this->uses_linked_products($id)) {
+			return false;
+		}
 
 		$settings = $this->get_settings();
 		$has_global = !empty($settings['active_global_settings']) ? true : false;
@@ -1960,7 +2081,7 @@ final class Product_Recommendations {
 				'id' => 'heading_type',
 				'title' => sprintf(
 					/* translators: %s: Link to global settings page */
-					__('Default Heading <small>Default will use for undefined heading & <a target="_blank" href="%s">Global Setting</a></small>', 'leo-product-recommendations'),
+					__('Default Heading <small>Used when a product has no heading of its own, and for <a target="_blank" href="%s">Default Recommendations</a></small>', 'leo-product-recommendations'),
 					home_url('/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings')
 				),
 				'type' => 'heading_selection',
@@ -1979,7 +2100,7 @@ final class Product_Recommendations {
 					),
 				),
 				'description' => __('If you like to use the same heading patterns for all recommendations then use the default heading. Use pattern <strong>%title%</strong> for the product title. Pattern <strong>[item, items]</strong> is changeable. You can utilize <strong>[product, products]</strong> or all that makes sense. The particular expression for a single recommended item and the plural expression for more than one supported item.', 'leo-product-recommendations'),
-				'doc' 		  => 'https://cutt.ly/Ek3t5AJ',
+				'doc' 		  => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/general-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 			),
 			array(
 				'id' => 'popup_view_times',
@@ -1993,7 +2114,7 @@ final class Product_Recommendations {
 					'4' 		 	 =>  __('4 Times', 'leo-product-recommendations'),
 					'5' 		 	 =>  __('5 Times', 'leo-product-recommendations'),
 				),
-				'description' => 'If you think showing a popup every time will bother your customers, then you can limit it.'
+				'description' => __('If you think showing a popup every time will bother your customers, then you can limit it.', 'leo-product-recommendations')
 			),
 			array(
 				'id' => 'variable_add_to_cart',
@@ -2001,12 +2122,12 @@ final class Product_Recommendations {
 				'title' => __('Variable Products <br> Add To Cart', 'leo-product-recommendations'),
 				'label' => __('Add To Cart', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				// translators: %s: Example URL link
 				'description' => sprintf(
+					/* translators: %s: URL of the documentation example */
 					__('To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href="%s" target="_blank">Example» </a>', 'leo-product-recommendations'),
-					esc_url("https://cutt.ly/QjE8s8y")
+					esc_url("https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/general-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page")
 				),
-				'doc'         => 'https://cutt.ly/QjE8s8y',
+				'doc'         => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/general-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 			),
 			array(
 				'id' => 'grid_options',
@@ -2049,35 +2170,35 @@ final class Product_Recommendations {
 						'default' => 20,
 					),
 				),
-				'doc' => 'https://cutt.ly/Vk3a9kC'
+				'doc' => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/general-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page'
 			),
 			array(
 				'id' => 'layout_image',
 				'title' => __('Layout Type <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
 				'type' => 'pro_image',
 				'image_url' => $this->get_url('assets/images/layout-type.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
+				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
 			),
 			array(
 				'id' => 'slider_options_image',
 				'title' => __('Slider Options <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
 				'type' => 'pro_image',
 				'image_url' => $this->get_url('assets/images/slider-options.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
+				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
 			),
 			array(
 				'id' => 'popup_size_image',
 				'title' => __('Popup Size <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
 				'type' => 'pro_image',
 				'image_url' => $this->get_url('assets/images/popup-size.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
+				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
 			),
 			array(
 				'id' => 'button_visibility_image',
 				'title' => __('Buttons Visibility <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
 				'type' => 'pro_image',
 				'image_url' => $this->get_url('assets/images/button-visibility.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
+				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
 			),
 		);
 
@@ -2087,36 +2208,57 @@ final class Product_Recommendations {
 				'title' => __('Popup Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
 				'type' => 'pro_image',
 				'image_url' => $this->get_url('assets/images/modal-color.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
+				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
 			),
 			array(
 				'id' => 'product_color_image',
 				'title' => __('Product Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
 				'type' => 'pro_image',
 				'image_url' => $this->get_url('assets/images/product-color-setting.jpg'),
-				'link' => esc_url('https://cutt.ly/4jE8fxM'),
+				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
 			),
 			array(
 				'id' => 'custom_style',
 				'title' => __('Custom CSS', 'leo-product-recommendations'),
 				'type' => 'css',
 				'description' => __('Write custom css to change style of modal.', 'leo-product-recommendations'),
-				'doc' 		  => 'https://cutt.ly/Uk3sC4R',
+				'doc' 		  => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/style-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 			),
 		);
 
 		$global_settings_fields = array(
 			array(
+				'id' => 'linked_products',
+				'title' => __('1. WooCommerce Linked Products', 'leo-product-recommendations'),
+				'type' => 'wrapper_extend',
+				'children' => array(
+					array(
+						'id' => 'global_linked_upsells',
+						'title' => __('Show the product\'s Upsells', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+						'default' => 1,
+					),
+					array(
+						'id' => 'global_linked_cross_sells',
+						'title' => __('Show the product\'s Cross-sells', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+						'default' => 1,
+					),
+				),
+				'description' => __('Set them under Product data > Linked Products. When both are on, Upsells come first.', 'leo-product-recommendations'),
+			),
+			array(
 				'id' => 'active_global_settings',
-				'title' => __('Active Global Setting', 'leo-product-recommendations'),
+				'title' => __('2. Store-wide Rule', 'leo-product-recommendations'),
+				'label' => __('Use a store-wide rule for the remaining products', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => __('If there are no recommendations available for certain or several products (if you do not configure from the woo-commerce product editor), the global setting will work for those products as a recovery. This setting also helps if you like mass recommendations arranged for all stores instead of different configurations for each product.', 'leo-product-recommendations'),
-				'doc' 		  => 'https://cutt.ly/Rk3dWPA',
+				'description' => __('Products without hand-picked or linked recommendations get products from this rule.', 'leo-product-recommendations'),
+				'doc' 		  => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/global-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 				'default' => 1,
 			),
 			array(
 				'id' => 'selection_options',
-				'title' => __('Recommendation Options', 'leo-product-recommendations'),
+				'title' => __('Store-wide Rule Options', 'leo-product-recommendations'),
 				'type' => 'wrapper_extend',
 				'children' => array(
 					array(
@@ -2167,16 +2309,15 @@ final class Product_Recommendations {
 						'default' => 12,
 					),
 				),
-				'doc' => 'https://cutt.ly/sk3d7sE',
+				'doc' => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/global-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 			),
 			array(
 				'id' => 'disable_global_override',
-				'label' => __('Skip', 'leo-product-recommendations'),
-				'title' => __('Skip Manual Selection', 'leo-product-recommendations'),
+				'label' => __('Use the store-wide rule for every product', 'leo-product-recommendations'),
+				'title' => __('Campaign Mode', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => __('It will ignore individual recommendations of what you have done from the Woo-Commerce Edit Product page using the WPR configuration panel. <br>
-                It is helpful for a quick campaign. For example: In your Black Friday campaign, you want to temporarily skip individual product-specific recommendations. And recommend certain or several categories of products. Simply select the categories of the previous configuration from above and check this <strong>Skip</strong> check box.','leo-product-recommendations'),
-				'doc' => 'https://cutt.ly/zk3fi4g',
+				'description' => __('Ignores hand-picked and linked recommendations while it is on. Handy for a Black Friday campaign: pick the campaign categories in the rule above and tick this box.', 'leo-product-recommendations'),
+				'doc' => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/global-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 			),
 		);
 
@@ -2185,6 +2326,7 @@ final class Product_Recommendations {
 				'id' => $this->get_settings_id(),
 				'page_title' => __('Product Recommendations Settings', 'leo-product-recommendations'),
 				'menu_title' => __('LPR Settings', 'leo-product-recommendations'),
+				'submenu_title' => __('Settings', 'leo-product-recommendations'),
 				'slug' => 'lpr-settings',
 				'icon' => 'dashicons-cart',
 				'position' => 60,
@@ -2206,8 +2348,9 @@ final class Product_Recommendations {
 
 					array(
 						'id' => 'lpr-global-settings',
-						'tab_title' => __('Global', 'leo-product-recommendations'),
-						'title' => __('Global Settings', 'leo-product-recommendations'),
+						'tab_title' => __('Default Recommendations', 'leo-product-recommendations'),
+						'title' => __('Default Recommendations', 'leo-product-recommendations'),
+						'description' => __('For products with nothing set in their own Recommendations tab. The popup uses their WooCommerce Upsells/Cross-sells first, then the store-wide rule.', 'leo-product-recommendations'),
 						'fields' => $global_settings_fields,
 					),
 
@@ -2247,12 +2390,13 @@ final class Product_Recommendations {
 	public function feedback_fields() {
 
 		$form_data = array(
-			'plugin_name' => $this->get_plugin_name(),
+			// Fixed name so feedback stays grouped under one plugin on leocoder.com after the 3.4.0 rename.
+			'plugin_name' => 'Leo Product Recommendations for WooCommerce',
 			'plugin_version' => $this->get_plugin_version(),
 			'plugin_slug' => $this->get_slug(),
 			'support' => array(
 				'title' => __('Need Help?', 'leo-product-recommendations'),
-				'support_url' => 'https://cutt.ly/UjXivGe'
+				'support_url' => 'https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form'
 			),
 			'feedback_heading' => __('Quick Feedback', 'leo-product-recommendations'),
 			'form_heading' => __('May we have a little info about why you are deactivating?', 'leo-product-recommendations'),
@@ -2270,7 +2414,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'not_show_image_button',
 					'reason' => __('Does not show product image or add to cart button.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2279,7 +2423,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'dont_understand',
 					'reason' => __('I couldn\'t understand how to use it.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://cutt.ly/rjE8eiu" target="_blank">' . __('Please check details documentations »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=deactivation-form" target="_blank">' . __('Please check details documentations »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2288,7 +2432,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'not_works',
 					'reason' => __('It doesn\'t work with my website.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2297,7 +2441,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'look_bad',
 					'reason' => __('It looks bad on my website.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://cutt.ly/UjXivGe" target="_blank">' . __('Please contact with our support we will help you to fix the issues »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Please contact with our support we will help you to fix the issues »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2306,7 +2450,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'dont_need',
 					'reason' => __('It works nicely but I don’t need it now.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://cutt.ly/ZjXi7q8" target="_blank">' . __('Please encourage us by giving nice feedback  »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://wordpress.org/support/plugin/leo-product-recommendations/reviews/" target="_blank">' . __('Please encourage us by giving nice feedback  »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',

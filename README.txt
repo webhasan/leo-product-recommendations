@@ -1,168 +1,207 @@
-=== Leo Product Recommendations for WooCommerce ===
+=== Leo Product Recommendations: Upsell & Cross-sell Popup for WooCommerce ===
 Contributors: webhasan, masum007
-Tags: woocommerce product recommendations, woocommerce related products, woocommerce upsell, woocommerce cross-sell, add to cart popup
+Tags: product recommendations, upsell, cross-sell, related products, add to cart popup
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.4.0
+Stable tag: 3.5.0
 WC requires at least: 7.0
 WC tested up to: 11.2.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Suggest related products in a popup after customers add to cart. Boost sales with WooCommerce upsells and cross-sells.
+Sell more per order. Show upsells and cross-sells in a popup right after add to cart, and let shoppers add them in one click.
 
 == Description ==
 [youtube https://youtu.be/c20SsY1zsf8]
-Leo Product Recommendations is a WooCommerce upsell and cross-sell plugin for store owners who want to show relevant products at the moment customers are most ready to buy. After a shopper adds a product to the cart, a responsive recommendation popup can present compatible accessories, complementary products, or a higher-value alternative without taking the shopper away from the current page.
 
-It is useful for online stores selling electronics, fashion, beauty products, food, software, and other product types where customers may need an accessory, matching item, replacement, or upgrade. For example, suggest a phone case and screen protector after a smartphone is added to the cart, or show a matching T-shirt after a customer chooses jeans.
+A shopper who has just added something to the cart is the easiest person to sell to. They have decided to buy, the card is out, and one good suggestion is often enough: a case for the phone, a belt for the jeans, batteries for the toy.
 
-== How It Works ==
-1. Choose the products or rules that should trigger a recommendation.
-2. Display the offer in a customizable popup after the customer adds an item to the cart.
-3. Let the customer add the recommended product with AJAX and continue shopping or check out.
+Leo Product Recommendations shows that suggestion at exactly the right moment. As soon as a product goes into the cart, a popup confirms it and shows the products you want to recommend. The shopper adds one with a single click, without leaving the page, and carries on shopping or goes to checkout.
 
-== Build Your Recommendation Strategy ==
-Use manual selection when you want complete control over the products shown for a specific item. Use dynamic selection to recommend products by category, tag, upsell, cross-sell, best-selling products, top-rated products, sale items, product range, and other WooCommerce criteria. Global recommendations can provide a store-wide default, while product-level settings can be used for more precise offers.
+No extra page, no redirect, no copy and paste of shortcodes. Install it, choose what to recommend, and the popup works on your shop, category and product pages.
 
-Customize the popup heading, description, product layout, colors, typography, background, and other styling options to match your store. Choose a product grid in the free version, with additional layout and styling options available in Pro.
+= Why store owners use it =
+
+* **Bigger orders without more traffic.** You already paid to get the visitor. The popup turns one item into two or three.
+* **Suggestions that make sense.** You decide what goes with what, product by product, or set one rule for the whole store.
+* **Nothing to set up if you use Upsells and Cross-sells.** The popup can show the ones you already added in WooCommerce.
+* **Shoppers stay in the flow.** They add recommended products, including variable products with options, right inside the popup.
+* **You can measure it.** GA4-ready dataLayer events show how much the recommendations sell.
+
+= How it works =
+
+1. A shopper adds a product to the cart, from the shop page, a category page or the product page.
+2. A popup confirms the add and shows your recommended products.
+3. They add a recommendation with one click or carry on shopping. Products already in the cart are never suggested again.
+
+= Three ways to choose what to recommend =
+
+**1. Your WooCommerce Upsells and Cross-sells.** If you already set them under Product data > Linked Products, the popup uses them. Upsells come first, then Cross-sells. You can turn each one on or off.
+
+**2. Hand-picked products.** On any product, open the Recommendations tab and pick what to suggest, then drag to set the order. Best for accessories and items you know sell together.
+
+**3. A store-wide rule.** One rule covers every product you haven't set up yourself, for example "4 best sellers from the same category" or "newest products tagged summer". Filter by categories, tags and on-sale products, and sort by best selling, top rated, newest, oldest, price or random.
+
+Running a sale? Turn on Campaign Mode and every product shows your campaign rule until you turn it off.
+
+Hidden and out of stock products are skipped automatically.
+
+= Track the revenue it brings in =
+
+If your site uses Google Tag Manager (or anything else that sets up a dataLayer), the popup pushes GA4 ecommerce events: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`. Each one carries the product data and the product that opened the popup, so you can report exactly what the recommendations sell. Your normal `add_to_cart` tracking keeps working, and GTM4WP picks up products added from the popup.
+
+Want the numbers without setting up GA4? The Pro version has a built-in analytics dashboard.
+
+= Works with your store =
+
+* Simple, variable and grouped products, with options chosen right in the popup
+* Shop, category and single product pages, WooCommerce blocks and shortcodes
+* Product bundles, subscriptions and other products with their own add to cart handling (the page reloads normally and the popup opens after it)
+* Popular themes such as Astra, Storefront, Kadence, OceanWP, Blocksy and the default Twenty themes
+* Page builders such as Elementor
+* HPOS and the block cart and checkout
+* Translation ready
+
+The popup content loads only after a product is added to the cart, so it doesn't slow down your pages.
+
+= Free features =
+
+* Recommendation popup after add to cart
+* Uses your WooCommerce Upsells and Cross-sells
+* Hand-picked recommendations per product
+* Store-wide rule-based recommendations, with Campaign Mode
+* One-click add to cart inside the popup, variable products included
+* Grid layout with items per row for desktop, tablet and mobile
+* Popup heading with the added product's name, or your own heading and description
+* Limit how often each visitor sees the popup
+* GA4 / Google Tag Manager dataLayer events
+* Custom CSS
+* Template overrides from your theme, plus action and filter hooks for developers
+
+= Pro features =
+
+[Leo Product Recommendations Pro](https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=upgrade&utm_content=readme) is for stores that want to see the results and fine-tune the popup:
+
+* **Analytics dashboard.** Revenue, orders and adds to cart that came from the popup, a simple funnel, the product pairs that sell best together, and average order value with vs without a recommendation. Data stays in your own database.
+* **Rules per product.** Give any product its own rule instead of the store-wide one, for example "on-sale products from the Accessories category".
+* **Slider layout** with its own items per row, autoplay and navigation settings
+* **Popup size** for desktop, tablet and mobile
+* **Your brand colors** for the popup, buttons and products
+* **Show or hide** the Continue Shopping, Checkout and close buttons
+
+[See Pro features and pricing](https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=upgrade&utm_content=readme-cta)
+
+= Demos =
+
+See the popup on a demo store: [smartphones](https://www.leocoder.com/demo/lc-product-recommendations/product-category/electronics/mobile/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [electronics](https://www.leocoder.com/demo/lc-product-recommendations/product-category/electronics/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [laptops](https://www.leocoder.com/demo/lc-product-recommendations/product-category/electronics/laptop/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [shoes](https://www.leocoder.com/demo/lc-product-recommendations/product-category/clothing/shoes/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [food](https://www.leocoder.com/demo/lc-product-recommendations/product-category/food/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [clothing](https://www.leocoder.com/demo/lc-product-recommendations/product-category/clothing/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [jewellery](https://www.leocoder.com/demo/lc-product-recommendations/product-category/jewellery/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [leather](https://www.leocoder.com/demo/lc-product-recommendations/product-category/leather/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [software](https://www.leocoder.com/demo/lc-product-recommendations/product-category/software/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [toys](https://www.leocoder.com/demo/lc-product-recommendations/product-category/toys/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme), [fashion](https://www.leocoder.com/demo/lc-product-recommendations/product-category/fashion/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme) and [sports](https://www.leocoder.com/demo/lc-product-recommendations/product-category/sports/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=demo&utm_content=readme).
+
+= Setup video =
+
+[youtube https://youtu.be/M5i8FDHge2s]
+
+[Read the documentation](https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=docs&utm_content=readme)
 
 [youtube https://youtu.be/6ojRz6bK9Xo]
 
 [youtube https://youtu.be/3t--SH1MjDw]
 
-Recommendations are loaded with AJAX so customers can review and add products with fewer page loads. This keeps the offer close to the original purchase and creates a faster shopping experience.
-
-## How to Set Up Leo Product Recommendations ##
-[youtube https://youtu.be/M5i8FDHge2s]
-
-[**See Details Documentation »**](https://cutt.ly/rjE8eiu)
-
-## Key Features ##
-* Responsive WooCommerce product recommendation popup
-* Related product, upsell, and cross-sell offers after add to cart
-* Manual product selection for curated offers
-* Dynamic selection by product data and WooCommerce rules
-* Global recommendations with product-level control
-* Customizable popup heading and description
-* Product grid display settings
-* AJAX add to cart
-* Simple, variable, and grouped product support
-* Single product and product archive page support
-* Custom CSS options
-* Template overrides through your theme
-* Gutenberg blocks and page builder support, including Elementor, Divi, and WPBakery
-* Quick checkout button
-
-## For Developers and Advanced Store Builds ##
-Developers can override popup templates from a theme and use the plugin's action and filter hooks to customize or extend the recommendation experience. The plugin is designed to work with popular WooCommerce themes and page builders, including Elementor, Divi, and WPBakery.
-
-## Pro Features ##
-The Pro version adds more layout, targeting, visibility, and styling options for WooCommerce product recommendations.
-
-* Slider Layouts
-* Dynamic Selection
-* Modal Color Settings
-* Modal Sizes Settings
-* Recommended Product Color Settings 
-* Items visibility and more
-
-[**Pro Version Details »**](https://cutt.ly/LjE8qAj)
-
-## Demos ##
-Explore product recommendation popup examples for different types of WooCommerce stores:
-
-[ 👉SMARTPHONE](https://cutt.ly/EjE3JbC)
-[ 👉ELECTRONICS](https://cutt.ly/RjE3CKI)
-[ 👉COMPUTER](https://cutt.ly/RjE3BE0)
-[ 👉SHOES](https://cutt.ly/UjE3N3P)
-[ 👉FOOD](https://cutt.ly/djE3M3P)
-[ 👉CLOTHING](https://cutt.ly/zjE312p)
-[ 👉JEWELLERY](https://cutt.ly/BjE30CR)
-[ 👉LEATHER](https://cutt.ly/QjE39ni)
-[ 👉SOFTWARE](https://cutt.ly/mjE33SE)
-[ 👉TOYS](https://cutt.ly/CjE380X)
-[ 👉FASHION](https://cutt.ly/EjE345n)
-[ 👉SPORTS](https://cutt.ly/7jE35lO)
-
 == Privacy ==
 
 The plugin does not collect any data by itself. If you choose to send feedback when you deactivate it, only the reason you pick, any comment you write and the plugin version are sent to LeoCoder. No site URL or other site details are sent. You can skip the feedback form.
 
+The dataLayer events are pushed only inside the visitor's browser, to a dataLayer your site already has. The plugin does not send them anywhere.
+
 == Installation ==
 
-### Minimum Requirements ##
+= Requirements =
 
-* WordPress version 5.7 or greater is required
-* WooCommerce version 7.0 or greater is required
-* PHP version 7.4 or greater is required
+* WordPress 6.6 or later
+* WooCommerce 7.0 or later
+* PHP 7.4 or later
 
-### Automatic Installation ##
+= Install from your dashboard =
 
-1. From the dashboard Navigate to **Plugins > Add New**
-2. Search **Leo Product Recommendations for WooCommerce**
-5. Click on the **Install Now** button
-5. When the installation is complete, click the **Activate** button to activate the plugin.
+1. Go to **Plugins > Add New** and search for **Leo Product Recommendations**.
+2. Click **Install Now**, then **Activate**.
+3. Open **LPR Settings > Settings** to choose your default recommendations, or edit a product and open its **Recommendations** tab to pick products.
 
-### Manual Installation ###
+= Install manually =
 
-#### Install From WordPress Dashboard: ####
-1. From the dashboard Navigate to **Plugins > Add New**
-2. Click on the **Upload Plugin** button at the top of the screen
-3. Select the zip file from your local filesystem
-4. Click on the **Install Now** button
-5. When the installation is complete, you’ll see “Plugin installed successfully.” Click on the **Activate Plugin** button at the bottom of the page.
+1. Download the plugin zip.
+2. Go to **Plugins > Add New > Upload Plugin**, choose the zip and click **Install Now**.
+3. Click **Activate Plugin**.
 
-#### Install Using FTP/SFTP: ####
-If you are unable to install the plugin from your WordPress dashboard you can install the plugin by the following method using FTP / SFTP
-
-1. Unzip the plugin file
-2. Connect to your WordPress server with your FTP / SFTP client (Fileziall, Cyberduck, etc)
-3. Copy the plugin folder to the **wp-content/plugins** folder in your WordPress directory. This installs the plugin to your WordPress site.
-4. Navigate to your Plugins admin screen from the WordPress dashboard and locate the newly uploaded Plugin in the list.
-5. Click the plugin’s **Activate** link.
-
-<sub>Note: After activating the plugin it will automatically enable “Enable AJAX add to cart buttons on archives” setting and disable “Redirect to the cart page after successful addition” setting. It is a required setting to work the plugin properly.</sub>
+On activation the plugin turns on WooCommerce's "Enable AJAX add to cart buttons on archives" setting and turns off "Redirect to the cart page after successful addition", so the popup can open on shop and category pages.
 
 == Frequently Asked Questions ==
-= How to translate it to another language =
-The plugin is completely translation-ready for any language. You need to use the **Loco Translate** plugin.
-[**More Details Documentation »**](https://leocoder.com/docs/woocommerce-product-recommendations/translation/)
 
-= Does it work for product archive single and product single page? =
-Yes, it works perfectly for a single product page and product archive page.
+= Is the free version really free? =
 
-= Does it work with WooCommerce Products shortcode and  Gutenberg Products Blocks?  =
-Yes, It works for  WooCommerce Products shortcode and all Gutenberg Products Blocks.
+Yes. The popup, hand-picked products, Upsells and Cross-sells, the store-wide rule and the GA4 events are all free, with no limit on products or popups. Pro adds analytics, rules per product and more design options.
 
-= Does it work with DIVI (WooCommerce Builder), Elementor, and WPBakery builder?  =
-Yes, This plugin is compatible with DIVI, WooCommerce Builder for DIVI, Elementor, and WPBakery page builder.  
+= Will it slow down my store? =
 
-= Besides Simple Product does it work for Variable Product & Grouped Product? =
-Yes, It works on all types of products including  Simple products, Variable products & Grouped Product
+No. The plugin adds two small scripts and one stylesheet. The recommended products are fetched with AJAX only after a shopper adds something to the cart, so your pages don't load any extra product data.
 
-= Does it work with a quick view? =
-Yes, it works with quick view of all major quick view plugins. If it does not work for your quick view option please contact support quickly to fix it.
+= Does it work on the shop page and the product page? =
 
-= How to override popup templates via a theme? =
-All template files are available in the templates folder inside plugin files.
-In the templates files, filter and action hooks are available that allow you to add/edit popup templates.
+Yes. The popup opens after add to cart on shop and category pages, on single product pages, and in WooCommerce product blocks and shortcodes.
 
-You also can overwrite template files with your theme. Create a directory as `/lpr/templates/` and copy the template file inside the directory.
-Example: To `overwrite template-modal.php` file by your theme then the file structure should be `wp-content/themes/yourtheme/lpr/templates/template-modal.php`
+= Does it work with variable and grouped products? =
 
-<sub>Note: You need some development knowledge to overwrite template files or it may cause an error.</sub>
+Yes, both for the product being added and for the products shown in the popup. Customers choose options inside the popup.
+
+= What if a product needs a page reload to add to cart? =
+
+Product types with their own add to cart handling, such as bundles, subscriptions or products with file uploads, are added the normal WooCommerce way. The popup then opens after the page loads.
+
+= Can I track sales from the recommendations in GA4? =
+
+Yes. When your site has a dataLayer (for example from Google Tag Manager), the popup pushes `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart` in GA4 ecommerce format. Create GA4 event tags for them in GTM. Products added from the popup also send GTM4WP's normal `add_to_cart`.
+
+= Does it use the Upsells and Cross-sells I already set in WooCommerce? =
+
+Yes. Products with nothing set in their own Recommendations tab show their Upsells first, then their Cross-sells. Products without either use your store-wide rule. You can turn Upsells and Cross-sells on or off separately in LPR Settings > Default Recommendations.
+
+= Can I stop the popup from showing too often? =
+
+Yes. In the settings you can show it every time or limit it to a number of times per visitor.
+
+= Does it work with Elementor and other page builders? =
+
+Yes. It works with WooCommerce products shown by Elementor and other builders that use the standard WooCommerce add to cart buttons and product forms.
+
+= How do I translate it? =
+
+The plugin is translation ready. Use a plugin such as Loco Translate. [Translation guide](https://leocoder.com/docs/woocommerce-product-recommendations/translation/?utm_source=wordpress.org&utm_medium=plugin-page&utm_campaign=docs&utm_content=readme)
+
+= Can I change the popup templates? =
+
+Yes. Copy a file from the plugin's `templates` folder to `your-theme/lpr/templates/` and edit it there. The templates also have action and filter hooks. You need some PHP knowledge for this.
 
 == Screenshots ==
-1. Product Recommendations Preview
-2. Ajax Add To Cart
-3. Flexible Popup Heading
-4. Selection Panel
-5. Settings Panel
-6. Popup Layouts
+
+1. Recommendation popup after add to cart
+2. AJAX add to cart inside the popup
+3. Popup heading with the added product's name
+4. Picking recommended products on the product edit screen
+5. Settings page
+6. Popup layouts
 
 == Changelog ==
+= 3.5.0 =
+* New: Use WooCommerce's own Upsells and Cross-sells (Product data > Linked Products) as recommendations. Products with nothing set in their Recommendations tab show their linked products first, and the store-wide rule covers the rest. On by default for new installs. Existing stores: turn it on in LPR Settings > Default Recommendations.
+* New: The product's Recommendations tab says when the popup will use its linked products.
+* New: LPR Settings > Analytics shows a preview of the Pro analytics dashboard. The free version does not track anything.
+* Improvement: Clearer settings. The Global tab is now Default Recommendations, with numbered steps (linked products, then the store-wide rule). Skip Manual Selection is now called Campaign Mode. Your saved settings don't change.
+* Improvement: Plugin renamed to Leo Product Recommendations: Upsell & Cross-sell Popup for WooCommerce. Settings and recommendations are not affected.
+* Improvement: Documentation and support links in the plugin now go straight to leocoder.com.
+* Improvement: The first item under LPR Settings is now called Settings, the same as with Pro.
+* Improvement: The "Popup Show" setting description can now be translated.
+* Fix: Headings with more than one [single, plural] pattern now show the right words, and spaces after the comma are trimmed.
+* Developer: Filter `lpr_linked_product_ids`. Recommendation type `linked` in the dataLayer events.
+
 = 3.4.0 =
 * New: The popup also opens after a normal (page reload) add to cart, for example for product bundles, subscriptions, bookings, products with file uploads and add to cart links.
 * New: GA4-ready dataLayer events for the popup: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`, with product data, so you can measure the revenue the popup brings in. Pushed only when the site already has a dataLayer (for example Google Tag Manager). Your existing add_to_cart tracking is not changed.

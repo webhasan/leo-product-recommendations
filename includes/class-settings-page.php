@@ -85,6 +85,11 @@ class Settings_Page {
 					isset($page['icon']) ? $page['icon'] : '',
 					isset($page['position']) ? $page['position'] : null
 				);
+
+				// First submenu item gets its own short name ("Settings") instead of repeating the menu title.
+				if (!empty($page['submenu_title'])) {
+					add_submenu_page($page['slug'], $page['page_title'], $page['submenu_title'], 'manage_options', $page['slug']);
+				}
 			} else {
 				$hook = add_submenu_page(
 					$page['parent'],
@@ -178,7 +183,17 @@ class Settings_Page {
 	public function add_sections() {
 		foreach ($this->get_pages() as $page) {
 			foreach ($this->get_sections($page) as $section) {
-				add_settings_section($section['id'], isset($section['title']) ? $section['title'] : '', '__return_false', $section['id']);
+				$intro = isset($section['description']) ? $section['description'] : '';
+				add_settings_section(
+					$section['id'],
+					isset($section['title']) ? $section['title'] : '',
+					function () use ($intro) {
+						if ($intro) {
+							echo '<p class="lpr-section-intro">' . wp_kses_post($intro) . '</p>';
+						}
+					},
+					$section['id']
+				);
 			}
 		}
 	}

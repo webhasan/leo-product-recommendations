@@ -17,9 +17,20 @@ Order of decision:
    Recommendations tab, it is used:
    - Manual selection: the hand-picked products, in the saved order.
    - Dynamic selection (Pro UI): a query by categories, tags, sort, on-sale and count.
-3. **Global fallback.** If the product has no manual products and no dynamic selection,
-   and Global is active, the Global rule is used.
-4. **Nothing.** If none of the above applies, no recommendations.
+3. **WooCommerce linked products (3.5.0+).** If the product has no manual products and no
+   dynamic selection, and `global_linked_upsells` and/or `global_linked_cross_sells` is on,
+   its Upsells then Cross-sells are used (published, not hidden, in stock, not itself,
+   capped at the Global "Number of Products"). Type `linked` in the dataLayer/analytics.
+   Code: `uses_linked_products()`, `get_linked_product_ids()`, filter `lpr_linked_product_ids`.
+   Skipped when Skip Manual Selection forces Global. The product's Recommendations tab shows
+   a hint when this applies.
+4. **Global fallback.** If the product has no manual products, no dynamic selection and no
+   usable linked products, and Global is active, the Global rule is used.
+5. **Nothing.** If none of the above applies, no recommendations.
+
+**Owner intent (linked products default):** on for new installs (activation writes the
+default `1`), off for stores that already had settings (the keys are missing, and a missing
+checkbox reads as off; activation code writes `''` for them so reactivating doesn't turn it on).
 
 Product picks and Global are never mixed. A product with manual picks shows only those
 picks, even if there are fewer than the Global "Number of Products".

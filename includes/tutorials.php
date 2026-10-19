@@ -15,6 +15,6 @@ if (!defined('ABSPATH')) {
     <div class="tutorials-wrapper">
         <h3><?php esc_html_e('Basic Setup:', 'leo-product-recommendations');?></h3>
         <div class="tutorial-video"><iframe style="max-width: 100%" width="1000" height="560" src="https://www.youtube.com/embed/M5i8FDHge2s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-        <h3><a href="https://cutt.ly/KjE8vEF" target="_blank"><?php esc_html_e('See Details Documentation','leo-product-recommendations') ?></a></h3>
+        <h3><a href="https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=tutorials" target="_blank"><?php esc_html_e('See Details Documentation','leo-product-recommendations') ?></a></h3>
     </div>
 </div>
