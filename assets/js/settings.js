@@ -55,8 +55,6 @@
       }
 
       $('#lpr-field-layout_type input[type="radio"]').on('change', function () {
-        console.log(this.value);
-
         if (this.value === 'slider') {
           $('.lpr-setting-page #lpr-field-slider_options').closest('tr').slideDown();
           $('.lpr-setting-page #lpr-field-grid_options').closest('tr').hide();
