@@ -26,7 +26,7 @@
 | Key | Type | Content |
 |---|---|---|
 | `lc_lpr_settings` | option | All settings (Free and Pro), one array |
-| `lc_lpr_settings_backup` | option (not autoloaded) | One-time copy taken before 3.3.0 first saves: `{time, version, settings}` |
+| `lc_lpr_settings_backup` | option (not autoloaded) | One-time copy taken before 3.4.0 first saves: `{time, version, settings}` |
 | `_lc_lpr_data` | product post meta | `heading_type`, `heading`, `heading_article`, `type` (`manual-selection` / `dynamic-selection`), `products`, `categories`, `tags`, `orderby`, `sale`, `number` |
 | `lpr-popup-count` | browser localStorage | `{count, time}` for the Popup Show limit |
 | `lpr_added_product` | cookie (5 min, COOKIEPATH, not HttpOnly) | Product ID added with a normal form post; `modal.js` opens the popup on the next page load and deletes it (since 3.4.0) |

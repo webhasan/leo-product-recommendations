@@ -40,7 +40,7 @@ final class Product_Recommendations {
 	 * Per-request cache of the settings schema (pages, sections, fields).
 	 *
 	 * @var array|null
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 */
 	static protected $settings_pages_cache = null;
 
@@ -48,7 +48,7 @@ final class Product_Recommendations {
 	 * Per-request cache of all fields keyed by field id.
 	 *
 	 * @var array|null
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 */
 	static protected $field_map_cache = null;
 
@@ -590,7 +590,7 @@ final class Product_Recommendations {
 	 * Allowed tags and attributes for the inline SVG icons in the popup templates
 	 * (wp_kses_post() strips <svg>, which hid the cart and check icons).
 	 *
-	 * @since 3.3.1
+	 * @since 3.4.0
 	 * @return array wp_kses() allowed HTML.
 	 */
 	public static function svg_allowed_html() {
@@ -1524,7 +1524,7 @@ final class Product_Recommendations {
 	/**
 	 * Replace all settings and refresh the in-request cache.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @param array|null $value New settings array.
 	 * @return bool
 	 */
@@ -1764,7 +1764,7 @@ final class Product_Recommendations {
 	 * Normalize a settings schema: sub-fields are read from `children`, `chields`
 	 * (Free 2022-2026) or `childs` (Pro up to 3.1) and stored under `children`.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @param array $pages Settings pages.
 	 * @return array
 	 */
@@ -1795,7 +1795,7 @@ final class Product_Recommendations {
 	/**
 	 * Normalize one field definition (see normalize_settings_pages()).
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @param array $field Field definition.
 	 * @return array
 	 */
@@ -1822,7 +1822,7 @@ final class Product_Recommendations {
 	 * All fields (including sub-fields) keyed by field id, with the id of the
 	 * settings page (option name) they belong to in `_page`.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @return array
 	 */
 	public function get_field_map() {
@@ -1877,7 +1877,7 @@ final class Product_Recommendations {
 	 * (it defines LPR_PRO_SHARED_SETTINGS). An older Pro brings its own copy of the
 	 * framework; loading both in one request would declare the same functions twice.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @return bool
 	 */
 	public function use_shared_settings() {
@@ -1886,9 +1886,9 @@ final class Product_Recommendations {
 
 	/**
 	 * Keep a one-time copy of the settings, taken before the shared framework
-	 * (3.3.0) saves them for the first time. Not autoloaded.
+	 * (3.4.0) saves them for the first time. Not autoloaded.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @return void
 	 */
 	public function maybe_backup_settings() {
@@ -2356,7 +2356,7 @@ final class Product_Recommendations {
 	 * that @wordpress/scripts writes next to it. The version is a content hash, so
 	 * browsers pick up every new build.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @param string $name       Script name, e.g. 'panel' for assets/js/panel.min.js.
 	 * @param array  $extra_deps Globals the script uses without importing them (jQuery, wp.i18n, ...).
 	 * @return array { dependencies: string[], version: string }

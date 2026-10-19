@@ -1,7 +1,7 @@
 <?php
 namespace LoeCoder\Plugin\ProductRecommendations;
 /**
- * Plugin settings pages framework (shared by Free and Pro since 3.3.0)
+ * Plugin settings pages framework (shared by Free and Pro since 3.4.0)
  *
  * Pages, sections and fields come from Product_Recommendations::settings_pages().
  * Pro adds its own pages and fields with the `lpr_settings_pages` filter and can
@@ -61,7 +61,7 @@ class Settings_Page {
 	/**
 	 * Settings pages (cached by the base class).
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @return array
 	 */
 	private function get_pages() {
@@ -142,7 +142,7 @@ class Settings_Page {
 	 * Requires a valid nonce and an existing color group. Only that group's
 	 * sub-settings are removed; nothing happens for an unknown group.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @return void
 	 */
 	private function maybe_reset_colors() {
@@ -343,7 +343,7 @@ class Settings_Page {
 	/**
 	 * Fields (including sub-fields) that a settings page (option) manages.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @param string $option_id Option name / page id.
 	 * @return array Field definitions keyed by id.
 	 */
@@ -364,7 +364,7 @@ class Settings_Page {
 	 *
 	 * Built to accept every value that Free and Pro have stored so far:
 	 * - Stored keys this page does not manage are kept (for example Pro settings while
-	 *   Pro is inactive). Before 3.3.0 they were lost on save.
+	 *   Pro is inactive). Before 3.4.0 they were lost on save.
 	 * - Colors accept hex, rgb() and rgba() as saved by the color picker.
 	 * - Unknown posted keys are kept, sanitized as text.
 	 *
@@ -412,7 +412,7 @@ class Settings_Page {
 	/**
 	 * Option name being sanitized (the filter name is sanitize_option_{$option}).
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @return string
 	 */
 	private function current_option_id() {
@@ -428,7 +428,7 @@ class Settings_Page {
 	/**
 	 * Sanitize one value by field type.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @param mixed  $value Raw value.
 	 * @param string $type  Field type, empty when unknown.
 	 * @return mixed|null Clean value, or null to leave the key unset (use default).
@@ -476,7 +476,7 @@ class Settings_Page {
 	 * Allowed: '' (no color), #rgb, #rgba, #rrggbb, #rrggbbaa, rgb(), rgba(),
 	 * 'transparent' and plain color names. Anything else becomes ''.
 	 *
-	 * @since 3.3.0
+	 * @since 3.4.0
 	 * @param string $color Raw color.
 	 * @return string
 	 */

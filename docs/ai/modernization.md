@@ -15,7 +15,7 @@ release. Re-check after each `@wordpress/scripts` update.
 
 | Item | Free | Pro | Latest | Notes |
 |---|---|---|---|---|
-| `@wordpress/scripts` | **36.1** (was 6.1) | **36.1** (was 6.2) | 36.1.0 | Done in Free 3.3.1 / Pro 3.2.1. Needs Node 22.22+ / 24.15+. |
+| `@wordpress/scripts` | **36.1** (was 6.1) | **36.1** (was 6.2) | 36.1.0 | Done in Free 3.4.0 / Pro 3.2.0. Needs Node 22.22+ / 24.15+. |
 | `sass` | **1.105** | **1.105** | 1.105 | Done. `darken()` replaced by a fixed color. |
 | Lockfiles | v3 | v3 | | Regenerated. |
 | `*.asset.php` | committed, used | committed, used | | `script_asset()` reads dependencies and version. |
@@ -35,7 +35,7 @@ release. Re-check after each `@wordpress/scripts` update.
 
 React compatibility: the panel uses WordPress's React (18.3.1 on WordPress 7.1) and no
 longer relies on APIs removed in React 19 (`findDOMNode`, legacy render, legacy
-lifecycles). Done in Free 3.3.1 / Pro 3.2.1.
+lifecycles). Done in Free 3.4.0 / Pro 3.2.0.
 
 ## Admin settings page (jQuery plugins, vendored)
 
@@ -65,7 +65,7 @@ and Pro PHP frameworks.
 
 | Duplicated thing | Free | Pro | Notes |
 |---|---|---|---|
-| Settings framework | `class-settings-page.php`, `settings-fields-type.php` | **Done (3.3.0/3.2.0):** removed from Pro | Shared via `lpr_settings_pages` |
+| Settings framework | `class-settings-page.php`, `settings-fields-type.php` | **Done (3.4.0/3.2.0):** removed from Pro | Shared via `lpr_settings_pages` |
 | Settings schema | `default_settings_pages()` | Full page set returned through the filter | Next: Pro could add only its own fields instead of the whole schema |
 | `get_setting()` and helpers | Cached field map | Delegates to Free (own copy kept for compatibility mode and activation defaults) | Remove Pro's copy once Free 3.2.0 support ends |
 | Product panel | `panel.js` + components | Forked copies | One panel in Free with an extension point for Dynamic Selection |
@@ -73,11 +73,11 @@ and Pro PHP frameworks.
 
 ## Suggested order (proposal)
 
-1. ~~Bump `@wordpress/scripts` and `sass`; production build; use `*.asset.php`.~~ Done (3.3.1 / 3.2.1).
+1. ~~Bump `@wordpress/scripts` and `sass`; production build; use `*.asset.php`.~~ Done (3.4.0 / 3.2.0).
 2. ~~Replace `react-reorder`, move to `createRoot`, drop `react-debounce-input` and lodash.~~
-   Done (3.3.1 / 3.2.1).
+   Done (3.4.0 / 3.2.0).
 3. ~~Merge the Free and Pro settings framework into Free; cache the schema.~~ Done.
-   Release rules: Free 3.3.0 ships before Pro 3.2.0; keep Pro `$require_free_version`
+   Release rules: Free 3.4.0 ships before Pro 3.2.0; keep Pro `$require_free_version`
    at 3.2.0 (see `codebase-internals.md`, version-aware loading).
 4. Replace Select2, Spectrum, Lity on the settings page (or rebuild it in React).
 5. Replace Owl Carousel; review the add-to-cart interception.

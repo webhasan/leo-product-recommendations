@@ -45,13 +45,13 @@ pages[]     id (option name), page_title, menu_title, slug, parent, icon, positi
 - Values are read with `$base->get_setting($id)`: stored value, else field default
   (looked up by walking the schema). Checkbox missing from a saved array = off.
 - `get_setting()`, `get_field_type()` and `get_default_setting()` read from the cached
-  field map (3.3.0). Pro's `get_setting()` delegates to Free's. Before that, every call
+  field map (3.4.0). Pro's `get_setting()` delegates to Free's. Before that, every call
   rebuilt the schema, and in Pro also read the plugin file header from disk (about 40
   times per front-end page from Pro's `settings_css()`). In Pro compatibility mode Pro
   still uses its own old `get_setting()`.
 - Front-end CSS is generated from settings in `settings_css()` (`wp_head`).
 
-### One shared framework (Free 3.3.0 + Pro 3.2.0)
+### One shared framework (Free 3.4.0 + Pro 3.2.0)
 
 Until Free 3.2.0 / Pro 3.1.0 the framework existed twice (Pro carried an older copy with
 no sanitizing, little escaping and `childs` instead of `chields`). It now lives only in
@@ -70,7 +70,7 @@ Free:
 - **Sanitizer** (`Settings_Page::sanitize_settings()`), built to accept everything already
   stored:
   - keeps stored keys the current page does not manage (Pro settings survive a save from
-    the Free-only screen; before 3.3.0 they were erased),
+    the Free-only screen; before 3.4.0 they were erased),
   - colors: hex (3, 4, 6, 8 digits), `rgb()`, `rgba()`, `transparent`, color names,
   - numbers: empty means "use default" (key unset), otherwise `absint`,
   - text: `wp_kses` with span/b/strong/i/br (same list as `get_setting()`),
@@ -79,17 +79,17 @@ Free:
   WordPress runs it on every `update_option()` of the option, so it is idempotent.
 - **Reset Colors** needs a nonce (`lpr_reset_colors`) and `manage_options`, and only
   removes sub-fields of an existing wrapper. Unknown group = no change.
-- **Backup:** first admin load under 3.3.0 copies the option to `lc_lpr_settings_backup`
+- **Backup:** first admin load under 3.4.0 copies the option to `lc_lpr_settings_backup`
   (`{time, version, settings}`, not autoloaded). Deleted on uninstall.
 
 ### Version-aware loading
 
 | Free | Pro | Who runs the settings page | Notes |
 |---|---|---|---|
-| 3.3.0+ | none | Free | Free fields + Pro teaser images |
-| 3.3.0+ | 3.1.x or older | Old Pro (its own copy) | Free stays out: no `LPR_PRO_SHARED_SETTINGS` |
+| 3.4.0+ | none | Free | Free fields + Pro teaser images |
+| 3.4.0+ | 3.1.x or older | Old Pro (its own copy) | Free stays out: no `LPR_PRO_SHARED_SETTINGS` |
 | 3.2.0 | 3.2.0+ | Nobody | Pro shows "update Free" and runs in **compatibility mode** (front end + product panel only); old Free hides its page because Pro is active, so no screen can overwrite Pro settings |
-| 3.3.0+ | 3.2.0+ | Free (shared) | Pro adds fields by filter |
+| 3.4.0+ | 3.2.0+ | Free (shared) | Pro adds fields by filter |
 
 Constants: Free defines `LPR_SETTINGS_API_VERSION` (1); Pro defines
 `LPR_PRO_SHARED_SETTINGS`. **Pro's `$require_free_version` must stay at 3.2.0**: raising
@@ -109,7 +109,7 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
 
 - PHP prints `<div id="pr-app" data-id="POST_ID">` inside the WooCommerce
   "Recommendations" product data tab (`option-select-products.php`).
-- `panel.js` mounts with `wp.element.createRoot()` (React 18/19 API, since 3.3.1).
+- `panel.js` mounts with `wp.element.createRoot()` (React 18/19 API, since 3.4.0).
 - **There is no save API.** The React app renders hidden inputs named
   `_lc_lpr_data[...]`, plus nonce `lc_pr_panel_nonce`. They are submitted with the normal
   product form and saved by PHP in `on_save_post()` (`save_post` hook) into post meta

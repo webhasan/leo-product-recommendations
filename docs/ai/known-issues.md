@@ -36,7 +36,7 @@ Remove an item when it is fixed. Add new items as you find them.
 
 ## Security and hardening
 
-Security review (Oct 2026, Free 3.4.0 / Pro 3.2.2) fixed: public REST routes, `nopriv`
+Security review (Oct 2026, Free 3.4.0 / Pro 3.2.0) fixed: public REST routes, `nopriv`
 panel AJAX, popup/REST/tracking data for non-public posts, unescaped Pro CSS and
 templates, `%title%` in the heading, custom CSS output, save handler without capability
 or post type checks, deactivation feedback (`sslverify => false`, no capability check,
@@ -69,7 +69,7 @@ Still open:
 3. Pro's activation defaults add a meaningless `reset_colors` key (the reset link field has
    a `default`). Harmless.
 4. Pro `settings_css()` still echoes setting values without escaping. Values are
-   sanitized on save since 3.3.0, but values stored earlier are printed as they are.
+   sanitized on save since 3.4.0, but values stored earlier are printed as they are.
 
 ## Public docs out of date (leocoder.com)
 
@@ -84,7 +84,7 @@ Still open:
 
 ## Fixed (October 2026)
 
-Shared settings framework (Free 3.3.0 + Pro 3.2.0, see `codebase-internals.md`):
+Shared settings framework (Free 3.4.0 + Pro 3.2.0, see `codebase-internals.md`):
 
 - Grid `100 / items` division by zero guarded in Free and Pro `settings_css()`; empty
   numbers fall back to defaults.
@@ -101,7 +101,7 @@ Shared settings framework (Free 3.3.0 + Pro 3.2.0, see `codebase-internals.md`):
   button): the template printed the SVG icons through `wp_kses_post()`, which strips
   `<svg>`. Now `wp_kses()` with `Product_Recommendations::svg_allowed_html()`.
 
-- Build tools updated to `@wordpress/scripts` 36 (Free 3.3.1 / Pro 3.2.1); Free's
+- Build tools updated to `@wordpress/scripts` 36 (Free 3.4.0 / Pro 3.2.0); Free's
   committed bundles were development builds, now production.
 
 - Product panel ready for React 19: `react-reorder` replaced by `@dnd-kit`, mounted with

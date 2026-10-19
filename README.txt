@@ -164,42 +164,38 @@ Example: To `overwrite template-modal.php` file by your theme then the file stru
 
 == Changelog ==
 = 3.4.0 =
-* Security: The product panel requests now need a logged-in user who can edit products. They were also open to logged-out visitors (protected only by a nonce).
-* Security: The popup only loads for published, visible products, so it can no longer show the title or image of a draft, private or non-product post.
-* Security: Recommendations are saved only for products, only by users who can edit them, and not on autosaves or revisions.
-* Security: The product title in the popup heading is escaped. Custom CSS is printed without tags (so it can't leave the style element) and selectors like `a > b` now work.
-* Fix: The deactivation feedback form showed no radio buttons or text fields since 3.1.0, so feedback could not be sent.
-* Privacy: Deactivation feedback now sends only the reason, your comment and the plugin version. The site URL, theme, plugin list and server details are no longer sent.
-* Security: Deactivation feedback is sent with TLS certificate checks on and only by users who can manage plugins.
-* New: GA4-ready dataLayer events for the popup: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`, with product data, so you can measure the revenue the popup brings in. Pushed only when the site already has a dataLayer (for example Google Tag Manager). Your existing add_to_cart tracking is not changed.
 * New: The popup also opens after a normal (page reload) add to cart, for example for product bundles, subscriptions, bookings, products with file uploads and add to cart links.
+* New: GA4-ready dataLayer events for the popup: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`, with product data, so you can measure the revenue the popup brings in. Pushed only when the site already has a dataLayer (for example Google Tag Manager). Your existing add_to_cart tracking is not changed.
+* New: One settings framework shared with the Pro version. Settings are kept as they are.
+* New: One-time backup of the plugin settings before the first save with this version.
+* Improvement: Modern build tools (@wordpress/scripts 36). Admin scripts are smaller and load with automatic cache busting.
+* Improvement: Product panel ready for React 19 (new drag and drop, keyboard sorting with space and arrow keys).
+* Improvement: Settings are loaded once per request (faster pages).
 * Fix: Product types with their own add to cart handler (bundles, composites, subscriptions...) showed "Something went wrong" on the product page. They now add to cart the normal WooCommerce way.
 * Fix: Product options sent as checkbox groups or multi-selects kept only the last choice.
 * Fix: "Buy now" buttons in the product form now work instead of opening the popup.
 * Fix: GTM4WP did not record add to cart for products added from the popup. The popup now loads GTM4WP's product data for its products.
-* Developer: Filter `lpr_popup_tracking_data` (on by default when GTM4WP is active).
-* Fix (Blocksy): two add to cart requests on the product page when Blocksy's AJAX add to cart is on, the popup opening again on the next page, and two add to cart buttons on each popup product.
-* Fix (Woodmart): with Woodmart's AJAX add to cart on, the product page sent two add to cart requests. The plugin now leaves those forms to Woodmart.
-* Fix: No JavaScript error when a theme fires added_to_cart without a button (Flatsome mini cart).
-* Developer: Filters `lpr_popup_datalayer`, `lpr_datalayer_item`, `lpr_datalayer_item_id_type` (`id` or `sku`) and `lpr_datalayer_item_list_name`.
-* Developer: Filter `lpr_theme_ajax_add_to_cart_selector` for themes that add the product form to the cart with their own AJAX call.
-* Developer: Filters `lpr_ajax_add_to_cart_supported`, `lpr_popup_after_reload`, `lpr_popup_after_reload_on_cart`, and the `lpr-no-ajax` form class to opt a form out of AJAX add to cart.
-
-= 3.3.1 =
 * Fix: Cart and check icons were missing in the popup, so the cart count badge overlapped the Checkout button.
 * Fix: The popup grid showed one product fewer per row than set with themes that add a gap to product lists (for example Astra).
-* Improvement: Modern build tools (@wordpress/scripts 36). Admin scripts are smaller and load with automatic cache busting.
-* Improvement: Product panel ready for React 19 (new drag and drop, keyboard sorting with space and arrow keys).
-* Requires WordPress 6.6 or later.
-
-= 3.3.0 =
-* New: One settings framework shared with the Pro version. Settings are kept as they are.
-* New: One-time backup of the plugin settings before the first save with this version.
-* Fix: Saving settings without Pro active no longer removes Pro settings.
 * Fix: Hidden and out-of-stock products are always excluded from dynamic recommendations.
+* Fix: Saving settings without Pro active no longer removes Pro settings.
 * Fix: An empty or zero "items per row" value no longer causes a PHP error.
+* Fix: No JavaScript error when a theme fires added_to_cart without a button (Flatsome mini cart).
+* Fix (Blocksy): two add to cart requests on the product page when Blocksy's AJAX add to cart is on, the popup opening again on the next page, and two add to cart buttons on each popup product.
+* Fix (Woodmart): with Woodmart's AJAX add to cart on, the product page sent two add to cart requests. The plugin now leaves those forms to Woodmart.
+* Fix: The deactivation feedback form showed no radio buttons or text fields since 3.1.0, so feedback could not be sent.
+* Security: The product panel requests now need a logged-in user who can edit products. They were also open to logged-out visitors (protected only by a nonce).
+* Security: The popup only loads for published, visible products, so it can no longer show the title or image of a draft, private or non-product post.
+* Security: Recommendations are saved only for products, only by users who can edit them, and not on autosaves or revisions.
+* Security: The product title in the popup heading is escaped. Custom CSS is printed without tags (so it can't leave the style element) and selectors like `a > b` now work.
 * Security: "Reset colors" now requires a valid nonce and only resets the color settings.
-* Improvement: Settings are loaded once per request (faster pages).
+* Security: Deactivation feedback is sent with TLS certificate checks on and only by users who can manage plugins.
+* Privacy: Deactivation feedback now sends only the reason, your comment and the plugin version. The site URL, theme, plugin list and server details are no longer sent.
+* Developer: Filters `lpr_popup_datalayer`, `lpr_datalayer_item`, `lpr_datalayer_item_id_type` (`id` or `sku`) and `lpr_datalayer_item_list_name`.
+* Developer: Filters `lpr_ajax_add_to_cart_supported`, `lpr_popup_after_reload`, `lpr_popup_after_reload_on_cart`, and the `lpr-no-ajax` form class to opt a form out of AJAX add to cart.
+* Developer: Filter `lpr_theme_ajax_add_to_cart_selector` for themes that add the product form to the cart with their own AJAX call.
+* Developer: Filter `lpr_popup_tracking_data` (on by default when GTM4WP is active).
+* Requires WordPress 6.6 or later.
 
 = 3.2.0 =
 * Updated compatibility metadata for WordPress 7.1 and WooCommerce 11.1.1.

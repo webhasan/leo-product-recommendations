@@ -30,7 +30,7 @@ add_action('before_woocommerce_init', function(){
 });
 
 /**
- * Shared settings framework API (3.3.0+).
+ * Shared settings framework API (3.4.0+).
  * Pro 3.2.0+ checks this to know it can register its settings with the free plugin.
  */
 if (!defined('LPR_SETTINGS_API_VERSION')) {

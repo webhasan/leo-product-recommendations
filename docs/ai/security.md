@@ -1,4 +1,4 @@
-# Security model (since Free 3.4.0 / Pro 3.2.2)
+# Security model (since Free 3.4.0 / Pro 3.2.0)
 
 Rules every change must keep. Reviewed Oct 2026.
 
