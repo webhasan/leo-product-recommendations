@@ -10,7 +10,9 @@
         });
     },
 
+    // Custom CSS field was removed in 3.6.0 (saved CSS is still printed on the store).
     cssEditor: function () {
+      if (!$(".css-editor").length || !window.wp || !wp.codeEditor || !window.lpr_css_editor) return;
       wp.codeEditor.initialize($(".css-editor"), lpr_css_editor);
     },
 

@@ -61,6 +61,7 @@
    z-index: 999998;
    width: 100vw;
    height: 100vh;
+   height: 100dvh;
    background-color: rgba(0,0,0,.5);
  }
  
@@ -107,6 +108,7 @@
  
    .lpr-modal-content {
      max-height: calc(100vh - 3.5rem);
+     max-height: calc(100dvh - 3.5rem);
     //  overflow: hidden;
      position: relative;
      width: 100%;
@@ -594,7 +596,6 @@
        button[type="submit"].button {
          font-size: 14px;
          font-weight: bold;
-         outline: none;
          float: none !important;
        }
        a.button:before,
@@ -651,7 +652,10 @@
      .owl-next {
        position: absolute;
        background: none;
-       outline: none;
+       border: 0;
+       padding: 0;
+       color: inherit;
+       cursor: pointer;
        text-decoration: none;
        display: inline-block;
        font-size: 70px;
@@ -820,4 +824,25 @@ body.oceanwp-theme #lpr-modal ul.woo-entry-inner .btn-wrap {
 // so there is one add to cart button.
 .single-lpr:has(form.cart) .ct-woo-card-actions {
   display: none !important;
+}
+
+
+/* Keyboard focus is visible in the classic popup. */
+.#{$base_class} a:focus-visible,
+.#{$base_class} button:focus-visible,
+.#{$base_class} .lpr-modal-close:focus-visible {
+  outline: 2px solid #2271b1;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .#{$base_class},
+  .#{$base_class} .lpr-modal-dialog,
+  .#{$overlay_class} {
+    transition: none !important;
+  }
+
+  .#{$base_class} .lpr__animated {
+    animation: none !important;
+  }
 }

@@ -79,6 +79,28 @@ Run each with **Pro active** and **Pro inactive**.
     `window.dataLayer` undefined nothing is pushed and nothing is created.
 24. Dynamic selection with "Low Price" / "High Price": the popup order matches the shop's
     "Sort by price" for the same category, including variable and on-sale products.
+25. More Places, cart page (classic and block cart): recommendations show, products in the
+    cart are left out, adding one does not open the popup, the block cart updates and the
+    card fades out. Grid and Slider; on a phone the add button is visible.
+26. Pro: Frequently bought together on a simple and a variable product (button waits for
+    options, price follows the variation), "Add all" adds every ticked item once.
+27. Pro: checkout offer (classic and block checkout) ticks and unticks, totals update,
+    and only products under the price limit are offered.
+28. Pro: thank-you page shows recommendations for the ordered products.
+29. More Places tab: preview follows the card being edited; a place that is off shows only
+    its switch.
+30. Pro Smart picks: status card shows the order count; "Rebuild now" updates it; firing
+    several rebuilds at once gives the same counts as one (build lock).
+31. Pro Smart picks: a product bought together with another ranks it first in the popup,
+    drawer and FBT; products already in the cart are skipped; a product with no pairs gets
+    similar products.
+32. Pro Fill empty spots: a product with fewer hand-picked products than one row is topped
+    up; a full list is left alone.
+33. Pro product panel: "Smart" option shows its note, the picks shown now with reasons, and
+    saves `smart-selection`.
+34. Pro Smart Options: personalize (a viewed product moves to the front of the popup),
+    skip bought (logged-in customer), lower-priced first.
+35. Pro Analytics: "Smart picks vs your own picks" card fills after a popup view and an add.
 Tip: a temporary helper plugin that maps a product to a custom handler type
 (`woocommerce_add_to_cart_handler` filter) and prints test fields is the quickest way to
 cover 15 to 16. Remove it afterwards.

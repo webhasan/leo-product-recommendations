@@ -52,7 +52,7 @@ without leaving the page, then continue shopping or go to checkout.
   `includes/class-product-recommendations.php` (`Product_Recommendations`, singleton,
   namespace `LoeCoder\Plugin\ProductRecommendations`; the "Loe" typo is real, keep it).
 - Requires WP 6.6+, WC 7.0+, PHP 7.4+. HPOS compatible.
-- Settings page: `wp-admin/admin.php?page=lpr-settings` (tabs: General, Style, Global, Tutorials).
+- Settings page: `wp-admin/admin.php?page=lpr-settings` (tabs, most useful first: What to Recommend, Popup, More Places, Discounts, Get Started; Pro adds General and Cart Drawer).
 - Product panel: "Recommendations" tab in WooCommerce Product data (React app, `assets/js/panel.js`).
 - Front end: `assets/js/modal.js` (popup) and `assets/js/ajax-add-to-cart.js` (single product AJAX submit).
 - Build (Node 22.22+): `npm install` once, `npm start` to watch, `npm run build` for production.

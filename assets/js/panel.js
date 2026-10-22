@@ -34,11 +34,11 @@ import ManualSelection from './components/ManualSelection';
   const selectionMethods = [
     {
       id: "manual-selection",
-      title: __("Manual Selection", "leo-product-recommendations"),
+      title: __("Products I pick", "leo-product-recommendations"),
     },
     {
       id: "dynamic-selection",
-      title: __("Dynamic Selection", "leo-product-recommendations"),
+      title: __("Categories and tags", "leo-product-recommendations"),
     },
   ];
 
@@ -184,7 +184,7 @@ import ManualSelection from './components/ManualSelection';
         <div className="pr-field">
           <RecommendationHeading
             textDomain='leo-product-recommendations'
-            heading='Popup Heading'
+            heading={__('Popup Heading', 'leo-product-recommendations')}
             headingTypes = {headingType}
             docURL = 'https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=product-panel'
             initialType = {appData.heading_type}
@@ -215,7 +215,7 @@ import ManualSelection from './components/ManualSelection';
 
           <div className="pr-field">
             <RadioSelection 
-              title = 'Select By'
+              title = {__('Choose Products By', 'leo-product-recommendations')}
               textDomain='leo-product-recommendations'
               docURL = 'https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=product-panel'
               options={selectionMethods} 
@@ -269,5 +269,5 @@ import ManualSelection from './components/ManualSelection';
     );
   };
 
-  React.createRoot(app).render(<SelectProduct />);
+  if (app) React.createRoot(app).render(<SelectProduct />);
 })(wp.element, wp.i18n.__, document.getElementById("pr-app"));

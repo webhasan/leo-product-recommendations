@@ -214,7 +214,21 @@ class Settings_Page {
 				'sanitize_callback' => array($this, 'sanitize_settings'),
 			));
 
-			foreach ($this->get_fields($page) as $field) {
+			$fields = array_values($this->get_fields($page));
+			foreach ($fields as $i => $field) {
+				// Row classes: lpr-row-{id} for scripts, lpr-advanced for the "More options" group.
+				$field['class'] = trim((isset($field['class']) ? $field['class'] . ' ' : '') . 'lpr-row-' . sanitize_html_class($field['id']) . (!empty($field['advanced']) ? ' lpr-advanced' : ''));
+
+				// Rows that share a 'group' (same section, next to each other) show as one card.
+				if (!empty($field['group'])) {
+					$group   = $field['group'];
+					$same    = function ($other) use ($group, $field) {
+						return $other && !empty($other['group']) && $other['group'] === $group && $other['section'] === $field['section'];
+					};
+					$prev    = $same(isset($fields[$i - 1]) ? $fields[$i - 1] : null);
+					$next    = $same(isset($fields[$i + 1]) ? $fields[$i + 1] : null);
+					$field['class'] .= ' lpr-group lpr-group-' . sanitize_html_class($group) . ($prev ? '' : ' lpr-group-start') . ($next ? '' : ' lpr-group-end');
+				}
 				add_settings_field($field['id'], $field['title'], array($this, 'display_field'), $field['section'], $field['section'], $field);
 			}
 		}
@@ -225,6 +239,16 @@ class Settings_Page {
 	 *
 	 * @since      1.0.0
 	 */
+	/**
+	 * The tab to show: the one in ?sec= when it exists, else the first one
+	 * (an old link to a tab that was removed, such as Free's General tab).
+	 */
+	public function active_section($sections) {
+		$ids = wp_list_pluck($sections, 'id');
+		$sec = isset($_GET['sec']) ? sanitize_key(wp_unslash($_GET['sec'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return in_array($sec, $ids, true) ? $sec : $ids[0];
+	}
+
 	public function section_tab($page) {
 		$sections = $this->get_sections($page);
 
@@ -232,7 +256,7 @@ class Settings_Page {
 			return;
 		}
 
-		$active_section = isset($_GET['sec']) ? sanitize_key(wp_unslash($_GET['sec'])) : $sections[0]['id'];
+		$active_section = $this->active_section($sections);
 		?>
 		<div class="nav-tab-wrapper">
 			<?php foreach ($sections as $section): ?>
@@ -257,7 +281,7 @@ class Settings_Page {
 			return;
 		}
 
-		$active_section = isset($_GET['sec']) ? sanitize_key(wp_unslash($_GET['sec'])) : $sections[0]['id'];
+		$active_section = $this->active_section($sections);
 
 		foreach ($sections as $section) {
 			$is_template   = !empty($section['template']);
@@ -324,7 +348,10 @@ class Settings_Page {
 	 */
 	public function get_sections($page) {
 		if (!empty($page) && isset($page['sections'])) {
-			return $page['sections'];
+			// A tab with no fields left (and no template) is not shown.
+			return array_values(array_filter($page['sections'], function ($section) {
+				return !empty($section['template']) || !array_key_exists('fields', $section) || !empty($section['fields']);
+			}));
 		}
 
 		return array();
@@ -412,6 +439,7 @@ class Settings_Page {
 			$field = isset($fields[$key]) ? $fields[$key] : array();
 			$type  = isset($field['type']) ? $field['type'] : '';
 			$clean = $this->sanitize_value($value, $type);
+			$clean = $this->limit_value($clean, $field);
 
 			if (null === $clean) {
 				unset($sanitized[$key]);
@@ -422,6 +450,40 @@ class Settings_Page {
 		}
 
 		return $sanitized;
+	}
+
+	/**
+	 * Keep numbers inside the field's min/max and choices inside its options.
+	 * Out-of-range numbers are clamped; an unknown choice falls back to the default.
+	 *
+	 * @since 3.6.0
+	 * @param mixed $value Sanitized value.
+	 * @param array $field Field definition.
+	 * @return mixed|null
+	 */
+	private function limit_value($value, $field) {
+		if (null === $value || empty($field['type'])) {
+			return $value;
+		}
+
+		if (in_array($field['type'], array('number', 'stepper'), true) && is_numeric($value)) {
+			$value = (int) $value;
+			if (isset($field['min']) && '' !== $field['min']) {
+				$value = max((int) $field['min'], $value);
+			}
+			if (isset($field['max']) && '' !== $field['max']) {
+				$value = min((int) $field['max'], $value);
+			}
+			return $value;
+		}
+
+		if (in_array($field['type'], array('radio', 'select'), true) && !empty($field['options']) && is_array($field['options']) && is_scalar($value)) {
+			if (!array_key_exists((string) $value, $field['options'])) {
+				return isset($field['default']) ? $field['default'] : null;
+			}
+		}
+
+		return $value;
 	}
 
 	/**
@@ -451,9 +513,11 @@ class Settings_Page {
 	private function sanitize_value($value, $type) {
 		switch ($type) {
 			case 'color_picker':
+			case 'swatches':
 				return is_scalar($value) ? self::sanitize_color((string) $value) : '';
 
 			case 'number':
+			case 'stepper':
 				if (is_array($value) || '' === trim((string) $value)) {
 					return null; // empty: fall back to the default
 				}
@@ -465,6 +529,9 @@ class Settings_Page {
 			case 'categories_select':
 			case 'tags_select':
 				return is_array($value) ? array_values(array_map('absint', array_filter($value))) : array();
+
+			case 'products_select':
+				return is_array($value) ? array_values(array_unique(array_filter(array_map('absint', $value)))) : array();
 
 			case 'css':
 				return is_scalar($value) ? wp_strip_all_tags((string) $value) : '';

@@ -3,9 +3,12 @@
         var __ = wp.i18n.__;
 
         function getPopupCount() {
-            const popupData = localStorage.getItem('lpr-popup-count');
-            const hasPopupCount = (popupData && JSON.parse(popupData).count && (JSON.parse(popupData).time > Date.now() - 2 * 3600 * 1000));
-            return hasPopupCount ? JSON.parse(popupData).count : 0;
+            try {
+                const data = JSON.parse(localStorage.getItem('lpr-popup-count') || 'null');
+                return data && data.count && data.time > Date.now() - 2 * 3600 * 1000 ? data.count : 0;
+            } catch (e) {
+                return 0; // storage blocked or a broken value
+            }
         }
 
         // A file the visitor picked can't go through this AJAX call, so the form posts normally.
@@ -64,7 +67,9 @@
             if(!lc_ajax.popup_view_times) lc_ajax.popup_view_times = 'always';
             const popupShowTimes = lc_ajax.popup_view_times === 'always' ? Infinity : +lc_ajax.popup_view_times;
 
-            if(popupShowTimes <= popupCount) {
+            // Popup limit reached: post normally, unless another place (Pro cart drawer)
+            // still shows recommendations after add to cart.
+            if(popupShowTimes <= popupCount && !lc_ajax.ajax_always) {
                 return;
             }
 
@@ -79,6 +84,12 @@
             }
 
             var $submitButton = $form.find('button[type="submit"]');
+
+            // Already adding (double click): don't add twice.
+            if ($submitButton.hasClass('loading') || $form.data('lpr-adding')) {
+                e.preventDefault();
+                return;
+            }
 
             // FormData keeps repeated fields (checkbox groups, multi-selects) that a flat object loses.
             const formData = new FormData(form);
@@ -117,6 +128,7 @@
             $submitButton.attr('data-product_id', data.product_id);
             $submitButton.removeClass( 'added' );
             $submitButton.addClass( 'loading' );
+            $form.data('lpr-adding', true);
 
             // Trigger event before add to cart.
             $( document.body ).trigger( 'adding_to_cart', [ $submitButton,  data]);
@@ -140,17 +152,19 @@
                     nativeSubmit(form, data.product_id, submitter);
 
                 }else if(response && response.success === false) {
-                    alert(response.data && response.data.message ? response.data.message : __('Something went wrong','leo-product-recommendations'));
+                    alert(response.data && response.data.message ? response.data.message : __('Something went wrong. Please try again.','leo-product-recommendations'));
                     $submitButton.removeClass('loading');
                 }else {
-                    alert(__('Something went wrong','leo-product-recommendations'));
+                    alert(__('Something went wrong. Please try again.','leo-product-recommendations'));
                     location.reload(); 
                 }
 
+            }).always(function() {
+                $form.data('lpr-adding', false);
             }).fail(function(response) {
                 const json = response && response.responseJSON;
                 const message = json && json.data && json.data.message ? json.data.message : (json && typeof json.data === 'string' ? json.data : '');
-                alert(message || __('Something went wrong','leo-product-recommendations'));
+                alert(message || __('Something went wrong. Please try again.','leo-product-recommendations'));
                 location.reload();
             });
 

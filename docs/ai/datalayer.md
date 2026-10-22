@@ -26,7 +26,7 @@ Each push is preceded by `{ecommerce: null}`. Payload:
               item_list_id: 'lpr_popup', item_list_name: 'Product Recommendations Popup' }]
   },
   lpr: { source_product_id: '247', source_product_name: 'Basic Gray Jeans',
-         recommendation_type: 'manual' }    // manual | dynamic | global
+         recommendation_type: 'manual' }    // manual | dynamic | linked | smart | global
 }
 ```
 

@@ -51,7 +51,7 @@ class Admin_Ajax {
      */
     public function initial_data() {
         // post ID
-        $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;
+        $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce checked in verify_request() next.
 
         $this->verify_request($post_id);
 
@@ -189,6 +189,8 @@ class Admin_Ajax {
     public function fetch_products() {
         $this->verify_request();
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- nonce checked in verify_request().
+
         // post ID
         $post_id = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;
 
@@ -215,6 +217,8 @@ class Admin_Ajax {
         if (!empty($_GET['query'])) {
             $args['s'] = sanitize_text_field(wp_unslash($_GET['query']));
         }
+
+        // phpcs:enable
 
         $products      = get_posts($args);
         $product_query = new \WP_Query($args);

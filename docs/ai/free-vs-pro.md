@@ -16,18 +16,27 @@
 | Popup size | Locked | Yes |
 | Button visibility (Continue Shopping, Checkout, Close icon) | Locked | Yes |
 | Popup colors and product colors | Locked | Yes |
-| Custom CSS | Yes | Yes |
+| Custom CSS (field removed in 3.6.0, saved CSS still printed) | Yes | Yes |
+| Cart drawer | Locked (example in More Places) | Yes |
+| More Places: cart page, product page FBT, checkout offer, thank-you page | Locked (Pro card + live example) | Yes |
+| Smart picks (store-wide rule, product panel, fill empty spots) | Locked option (accent border, PRO badge) that scrolls to a showcase card (`smart_teaser`) with pairs found in the store's own last 300 orders (`smart_teaser_data()`, cached a day in the `lpr_smart_teaser` transient; visible, in-stock products only; an example when there are none) | Yes |
+| Free shipping bar with products that close the gap | Sixth item in the More Places showcase, drawn with the store's products | Yes |
+| Discounts (bundle saving, add-on saving, checkout offer discount) | Discounts tab with a showcase (`discount_showcase` field type, drawn with the store's own products) and locked `pro_preview` cards; no Save button on that tab | Yes |
+| Recommendation analytics | Locked (teaser page) | Yes |
 | REST API (`lpr/v1`) | No | Yes |
 | License page, automatic updates from leocoder.com | No | Yes |
 
 **Owner intent:** Global dynamic rules are free on purpose. Product-level dynamic
-selection is the Pro feature.
+selection is the Pro feature. Free is the popup only; every other place (cart drawer,
+cart page, product page, checkout, thank-you page) is Pro (owner, October 2026).
 
 ## How locking works in Free
 
-- Settings page: Pro fields are `pro_image` type fields. Each shows a static teaser image
-  with a red "PRO FEATURE" badge and a "Get Pro Version »" link. They are images, not
-  real fields, so they can drift from the real Pro fields (see `known-issues.md`).
+- Settings page: locked Pro settings are `pro_preview` fields (Layout Type, Popup Size,
+  Buttons, Popup Colors). They draw the same controls Pro uses (chips, switches, swatches),
+  disabled and without a `name`, with a small PRO badge and a "Get it with Pro" link. When
+  a Pro control changes, update its `controls` list in Free so the two stay alike.
+  More Places in Free is a showcase of every Pro place drawn with the store's products.
 - Product panel: the Dynamic Selection option shows a locked demo with sample data
   (Clothing, Hoodies, T-Shirt; Green, Orange, Red; Best Selling; 10).
 - Front end: when Pro is inactive the layout is forced to grid

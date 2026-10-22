@@ -2,16 +2,16 @@
 # This file is distributed under the GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Leo Product Recommendations: Upsell & Cross-sell Popup for WooCommerce 3.5.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/leo-product-recommendations/\n"
+"Project-Id-Version: Leo Product Recommendations: Upsell & Cross-sell Popup for WooCommerce 3.6.0\n"
+"Report-Msgid-Bugs-To: https://leocoder.com/support/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-19T16:32:55+00:00\n"
+"POT-Creation-Date: 2026-10-22T13:10:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: leo-product-recommendations\n"
 
 #. Plugin Name of the plugin
@@ -61,11 +61,13 @@ msgstr ""
 
 #. translators: %s: Attribute name.
 #: includes/class-ajax-add-to-cart.php:153
+#, php-format
 msgid "Invalid value posted for %s"
 msgstr ""
 
 #. translators: %s: Attribute name.
 #: includes/class-ajax-add-to-cart.php:161
+#, php-format
 msgid "%s is a required field"
 msgid_plural "%s are required fields"
 msgstr[0] ""
@@ -95,6 +97,8 @@ msgstr ""
 
 #: includes/class-analytics-teaser.php:55
 #: includes/class-analytics-teaser.php:92
+#: includes/settings-fields-type.php:408
+#: includes/settings-fields-type.php:890
 msgid "PRO"
 msgstr ""
 
@@ -103,11 +107,11 @@ msgid "Revenue and orders from recommended products, and their share of your sto
 msgstr ""
 
 #: includes/class-analytics-teaser.php:82
-msgid "Adds to cart right in the popup, and after a shopper clicks through to the product page"
+msgid "Adds to cart right from a recommendation, and after a shopper clicks through to the product page"
 msgstr ""
 
 #: includes/class-analytics-teaser.php:83
-msgid "A simple funnel: popup views, products added, products ordered"
+msgid "Results for each place: popup, cart drawer, cart page, free shipping bar, product page, checkout and thank-you page"
 msgstr ""
 
 #: includes/class-analytics-teaser.php:84
@@ -123,11 +127,11 @@ msgid "Top recommended products, date ranges and CSV export"
 msgstr ""
 
 #: includes/class-analytics-teaser.php:98
-msgid "Analytics comes with Leo Product Recommendations Pro 3.3.0. Update Pro to start counting what the popup sells."
+msgid "Analytics comes with Leo Product Recommendations Pro 3.3.0. Update Pro to start counting what your recommendations sell."
 msgstr ""
 
 #: includes/class-analytics-teaser.php:100
-msgid "Find out how much the recommendation popup really sells. The analytics dashboard is part of Leo Product Recommendations Pro."
+msgid "Find out how much your recommendations really sell, and which places sell the most. The analytics dashboard is part of Leo Product Recommendations Pro."
 msgstr ""
 
 #: includes/class-analytics-teaser.php:109
@@ -139,6 +143,8 @@ msgid "Update Pro"
 msgstr ""
 
 #: includes/class-analytics-teaser.php:116
+#: includes/settings-fields-type.php:774
+#: assets/js/settings-ui.js:98
 msgid "Get Pro"
 msgstr ""
 
@@ -151,504 +157,1077 @@ msgstr ""
 msgid "Preview of the Pro analytics dashboard with sample data"
 msgstr ""
 
-#. translators: 1. link of plugin, 2. plugin version.
-#: includes/class-product-recommendations.php:210
-msgid "Leo Product Recommendations requires <a href=\"%1$s\">WooCommerce</a> %2$s or greater to be installed and active."
+#: includes/class-places.php:56
+msgid "Cart Page"
 msgstr ""
 
-#. translators: 1. link of wordpress 2. version of WordPress.
-#: includes/class-product-recommendations.php:219
-msgid "Leo Product Recommendations requires <a href=\"%1$s\">WordPress</a> %2$s or greater to be installed and active."
+#: includes/class-places.php:57
+msgid "Show recommendations under the cart"
 msgstr ""
 
-#. translators: 1. version of php
-#: includes/class-product-recommendations.php:228
-msgid "Leo Product Recommendations requires <strong>php version %s</strong> or greater. Please update your server php version."
+#: includes/class-places.php:61
+msgid "Products that go with everything in the cart, under the cart table. Products already in the cart are left out."
 msgstr ""
 
-#: includes/class-product-recommendations.php:285
-#: includes/class-product-recommendations.php:2329
-msgid "Settings"
+#: includes/class-places.php:66
+msgid "Layout"
 msgstr ""
 
-#: includes/class-product-recommendations.php:286
-msgid "Docs"
+#: includes/class-places.php:69
+#: includes/class-product-recommendations.php:2514
+msgid "Grid"
 msgstr ""
 
-#: includes/class-product-recommendations.php:291
-msgid "Go Pro"
+#: includes/class-places.php:70
+#: includes/class-product-recommendations.php:2514
+msgid "Slider"
 msgstr ""
 
-#: includes/class-product-recommendations.php:542
-msgid "Recommendations"
+#: includes/class-places.php:73
+msgid "Grid shows all products at once. Slider keeps them in one row that shoppers swipe or scroll with the arrows."
 msgstr ""
 
-#. translators: %s: Link to global settings page
-#: includes/class-product-recommendations.php:2084
-msgid "Default Heading <small>Used when a product has no heading of its own, and for <a target=\"_blank\" href=\"%s\">Default Recommendations</a></small>"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2092
+#: includes/class-places.php:78
+#: includes/class-product-recommendations.php:2428
 #: assets/js/panel.js:25
 msgid "Heading"
 msgstr ""
 
-#: includes/class-product-recommendations.php:2094
+#: includes/class-places.php:81
+msgid "Leave empty for \"Complete your order\"."
+msgstr ""
+
+#: includes/class-places.php:86
+#: includes/class-product-recommendations.php:2750
+msgid "Number of Products"
+msgstr ""
+
+#: includes/class-places.php:91
+msgid "Grid: up to 4 in a row, more wrap to a second row. Slider: 4 in view, the rest one swipe away."
+msgstr ""
+
+#: includes/class-places.php:182
+#: assets/js/settings-ui.js:749
+msgid "Complete your order"
+msgstr ""
+
+#: includes/class-places.php:362
+#: templates/modern-popup.php:63
+msgid "Previous products"
+msgstr ""
+
+#: includes/class-places.php:363
+#: templates/modern-popup.php:64
+msgid "Next products"
+msgstr ""
+
+#: includes/class-popup-modern.php:146
 msgid "You may purchase following [item, items] with the %title%"
 msgstr ""
 
-#: includes/class-product-recommendations.php:2098
+#. translators: %s: product name
+#: includes/class-popup-modern.php:156
+#: assets/js/settings-ui.js:641
+#, php-format,js-format
+msgid "Goes well with %s"
+msgstr ""
+
+#: includes/class-popup-modern.php:185
+#: assets/js/settings-ui.js:655
+#: assets/js/settings-ui.js:683
+#: assets/js/settings-ui.js:770
+msgid "Add"
+msgstr ""
+
+#. translators: %s: product name
+#: includes/class-popup-modern.php:193
+#, php-format
+msgid "Add %s to your cart"
+msgstr ""
+
+#. translators: %s: product name
+#: includes/class-popup-modern.php:229
+#, php-format
+msgid "Options for %s"
+msgstr ""
+
+#. translators: %s: product name
+#: includes/class-popup-modern.php:230
+msgid "Choose an option"
+msgstr ""
+
+#: includes/class-popup-modern.php:238
+msgid "Choose options"
+msgstr ""
+
+#: includes/class-popup-modern.php:238
+msgid "View product"
+msgstr ""
+
+#. translators: %d: number of items in the cart
+#: includes/class-popup-modern.php:261
+#, php-format
+msgid "Cart subtotal (%d item)"
+msgid_plural "Cart subtotal (%d items)"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1. link of plugin, 2. plugin version.
+#: includes/class-product-recommendations.php:230
+#, php-format
+msgid "Leo Product Recommendations requires <a href=\"%1$s\">WooCommerce</a> %2$s or greater to be installed and active."
+msgstr ""
+
+#. translators: 1. link of wordpress 2. version of WordPress.
+#: includes/class-product-recommendations.php:239
+#, php-format
+msgid "Leo Product Recommendations requires <a href=\"%1$s\">WordPress</a> %2$s or greater to be installed and active."
+msgstr ""
+
+#. translators: 1. version of php
+#: includes/class-product-recommendations.php:248
+#, php-format
+msgid "Leo Product Recommendations needs <strong>PHP %s</strong> or newer. Please update PHP on your server."
+msgstr ""
+
+#: includes/class-product-recommendations.php:307
+#: includes/class-product-recommendations.php:2794
+msgid "Settings"
+msgstr ""
+
+#: includes/class-product-recommendations.php:308
+msgid "Docs"
+msgstr ""
+
+#: includes/class-product-recommendations.php:313
+msgid "Go Pro"
+msgstr ""
+
+#: includes/class-product-recommendations.php:595
+#: includes/settings-fields-type.php:986
+msgid "Recommendations"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2407
+msgid "Popup Design"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2410
+msgid "Modern"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2411
+msgid "Classic"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2414
+msgid "Modern: the added product, cart subtotal, a row of matching products, and View cart and Checkout buttons. Looks the same in every theme and slides up from the bottom on phones. Classic: the earlier design, using your theme's product cards."
+msgstr ""
+
+#. translators: %s: Link to global settings page
+#: includes/class-product-recommendations.php:2420
+#, php-format
+msgid "Default Heading <small>Used for products that have no heading of their own, or that use the store-wide rule (<a target=\"_blank\" href=\"%s\">What to Recommend</a>)</small>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2430
+msgid "Goes well with %title%"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2434
 #: assets/js/panel.js:29
 msgid "Heading & Description"
 msgstr ""
 
-#: includes/class-product-recommendations.php:2102
-msgid "If you like to use the same heading patterns for all recommendations then use the default heading. Use pattern <strong>%title%</strong> for the product title. Pattern <strong>[item, items]</strong> is changeable. You can utilize <strong>[product, products]</strong> or all that makes sense. The particular expression for a single recommended item and the plural expression for more than one supported item."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2107
-msgid "Popup Show"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2110
-msgid "Every Time"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2111
-msgid "1 Time"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2112
-msgid "2 Times"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2113
-msgid "3 Times"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2114
-msgid "4 Times"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2115
-msgid "5 Times"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2117
-msgid "If you think showing a popup every time will bother your customers, then you can limit it."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2122
-msgid "Variable Products <br> Add To Cart"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2123
-msgid "Add To Cart"
-msgstr ""
-
-#. translators: %s: URL of the documentation example
-#: includes/class-product-recommendations.php:2127
-msgid "To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href=\"%s\" target=\"_blank\">Example» </a>"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2134
-msgid "Grid Options"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2139
-msgid "Desktop Items Per Row"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2148
-msgid "Tablet Items Per Row"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2157
-msgid "Mobile Items Per Row"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2165
-msgid "Column Gap"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2177
-msgid "Layout Type <br> <span class=\"badge\">PRO FEATURE</span>"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2184
-msgid "Slider Options <br> <span class=\"badge\">PRO FEATURE</span>"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2191
-msgid "Popup Size <br> <span class=\"badge\">PRO FEATURE</span>"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2198
-msgid "Buttons Visibility <br> <span class=\"badge\">PRO FEATURE</span>"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2208
-msgid "Popup Color Settings <br> <span class=\"badge\">PRO FEATURE</span>"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2215
-msgid "Product Color Settings <br> <span class=\"badge\">PRO FEATURE</span>"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2222
-msgid "Custom CSS"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2224
-msgid "Write custom css to change style of modal."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2232
-msgid "1. WooCommerce Linked Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2237
-msgid "Show the product's Upsells"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2243
-msgid "Show the product's Cross-sells"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2248
-msgid "Set them under Product data > Linked Products. When both are on, Upsells come first."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2252
-msgid "2. Store-wide Rule"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2253
-msgid "Use a store-wide rule for the remaining products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2255
-msgid "Products without hand-picked or linked recommendations get products from this rule."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2261
-msgid "Store-wide Rule Options"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2266
-msgid "Categories"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2269
-msgid "Product Related Category"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2270
-msgid "Manual"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2276
-msgid "Choose Categories"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2282
-msgid "Choose Tags"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2288
-msgid "Products Filtering"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2291
-msgid "Random Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2292
-msgid "Newest Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2293
-msgid "Oldest Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2294
-msgid "Low Price Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2295
-msgid "High Price Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2296
-msgid "Best Selling Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2297
-msgid "Top Rated Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2302
-msgid "On-Sale Only"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2307
-msgid "Numbers of Products"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2316
-msgid "Use the store-wide rule for every product"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2317
-msgid "Campaign Mode"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2319
-msgid "Ignores hand-picked and linked recommendations while it is on. Handy for a Black Friday campaign: pick the campaign categories in the rule above and tick this box."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2327
-msgid "Product Recommendations Settings"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2328
-msgid "LPR Settings"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2337
-msgid "General"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2338
-msgid "General Settings"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2344
-msgid "Style"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2345
-msgid "Colors & Styles Settings"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2351
-#: includes/class-product-recommendations.php:2352
-msgid "Default Recommendations"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2353
-msgid "For products with nothing set in their own Recommendations tab. The popup uses their WooCommerce Upsells/Cross-sells first, then the store-wide rule."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2359
-msgid "Tutorials"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2360
-msgid "Tutorial & Documentation"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2398
-msgid "Need Help?"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2401
-msgid "Quick Feedback"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2402
-msgid "May we have a little info about why you are deactivating?"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2408
-msgid "It's a temporary deactivation."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2416
-msgid "Does not show product image or add to cart button."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2417
-#: includes/class-product-recommendations.php:2435
-msgid "Please contact with our support we will try fix it quickly for you »"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2425
-msgid "I couldn't understand how to use it."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2426
-msgid "Please check details documentations »"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2434
-msgid "It doesn't work with my website."
+#: includes/class-product-recommendations.php:2438
+msgid "<strong>%title%</strong> becomes the added product's name. <strong>[item, items]</strong> picks the first word for one recommended product and the second for more, for example [product, products]."
 msgstr ""
 
 #: includes/class-product-recommendations.php:2443
-msgid "It looks bad on my website."
+msgid "How Often To Show"
 msgstr ""
 
-#: includes/class-product-recommendations.php:2444
-msgid "Please contact with our support we will help you to fix the issues »"
+#: includes/class-product-recommendations.php:2446
+msgid "Every Time"
 msgstr ""
 
-#: includes/class-product-recommendations.php:2452
-msgid "It works nicely but I don’t need it now."
+#: includes/class-product-recommendations.php:2447
+msgid "1 Time"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2448
+msgid "2 Times"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2449
+msgid "3 Times"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2450
+msgid "4 Times"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2451
+msgid "5 Times"
 msgstr ""
 
 #: includes/class-product-recommendations.php:2453
-msgid "Please encourage us by giving nice feedback  »"
+#: includes/class-product-recommendations.php:2564
+msgid "How many times one visitor sees the popup. The count starts again after 2 hours without a popup."
 msgstr ""
 
-#: includes/class-product-recommendations.php:2461
-msgid "I need some help to set up the plugin."
+#: includes/class-product-recommendations.php:2459
+msgid "Products With Options"
 msgstr ""
 
-#: includes/class-product-recommendations.php:2462
-msgid "Please provide your email address we will contact you soon."
+#: includes/class-product-recommendations.php:2460
+msgid "Let shoppers choose options in the popup"
 msgstr ""
 
-#: includes/class-product-recommendations.php:2470
-msgid "I found a better plugin."
+#: includes/class-product-recommendations.php:2463
+msgid "Shoppers pick the size, color or other options of a recommended product right in the popup. Off: these products show a button that opens the product page, where shoppers choose their options."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2468
+msgid "Grid Options"
 msgstr ""
 
 #: includes/class-product-recommendations.php:2473
-msgid "Please share which plugin"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2479
-msgid "I need a specific feature that it doesn't support."
-msgstr ""
-
-#: includes/class-product-recommendations.php:2480
-msgid "Please let us know feature details we will try add it ASAP"
+msgid "Desktop Products Per Row"
 msgstr ""
 
 #: includes/class-product-recommendations.php:2482
-msgid "Require feature details"
-msgstr ""
-
-#: includes/class-product-recommendations.php:2488
-msgid "Other."
+msgid "Tablet Products Per Row"
 msgstr ""
 
 #: includes/class-product-recommendations.php:2491
-msgid "Please share the reason. We will try to fix / help you."
+msgid "Mobile Products Per Row"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2499
+msgid "Column Gap"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2511
+msgid "Layout Type <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2516
+msgid "Show products in a grid or a sliding row, with autoplay, speed and loop for the slider."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2521
+msgid "Popup Size <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2524
+msgid "Small"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2524
+msgid "Medium"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2524
+msgid "Large"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2524
+msgid "Custom"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2526
+msgid "Width of the popup on desktop. Custom: set the desktop, tablet and mobile widths yourself."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2531
+msgid "Buttons <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2534
+msgid "Continue Shopping Button"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2534
+msgid "Checkout Button"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2534
+msgid "Close Button"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2536
+msgid "Show or hide each button in the popup."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2544
+msgid "Popup Colors <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2547
+msgid "Button Color"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2548
+msgid "Heading Color"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2549
+msgid "Notification Bar"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2551
+msgid "Match the popup to your brand. Every other popup color and the product title, price and button colors can be set too."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2569
+msgid "Products Per Row"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2573
+msgid "On desktop. Tablet and mobile sizes are under More options."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2575
+msgid "Tablet, Mobile And Spacing"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2599
+msgid "More Places <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2601
+msgid "Recommendations beyond the popup, at every step from the product page to the thank-you page. The previews below use your own products."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2611
+msgid "Discounts <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2613
+msgid "Give a small discount when shoppers add recommended products."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2618
+msgid "Bundle Saving <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2621
+msgid "Give a discount on products bought together"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2622
+#: includes/class-product-recommendations.php:2635
+#: includes/class-product-recommendations.php:2648
+msgid "Percentage"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2622
+#: includes/class-product-recommendations.php:2635
+#: includes/class-product-recommendations.php:2648
+msgid "Fixed amount"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2623
+#: includes/class-product-recommendations.php:2636
+#: includes/class-product-recommendations.php:2649
+msgid "Discount"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2624
+#: includes/class-product-recommendations.php:2637
+msgid "Give a bigger saving when shoppers add 2 or more products"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2626
+msgid "Products added from \"Frequently bought together\" cost less while the main product is in the cart."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2631
+msgid "Add-on Saving <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2634
+msgid "Give a discount on products added from the popup or cart drawer"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2639
+msgid "After a shopper adds a product, the products recommended with it show a lower price."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2644
+msgid "Checkout Offer Saving <span class=\"badge\">PRO</span>"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2647
+msgid "Give a discount on the checkout offer"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2651
+msgid "The products offered at checkout show a lower price."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2666
+msgid "Store-wide Rule"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2667
+msgid "Use a store-wide rule for products with nothing set"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2674
+#: assets/js/panel.js:218
+msgid "Choose Products By"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2677
+#: assets/js/panel.js:41
+msgid "Categories and tags"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2678
+#: assets/js/panel.js:37
+msgid "Products I pick"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2679
+msgid "Smart picks, learned from your orders"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2683
+msgid "Categories and tags: products are found for you. Products I pick: the same hand-picked list for every product, handy for best sellers or add-ons that go with anything. Smart picks: click it to see what it finds in your orders."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2695
+msgid "Products"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2697
+msgid "Shown in this order. The product itself and products already in the cart are left out."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2702
+msgid "Rule Options"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2707
+msgid "Categories"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2710
+msgid "Same categories as the product"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2711
+msgid "Categories I choose"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2717
+msgid "Choose Categories"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2723
+msgid "Choose Tags"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2729
+msgid "Sort By"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2732
+msgid "Random"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2733
+msgid "Newest"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2734
+msgid "Oldest"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2735
+msgid "Price: Low to High"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2736
+msgid "Price: High to Low"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2737
+msgid "Best Selling"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2738
+msgid "Top Rated"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2743
+msgid "On-Sale Only"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2761
+msgid "Use the store-wide rule for every product"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2762
+msgid "Campaign Mode"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2764
+msgid "Ignores hand-picked and linked recommendations while it is on. Handy for a Black Friday campaign: set the rule above to the campaign products, then turn this on."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2769
+msgid "WooCommerce Linked Products"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2774
+msgid "Show the product's Upsells"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2780
+msgid "Show the product's Cross-sells"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2785
+msgid "Set them under Product data > Linked Products. When both are on, Upsells come first."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2792
+msgid "Product Recommendations Settings"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2793
+msgid "LPR Settings"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2802
+#: includes/class-product-recommendations.php:2803
+#: includes/option-select-products.php:40
+msgid "What to Recommend"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2808
+#: includes/class-product-recommendations.php:2809
+msgid "Popup"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2810
+msgid "The popup that shows after a product is added to the cart: how often, its heading, layout and look."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2816
+#: includes/class-product-recommendations.php:2817
+msgid "More Places"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2818
+msgid "Show recommendations in more places than the popup. Available in Pro."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2824
+#: includes/class-product-recommendations.php:2825
+msgid "Discounts"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2826
+msgid "Small discounts on recommended products, taken off in the cart automatically. Available in Pro."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2833
+#: includes/class-product-recommendations.php:2834
+#: includes/tutorials.php:17
+msgid "Get Started"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2872
+msgid "Need Help?"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2875
+msgid "Quick Feedback"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2876
+msgid "May we have a little info about why you are deactivating?"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2882
+msgid "It's a temporary deactivation."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2890
+msgid "Does not show product image or add to cart button."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2891
+#: includes/class-product-recommendations.php:2909
+#: includes/class-product-recommendations.php:2918
+msgid "Contact our support and we'll help you fix it »"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2899
+msgid "I couldn't understand how to use it."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2900
+msgid "Read the documentation »"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2908
+msgid "It doesn't work with my website."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2917
+msgid "It looks bad on my website."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2926
+msgid "It works nicely but I don’t need it now."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2927
+msgid "Leave us a review »"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2935
+msgid "I need some help to set up the plugin."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2936
+msgid "Leave your email address and we'll contact you soon."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2944
+msgid "I found a better plugin."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2947
+msgid "Please share which plugin"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2953
+msgid "I need a specific feature that it doesn't support."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2954
+msgid "Tell us which feature you need."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2956
+msgid "Feature details"
+msgstr ""
+
+#: includes/class-product-recommendations.php:2962
+msgid "Other."
+msgstr ""
+
+#: includes/class-product-recommendations.php:2965
+msgid "Please share the reason. We'll try to help."
 msgstr ""
 
 #: includes/class-settings-page.php:137
+#: assets/js/settings-ui.js:465
 msgid "Save Settings"
 msgstr ""
 
 #. translators: %s: Name of field type
-#: includes/class-settings-page.php:299
+#: includes/class-settings-page.php:323
+#, php-format
 msgid "%s field type not found!"
 msgstr ""
 
 #. translators: %d: number of linked products
 #: includes/option-select-products.php:24
+#, php-format
 msgid "Nothing is set here, so the popup shows %d product from this product's Upsells and Cross-sells (Linked Products tab)."
 msgid_plural "Nothing is set here, so the popup shows %d products from this product's Upsells and Cross-sells (Linked Products tab)."
 msgstr[0] ""
 msgstr[1] ""
 
+#. translators: %s: link to the What to Recommend settings
+#: includes/option-select-products.php:39
+#, php-format
+msgid "Picks set here are for this product only. Products with nothing set use the %s settings."
+msgstr ""
+
+#: includes/option-select-products.php:67
+msgid "Set this product's recommendations here"
+msgstr ""
+
 #: includes/settings-fields-type.php:177
 #: includes/settings-fields-type.php:360
-#: includes/settings-fields-type.php:406
-#: includes/settings-fields-type.php:439
-#: includes/settings-fields-type.php:476
-#: includes/settings-fields-type.php:507
-#: includes/settings-fields-type.php:543
-#: includes/settings-fields-type.php:577
-#: includes/settings-fields-type.php:604
-#: includes/settings-fields-type.php:672
+#: includes/settings-fields-type.php:417
+#: includes/settings-fields-type.php:450
+#: includes/settings-fields-type.php:487
+#: includes/settings-fields-type.php:518
+#: includes/settings-fields-type.php:554
+#: includes/settings-fields-type.php:588
+#: includes/settings-fields-type.php:615
+#: includes/settings-fields-type.php:683
 msgid "HELP"
 msgstr ""
 
 #: includes/settings-fields-type.php:185
 #: includes/settings-fields-type.php:368
-#: includes/settings-fields-type.php:414
-#: includes/settings-fields-type.php:447
-#: includes/settings-fields-type.php:484
-#: includes/settings-fields-type.php:515
-#: includes/settings-fields-type.php:551
-#: includes/settings-fields-type.php:585
-#: includes/settings-fields-type.php:612
-#: includes/settings-fields-type.php:680
+#: includes/settings-fields-type.php:425
+#: includes/settings-fields-type.php:458
+#: includes/settings-fields-type.php:495
+#: includes/settings-fields-type.php:526
+#: includes/settings-fields-type.php:562
+#: includes/settings-fields-type.php:596
+#: includes/settings-fields-type.php:623
+#: includes/settings-fields-type.php:691
+#: assets/js/components/RecommendationHeading.js:79
 msgid "Documentation »"
 msgstr ""
 
-#: includes/settings-fields-type.php:599
-#: assets/js/panel.js:262
-msgid "Get Pro Version »"
+#: includes/settings-fields-type.php:610
+msgid "Get Pro »"
 msgstr ""
 
-#: includes/tutorials.php:14
-msgid "How To Setup"
+#: includes/settings-fields-type.php:718
+msgid "Custom color"
 msgstr ""
 
-#: includes/tutorials.php:16
-msgid "Basic Setup:"
+#: includes/settings-fields-type.php:742
+msgid "Fewer"
 msgstr ""
 
-#: includes/tutorials.php:18
-msgid "See Details Documentation"
+#: includes/settings-fields-type.php:744
+msgid "More"
 msgstr ""
 
-#: templates/template-modal-content.php:39
-msgid "has been added to your cart."
+#: includes/settings-fields-type.php:791
+msgid "Search products"
 msgstr ""
 
-#: templates/template-modal-content.php:40
-msgid "View cart"
+#: includes/settings-fields-type.php:865
+msgid "Get it with Pro"
 msgstr ""
 
-#: templates/template-modal-content.php:46
-msgid "Continue Shopping"
+#: includes/settings-fields-type.php:889
+msgid "Smart picks"
 msgstr ""
 
+#: includes/settings-fields-type.php:891
+#: templates/modern-popup.php:40
+#: assets/js/modal.js:487
+#: assets/js/settings-ui.js:151
+msgid "Close"
+msgstr ""
+
+#: includes/settings-fields-type.php:893
+msgid "Recommends what your customers buy together, learned from your own orders and updated every night. No picking products by hand."
+msgstr ""
+
+#. translators: %s: number of orders
+#: includes/settings-fields-type.php:900
+#, php-format
+msgid "Found in your last %s order:"
+msgid_plural "Found in your last %s orders:"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of orders
+#: includes/settings-fields-type.php:917
+#, php-format
+msgid "bought together in %s order"
+msgid_plural "bought together in %s orders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/settings-fields-type.php:925
+msgid "Smart picks would recommend these to each other for you, and keep finding new pairs as you sell."
+msgstr ""
+
+#: includes/settings-fields-type.php:927
+msgid "For example:"
+msgstr ""
+
+#: includes/settings-fields-type.php:930
+#: includes/settings-fields-type.php:1038
+msgid "Running shoes"
+msgstr ""
+
+#: includes/settings-fields-type.php:932
+#: includes/settings-fields-type.php:1039
+msgid "Sport socks"
+msgstr ""
+
+#: includes/settings-fields-type.php:933
+msgid "bought together in 38 orders"
+msgstr ""
+
+#: includes/settings-fields-type.php:936
+msgid "Coffee beans"
+msgstr ""
+
+#: includes/settings-fields-type.php:938
+msgid "Paper filters"
+msgstr ""
+
+#: includes/settings-fields-type.php:939
+msgid "bought together in 24 orders"
+msgstr ""
+
+#: includes/settings-fields-type.php:942
+msgid "Smart picks finds pairs like these in your own orders and shows them together."
+msgstr ""
+
+#: includes/settings-fields-type.php:946
+msgid "Learns what shoppers add to the cart"
+msgstr ""
+
+#: includes/settings-fields-type.php:947
+msgid "Personal for each shopper"
+msgstr ""
+
+#: includes/settings-fields-type.php:948
+msgid "Fills short lists"
+msgstr ""
+
+#: includes/settings-fields-type.php:949
+msgid "Updates every night"
+msgstr ""
+
+#: includes/settings-fields-type.php:953
+msgid "Get Smart picks with Pro"
+msgstr ""
+
+#: includes/settings-fields-type.php:980
+msgid "These settings are for all your products."
+msgstr ""
+
+#. translators: %s: the word "Recommendations" (name of the product tab), in bold
+#: includes/settings-fields-type.php:985
+#, php-format
+msgid "To change them for one product, edit that product and open its %s tab, in the Product data box."
+msgstr ""
+
+#: includes/settings-fields-type.php:989
+msgid "Open a product"
+msgstr ""
+
+#: includes/settings-fields-type.php:989
+msgid "Go to Products"
+msgstr ""
+
+#: includes/settings-fields-type.php:1040
+msgid "Shoe cleaner"
+msgstr ""
+
+#: includes/settings-fields-type.php:1041
+msgid "Water bottle"
+msgstr ""
+
+#: includes/settings-fields-type.php:1042
+msgid "Sport cap"
+msgstr ""
+
+#: includes/settings-fields-type.php:1043
+msgid "Sport bag"
+msgstr ""
+
+#: includes/settings-fields-type.php:1058
+msgid "Product page"
+msgstr ""
+
+#: includes/settings-fields-type.php:1059
+#: assets/js/settings-ui.js:792
+msgid "Frequently bought together"
+msgstr ""
+
+#: includes/settings-fields-type.php:1060
+msgid "Buy together and save: 10% off 1 product, 15% off each on 2."
+msgstr ""
+
+#: includes/settings-fields-type.php:1066
+#: assets/js/settings-ui.js:798
+#: assets/js/settings-ui.js:841
+msgid "Total:"
+msgstr ""
+
+#: includes/settings-fields-type.php:1069
+msgid "Popup and cart drawer"
+msgstr ""
+
+#. translators: %s: product name
+#: includes/settings-fields-type.php:1070
+#: assets/js/modal.js:687
+#: assets/js/modal.js:709
+#, php-format,js-format
+msgid "%s has been added to your cart."
+msgstr ""
+
+#. translators: %s: percentage
+#: includes/settings-fields-type.php:1071
+#, php-format
+msgid "Add any of these now and save %s%%."
+msgstr ""
+
+#: includes/settings-fields-type.php:1078
+#: templates/modern-popup.php:85
 #: templates/template-modal-content.php:50
+#: assets/js/settings-ui.js:73
+#: assets/js/settings-ui.js:611
+#: assets/js/settings-ui.js:661
+#: assets/js/settings-ui.js:686
+#: assets/js/settings-ui.js:816
 msgid "Checkout"
 msgstr ""
 
-#: assets/js/ajax-add-to-cart.js:143
-#: assets/js/ajax-add-to-cart.js:146
-#: assets/js/ajax-add-to-cart.js:153
-msgid "Something went wrong"
+#: includes/settings-fields-type.php:1079
+#: assets/js/settings-ui.js:827
+msgid "Last chance to add"
 msgstr ""
 
-#: assets/js/components/ManualSelection.js:65
+#. translators: %s: product name
+#: includes/settings-fields-type.php:1081
+#, php-format
+msgid "Yes, add %s"
+msgstr ""
+
+#. translators: %s: percentage
+#: includes/settings-fields-type.php:1081
+#, php-format
+msgid "%s%% off"
+msgstr ""
+
+#: includes/settings-fields-type.php:1083
+msgid "Cart total"
+msgstr ""
+
+#: includes/settings-fields-type.php:1085
+msgid "Bundle saving"
+msgstr ""
+
+#: includes/settings-fields-type.php:1086
+msgid "Add-on saving"
+msgstr ""
+
+#: includes/settings-fields-type.php:1087
+msgid "Checkout offer saving"
+msgstr ""
+
+#: includes/settings-fields-type.php:1091
+msgid "A percentage or a fixed amount, with a bigger saving when shoppers add more. Taken off in the cart automatically: shoppers never type a code."
+msgstr ""
+
+#: includes/settings-fields-type.php:1093
+msgid "Get Discounts with Pro"
+msgstr ""
+
+#: includes/tutorials.php:18
+msgid "Three steps to your first recommendations."
+msgstr ""
+
+#: includes/tutorials.php:24
+msgid "Choose what to recommend"
+msgstr ""
+
+#: includes/tutorials.php:25
+msgid "Turn on Upsells and Cross-sells or set a store-wide rule in the What to Recommend tab."
+msgstr ""
+
+#: includes/tutorials.php:28
+msgid "Pick products for key items"
+msgstr ""
+
+#: includes/tutorials.php:29
+msgid "Edit a product, open its Recommendations tab and pick what goes with it."
+msgstr ""
+
+#: includes/tutorials.php:32
+msgid "Make it look right"
+msgstr ""
+
+#: includes/tutorials.php:33
+msgid "Choose the popup design and heading in the Popup tab. The preview shows every change."
+msgstr ""
+
+#: includes/tutorials.php:37
+msgid "Read the documentation"
+msgstr ""
+
+#: includes/tutorials.php:38
+msgid "Ask for help"
+msgstr ""
+
+#: includes/tutorials.php:43
+msgid "Setup video"
+msgstr ""
+
+#. translators: %d: quantity
+#: templates/modern-popup.php:25
+#, php-format
+msgid "Qty %d"
+msgstr ""
+
+#: templates/modern-popup.php:38
+#: assets/js/settings-ui.js:649
+msgid "Added to your cart"
+msgstr ""
+
+#: templates/modern-popup.php:80
+#: assets/js/settings-ui.js:659
+msgid "Continue shopping"
+msgstr ""
+
+#: templates/modern-popup.php:83
+#: templates/template-modal-content.php:40
+#: assets/js/settings-ui.js:608
+#: assets/js/settings-ui.js:660
+#: assets/js/settings-ui.js:686
+msgid "View cart"
+msgstr ""
+
+#: templates/template-modal-content.php:39
+#: assets/js/settings-ui.js:608
+#: assets/js/settings-ui.js:678
+msgid "has been added to your cart."
+msgstr ""
+
+#: templates/template-modal-content.php:46
+#: assets/js/settings-ui.js:610
+msgid "Continue Shopping"
+msgstr ""
+
+#: assets/js/ajax-add-to-cart.js:155
+#: assets/js/ajax-add-to-cart.js:158
+#: assets/js/ajax-add-to-cart.js:167
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: assets/js/components/ManualSelection.js:66
 msgid "Remove"
 msgstr ""
 
-#: assets/js/components/ManualSelection.js:136
-#: assets/js/settings.js:126
+#: assets/js/components/ManualSelection.js:143
+#: assets/js/settings.js:128
 msgid "All Categories"
 msgstr ""
 
-#: assets/js/components/ManualSelection.js:156
-msgid "Not found selectable product"
+#: assets/js/components/ManualSelection.js:163
+msgid "No products found"
 msgstr ""
 
 #: assets/js/components/RadioSelection.js:30
 msgid "Documentation»"
 msgstr ""
 
-#: assets/js/modal.js:527
-msgid "has been added to cart."
+#: assets/js/modal.js:685
+msgid "Added"
 msgstr ""
 
-#: assets/js/modal.js:527
-msgid "Item has been added to cart."
+#: assets/js/modal.js:687
+#: assets/js/modal.js:709
+msgid "The product has been added to your cart."
 msgstr ""
 
-#: assets/js/panel.js:37
-msgid "Manual Selection"
-msgstr ""
-
-#: assets/js/panel.js:41
-msgid "Dynamic Selection"
+#: assets/js/panel.js:187
+msgid "Popup Heading"
 msgstr ""
 
 #: assets/js/panel.js:235
@@ -659,6 +1238,307 @@ msgstr ""
 msgid "Search..."
 msgstr ""
 
-#: assets/js/settings.js:130
+#: assets/js/panel.js:262
+msgid "Get Pro Version »"
+msgstr ""
+
+#: assets/js/settings-ui.js:70
+#: assets/js/settings-ui.js:747
+#: assets/js/settings-ui.js:761
+#: assets/js/settings-ui.js:938
+msgid "Cart"
+msgstr ""
+
+#: assets/js/settings-ui.js:71
+msgid "Free shipping"
+msgstr ""
+
+#: assets/js/settings-ui.js:72
+msgid "Product"
+msgstr ""
+
+#: assets/js/settings-ui.js:74
+msgid "Thank-you"
+msgstr ""
+
+#: assets/js/settings-ui.js:83
+msgid "Cart drawer"
+msgstr ""
+
+#: assets/js/settings-ui.js:83
+msgid "After add to cart, the cart slides in from the side with recommendations under the items. Shoppers add more without leaving the page."
+msgstr ""
+
+#: assets/js/settings-ui.js:84
+msgid "Cart page: Complete your order"
+msgstr ""
+
+#: assets/js/settings-ui.js:84
+msgid "Under the cart, products that go with everything in it. Shown as a grid or a slider."
+msgstr ""
+
+#: assets/js/settings-ui.js:85
+msgid "Free shipping bar"
+msgstr ""
+
+#: assets/js/settings-ui.js:85
+msgid "In the cart and the cart drawer: how much more gets free shipping, with products that cost about that much. One tap and shipping is free."
+msgstr ""
+
+#: assets/js/settings-ui.js:86
+msgid "Product page: Frequently bought together"
+msgstr ""
+
+#: assets/js/settings-ui.js:86
+msgid "The product plus a few that go with it, ticked, with the total price and one button to add them all."
+msgstr ""
+
+#: assets/js/settings-ui.js:87
+msgid "Checkout offer"
+msgstr ""
+
+#: assets/js/settings-ui.js:87
+msgid "One or two small extras above the payment options. One tick adds them to the order."
+msgstr ""
+
+#: assets/js/settings-ui.js:88
+msgid "Thank-you page"
+msgstr ""
+
+#: assets/js/settings-ui.js:88
+msgid "Right after the order, products that go with what was just bought, for the next order."
+msgstr ""
+
+#: assets/js/settings-ui.js:98
+msgid "Get all six places with Pro"
+msgstr ""
+
+#: assets/js/settings-ui.js:98
+msgid "All six places come with Pro, together with the slider, popup colors and recommendation analytics."
+msgstr ""
+
+#: assets/js/settings-ui.js:123
+msgid "After add to cart"
+msgstr ""
+
+#: assets/js/settings-ui.js:123
+msgid "Cart icon click"
+msgstr ""
+
+#: assets/js/settings-ui.js:129
+#: assets/js/settings-ui.js:130
+msgid "Live preview"
+msgstr ""
+
+#: assets/js/settings-ui.js:132
+msgid "Desktop"
+msgstr ""
+
+#: assets/js/settings-ui.js:133
+msgid "Tablet"
+msgstr ""
+
+#: assets/js/settings-ui.js:134
+msgid "Mobile"
+msgstr ""
+
+#: assets/js/settings-ui.js:136
+#: assets/js/settings-ui.js:151
+msgid "Enlarge"
+msgstr ""
+
+#: assets/js/settings-ui.js:140
+msgid "Your theme can change fonts and buttons a little."
+msgstr ""
+
+#: assets/js/settings-ui.js:140
+msgid "Changes show here before you save. Your theme can change fonts and buttons a little."
+msgstr ""
+
+#: assets/js/settings-ui.js:141
+msgid "Test on a product page"
+msgstr ""
+
+#: assets/js/settings-ui.js:397
+msgid "Fewer options"
+msgstr ""
+
+#: assets/js/settings-ui.js:397
+msgid "More options"
+msgstr ""
+
+#: assets/js/settings-ui.js:461
+msgid "You have unsaved changes."
+msgstr ""
+
+#: assets/js/settings-ui.js:463
+msgid "Discard"
+msgstr ""
+
+#: assets/js/settings-ui.js:621
+#: assets/js/settings-ui.js:725
+#: assets/js/settings-ui.js:785
+msgid "Add to cart"
+msgstr ""
+
+#: assets/js/settings-ui.js:650
+msgid "Qty 1"
+msgstr ""
+
+#: assets/js/settings-ui.js:651
+msgid "Cart subtotal (2 items)"
+msgstr ""
+
+#: assets/js/settings-ui.js:677
+msgid "Your cart"
+msgstr ""
+
+#: assets/js/settings-ui.js:680
+#: assets/js/settings-ui.js:845
+msgid "You may also like"
+msgstr ""
+
+#: assets/js/settings-ui.js:748
+msgid "Coupon code"
+msgstr ""
+
+#: assets/js/settings-ui.js:748
+msgid "Update cart"
+msgstr ""
+
+#: assets/js/settings-ui.js:750
+#: assets/js/settings-ui.js:776
+msgid "Cart totals"
+msgstr ""
+
+#: assets/js/settings-ui.js:750
+#: assets/js/settings-ui.js:776
+#: assets/js/settings-ui.js:825
+msgid "Total"
+msgstr ""
+
+#: assets/js/settings-ui.js:750
+#: assets/js/settings-ui.js:776
+msgid "Proceed to checkout"
+msgstr ""
+
+#: assets/js/settings-ui.js:763
+#, js-format
+msgid "Add %s more to get free shipping."
+msgstr ""
+
+#: assets/js/settings-ui.js:796
+msgid "This item:"
+msgstr ""
+
+#. translators: %d: number of products
+#: assets/js/settings-ui.js:798
+#, js-format
+msgid "Add all %d to cart"
+msgstr ""
+
+#: assets/js/settings-ui.js:817
+msgid "Billing details"
+msgstr ""
+
+#: assets/js/settings-ui.js:820
+msgid "Your order"
+msgstr ""
+
+#: assets/js/settings-ui.js:833
+#: assets/js/settings-ui.js:841
+msgid "Cash on delivery"
+msgstr ""
+
+#: assets/js/settings-ui.js:833
+msgid "Place order"
+msgstr ""
+
+#: assets/js/settings-ui.js:839
+msgid "Order received"
+msgstr ""
+
+#: assets/js/settings-ui.js:839
+msgid "Thank you. Your order has been received."
+msgstr ""
+
+#: assets/js/settings-ui.js:841
+msgid "Order number:"
+msgstr ""
+
+#: assets/js/settings-ui.js:841
+msgid "Payment method:"
+msgstr ""
+
+#: assets/js/settings-ui.js:846
+msgid "Order details"
+msgstr ""
+
+#: assets/js/settings-ui.js:854
+msgid "The cart page with recommendations under the cart table."
+msgstr ""
+
+#: assets/js/settings-ui.js:855
+msgid "The cart page with the free shipping bar above the cart. The cart drawer shows it under its header. The amount here is an example."
+msgstr ""
+
+#: assets/js/settings-ui.js:856
+msgid "The product page with Frequently bought together under the add to cart button."
+msgstr ""
+
+#: assets/js/settings-ui.js:857
+msgid "The checkout with the offer above the payment options. Only products up to the price limit are offered."
+msgstr ""
+
+#: assets/js/settings-ui.js:858
+msgid "The order received page with recommendations for the next order."
+msgstr ""
+
+#: assets/js/settings-ui.js:864
+#: assets/js/settings-ui.js:925
+msgid "An example with your products. More Places is part of Pro."
+msgstr ""
+
+#: assets/js/settings-ui.js:865
+msgid "This place is switched off, so shoppers see the normal page."
+msgstr ""
+
+#: assets/js/settings-ui.js:932
+msgid "The cart drawer with your settings."
+msgstr ""
+
+#: assets/js/settings-ui.js:936
+msgid "Clicking the cart icon opens the drawer."
+msgstr ""
+
+#: assets/js/settings-ui.js:938
+msgid "The cart icon goes to the normal cart page."
+msgstr ""
+
+#: assets/js/settings-ui.js:939
+msgid "The cart icon works as your theme set it up."
+msgstr ""
+
+#: assets/js/settings-ui.js:943
+msgid "After add to cart, the drawer slides in."
+msgstr ""
+
+#: assets/js/settings-ui.js:945
+msgid "Added to cart. No recommendations shown."
+msgstr ""
+
+#: assets/js/settings-ui.js:946
+msgid "Shoppers only see your theme's normal message."
+msgstr ""
+
+#: assets/js/settings-ui.js:949
+msgid "The modern popup after add to cart, with products from your store."
+msgstr ""
+
+#: assets/js/settings-ui.js:952
+msgid "The popup after add to cart, with products from your store."
+msgstr ""
+
+#: assets/js/settings.js:132
 msgid "All Tags"
 msgstr ""

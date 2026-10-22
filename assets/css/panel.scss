@@ -355,3 +355,16 @@
 #woocommerce-product-data ul.wc-tabs li.lpr-product-recommendations_tab a::before {
     content: "\f174";
 }
+/* Keyboard access for the product lists. */
+.recommendation-product-options .product-selection-panel ul li:focus-visible {
+  outline: 2px solid #2271b1;
+  outline-offset: -2px;
+}
+.recommendation-product-options .product-selection-panel .select-item-panel li:focus-within .remove-item,
+.recommendation-product-options .product-selection-panel .select-item-panel li .remove-item:focus-visible {
+  opacity: 1;
+}
+.recommendation-product-options .product-selection-panel .select-item-panel li .remove-item:focus-visible {
+  outline: 2px solid #2271b1;
+  outline-offset: 1px;
+}

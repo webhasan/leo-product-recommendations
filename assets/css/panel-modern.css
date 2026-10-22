@@ -1,0 +1,190 @@
+/* Recommendations tab on the product edit screen: same look as the plugin settings. */
+#lpr_product_recommendations_panel .pr-field {
+	padding: 18px 20px;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+#lpr_product_recommendations_panel .rp-panel-title {
+	margin-bottom: 10px;
+	color: #1d2327;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+/* Choices (heading type, manual or dynamic) as segmented buttons. */
+#lpr_product_recommendations_panel .heading-control,
+#lpr_product_recommendations_panel .selection-methods {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 10px;
+}
+
+#lpr_product_recommendations_panel .heading-control > label,
+#lpr_product_recommendations_panel .selection-methods > label {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	float: none;
+	width: auto;
+	min-height: 38px;
+	margin: 0;
+	padding: 0 14px;
+	border: 2px solid #dcdcde;
+	border-radius: 6px;
+	background: #fff;
+	color: #1d2327;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+#lpr_product_recommendations_panel .heading-control > label input[type="radio"],
+#lpr_product_recommendations_panel .selection-methods > label input[type="radio"] {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+#lpr_product_recommendations_panel .heading-control > label:has(input:checked),
+#lpr_product_recommendations_panel .selection-methods > label:has(input:checked) {
+	border-color: #2271b1;
+	background: #f0f6fc;
+	color: #135e96;
+}
+
+#lpr_product_recommendations_panel .heading-control > label:has(input:focus-visible),
+#lpr_product_recommendations_panel .selection-methods > label:has(input:focus-visible) {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2271b1;
+}
+
+/* Text and search fields. */
+#lpr_product_recommendations_panel input[type="text"],
+#lpr_product_recommendations_panel input[type="number"],
+#lpr_product_recommendations_panel select {
+	min-height: 40px;
+	padding: 0 12px;
+	border: 1px solid #c3c4c7;
+	border-radius: 6px;
+	box-shadow: none;
+}
+
+#lpr_product_recommendations_panel .heading-input input[type="text"] {
+	width: 100%;
+}
+
+#lpr_product_recommendations_panel input:focus,
+#lpr_product_recommendations_panel select:focus {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: none;
+}
+
+/* Product picker: two rounded lists. */
+#lpr_product_recommendations_panel .product-selection-panel {
+	overflow: hidden;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+}
+
+#lpr_product_recommendations_panel .product-filter {
+	display: flex;
+	gap: 10px;
+	padding: 10px;
+	border-bottom: 1px solid #f0f0f1;
+	background: #f6f7f7;
+}
+
+#lpr_product_recommendations_panel .product-filter .search {
+	flex: 1;
+}
+
+#lpr_product_recommendations_panel .product-filter .search input {
+	width: 100%;
+}
+
+#lpr_product_recommendations_panel .product-selection li {
+	border-radius: 6px;
+}
+
+#lpr_product_recommendations_panel .product-selection li img {
+	border-radius: 4px;
+}
+
+#lpr_product_recommendations_panel .lpr-heading-note {
+	margin: 0 0 10px;
+}
+
+/* "Picks set here are for this product only..." */
+#lpr_product_recommendations_panel .lpr-panel-scope {
+	margin: 12px 12px 0;
+	padding: 0;
+	color: #646970;
+	font-size: 12px;
+}
+
+/* Arriving from "Open a product": point at the Recommendations tab for a few seconds. */
+#woocommerce-product-data ul.wc-tabs li.lpr-product-recommendations_tab {
+	position: relative;
+}
+#woocommerce-product-data ul.wc-tabs li.lpr-spotlight a {
+	border-radius: 4px;
+	animation: lpr-spotlight-pulse 1.4s ease-out 3;
+}
+@keyframes lpr-spotlight-pulse {
+	0% { box-shadow: 0 0 0 0 rgba(34, 113, 177, .55); }
+	70% { box-shadow: 0 0 0 10px rgba(34, 113, 177, 0); }
+	100% { box-shadow: 0 0 0 0 rgba(34, 113, 177, 0); }
+}
+.lpr-spotlight-tip {
+	position: absolute;
+	top: 50%;
+	left: calc(100% + 12px);
+	z-index: 30;
+	width: max-content;
+	max-width: 220px;
+	padding: 8px 12px;
+	border-radius: 6px;
+	background: #1d2327;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.4;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+	opacity: 0;
+	transform: translate(-6px, -50%);
+	transition: opacity .25s ease, transform .25s ease;
+	pointer-events: none;
+}
+.lpr-spotlight-tip::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: -6px;
+	margin-top: -6px;
+	border-width: 6px 6px 6px 0;
+	border-style: solid;
+	border-color: transparent #1d2327 transparent transparent;
+}
+.lpr-spotlight-tip.is-shown {
+	opacity: 1;
+	transform: translate(0, -50%);
+}
+#lpr_product_recommendations_panel.lpr-spotlight-panel {
+	animation: lpr-spotlight-panel 1.6s ease-out 1;
+}
+@keyframes lpr-spotlight-panel {
+	0% { box-shadow: inset 0 0 0 2px rgba(34, 113, 177, .6); }
+	100% { box-shadow: inset 0 0 0 2px rgba(34, 113, 177, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+	#woocommerce-product-data ul.wc-tabs li.lpr-spotlight a,
+	#lpr_product_recommendations_panel.lpr-spotlight-panel {
+		animation: none;
+	}
+	#woocommerce-product-data ul.wc-tabs li.lpr-spotlight a {
+		box-shadow: 0 0 0 2px #2271b1;
+	}
+	.lpr-spotlight-tip {
+		transition: none;
+	}
+}

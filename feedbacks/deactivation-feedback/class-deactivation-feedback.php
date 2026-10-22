@@ -214,7 +214,7 @@ class Deactivation_Feedback {
         }
 
         $settings        = $this->settings;
-        $form_data       = isset($_POST['formData']) ? wp_unslash($_POST['formData']) : array();
+        $form_data       = isset($_POST['formData']) ? wp_unslash($_POST['formData']) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- array, each field used is sanitized below.
         $form_data       = is_array($form_data) ? $form_data : array();
         $reason_category = isset($form_data['reason']) ? sanitize_text_field($form_data['reason']) : '';
         $reason_text     = isset($form_data[$reason_category]) ? sanitize_text_field($form_data[$reason_category]) : '';

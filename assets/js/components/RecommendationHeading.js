@@ -76,7 +76,7 @@ const RecommendationHeading = (props) => {
 
             {
                 docURL &&
-                <p><a href={docURL} target="_blank">{__('Documentation»', { textDomain })}</a></p>
+                <p><a href={docURL} target="_blank">{__('Documentation »', 'leo-product-recommendations')}</a></p>
             }
 
         </>

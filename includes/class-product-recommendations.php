@@ -67,11 +67,27 @@ final class Product_Recommendations {
 	static protected $linked_cache = array();
 
 	/**
+	 * Where each recommended product came from, per source product, for this request:
+	 * source ID => array(product ID => 'smart' or 'own').
+	 *
+	 * @var array
+	 */
+	static protected $origins = array();
+
+	/**
 	 * Settings that turn on WooCommerce linked products as a source.
 	 *
 	 * @since 3.5.0
 	 */
 	const LINKED_SETTINGS = array('global_linked_upsells', 'global_linked_cross_sells');
+
+	/**
+	 * More places for recommendations (cart page, Pro places).
+	 *
+	 * @since 3.6.0
+	 * @var Places|null
+	 */
+	public $places = null;
 
 	/**
 	 * Plugin root file __FILE__
@@ -148,6 +164,10 @@ final class Product_Recommendations {
 					$settings[$key] = '';
 				}
 			}
+			// The modern popup is for new installs; a store with settings keeps the classic one.
+			if (!array_key_exists('popup_design', $settings)) {
+				$settings['popup_design'] = 'classic';
+			}
 		}
 		update_option($this->get_settings_id(), array_merge($default_settings, $settings));
 	}
@@ -171,8 +191,9 @@ final class Product_Recommendations {
 		$this->includes();
 		$this->hooks();
 
-		//deactivation feedback
-		$this->deactivation_feedback();
+		// Deactivation feedback. Its labels are translated, so it waits for init
+		// (WordPress 6.7+ warns when translations load earlier).
+		add_action('init', array($this, 'deactivation_feedback'));
 	}
 
 	/**
@@ -225,7 +246,7 @@ final class Product_Recommendations {
 		if (!$php_minimum_met) {
 			$errors[] = sprintf(
 				/* translators: 1. version of php */
-				__('Leo Product Recommendations requires <strong>php version %s</strong> or greater. Please update your server php version.', 'leo-product-recommendations'),
+				__('Leo Product Recommendations needs <strong>PHP %s</strong> or newer. Please update PHP on your server.', 'leo-product-recommendations'),
 				$minium_php_version
 			);
 		}
@@ -251,6 +272,8 @@ final class Product_Recommendations {
 	 * @return void
 	 */
 	public function includes() {
+		require_once $this->get_path('includes/class-popup-modern.php');
+
 		$this->admin_ajax(); // handle all admin ajax request
 
 		$this->plugin_action_links(); // add action link, example: Go Pro->, Settings->
@@ -324,7 +347,15 @@ final class Product_Recommendations {
 		if (is_admin()) {
 			require_once $this->get_path('includes/class-analytics-teaser.php');
 			new Analytics_Teaser($this);
+
+			// Simple settings and live preview on the settings page.
+			require_once $this->get_path('includes/class-settings-ui.php');
+			new Settings_UI($this);
 		}
+
+		// More places for recommendations: cart page (Pro adds more).
+		require_once $this->get_path('includes/class-places.php');
+		$this->places = new Places($this);
 
 		// One-time safety copy of the settings before the shared framework saves anything.
 		add_action('admin_init', array($this, 'maybe_backup_settings'));
@@ -340,6 +371,9 @@ final class Product_Recommendations {
 		// Fetch popup modal data
 		add_action('wp_ajax_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
 		add_action('wp_ajax_nopriv_lpr_get_popup_data', array($this, 'lpr_get_popup_data'));
+		// Modern popup: subtotal and free shipping bar after adding from the popup
+		add_action('wp_ajax_lpr_popup_summary', array(Popup_Modern::class, 'ajax_summary'));
+		add_action('wp_ajax_nopriv_lpr_popup_summary', array(Popup_Modern::class, 'ajax_summary'));
 		// Tracking data for the popup products (GTM4WP), built in a front-end request
 		add_action('wc_ajax_lpr_tracking_data', array($this, 'lpr_tracking_data'));
 
@@ -373,10 +407,23 @@ final class Product_Recommendations {
 	 */
 	public function admin_enqueue_scripts() {
 		$version = $this->script_version();
-		$screen = get_current_screen();		
+		$screen = get_current_screen();
+		$screen_id = $screen ? (string) $screen->id : '';
+		$is_product = 'product' === $screen_id;
+		$is_settings = false !== strpos($screen_id, 'lpr-settings');
+
+		// Only the product editor and the plugin's own pages use these.
+		if (!$is_product && !$is_settings) {
+			return;
+		}
 		wp_enqueue_editor();
 
-		if (!$this->is_pro_activated()) {
+		// Product edit screen: the Recommendations tab gets the same look as the settings (Free and Pro).
+		if ($screen && 'product' === $screen->id) {
+			wp_enqueue_style('lpr-panel-modern', $this->get_url('assets/css/panel-modern.css'), array(), $version . '.' . (int) @filemtime($this->get_path('assets/css/panel-modern.css')));
+		}
+
+		if (!$this->is_pro_activated() && $is_product) {
 			$panel_asset = $this->script_asset('panel', array('wp-element', 'wp-components', 'wp-i18n', 'jquery'));
 			wp_enqueue_script('selection-panel-script', $this->get_url('assets/js/panel.min.js'), $panel_asset['dependencies'], $panel_asset['version'], true);
 			wp_set_script_translations( 'selection-panel-script', 'leo-product-recommendations' );
@@ -390,7 +437,7 @@ final class Product_Recommendations {
 		}
 
 		//load script in setting page
-		if ($screen->id === 'toplevel_page_lpr-settings') {
+		if ($screen_id === 'toplevel_page_lpr-settings') {
 			// color picker
 			wp_enqueue_script('spectrum', $this->get_url('assets/js/color-picker/spectrum.js'), array('jquery'), $version, true);
 			wp_enqueue_style('lpr-spectrum', $this->get_url('assets/js/color-picker/spectrum.css'), array(), $version);
@@ -408,11 +455,6 @@ final class Product_Recommendations {
 			wp_enqueue_script('lpr-settings', $this->get_url('assets/js/settings.min.js'), $settings_asset['dependencies'], $settings_asset['version'], true);
 			wp_enqueue_style('lpr-settings', $this->get_url('assets/css/settings.css'), array(), $version);
 
-			//css editor
-			$cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/css'));
-			wp_localize_script('lpr-settings', 'lpr_css_editor', $cm_settings);
-			wp_enqueue_style('wp-codemirror');
-			wp_enqueue_script('wp-theme-plugin-editor');
 
 		}
 	}
@@ -454,6 +496,7 @@ final class Product_Recommendations {
 			 */
 			'popup_on_cart' => (bool) apply_filters('lpr_popup_after_reload_on_cart', false),
 			'is_cart_page' => $this->is_cart_or_checkout_page(),
+			'design' => Popup_Modern::design($this),
 		));
 
 		// if (is_product()) { // disabled condition so that it work for quick view
@@ -470,9 +513,20 @@ final class Product_Recommendations {
 			 * @since 3.4.0
 			 */
 			'theme_ajax_selector' => (string) apply_filters('lpr_theme_ajax_add_to_cart_selector', '[data-add-to-cart="ajax"]'),
+			/**
+			 * Keep adding single product forms with AJAX even when the popup limit is reached
+			 * or the popup is replaced (Pro cart drawer).
+			 *
+			 * @since 3.6.0
+			 */
+			'ajax_always' => (bool) apply_filters('lpr_ajax_add_to_cart_always', false),
 		));
 
 		wp_enqueue_style('lpr-modal', $this->get_url('assets/css/modal.css'), array(), $version);
+		if (Popup_Modern::is_modern($this)) {
+			wp_enqueue_style('lpr-popup-modern', $this->get_url('assets/css/popup-modern.css'), array('lpr-modal'), $version . '.' . (int) @filemtime($this->get_path('assets/css/popup-modern.css')));
+			wp_enqueue_script('wc-add-to-cart');
+		}
 		//recommend variable and group product add to cart
 		if ($this->get_setting('variable_add_to_cart')) {
 			wp_enqueue_script('wc-add-to-cart-variation');
@@ -678,7 +732,7 @@ final class Product_Recommendations {
 		$is_secure = !empty($_POST['_lc_lpr_data']) && !empty($nonce) && wp_verify_nonce($nonce, 'lc-panel-security');
 
 		if ($is_secure) {
-			$panel_data = isset($_POST['_lc_lpr_data']) ? wp_unslash($_POST['_lc_lpr_data']) : array();
+			$panel_data = isset($_POST['_lc_lpr_data']) ? wp_unslash($_POST['_lc_lpr_data']) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- array, each field is validated and sanitized below.
 			$panel_data = is_array($panel_data) ? $panel_data : array();
 			$entry_data = array();
 
@@ -796,7 +850,12 @@ final class Product_Recommendations {
 		if(!count($recommended_products_id)) wp_die();
 
 		$template_data = $this->get_template_data($product_id, $recommended_products_id);
-		include $this->get_templates_path('templates/template-modal-content.php');
+		if (Popup_Modern::is_modern($this)) {
+			$added = Popup_Modern::added_item($product_id);
+			include $this->get_templates_path('templates/modern-popup.php');
+		} else {
+			include $this->get_templates_path('templates/template-modal-content.php');
+		}
 
 		if ($this->datalayer_enabled()) {
 			$this->print_datalayer_data($product_id, $recommended_products_id);
@@ -828,6 +887,9 @@ final class Product_Recommendations {
 		}
 		if ($this->is_active_global($product_id)) {
 			return 'global';
+		}
+		if ($this->is_smart_selection($product_id)) {
+			return 'smart';
 		}
 		if ($this->is_manually_selection($product_id)) {
 			return 'manual';
@@ -898,7 +960,7 @@ final class Product_Recommendations {
 	 * @param array $recommended_products_id
 	 * @return void
 	 */
-	public function print_datalayer_data($product_id, $recommended_products_id) {
+	public function print_datalayer_data($product_id, $recommended_products_id, $list = array()) {
 		$items = array();
 
 		foreach ($recommended_products_id as $id) {
@@ -926,8 +988,8 @@ final class Product_Recommendations {
 
 		$data = array(
 			'currency' => get_woocommerce_currency(),
-			'item_list_id' => 'lpr_popup',
-			'item_list_name' => (string) apply_filters('lpr_datalayer_item_list_name', 'Product Recommendations Popup'),
+			'item_list_id' => !empty($list['id']) ? (string) $list['id'] : 'lpr_popup',
+			'item_list_name' => !empty($list['name']) ? (string) $list['name'] : (string) apply_filters('lpr_datalayer_item_list_name', 'Product Recommendations Popup'),
 			'id_type' => $this->get_datalayer_id_type(),
 			'source' => array(
 				'source_product_id' => (string) $product_id,
@@ -936,6 +998,11 @@ final class Product_Recommendations {
 			),
 			'items' => (object) $items,
 		);
+
+		// Places with products from several sources (cart, checkout): product => source.
+		if (!empty($list['sources']) && is_array($list['sources'])) {
+			$data['sources'] = (object) array_map('strval', $list['sources']);
+		}
 
 		echo '<script type="application/json" class="lpr-datalayer-data">' . wp_json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . '</script>';
 	}
@@ -1024,7 +1091,7 @@ final class Product_Recommendations {
 		}
 
 		// Only for adds the visitor asked for, not products other code adds on page load.
-		if (!isset($_REQUEST['add-to-cart']) || !is_numeric(wp_unslash($_REQUEST['add-to-cart']))) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if (!isset($_REQUEST['add-to-cart']) || !is_numeric(wp_unslash($_REQUEST['add-to-cart']))) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only checked to be numeric.
 			return;
 		}
 
@@ -1112,7 +1179,9 @@ final class Product_Recommendations {
 		if (!class_exists(Ajax_Add_To_Cart::class)) {
 			include $this->get_path('includes/class-ajax-add-to-cart.php');
 		}
-		new Ajax_Add_To_Cart($_POST);
+		// Same as WooCommerce's own AJAX add to cart: no nonce, so it keeps working on cached pages.
+		// Ajax_Add_To_Cart reads and sanitizes only the fields it needs.
+		new Ajax_Add_To_Cart($_POST); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	}
 
 	/**
@@ -1247,7 +1316,7 @@ final class Product_Recommendations {
 		}
 
 		$data = $this->get_pr_data($product_id);
-		if ($this->is_dynamic_selection($product_id) || !empty($data['products'])) {
+		if ($this->is_dynamic_selection($product_id) || $this->is_smart_selection($product_id) || !empty($data['products'])) {
 			return false;
 		}
 
@@ -1331,6 +1400,136 @@ final class Product_Recommendations {
 	}
 
 	/**
+	 * Is the smart engine available? Pro turns it on.
+	 *
+	 * @since 3.6.0
+	 * @return bool
+	 */
+	public function smart_available() {
+		/**
+		 * Smart recommendations (learned from the store's orders) are available.
+		 *
+		 * @since 3.6.0
+		 * @param bool $available
+		 */
+		return (bool) apply_filters('lpr_smart_available', false);
+	}
+
+	/**
+	 * For the Smart picks teaser in Free: products the store's own customers bought
+	 * together, from up to the last 300 paid orders of the past 6 months.
+	 * Cached for a day, so it costs nothing on most page loads.
+	 *
+	 * @since 3.6.0
+	 * @return array{orders:int, pairs:array<int, array{0:int, 1:int, 2:int}>}
+	 */
+	public function smart_teaser_data() {
+		$cached = get_transient('lpr_smart_teaser');
+		if (is_array($cached)) {
+			return $cached;
+		}
+
+		$data = array('orders' => 0, 'pairs' => array());
+		if (function_exists('wc_get_orders')) {
+			$order_ids = wc_get_orders(array(
+				'type'         => 'shop_order',
+				'status'       => array('wc-processing', 'wc-completed'),
+				'date_created' => '>' . strtotime('-6 months'),
+				'orderby'      => 'date',
+				'order'        => 'DESC',
+				'limit'        => 300,
+				'return'       => 'ids',
+			));
+			$order_ids = array_filter(array_map('absint', (array) $order_ids));
+			$data['orders'] = count($order_ids);
+
+			if ($order_ids) {
+				global $wpdb;
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+				$rows = $wpdb->get_results("SELECT oi.order_id, im.meta_value AS product_id FROM {$wpdb->prefix}woocommerce_order_items oi STRAIGHT_JOIN {$wpdb->prefix}woocommerce_order_itemmeta im ON im.order_item_id = oi.order_item_id AND im.meta_key = '_product_id' WHERE oi.order_item_type = 'line_item' AND oi.order_id IN (" . implode(',', $order_ids) . ')');
+				$orders = array();
+				foreach ((array) $rows as $row) {
+					$orders[(int) $row->order_id][(int) $row->product_id] = true;
+				}
+				$count = array();
+				foreach ($orders as $products) {
+					$products = array_keys($products);
+					if (count($products) < 2 || count($products) > 20) {
+						continue;
+					}
+					sort($products);
+					foreach ($products as $i => $a) {
+						for ($j = $i + 1; $j < count($products); $j++) {
+							$key = $a . ':' . $products[$j];
+							$count[$key] = (isset($count[$key]) ? $count[$key] : 0) + 1;
+						}
+					}
+				}
+				arsort($count);
+				foreach ($count as $key => $n) {
+					list($a, $b) = array_map('intval', explode(':', $key));
+					$pa = wc_get_product($a);
+					$pb = wc_get_product($b);
+					// Only products Smart picks would show: published, visible in the catalog, in stock.
+					if (!$pa || !$pb || 'publish' !== $pa->get_status() || 'publish' !== $pb->get_status()
+						|| 'hidden' === $pa->get_catalog_visibility() || 'hidden' === $pb->get_catalog_visibility()
+						|| !$pa->is_in_stock() || !$pb->is_in_stock()) {
+						continue;
+					}
+					$data['pairs'][] = array($a, $b, (int) $n);
+					if (count($data['pairs']) >= 3) {
+						break;
+					}
+				}
+			}
+		}
+
+		set_transient('lpr_smart_teaser', $data, DAY_IN_SECONDS);
+		return $data;
+	}
+
+	/**
+	 * Product set to "Smart" in its Recommendations tab (only counts while Smart is available).
+	 *
+	 * @since 3.6.0
+	 * @param int $product_id
+	 * @return bool
+	 */
+	public function is_smart_selection($product_id) {
+		$pr_data = $this->get_pr_data($product_id);
+		return !empty($pr_data['type']) && 'smart-selection' === $pr_data['type'] && $this->smart_available();
+	}
+
+	/**
+	 * Smart picks for a product. Without the engine, products from the same
+	 * categories are used so nothing breaks.
+	 *
+	 * @since 3.6.0
+	 * @param int $product_id
+	 * @return int[]
+	 */
+	public function smart_product_ids($product_id) {
+		$limit = absint($this->get_setting('global_products_number'));
+		$limit = $limit ? $limit : 12;
+
+		/**
+		 * Smart picks for a product, best first.
+		 *
+		 * @since 3.6.0
+		 * @param int[] $ids        Empty unless the engine fills it.
+		 * @param int   $product_id Product the picks are for.
+		 * @param int   $limit      Maximum number of products.
+		 */
+		$ids = (array) apply_filters('lpr_smart_product_ids', array(), $product_id, $limit);
+
+		if (!$ids && !$this->smart_available()) {
+			$ids = $this->dynamic_query_products($product_id, array('category_type' => 'same_categories', 'orderby' => 'popularity', 'number' => $limit));
+		}
+
+		return array_slice(array_values(array_map('absint', $ids)), 0, $limit);
+	}
+
+	/**
 	 * Array of recommended product ids
 	 *
 	 * @param int $product_id
@@ -1338,21 +1537,85 @@ final class Product_Recommendations {
 	 * @since      1.0.0
 	 */
 	public function get_recommended_products_id($product_id) {
+		$ids  = array();
+		$from = '';
+
 		if ($this->uses_linked_products($product_id)) {
-			return $this->get_linked_product_ids($product_id);
+			$ids  = $this->get_linked_product_ids($product_id);
+			$from = 'linked';
+		} elseif ($this->is_active_global($product_id)) {
+			$global = $this->get_global_pr_data();
+			$type   = isset($global['type']) ? $global['type'] : 'rule';
+
+			if ('manual' === $type) {
+				// Store-wide rule with hand-picked products: the same list for every product.
+				$picked = array_values(array_diff(array_map('absint', (array) $global['products']), array((int) $product_id)));
+				$ids    = $picked ? array_values($this->manual_query_products(array('products' => $picked))) : array();
+				$from   = 'global-manual';
+			} elseif ('smart' === $type) {
+				$ids  = $this->smart_product_ids($product_id);
+				$from = 'smart';
+			} else {
+				$ids  = $this->dynamic_query_products($product_id, $global);
+				$from = 'global-rule';
+			}
+		} else {
+			$data = $this->get_pr_data($product_id);
+			if ($this->is_smart_selection($product_id)) {
+				$ids  = $this->smart_product_ids($product_id);
+				$from = 'smart';
+			} elseif ($this->is_manually_selection($product_id)) {
+				$ids  = $this->manual_query_products($data);
+				$from = 'manual';
+			} elseif ($this->is_dynamic_selection($product_id)) {
+				$ids  = $this->dynamic_query_products($product_id, $data);
+				$from = 'dynamic';
+			}
 		}
 
-		if ($this->is_active_global($product_id)) {
-			return $this->dynamic_query_products($product_id, $this->get_global_pr_data());
-		}
+		/**
+		 * Recommended products for a product, in display order.
+		 *
+		 * @since 3.6.0
+		 * @param int[]  $ids        Product IDs.
+		 * @param int    $product_id Product the recommendations are for.
+		 * @param string $from       Where they came from: linked, manual, dynamic, smart,
+		 *                           global-manual, global-rule, or empty for none.
+		 */
+		$own = array_values(array_map('absint', (array) $ids));
+		$ids = (array) apply_filters('lpr_recommended_products_id', $own, $product_id, $from);
+		$ids = array_values(array_unique(array_filter(array_map('absint', $ids), function ($id) use ($product_id) {
+			return $id && $id !== (int) $product_id;
+		})));
 
-		$data = $this->get_pr_data($product_id);
-		if ($this->is_manually_selection($product_id)) {
-			return $this->manual_query_products($data);
-		} elseif ($this->is_dynamic_selection($product_id)) {
-			return $this->dynamic_query_products($product_id, $data);
+		// Smart picks: the whole list for a Smart product or rule, or the products added to
+		// fill a short list. Everything else is the store owner's own choice.
+		$smart = $this->smart_available();
+		$map   = array();
+		foreach ($ids as $id) {
+			$map[$id] = ($smart && ('smart' === $from || !in_array($id, $own, true))) ? 'smart' : 'own';
 		}
-		return array();
+		self::$origins[(int) $product_id] = $map;
+
+		return $ids;
+	}
+
+	/**
+	 * Where a recommended product came from: 'smart' (smart picks), 'own' (hand-picked,
+	 * linked, rules) or '' (not recommended for this product right now).
+	 *
+	 * @since 3.6.0
+	 * @param int $source_id  Product the recommendations are for.
+	 * @param int $product_id Recommended product.
+	 * @return string
+	 */
+	public function recommendation_origin($source_id, $product_id) {
+		$source_id  = absint($source_id);
+		$product_id = absint($product_id);
+		if (!isset(self::$origins[$source_id])) {
+			$this->get_recommended_products_id($source_id);
+		}
+		return isset(self::$origins[$source_id][$product_id]) ? self::$origins[$source_id][$product_id] : '';
 	}
 
 	/**
@@ -1378,7 +1641,7 @@ final class Product_Recommendations {
 		}
 
 		// active global and not available local
-		$is_dynamic_selection = $this->is_dynamic_selection($id);
+		$is_dynamic_selection = $this->is_dynamic_selection($id) || $this->is_smart_selection($id);
 		$data = $this->get_pr_data($id);
 		$recommended_products = !empty($data['products']) ? $data['products'] : array();
 
@@ -1551,6 +1814,12 @@ final class Product_Recommendations {
 			$args['orderby'] = $orderby;
 		}
 
+		// Best selling / top rated: products with the same number break the tie by newest,
+		// then id, so the list is the same on every request.
+		if ('meta_value_num' === $orderby) {
+			$args['orderby'] = array('meta_value_num' => 'DESC', 'date' => 'DESC', 'ID' => 'DESC');
+		}
+
 		if (!empty($meta_key)) {
 			$args['meta_key'] = $meta_key;
 		}
@@ -1612,7 +1881,7 @@ final class Product_Recommendations {
 	 * Nonce fixe for logged out user
 	 */
 	public function nonce_fix($uid = 0, $action = '') {
-		$nonce_actions = array('lc-ajax-modal', 'lc-add-to-cart');
+		$nonce_actions = array('lc-ajax-modal', 'lc-add-to-cart', 'lpr-places');
 		if (in_array($action, $nonce_actions)) {
 			return 0;
 		}
@@ -1778,6 +2047,9 @@ final class Product_Recommendations {
 		$number_of_posts = !empty($settings['global_products_number']) ? $settings['global_products_number'] : 12;
 
 		$data = array();
+		$rule_type    = isset($settings['global_rule_type']) ? $settings['global_rule_type'] : 'rule';
+		$data['type'] = 'manual' === $rule_type ? 'manual' : (('smart' === $rule_type && $this->smart_available()) ? 'smart' : 'rule');
+		$data['products'] = !empty($settings['global_products']) ? array_map('absint', (array) $settings['global_products']) : array();
 		$data['category_type'] = $category_type;
 		$data['categories'] = $categories;
 		$data['number'] = $number_of_posts;
@@ -1803,6 +2075,12 @@ final class Product_Recommendations {
 
 		if ($field_type === 'checkbox' && $settings && !isset($settings[$id])) {
 			$value = null;
+		}
+
+		// Stores that saved settings before the modern popup (3.6.0) keep the classic one,
+		// in the popup and in the settings form, until the owner switches.
+		if ('popup_design' === $id && $settings && !isset($settings[$id])) {
+			$value = 'classic';
 		}
 
 		if (!$value) {
@@ -1959,6 +2237,54 @@ final class Product_Recommendations {
 	 * @param array $field Field definition.
 	 * @return array
 	 */
+	/**
+	 * Move one child of a wrapper field out as its own top-level field (simple settings).
+	 * Saved values are unchanged: the setting keeps its id.
+	 *
+	 * @since 3.6.0
+	 * @param array  $fields   Top-level fields keyed by id (changed in place).
+	 * @param string $wrapper  Wrapper field id.
+	 * @param string $child_id Child field id.
+	 * @param array  $as       Keys for the new top-level field.
+	 * @param array  $rest     Keys for what stays in the wrapper.
+	 */
+	public static function split_child_field(array &$fields, $wrapper, $child_id, array $as, array $rest = array()) {
+		if (!isset($fields[$wrapper])) {
+			return;
+		}
+
+		$field    = self::normalize_settings_field($fields[$wrapper]);
+		$children = isset($field['children']) ? $field['children'] : array();
+		$found    = null;
+
+		foreach ($children as $i => $child) {
+			if (isset($child['id']) && $child['id'] === $child_id) {
+				$found = $child;
+				unset($children[$i]);
+			}
+		}
+
+		if (!$found) {
+			return;
+		}
+
+		$field['children'] = array_values($children);
+		$fields[$wrapper]  = array_merge($field, $rest);
+
+		$new = array_merge($found, array('id' => $child_id), $as);
+		unset($new['_parent']);
+
+		// Keep the order: the new field goes right before its wrapper.
+		$ordered = array();
+		foreach ($fields as $id => $item) {
+			if ($id === $wrapper) {
+				$ordered[$child_id] = $new;
+			}
+			$ordered[$id] = $item;
+		}
+		$fields = $ordered;
+	}
+
 	public static function normalize_settings_field($field) {
 		$children = array();
 
@@ -2078,11 +2404,22 @@ final class Product_Recommendations {
 	public function default_settings_pages() {
 		$general_settings_fields = array(
 			array(
+				'id' => 'popup_design',
+				'title' => __('Popup Design', 'leo-product-recommendations'),
+				'type' => 'radio',
+				'options' => array(
+					'modern' => __('Modern', 'leo-product-recommendations'),
+					'classic' => __('Classic', 'leo-product-recommendations'),
+				),
+				'default' => 'modern',
+				'description' => __('Modern: the added product, cart subtotal, a row of matching products, and View cart and Checkout buttons. Looks the same in every theme and slides up from the bottom on phones. Classic: the earlier design, using your theme\'s product cards.', 'leo-product-recommendations'),
+			),
+			array(
 				'id' => 'heading_type',
 				'title' => sprintf(
 					/* translators: %s: Link to global settings page */
-					__('Default Heading <small>Used when a product has no heading of its own, and for <a target="_blank" href="%s">Default Recommendations</a></small>', 'leo-product-recommendations'),
-					home_url('/wp-admin/admin.php?page=lpr-settings&sec=lpr-global-settings')
+					__('Default Heading <small>Used for products that have no heading of their own, or that use the store-wide rule (<a target="_blank" href="%s">What to Recommend</a>)</small>', 'leo-product-recommendations'),
+					admin_url('admin.php?page=lpr-settings&sec=lpr-global-settings')
 				),
 				'type' => 'heading_selection',
 				'default' => 'default_heading',
@@ -2091,7 +2428,7 @@ final class Product_Recommendations {
 						'id' => 'default_heading',
 						'title' => __('Heading', 'leo-product-recommendations'),
 						'type' => 'text',
-						'default' => __('You may purchase following [item, items] with the %title%', 'leo-product-recommendations'),
+						'default' => __('Goes well with %title%', 'leo-product-recommendations'),
 					),
 					array(
 						'id' => 'default_heading_description',
@@ -2099,12 +2436,12 @@ final class Product_Recommendations {
 						'type' => 'editor',
 					),
 				),
-				'description' => __('If you like to use the same heading patterns for all recommendations then use the default heading. Use pattern <strong>%title%</strong> for the product title. Pattern <strong>[item, items]</strong> is changeable. You can utilize <strong>[product, products]</strong> or all that makes sense. The particular expression for a single recommended item and the plural expression for more than one supported item.', 'leo-product-recommendations'),
+				'description' => __('<strong>%title%</strong> becomes the added product\'s name. <strong>[item, items]</strong> picks the first word for one recommended product and the second for more, for example [product, products].', 'leo-product-recommendations'),
 				'doc' 		  => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/general-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 			),
 			array(
 				'id' => 'popup_view_times',
-				'title' => __('Popup Show', 'leo-product-recommendations'),
+				'title' => __('How Often To Show', 'leo-product-recommendations'),
 				'type' 	=> 'select',
 				'options' => array(
 					'always' 		 => __('Every Time', 'leo-product-recommendations'),
@@ -2114,19 +2451,17 @@ final class Product_Recommendations {
 					'4' 		 	 =>  __('4 Times', 'leo-product-recommendations'),
 					'5' 		 	 =>  __('5 Times', 'leo-product-recommendations'),
 				),
-				'description' => __('If you think showing a popup every time will bother your customers, then you can limit it.', 'leo-product-recommendations')
+				'description' => __('How many times one visitor sees the popup. The count starts again after 2 hours without a popup.', 'leo-product-recommendations')
 			),
 			array(
 				'id' => 'variable_add_to_cart',
+				'switch' => true,
 				'default' => 1,
-				'title' => __('Variable Products <br> Add To Cart', 'leo-product-recommendations'),
-				'label' => __('Add To Cart', 'leo-product-recommendations'),
+				'title' => __('Products With Options', 'leo-product-recommendations'),
+				'label' => __('Let shoppers choose options in the popup', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => sprintf(
-					/* translators: %s: URL of the documentation example */
-					__('To show Add to cart button with products which have multiple variable options instead Select options button for recommending Variable and Group products. These amazing features will allow customers to purchase merchandise without visiting a single page for variable/group products. <a href="%s" target="_blank">Example» </a>', 'leo-product-recommendations'),
-					esc_url("https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/general-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page")
-				),
+				'advanced' => true,
+				'description' => __('Shoppers pick the size, color or other options of a recommended product right in the popup. Off: these products show a button that opens the product page, where shoppers choose their options.', 'leo-product-recommendations'),
 				'doc'         => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/general-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 			),
 			array(
@@ -2136,7 +2471,7 @@ final class Product_Recommendations {
 				'children' => array(
 					array(
 						'id' => 'grid_lg_items',
-						'title' => __('Desktop Items Per Row', 'leo-product-recommendations'),
+						'title' => __('Desktop Products Per Row', 'leo-product-recommendations'),
 						'type' => 'number',
 						'min' => 2,
 						'max' => 5,
@@ -2145,7 +2480,7 @@ final class Product_Recommendations {
 
 					array(
 						'id' => 'grid_md_items',
-						'title' => __('Tablet Items Per Row', 'leo-product-recommendations'),
+						'title' => __('Tablet Products Per Row', 'leo-product-recommendations'),
 						'type' => 'number',
 						'min' => 2,
 						'max' => 5,
@@ -2154,7 +2489,7 @@ final class Product_Recommendations {
 
 					array(
 						'id' => 'grid_sm_items',
-						'title' => __('Mobile Items Per Row', 'leo-product-recommendations'),
+						'title' => __('Mobile Products Per Row', 'leo-product-recommendations'),
 						'type' => 'number',
 						'min' => 1,
 						'max' => 3,
@@ -2174,91 +2509,198 @@ final class Product_Recommendations {
 			),
 			array(
 				'id' => 'layout_image',
-				'title' => __('Layout Type <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/layout-type.jpg'),
-				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
-			),
-			array(
-				'id' => 'slider_options_image',
-				'title' => __('Slider Options <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/slider-options.jpg'),
-				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
+				'title' => __('Layout Type <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'pro_preview',
+				'controls' => array(
+					array('type' => 'chips', 'options' => array(__('Grid', 'leo-product-recommendations'), __('Slider', 'leo-product-recommendations')), 'active' => 1),
+				),
+				'description' => __('Show products in a grid or a sliding row, with autoplay, speed and loop for the slider.', 'leo-product-recommendations'),
+				'link' => 'https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser',
 			),
 			array(
 				'id' => 'popup_size_image',
-				'title' => __('Popup Size <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/popup-size.jpg'),
-				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
+				'title' => __('Popup Size <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'pro_preview',
+				'controls' => array(
+					array('type' => 'chips', 'options' => array(__('Small', 'leo-product-recommendations'), __('Medium', 'leo-product-recommendations'), __('Large', 'leo-product-recommendations'), __('Custom', 'leo-product-recommendations')), 'active' => 1),
+				),
+				'description' => __('Width of the popup on desktop. Custom: set the desktop, tablet and mobile widths yourself.', 'leo-product-recommendations'),
+				'link' => 'https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser',
 			),
 			array(
 				'id' => 'button_visibility_image',
-				'title' => __('Buttons Visibility <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/button-visibility.jpg'),
-				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
+				'title' => __('Buttons <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'pro_preview',
+				'controls' => array(
+					array('type' => 'switches', 'items' => array(__('Continue Shopping Button', 'leo-product-recommendations'), __('Checkout Button', 'leo-product-recommendations'), __('Close Button', 'leo-product-recommendations'))),
+				),
+				'description' => __('Show or hide each button in the popup.', 'leo-product-recommendations'),
+				'link' => 'https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser',
 			),
 		);
 
 		$style_settings = array(
 			array(
 				'id' => 'popup_color_image',
-				'title' => __('Popup Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/modal-color.jpg'),
-				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
+				'title' => __('Popup Colors <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'pro_preview',
+				'controls' => array(
+					array('type' => 'swatches', 'label' => __('Button Color', 'leo-product-recommendations'), 'colors' => array('#46C28E', '#2271b1', '#1d2327', '#d9622b', '#7a4fd6')),
+					array('type' => 'swatches', 'label' => __('Heading Color', 'leo-product-recommendations'), 'colors' => array('#555555', '#1d2327', '#2271b1', '#1f7a53', '#b32d2e')),
+					array('type' => 'swatches', 'label' => __('Notification Bar', 'leo-product-recommendations'), 'colors' => array('#f5f5f5', '#eaf7f1', '#eef4fb', '#fbf6ea', '#ffffff')),
+				),
+				'description' => __('Match the popup to your brand. Every other popup color and the product title, price and button colors can be set too.', 'leo-product-recommendations'),
+				'link' => 'https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser',
+			),
+		);
+
+		// Tabs, most useful first: What to Recommend, Popup, More Places, Get Started.
+		$all_fields = array();
+		foreach (array_merge($general_settings_fields, $style_settings) as $field) {
+			$all_fields[$field['id']] = $field;
+		}
+
+
+		if (isset($all_fields['popup_view_times'])) {
+			$all_fields['popup_view_times']['description'] = __('How many times one visitor sees the popup. The count starts again after 2 hours without a popup.', 'leo-product-recommendations');
+		}
+
+		// Simple layout: products per row up front, the rest of the grid options under "More options".
+		self::split_child_field($all_fields, 'grid_options', 'grid_lg_items', array(
+			'title' => __('Products Per Row', 'leo-product-recommendations'),
+			'type' => 'stepper',
+			'min' => 2,
+			'max' => 5,
+			'description' => __('On desktop. Tablet and mobile sizes are under More options.', 'leo-product-recommendations'),
+		), array(
+			'title' => __('Tablet, Mobile And Spacing', 'leo-product-recommendations'),
+			'advanced' => true,
+		));
+
+		$pick = function ($ids) use (&$all_fields) {
+			$fields = array();
+			foreach ($ids as $id) {
+				if (isset($all_fields[$id])) {
+					$fields[] = $all_fields[$id];
+				}
+			}
+			return $fields;
+		};
+
+		// No General tab in Free: everything it had is about the popup, so it lives in the Popup tab.
+		$popup_settings_fields    = $pick(array('popup_design', 'popup_view_times', 'heading_type', 'grid_lg_items', 'layout_image', 'popup_size_image', 'button_visibility_image', 'popup_color_image', 'grid_options', 'variable_add_to_cart'));
+
+		// More Places is a Pro feature: Free shows what it does, with a live example.
+		if (!class_exists(Places::class)) {
+			require_once $this->get_path('includes/class-places.php');
+		}
+		$places_settings_fields = array(
+			array(
+				'id' => 'places_pro',
+				'title' => __('More Places <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'pro_note',
+				'description' => __('Recommendations beyond the popup, at every step from the product page to the thank-you page. The previews below use your own products.', 'leo-product-recommendations'),
+				'link' => 'https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=places',
+			),
+		);
+
+		// Discounts are a Pro feature: Free shows how shoppers see them, with the store's products.
+		$pro_link = 'https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=discounts';
+		$discount_settings_fields = array(
+			array(
+				'id' => 'discounts_pro',
+				'title' => __('Discounts <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'discount_showcase',
+				'description' => __('Give a small discount when shoppers add recommended products.', 'leo-product-recommendations'),
+				'link' => $pro_link,
 			),
 			array(
-				'id' => 'product_color_image',
-				'title' => __('Product Color Settings <br> <span class="badge">PRO FEATURE</span>', 'leo-product-recommendations'),
-				'type' => 'pro_image',
-				'image_url' => $this->get_url('assets/images/product-color-setting.jpg'),
-				'link' => esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=pro-teaser'),
+				'id' => 'discount_bundle_image',
+				'title' => __('Bundle Saving <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'pro_preview',
+				'controls' => array(
+					array('type' => 'switches', 'items' => array(__('Give a discount on products bought together', 'leo-product-recommendations'))),
+					array('type' => 'chips', 'options' => array(__('Percentage', 'leo-product-recommendations'), __('Fixed amount', 'leo-product-recommendations')), 'active' => 0),
+					array('type' => 'stepper', 'label' => __('Discount', 'leo-product-recommendations'), 'value' => 10, 'suffix' => '%'),
+					array('type' => 'switches', 'items' => array(__('Give a bigger saving when shoppers add 2 or more products', 'leo-product-recommendations'))),
+				),
+				'description' => __('Products added from "Frequently bought together" cost less while the main product is in the cart.', 'leo-product-recommendations'),
+				'link' => $pro_link,
 			),
 			array(
-				'id' => 'custom_style',
-				'title' => __('Custom CSS', 'leo-product-recommendations'),
-				'type' => 'css',
-				'description' => __('Write custom css to change style of modal.', 'leo-product-recommendations'),
-				'doc' 		  => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/style-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
+				'id' => 'discount_addon_image',
+				'title' => __('Add-on Saving <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'pro_preview',
+				'controls' => array(
+					array('type' => 'switches', 'items' => array(__('Give a discount on products added from the popup or cart drawer', 'leo-product-recommendations'))),
+					array('type' => 'chips', 'options' => array(__('Percentage', 'leo-product-recommendations'), __('Fixed amount', 'leo-product-recommendations')), 'active' => 0),
+					array('type' => 'stepper', 'label' => __('Discount', 'leo-product-recommendations'), 'value' => 10, 'suffix' => '%'),
+					array('type' => 'switches', 'items' => array(__('Give a bigger saving when shoppers add 2 or more products', 'leo-product-recommendations'))),
+				),
+				'description' => __('After a shopper adds a product, the products recommended with it show a lower price.', 'leo-product-recommendations'),
+				'link' => $pro_link,
+			),
+			array(
+				'id' => 'discount_offer_image',
+				'title' => __('Checkout Offer Saving <span class="badge">PRO</span>', 'leo-product-recommendations'),
+				'type' => 'pro_preview',
+				'controls' => array(
+					array('type' => 'switches', 'items' => array(__('Give a discount on the checkout offer', 'leo-product-recommendations'))),
+					array('type' => 'chips', 'options' => array(__('Percentage', 'leo-product-recommendations'), __('Fixed amount', 'leo-product-recommendations')), 'active' => 0),
+					array('type' => 'stepper', 'label' => __('Discount', 'leo-product-recommendations'), 'value' => 15, 'suffix' => '%'),
+				),
+				'description' => __('The products offered at checkout show a lower price.', 'leo-product-recommendations'),
+				'link' => $pro_link,
 			),
 		);
 
 		$global_settings_fields = array(
 			array(
-				'id' => 'linked_products',
-				'title' => __('1. WooCommerce Linked Products', 'leo-product-recommendations'),
-				'type' => 'wrapper_extend',
-				'children' => array(
-					array(
-						'id' => 'global_linked_upsells',
-						'title' => __('Show the product\'s Upsells', 'leo-product-recommendations'),
-						'type' => 'checkbox',
-						'default' => 1,
-					),
-					array(
-						'id' => 'global_linked_cross_sells',
-						'title' => __('Show the product\'s Cross-sells', 'leo-product-recommendations'),
-						'type' => 'checkbox',
-						'default' => 1,
-					),
-				),
-				'description' => __('Set them under Product data > Linked Products. When both are on, Upsells come first.', 'leo-product-recommendations'),
+				'id' => 'recommendation_flow',
+				'title' => '',
+				'type' => 'recommendation_flow',
 			),
 			array(
 				'id' => 'active_global_settings',
-				'title' => __('2. Store-wide Rule', 'leo-product-recommendations'),
-				'label' => __('Use a store-wide rule for the remaining products', 'leo-product-recommendations'),
+				'switch' => true,
+				'group' => 'rule',
+				'title' => __('Store-wide Rule', 'leo-product-recommendations'),
+				'label' => __('Use a store-wide rule for products with nothing set', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => __('Products without hand-picked or linked recommendations get products from this rule.', 'leo-product-recommendations'),
-				'doc' 		  => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/global-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
 				'default' => 1,
 			),
 			array(
+				'id' => 'global_rule_type',
+				'group' => 'rule',
+				'title' => __('Choose Products By', 'leo-product-recommendations'),
+				'type' => 'radio',
+				'options' => array(
+					'rule' => __('Categories and tags', 'leo-product-recommendations'),
+					'manual' => __('Products I pick', 'leo-product-recommendations'),
+					'smart' => __('Smart picks, learned from your orders', 'leo-product-recommendations'),
+				),
+				'locked' => array('smart'),
+				'default' => 'rule',
+				'description' => __('Categories and tags: products are found for you. Products I pick: the same hand-picked list for every product, handy for best sellers or add-ons that go with anything. Smart picks: click it to see what it finds in your orders.', 'leo-product-recommendations'),
+			),
+			array(
+				'id' => 'smart_teaser',
+				'group' => 'rule',
+				'title' => '',
+				'type' => 'smart_teaser',
+				'link' => 'https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=smart-picks',
+			),
+			array(
+				'id' => 'global_products',
+				'group' => 'rule',
+				'title' => __('Products', 'leo-product-recommendations'),
+				'type' => 'products_select',
+				'description' => __('Shown in this order. The product itself and products already in the cart are left out.', 'leo-product-recommendations'),
+			),
+			array(
 				'id' => 'selection_options',
-				'title' => __('Store-wide Rule Options', 'leo-product-recommendations'),
+				'group' => 'rule',
+				'title' => __('Rule Options', 'leo-product-recommendations'),
 				'type' => 'wrapper_extend',
 				'children' => array(
 					array(
@@ -2266,8 +2708,8 @@ final class Product_Recommendations {
 						'title' => __('Categories', 'leo-product-recommendations'),
 						'type' => 'radio',
 						'options' => array(
-							'same_categories' => __('Product Related Category', 'leo-product-recommendations'),
-							'manual_categories' => __('Manual', 'leo-product-recommendations'),
+							'same_categories' => __('Same categories as the product', 'leo-product-recommendations'),
+							'manual_categories' => __('Categories I choose', 'leo-product-recommendations'),
 						),
 						'default' => 'same_categories',
 					),
@@ -2285,16 +2727,16 @@ final class Product_Recommendations {
 
 					array(
 						'id' => 'global_filtering',
-						'title' => __('Products Filtering', 'leo-product-recommendations'),
+						'title' => __('Sort By', 'leo-product-recommendations'),
 						'type' 	=> 'select',
 						'options' => array(
-							'rand' 		 => __('Random Products', 'leo-product-recommendations'),
-							'newest' 	 => __('Newest Products', 'leo-product-recommendations'),
-							'oldest' 	 => __('Oldest Products', 'leo-product-recommendations'),
-							'lowprice' 	 => __('Low Price Products', 'leo-product-recommendations'),
-							'highprice'  => __('High Price Products', 'leo-product-recommendations'),
-							'popularity' => __('Best Selling Products', 'leo-product-recommendations'),
-							'rating' 	 => __('Top Rated Products', 'leo-product-recommendations'),
+							'rand' 		 => __('Random', 'leo-product-recommendations'),
+							'newest' 	 => __('Newest', 'leo-product-recommendations'),
+							'oldest' 	 => __('Oldest', 'leo-product-recommendations'),
+							'lowprice' 	 => __('Price: Low to High', 'leo-product-recommendations'),
+							'highprice'  => __('Price: High to Low', 'leo-product-recommendations'),
+							'popularity' => __('Best Selling', 'leo-product-recommendations'),
+							'rating' 	 => __('Top Rated', 'leo-product-recommendations'),
 						),
 					),
 					array(
@@ -2304,7 +2746,9 @@ final class Product_Recommendations {
 					),
 					array(
 						'id' 	  => 'global_products_number',
-						'title'   => __('Numbers of Products', 'leo-product-recommendations'),
+						'min' => 1,
+						'max' => 100,
+						'title'   => __('Number of Products', 'leo-product-recommendations'),
 						'type' 	  => 'number',
 						'default' => 12,
 					),
@@ -2313,11 +2757,33 @@ final class Product_Recommendations {
 			),
 			array(
 				'id' => 'disable_global_override',
+				'switch' => true,
+				'group' => 'rule',
 				'label' => __('Use the store-wide rule for every product', 'leo-product-recommendations'),
 				'title' => __('Campaign Mode', 'leo-product-recommendations'),
 				'type' => 'checkbox',
-				'description' => __('Ignores hand-picked and linked recommendations while it is on. Handy for a Black Friday campaign: pick the campaign categories in the rule above and tick this box.', 'leo-product-recommendations'),
+				'description' => __('Ignores hand-picked and linked recommendations while it is on. Handy for a Black Friday campaign: set the rule above to the campaign products, then turn this on.', 'leo-product-recommendations'),
 				'doc' => 'https://leocoder.com/docs/woocommerce-product-recommendations/popup-modal-settings/global-settings/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=settings-page',
+			),
+			array(
+				'id' => 'linked_products',
+				'title' => __('WooCommerce Linked Products', 'leo-product-recommendations'),
+				'type' => 'wrapper_extend',
+				'children' => array(
+					array(
+						'id' => 'global_linked_upsells',
+						'title' => __('Show the product\'s Upsells', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+						'default' => 1,
+					),
+					array(
+						'id' => 'global_linked_cross_sells',
+						'title' => __('Show the product\'s Cross-sells', 'leo-product-recommendations'),
+						'type' => 'checkbox',
+						'default' => 1,
+					),
+				),
+				'description' => __('Set them under Product data > Linked Products. When both are on, Upsells come first.', 'leo-product-recommendations'),
 			),
 		);
 
@@ -2333,31 +2799,40 @@ final class Product_Recommendations {
 				
 				'sections' => array(
 					array(
-						'id' => 'lpr-general-settings',
-						'tab_title' => __('General', 'leo-product-recommendations'),
-						'title' => __('General Settings', 'leo-product-recommendations'),
-						'fields' => $general_settings_fields,
-					),
-
-					array(
-						'id' => 'lpr-style-settings',
-						'tab_title' => __('Style', 'leo-product-recommendations'),
-						'title' => __('Colors & Styles Settings', 'leo-product-recommendations'),
-						'fields' => $style_settings,
-					),
-
-					array(
 						'id' => 'lpr-global-settings',
-						'tab_title' => __('Default Recommendations', 'leo-product-recommendations'),
-						'title' => __('Default Recommendations', 'leo-product-recommendations'),
-						'description' => __('For products with nothing set in their own Recommendations tab. The popup uses their WooCommerce Upsells/Cross-sells first, then the store-wide rule.', 'leo-product-recommendations'),
+						'tab_title' => __('What to Recommend', 'leo-product-recommendations'),
+						'title' => __('What to Recommend', 'leo-product-recommendations'),
 						'fields' => $global_settings_fields,
 					),
+					array(
+						'id' => 'lpr-style-settings',
+						'tab_title' => __('Popup', 'leo-product-recommendations'),
+						'title' => __('Popup', 'leo-product-recommendations'),
+						'description' => __('The popup that shows after a product is added to the cart: how often, its heading, layout and look.', 'leo-product-recommendations'),
+						'fields' => $popup_settings_fields,
+					),
+
+					array(
+						'id' => 'lpr-places-settings',
+						'tab_title' => __('More Places', 'leo-product-recommendations'),
+						'title' => __('More Places', 'leo-product-recommendations'),
+						'description' => __('Show recommendations in more places than the popup. Available in Pro.', 'leo-product-recommendations'),
+						'fields' => $places_settings_fields,
+					),
+
+					array(
+						'id' => 'lpr-discounts-settings',
+						'tab_title' => __('Discounts', 'leo-product-recommendations'),
+						'title' => __('Discounts', 'leo-product-recommendations'),
+						'description' => __('Small discounts on recommended products, taken off in the cart automatically. Available in Pro.', 'leo-product-recommendations'),
+						'fields' => $discount_settings_fields,
+					),
+
 
 					array(
 						'id' => 'lpr-documentation',
-						'tab_title' => __('Tutorials', 'leo-product-recommendations'),
-						'title' => __('Tutorial & Documentation', 'leo-product-recommendations'),
+						'tab_title' => __('Get Started', 'leo-product-recommendations'),
+						'title' => __('Get Started', 'leo-product-recommendations'),
 						'type' => 'article',
 						'template' => $this->get_path('includes/tutorials.php'),
 					),
@@ -2414,7 +2889,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'not_show_image_button',
 					'reason' => __('Does not show product image or add to cart button.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Contact our support and we\'ll help you fix it »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2423,7 +2898,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'dont_understand',
 					'reason' => __('I couldn\'t understand how to use it.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=deactivation-form" target="_blank">' . __('Please check details documentations »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=deactivation-form" target="_blank">' . __('Read the documentation »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2432,7 +2907,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'not_works',
 					'reason' => __('It doesn\'t work with my website.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Please contact with our support we will try fix it quickly for you »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Contact our support and we\'ll help you fix it »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2441,7 +2916,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'look_bad',
 					'reason' => __('It looks bad on my website.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Please contact with our support we will help you to fix the issues »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://leocoder.com/contact/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=support&utm_content=deactivation-form" target="_blank">' . __('Contact our support and we\'ll help you fix it »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2450,7 +2925,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'dont_need',
 					'reason' => __('It works nicely but I don’t need it now.', 'leo-product-recommendations'),
-					'instruction' => '<a href="https://wordpress.org/support/plugin/leo-product-recommendations/reviews/" target="_blank">' . __('Please encourage us by giving nice feedback  »', 'leo-product-recommendations') . '</a>',
+					'instruction' => '<a href="https://wordpress.org/support/plugin/leo-product-recommendations/reviews/" target="_blank">' . __('Leave us a review »', 'leo-product-recommendations') . '</a>',
 					'input_field' => '',
 					'placeholder' => '',
 					'input_default' => '',
@@ -2459,7 +2934,7 @@ final class Product_Recommendations {
 				array(
 					'category' => 'need_help',
 					'reason' => __('I need some help to set up the plugin.', 'leo-product-recommendations'),
-					'instruction' => __('Please provide your email address we will contact you soon.', 'leo-product-recommendations'),
+					'instruction' => __('Leave your email address and we\'ll contact you soon.', 'leo-product-recommendations'),
 					'input_field' => 'email',
 					'placeholder' => '',
 					'input_default' => sanitize_email($this->admin_email()),
@@ -2477,9 +2952,9 @@ final class Product_Recommendations {
 				array(
 					'category' => 'feature_request',
 					'reason' => __('I need a specific feature that it doesn\'t support.', 'leo-product-recommendations'),
-					'instruction' => __('Please let us know feature details we will try add it ASAP', 'leo-product-recommendations'),
+					'instruction' => __('Tell us which feature you need.', 'leo-product-recommendations'),
 					'input_field' => 'textarea',
-					'placeholder' => __('Require feature details', 'leo-product-recommendations'),
+					'placeholder' => __('Feature details', 'leo-product-recommendations'),
 					'input_default' => '',
 				),
 
@@ -2488,7 +2963,7 @@ final class Product_Recommendations {
 					'reason' => __('Other.', 'leo-product-recommendations'),
 					'instruction' => '',
 					'input_field' => 'textarea',
-					'placeholder' => __('Please share the reason. We will try to fix / help you.', 'leo-product-recommendations'),
+					'placeholder' => __('Please share the reason. We\'ll try to help.', 'leo-product-recommendations'),
 					'input_default' => '',
 				),
 			),

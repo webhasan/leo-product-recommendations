@@ -52,7 +52,6 @@ Still open:
 
 ## Admin UI and copy
 
-1. Free's locked color teaser (image) does not match Pro's real fields.
 2. Locked Dynamic Selection demo uses sample categories and tags that do not exist in the store.
 3. Typos: "Continue Shoping", "Gird Or Slider", "WPR configuration panel" in the Skip
    Manual Selection help text.
@@ -60,6 +59,18 @@ Still open:
 5. License page button reads "Active Lincese" / "Deactive Lincese".
 7. Untranslatable strings in the panel (`'Popup Heading'`, `'Select By'` passed as
    variables); `__('Documentation»', { textDomain })` passes an object as the domain.
+
+9. Analytics page wording still says "popup" (Popup views, Adds per popup, Added in the
+   popup) although it now counts the drawer and More Places too, and there is no
+   breakdown by place (the stats table has no place column).
+10. Recommendation cards in More Places use the theme's product card. Themes that show the
+    add to cart button only on hover hide it on touch screens. Astra is handled in
+    `places.css`; other themes may need the same, or the plugin's own compact card.
+11. Cart drawer with many items: the recommendations sit below the whole cart list, out of
+    view until the shopper scrolls the drawer.
+12. Popup cards: when titles wrap to two lines the add to cart buttons do not line up.
+13. License page: heading says "Activate License" when it is already active, and the
+    status reads "Activated License." (built JS, `license.js`).
 
 ## Build and housekeeping
 

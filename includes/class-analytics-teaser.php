@@ -79,8 +79,8 @@ class Analytics_Teaser {
 		$image    = $this->base->get_url('assets/images/pro-analytics.jpg');
 		$features = array(
 			__('Revenue and orders from recommended products, and their share of your store sales', 'leo-product-recommendations'),
-			__('Adds to cart right in the popup, and after a shopper clicks through to the product page', 'leo-product-recommendations'),
-			__('A simple funnel: popup views, products added, products ordered', 'leo-product-recommendations'),
+			__('Adds to cart right from a recommendation, and after a shopper clicks through to the product page', 'leo-product-recommendations'),
+			__('Results for each place: popup, cart drawer, cart page, free shipping bar, product page, checkout and thank-you page', 'leo-product-recommendations'),
 			__('Best product pairs: which products shoppers buy together', 'leo-product-recommendations'),
 			__('Average order value of orders with and without a recommended product', 'leo-product-recommendations'),
 			__('Top recommended products, date ranges and CSV export', 'leo-product-recommendations'),
@@ -95,9 +95,9 @@ class Analytics_Teaser {
 			<div class="lpr-teaser__intro">
 				<div class="lpr-teaser__text">
 					<?php if ($update) : ?>
-						<p class="lpr-teaser__lead"><?php esc_html_e('Analytics comes with Leo Product Recommendations Pro 3.3.0. Update Pro to start counting what the popup sells.', 'leo-product-recommendations'); ?></p>
+						<p class="lpr-teaser__lead"><?php esc_html_e('Analytics comes with Leo Product Recommendations Pro 3.3.0. Update Pro to start counting what your recommendations sell.', 'leo-product-recommendations'); ?></p>
 					<?php else : ?>
-						<p class="lpr-teaser__lead"><?php esc_html_e('Find out how much the recommendation popup really sells. The analytics dashboard is part of Leo Product Recommendations Pro.', 'leo-product-recommendations'); ?></p>
+						<p class="lpr-teaser__lead"><?php esc_html_e('Find out how much your recommendations really sell, and which places sell the most. The analytics dashboard is part of Leo Product Recommendations Pro.', 'leo-product-recommendations'); ?></p>
 					<?php endif; ?>
 
 					<ul class="lpr-teaser__list">

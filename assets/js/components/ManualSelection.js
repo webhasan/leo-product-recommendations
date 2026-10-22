@@ -62,9 +62,16 @@ const SortableProduct = ({ product, onRemoveProduct }) => {
                 <span
                     className="remove-item"
                     role="button"
+                    tabIndex={0}
                     aria-label={__("Remove", "leo-product-recommendations")}
                     onPointerDown={(e) => e.stopPropagation()}
-                    onKeyDown={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => {
+                        e.stopPropagation();
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            onRemoveProduct(product.id);
+                        }
+                    }}
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -154,7 +161,7 @@ const ManualSelection = (props) => {
                                 <span className="single-list">
                                     {" "}
                                     {__(
-                                        "Not found selectable product",
+                                        "No products found",
                                         "leo-product-recommendations"
                                     )}
                                 </span>
@@ -167,7 +174,16 @@ const ManualSelection = (props) => {
                                     className={classNames({
                                         "selected-product": product.selected,
                                     })}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-pressed={!!product.selected}
                                     onClick={() => onAddProduct(product) }
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                            e.preventDefault();
+                                            onAddProduct(product);
+                                        }
+                                    }}
                                 >
                                     <span className="single-list">
                                         <div className="thumb">

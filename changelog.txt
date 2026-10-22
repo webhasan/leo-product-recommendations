@@ -1,0 +1,173 @@
+Leo Product Recommendations: changelog for versions before 3.6.0
+
+= 3.5.0 =
+* New: Use WooCommerce's own Upsells and Cross-sells (Product data > Linked Products) as recommendations. Products with nothing set in their Recommendations tab show their linked products first, and the store-wide rule covers the rest. On by default for new installs. Existing stores: turn it on in LPR Settings > Default Recommendations.
+* New: The product's Recommendations tab says when the popup will use its linked products.
+* New: LPR Settings > Analytics shows a preview of the Pro analytics dashboard. The free version does not track anything.
+* Improvement: Clearer settings. The Global tab is now Default Recommendations, with numbered steps (linked products, then the store-wide rule). Skip Manual Selection is now called Campaign Mode. Your saved settings don't change.
+* Improvement: Plugin renamed to Leo Product Recommendations: Upsell & Cross-sell Popup for WooCommerce. Settings and recommendations are not affected.
+* Improvement: Documentation and support links in the plugin now go straight to leocoder.com.
+* Improvement: The first item under LPR Settings is now called Settings, the same as with Pro.
+* Improvement: The "Popup Show" setting description can now be translated.
+* Fix: Headings with more than one [single, plural] pattern now show the right words, and spaces after the comma are trimmed.
+* Developer: Filter `lpr_linked_product_ids`. Recommendation type `linked` in the dataLayer events.
+
+= 3.4.0 =
+* New: The popup also opens after a normal (page reload) add to cart, for example for product bundles, subscriptions, bookings, products with file uploads and add to cart links.
+* New: GA4-ready dataLayer events for the popup: `lpr_popup_view_item_list`, `lpr_popup_select_item` and `lpr_popup_add_to_cart`, with product data, so you can measure the revenue the popup brings in. Pushed only when the site already has a dataLayer (for example Google Tag Manager). Your existing add_to_cart tracking is not changed.
+* New: One settings framework shared with the Pro version. Settings are kept as they are.
+* New: One-time backup of the plugin settings before the first save with this version.
+* Improvement: Modern build tools (@wordpress/scripts 36). Admin scripts are smaller and load with automatic cache busting.
+* Improvement: Product panel ready for React 19 (new drag and drop, keyboard sorting with space and arrow keys).
+* Improvement: Settings are loaded once per request (faster pages).
+* Fix: Product types with their own add to cart handler (bundles, composites, subscriptions...) showed "Something went wrong" on the product page. They now add to cart the normal WooCommerce way.
+* Fix: Product options sent as checkbox groups or multi-selects kept only the last choice.
+* Fix: "Buy now" buttons in the product form now work instead of opening the popup.
+* Fix: GTM4WP did not record add to cart for products added from the popup. The popup now loads GTM4WP's product data for its products.
+* Fix: Cart and check icons were missing in the popup, so the cart count badge overlapped the Checkout button.
+* Fix: The popup grid showed one product fewer per row than set with themes that add a gap to product lists (for example Astra).
+* Fix: Hidden and out-of-stock products are always excluded from dynamic recommendations.
+* Fix: A PHP error in the popup when a hand-picked recommended product had been deleted.
+* Fix: "Low Price" and "High Price" sorting in dynamic recommendations left out most variable products and ignored sale prices. They now sort by the price shoppers see, like the shop's own price sorting.
+* Fix: Saving settings without Pro active no longer removes Pro settings.
+* Fix: An empty or zero "items per row" value no longer causes a PHP error.
+* Fix: No JavaScript error when a theme fires added_to_cart without a button (Flatsome mini cart).
+* Fix (Blocksy): two add to cart requests on the product page when Blocksy's AJAX add to cart is on, the popup opening again on the next page, and two add to cart buttons on each popup product.
+* Fix (Woodmart): with Woodmart's AJAX add to cart on, the product page sent two add to cart requests. The plugin now leaves those forms to Woodmart.
+* Fix: The deactivation feedback form showed no radio buttons or text fields since 3.1.0, so feedback could not be sent.
+* Security: The product panel requests now need a logged-in user who can edit products. They were also open to logged-out visitors (protected only by a nonce).
+* Security: The popup only loads for published, visible products, so it can no longer show the title or image of a draft, private or non-product post.
+* Security: Recommendations are saved only for products, only by users who can edit them, and not on autosaves or revisions.
+* Security: The product title in the popup heading is escaped. Custom CSS is printed without tags (so it can't leave the style element) and selectors like `a > b` now work.
+* Security: "Reset colors" now requires a valid nonce and only resets the color settings.
+* Security: Deactivation feedback is sent with TLS certificate checks on and only by users who can manage plugins.
+* Privacy: Deactivation feedback now sends only the reason, your comment and the plugin version. The site URL, theme, plugin list and server details are no longer sent.
+* Developer: Filters `lpr_popup_datalayer`, `lpr_datalayer_item`, `lpr_datalayer_item_id_type` (`id` or `sku`) and `lpr_datalayer_item_list_name`.
+* Developer: Filters `lpr_ajax_add_to_cart_supported`, `lpr_popup_after_reload`, `lpr_popup_after_reload_on_cart`, and the `lpr-no-ajax` form class to opt a form out of AJAX add to cart.
+* Developer: Filter `lpr_theme_ajax_add_to_cart_selector` for themes that add the product form to the cart with their own AJAX call.
+* Developer: Filter `lpr_popup_tracking_data` (on by default when GTM4WP is active).
+* Compatibility: Tested with WordPress 7.1 and WooCommerce 11.2. Declares support for High-Performance Order Storage and the Cart & Checkout blocks.
+* Requires WordPress 6.6 or later.
+
+= 3.2.0 =
+* Updated compatibility metadata for WordPress 7.1 and WooCommerce 11.1.1.
+
+= 3.0.0 =
+* Fix plugin compatibility issue
+
+= 2.8.0 =
+* Compatible with HPOS
+
+= 2.7.0 =
+* Bug Fix
+
+= 2.6.4 =
+* Bug Fix: Fix for Be theme
+
+= 2.6.3 =
+* Bug Fix: Fix for Blocksy theme
+
+= 2.6.2 =
+* Bug Fix: Fix when product data null
+
+= 2.6.1 =
+* Bug Fix: Fix when product data null
+
+= 2.6.0 =
+* Bug Fix: Bug for for pro version for popup limit.
+
+= 2.5.0 =
+* Feature Added: Limit to show recommendation popup (Every time, 1, 2, 3, 5 times)
+
+= 2.4.0 =
+* Feature Added: Modeal close icon
+
+= 2.3.1 =
+* Bug fix
+
+= 2.3.0 =
+* Exclude private, hidden, out-of-stock products from recommendation
+* Template fix for Rey theme
+
+= 2.2.0 =
+* Fixing for OceanWP
+
+= 2.0.2 =
+* Bug fix
+
+= 2.0.1 =
+* Bug fix
+
+= 2.0 =
+* Removed preloader from the popup
+* Moved selection panel to WooCommerce data table as Recommendations tab
+* Improved performance 
+* Bug Fixed
+
+= 1.9.0 =
+* Bug fix
+
+= 1.9.0 =
+* Update recommendation modal & added new features.
+
+= 1.8.9 =
+* Bug fixed for product_page shortcode
+
+= 1.8.8 =
+* Feature improvement & bug fixed
+
+= 1.8.6 =
+* Bug fix for WooCommerce Custom Product Addons
+
+= 1.8.4 =
+* Fixed theme compatibility
+
+= 1.8.3 =
+* Fixed modal appearing issue for variable product
+
+= 1.8.2 =
+* Fixed theme compatibility
+
+= 1.8.0 =
+* Added animation is added to cart and recommendations heading
+
+= 1.7.0 =
+* Improved plugin documentation
+
+= 1.6.1 =
+* Fix for Safari theme quick view 
+
+= 1.6.0 =
+* Optimized coding & performance 
+* Added deactivation feedback 
+
+= 1.5.3 =
+* Improved performance.
+* Improved theme compatibility.
+
+= 1.5.1 =
+* Bug Fixed
+
+= 1.5 =
+* Added Add To Cart flash notification.
+* Improved theme compatibility.
+
+= 1.4 =
+* Add option to ajax add to cart for Variable & Group recommend products. Customers don't need to go to a single product page to add to a cart variable/group.
+
+= 1.3.2 =
+* Bug Fix
+
+= 1.3.1 =
+* Add editor field for default heading
+
+= 1.2 =
+* Update compatibility
+
+= 1.1 =
+* Update Features
+
+= 1.0 =
+* Initial release
+
+== Upgrade Notice =

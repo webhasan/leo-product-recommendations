@@ -20,7 +20,11 @@
 
       that.addClass("show");
 
-      $("body").css("paddingRight", scrollbarWidth);
+      // Keep the page from shifting when its scrollbar goes away; restore the old value on close.
+      if (!$("body").hasClass("lpr-modal-opened")) {
+        savedPadding = document.body.style.paddingRight;
+        if (scrollbarWidth > 0) $("body").css("paddingRight", scrollbarWidth);
+      }
       $("body").addClass("lpr-modal-opened").prepend(overlay);
 
       setTimeout(function () {
@@ -39,7 +43,7 @@
       setTimeout(function () {
         that.removeClass("show");
         $(".lpr-modal-overlay").remove();
-        $("body").css("paddingRight", 0);
+        document.body.style.paddingRight = savedPadding || "";
         $("body").removeClass("lpr-modal-opened");
       }, 200);
 
@@ -56,32 +60,41 @@
       closeModal();
     }
 
-    that.find(".lpr-modal-close, .lpr-close-modal").click(function (e) {
+    // Bound once per popup, not once per call.
+    that.find(".lpr-modal-close, .lpr-close-modal").off("click.lpr").on("click.lpr", function () {
       closeModal();
       return false;
     });
 
-    $(".lpr-modal").click(function (e) {
+    that.off("click.lprbg").on("click.lprbg", function (e) {
       if (this === e.target) {
         closeModal();
       }
     });
   };
 
-  //popup count
-  function setPopupCount() {
-    const prevPopupCountData = localStorage.getItem('lpr-popup-count');
-    const hasPrevCount = (prevPopupCountData && JSON.parse(prevPopupCountData).count && (JSON.parse(prevPopupCountData).time > Date.now() - 2 * 3600 * 1000));
-    const popupCount = hasPrevCount ? (JSON.parse(prevPopupCountData).count + 1) : 1;
-    const popupCountData = {count: popupCount, time: Date.now()} 
+  let savedPadding = "";
+  const reducedMotion = () => !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
-    localStorage.setItem('lpr-popup-count', JSON.stringify(popupCountData));
+  //popup count
+  // Storage can be blocked (private mode, browser settings) or hold a broken value.
+  function readPopupCount() {
+    try {
+      const data = JSON.parse(localStorage.getItem('lpr-popup-count') || "null");
+      return data && data.count && data.time > Date.now() - 2 * 3600 * 1000 ? data.count : 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  function setPopupCount() {
+    try {
+      localStorage.setItem('lpr-popup-count', JSON.stringify({ count: readPopupCount() + 1, time: Date.now() }));
+    } catch (e) {}
   }
 
   function getPopupCount() {
-    const popupData = localStorage.getItem('lpr-popup-count');
-    const hasPopupCount = (popupData && JSON.parse(popupData).count && (JSON.parse(popupData).time > Date.now() - 2 * 3600 * 1000));
-    return hasPopupCount ? JSON.parse(popupData).count : 0;
+    return readPopupCount();
   }
 
 
@@ -98,6 +111,7 @@
   // elements/attributes into the popup, so its add_to_cart tracking works there too.
   // Product ID of a popup card (from its add to cart button or form).
   function getCardProductId($card) {
+    if ($card.attr("data-lpr-product")) return parseInt($card.attr("data-lpr-product"), 10) || 0;
     const $form = $card.find("form.cart").first();
     const $button = $card.find(".add_to_cart_button[data-product_id]").first();
 
@@ -310,6 +324,14 @@
       }
     }
 
+    // Modern popup: a variation picked from the card's select.
+    const buttonId = parseInt($button.data("product_id"), 10);
+    if (!variationId && buttonId && buttonId !== id) {
+      extra.item_id = String(buttonId);
+      const label = $card.find(".lpr-pm-card__select option:selected").text();
+      if (label) extra.item_variant = label.replace(/\s*\([^)]*\)\s*$/, "");
+    }
+
     const item = cardItem($card.get(0), extra);
     return item ? [item] : [];
   }
@@ -343,19 +365,174 @@
     if (items.length) datalayerPush("lpr_popup_add_to_cart", ecommerceFor(items));
   });
 
+  /* ---------- modern popup (3.6.0) ---------- */
+
+  let lastFocus = null;
+
+  function setupModern($wrapper) {
+    const $list = $wrapper.find(".lpr-pm__list");
+    const $nav = $wrapper.find(".lpr-pm__nav");
+    const list = $list.get(0);
+
+    function updateNav() {
+      if (!list) return;
+      const overflow = list.scrollWidth > list.clientWidth + 2;
+      $nav.prop("hidden", !overflow);
+      // scrollLeft is negative in right-to-left pages; the distance moved is the same.
+      const pos = Math.abs(list.scrollLeft);
+      const max = list.scrollWidth - list.clientWidth - 2;
+      $nav.find(".lpr-pm__prev").prop("disabled", pos <= 1);
+      $nav.find(".lpr-pm__next").prop("disabled", pos >= max);
+    }
+
+    function move(dir) {
+      const card = list && list.querySelector(".lpr-pm-card");
+      if (!card) return;
+      const gap = parseFloat(getComputedStyle(list).columnGap) || 0;
+      const step = card.getBoundingClientRect().width + gap;
+      const rtl = getComputedStyle(list).direction === "rtl";
+      const by = Math.max(1, Math.floor((list.clientWidth + gap) / step)) * step;
+      list.scrollBy({ left: dir * (rtl ? -by : by), behavior: reducedMotion() ? "auto" : "smooth" });
+    }
+
+    $wrapper.find(".lpr-pm__prev").on("click", () => move(-1));
+    $wrapper.find(".lpr-pm__next").on("click", () => move(1));
+    $list.on("scroll", () => window.requestAnimationFrame(updateNav));
+    $(window).off("resize.lprpm").on("resize.lprpm", updateNav);
+    setTimeout(updateNav, 50);
+    $wrapper.find("img").on("load", updateNav);
+
+  }
+
+  // A variation picked in a card: the Add button adds that variation.
+  $(document).on("change", "#lpr-modal .lpr-pm-card__select", function () {
+    const value = $(this).val();
+    const $add = $(this).siblings(".lpr-pm-card__add");
+    $add.attr("data-product_id", value || "").data("product_id", value || "");
+    $add.toggleClass("is-disabled", !value).attr("aria-disabled", value ? "false" : "true");
+  });
+
+  $(document).on("click", "#lpr-modal .lpr-pm-card__add.is-disabled", function (e) {
+    e.preventDefault();
+    $(this).siblings(".lpr-pm-card__select").trigger("focus");
+    return false;
+  });
+
+  function modernToast($modal, text) {
+    const $toast = $modal.find(".lpr-pm__toast");
+    if (!$toast.length) return;
+    $toast.text(text).addClass("is-shown");
+    clearTimeout($toast.data("timer"));
+    $toast.data("timer", setTimeout(() => $toast.removeClass("is-shown"), 1800));
+  }
+
+  // After adding from the popup: subtotal and free shipping bar again.
+  function refreshModernSummary($modal) {
+    const $summary = $modal.find("[data-lpr-pm-summary]");
+    if (!$summary.length) return;
+    $.get(lc_ajax_modal.url, { action: "lpr_popup_summary", nonce: lc_ajax_modal.nonce, _: Date.now() }).done(function (res) {
+      if (res && res.success && res.data) $summary.html(res.data.html || "");
+    });
+  }
+
+  function popupOpen() {
+    return $("#lpr-modal").hasClass("show");
+  }
+
+  const FOCUSABLE = 'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  // Keyboard (both designs): Esc closes, Tab stays inside the popup.
+  $(document).on("keydown", function (e) {
+    if (!popupOpen()) return;
+    if (e.key === "Escape") {
+      $("#lpr-modal").lprModal({ action: "close" });
+      return;
+    }
+    if (e.key !== "Tab") return;
+    const modal = $("#lpr-modal").get(0);
+    const $items = $("#lpr-modal-content").find(FOCUSABLE).filter(":visible");
+    if (!$items.length) {
+      e.preventDefault();
+      return;
+    }
+    const first = $items.get(0);
+    const last = $items.get($items.length - 1);
+    const active = document.activeElement;
+    const inside = $.contains(modal, active) && active !== $("#lpr-modal-content").get(0);
+    if (e.shiftKey && (active === first || !inside)) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (active === last || !inside)) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
+  // Classic popup: its close icon works from the keyboard too.
+  $(document).on("keydown", "#lpr-modal .lpr-modal-close[role='button']", function (e) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      $("#lpr-modal").lprModal({ action: "close" });
+    }
+  });
+
+  // Dialog role and focus for both designs.
+  function prepareDialog($wrapper) {
+    $("#lpr-modal").attr({ role: "dialog", "aria-modal": "true" });
+    const $title = $wrapper.find("#lpr-pm-title, .modal-heading").first();
+    if ($title.length) {
+      if (!$title.attr("id")) $title.attr("id", "lpr-modal-title");
+      $("#lpr-modal").attr("aria-labelledby", $title.attr("id"));
+    }
+    $wrapper.find(".lpr-modal-close").not("button").attr({ role: "button", tabindex: "0", "aria-label": __("Close", "leo-product-recommendations") }).removeAttr("aria-hidden");
+    setTimeout(() => {
+      const dialog = $("#lpr-modal-content").attr("tabindex", "-1").get(0);
+      if (dialog) dialog.focus({ preventScroll: true });
+    }, 60);
+  }
+
+  $(document.body).on("after_close_lpr_modal", function () {
+    if (lastFocus && document.body.contains(lastFocus)) {
+      try { lastFocus.focus({ preventScroll: true }); } catch (err) {}
+    }
+    lastFocus = null;
+  });
+
   // Load the recommendations for a product and open the popup.
+  let openToken = 0;
+
   async function openRecommendationPopup(addedProductId) {
+    const token = ++openToken;
     //hide existing popup, quick view etc
     $('body, .quickview-wrapper .closeqv, .yith-quick-view-overlay, .mfp-wrap, .owp-qv-overlay, .owp-qv-close').click(); 
 
     try {
       const modal = await getPopupHtml(addedProductId);
 
+      // A newer add (double click, quick second add) opened its own popup: drop this one.
+      if (token !== openToken) return;
+
       if(modal) {
         const $modalWrapper = $('#lpr-modal-content');
+        const $oldSlider = $modalWrapper.find(".owl-carousel");
+        if ($oldSlider.length) $oldSlider.trigger("destroy.owl.carousel");
+        if (!popupOpen()) lastFocus = document.activeElement;
         $modalWrapper.html(modal);
         addTrackingData($modalWrapper);
         readDatalayerData($modalWrapper);
+
+        const isModern = $modalWrapper.find(".lpr-pm").length > 0;
+        $("#lpr-modal").toggleClass("lpr-modal--modern", isModern);
+
+        prepareDialog($modalWrapper);
+
+        if (isModern) {
+          $('#lpr-modal').lprModal();
+          setPopupCount();
+          pushViewItemList();
+          setupModern($modalWrapper);
+          return;
+        }
 
         if (lc_ajax_modal.layout_type === "slider") {
 
@@ -397,9 +574,9 @@
 
           const $carousel = $modalWrapper.find(".recommended-products-slider").owlCarousel({
             autoplayHoverPause: true,
-            navElement: 'div',
+            navElement: 'button type="button"',
             mouseDrag: false,
-            autoplay: autoPlay,
+            autoplay: autoPlay && !reducedMotion(),
             autoplayTimeout: parseInt(autoPlaySpeed),
             margin: parseInt(columnGap),              
             loop: isLoop,
@@ -430,15 +607,12 @@
           pushViewItemList();
         }
 
-        setTimeout(() =>{
-          //message animation
-          $modalWrapper.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
-        }, 200);
-
-        setTimeout(() =>{
-          //message animation
-          $modalWrapper.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
-        }, 200);
+        if (!reducedMotion()) {
+          setTimeout(() => {
+            //message animation
+            $modalWrapper.find('.message-text').addClass('lpr__animated animate__lpr_headShake');
+          }, 200);
+        }
 
         //variable product swatch
         setTimeout(() => {
@@ -450,8 +624,10 @@
           if(window.woodmartThemeModule && woodmartThemeModule.swatchesVariations) {
             woodmartThemeModule.swatchesVariations();
           }
-          $modalWrapper.find('.modal-heading').addClass('lpr__animated animate__lpr_headShake');
-          $modalWrapper.find('.modal-heading-article').addClass('lpr__animated animate__lpr_headShake');
+          if (!reducedMotion()) {
+            $modalWrapper.find('.modal-heading').addClass('lpr__animated animate__lpr_headShake');
+            $modalWrapper.find('.modal-heading-article').addClass('lpr__animated animate__lpr_headShake');
+          }
         }, 700);
       }
     }catch(e) {
@@ -479,69 +655,118 @@
   }
 
   $(function () {
+    // Lets Pro (or another plugin) show the recommendations somewhere else, for example
+    // a cart drawer. Call event.preventDefault() to stop the popup for this add.
+    // source: "ajax" (added without reload) or "reload" (normal form post).
+    function popupCancelled(productId, source) {
+      const event = $.Event("lpr_before_popup");
+      $(document.body).trigger(event, [productId, source]);
+      return event.isDefaultPrevented();
+    }
+
     // call modal
     $(document.body).on("added_to_cart", async function (e, ...data) {
       // This add opens the popup now; drop any after-reload cookie a background form
       // post (theme AJAX add to cart) may have set, so it doesn't open again later.
       readAddedProductCookie();
 
-      const popupCount = getPopupCount();
+      const [, , buttonInfo] = data;
+      const button = buttonInfo && (buttonInfo.jquery ? buttonInfo[0] : (buttonInfo.nodeType ? buttonInfo : buttonInfo[0]));
 
-      // fallback for older version of pro plugin
-      if(!lc_ajax_modal.popup_view_times) lc_ajax_modal.popup_view_times = 'always';
+      // Some themes fire added_to_cart without a button (Flatsome's mini cart
+      // quantity change); there is no product to show recommendations for.
+      if (!button) return;
 
-      const popupShowTimes = lc_ajax_modal.popup_view_times === 'always' ? Infinity : +lc_ajax_modal.popup_view_times;
-
-      if(popupShowTimes > popupCount){
-        const [, , buttonInfo] = data;
-        const button = buttonInfo && (buttonInfo.jquery ? buttonInfo[0] : (buttonInfo.nodeType ? buttonInfo : buttonInfo[0]));
-
-        // Some themes fire added_to_cart without a button (Flatsome's mini cart
-        // quantity change); there is no product to show recommendations for.
-        if (!button) return;
-
-        let addedProductId = $(button).data("product_id");
-        //if don't find product id from button data
-        if(!addedProductId && $(button).closest('form').length) {
-          addedProductId = $(button).closest('form').find('[name="add-to-cart"]').val();
-        }
-
-        //don't show modal inside modal
-        if (!$(button).closest(".recommended-products-wrapper").length) {
-        
-          await openRecommendationPopup(addedProductId);
-
-        }else {
-          let $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
-          
-          //fix for woodmart theme
-          if(window.woodmartThemeModule) {
-              $productHeading = $(button).closest('.single-lpr').find('.wd-entities-title a:last-child');
-          }
-
-          //fix for oceanwp theme
-          if(window.oceanwp) {
-            $productHeading = $(button).closest('.single-lpr').find('li.title a');
-          }
-
-          const  notificationText = ($productHeading.length) ? `${$productHeading.text()} ${__('has been added to cart.','leo-product-recommendations')}` : __('Item has been added to cart.','leo-product-recommendations'); 
-
-          const topPosition = $(button).closest('.lpr-modal').find('.lpr-message').outerHeight();
-
-          const $notification_bar = $(button).closest('.lpr-modal').find('.lpr-purchase-notification'); 
-          $notification_bar.css('top', topPosition).fadeIn(300).text(notificationText);
-          setTimeout(() => {
-            $notification_bar.fadeOut(600);
-          }, 1500);
-        }
+      // Added from a list of recommendations (the popup or another place): show the
+      // short notice in the popup, never a new popup.
+      if ($(button).closest(".lpr-pm").length) {
+        const $modal = $(button).closest(".lpr-modal");
+        const name = $(button).closest(".lpr-pm-card").find(".lpr-pm-card__name").text();
+        $(button).addClass("added").text(__("Added", "leo-product-recommendations"));
+        /* translators: %s: product name */
+        modernToast($modal, name ? __("%s has been added to your cart.", "leo-product-recommendations").replace("%s", name) : __("The product has been added to your cart.", "leo-product-recommendations"));
+        refreshModernSummary($modal);
+        return;
       }
+
+      if ($(button).closest(".recommended-products-wrapper").length) {
+        let $productHeading = $(button).closest('.single-lpr').find('.woocommerce-loop-product__title'); //show notification for added product.
+
+        //fix for woodmart theme
+        if(window.woodmartThemeModule) {
+            $productHeading = $(button).closest('.single-lpr').find('.wd-entities-title a:last-child');
+        }
+
+        //fix for oceanwp theme
+        if(window.oceanwp) {
+          $productHeading = $(button).closest('.single-lpr').find('li.title a');
+        }
+
+        const $modal = $(button).closest('.lpr-modal');
+        if (!$modal.length) return;
+
+        /* translators: %s: product name */
+        const notificationText = $productHeading.length ? __("%s has been added to your cart.", "leo-product-recommendations").replace("%s", $productHeading.text()) : __("The product has been added to your cart.", "leo-product-recommendations");
+
+        const topPosition = $modal.find('.lpr-message').outerHeight();
+
+        const $notification_bar = $modal.find('.lpr-purchase-notification'); 
+        $notification_bar.css('top', topPosition).fadeIn(300).text(notificationText);
+        setTimeout(() => {
+          $notification_bar.fadeOut(600);
+        }, 1500);
+        return;
+      }
+
+      // Added from a recommendations block on the page (cart page and other places)
+      // or on the cart/checkout page: the page itself shows the result, no popup.
+      if ($(button).closest(".lpr-place").length || (lc_ajax_modal.is_cart_page && !lc_ajax_modal.popup_on_cart)) return;
+
+      let addedProductId = $(button).data("product_id");
+      //if don't find product id from button data
+      if(!addedProductId && $(button).closest('form').length) {
+        addedProductId = $(button).closest('form').find('[name="add-to-cart"]').val();
+      }
+
+      if (popupCancelled(addedProductId, "ajax")) return;
+
+      if (popupAllowed()) {
+        await openRecommendationPopup(addedProductId);
+      }
+    });
+
+    // Block themes: product grids built with WooCommerce blocks (Product Collection,
+    // Product Button) add to the cart through the Store API and send only the browser
+    // event "wc-blocks_added_to_cart", with no jQuery added_to_cart. Remember which
+    // product button was clicked and open the popup (or the drawer) for it.
+    let lastJqueryAdd = 0;
+    let blockClick = null;
+    $(document.body).on("added_to_cart", function () {
+      lastJqueryAdd = Date.now();
+    });
+    document.addEventListener("click", function (e) {
+      const el = e.target && e.target.closest ? e.target.closest("[data-product_id]") : null;
+      if (!el || el.closest("#lpr-modal, #lpr-drawer, .lpr-place")) return;
+      if (!el.closest(".wc-block-components-product-button, .wp-block-woocommerce-product-button, [data-wp-interactive]")) return;
+      blockClick = { id: parseInt(el.getAttribute("data-product_id"), 10) || 0, time: Date.now() };
+    }, true);
+    document.addEventListener("wc-blocks_added_to_cart", function () {
+      const click = blockClick;
+      // Let a jQuery added_to_cart for the same add (classic buttons) run first.
+      setTimeout(async function () {
+        if (!click || !click.id || Date.now() - click.time > 15000 || Date.now() - lastJqueryAdd < 2000) return;
+        blockClick = null;
+        if (lc_ajax_modal.is_cart_page && !lc_ajax_modal.popup_on_cart) return;
+        if (popupCancelled(click.id, "ajax")) return;
+        if (popupAllowed()) await openRecommendationPopup(click.id);
+      }, 80);
     });
 
     // popup after a normal (non AJAX) add to cart
     const reloadedProductId = readAddedProductCookie();
     const onCartPage = !!lc_ajax_modal.is_cart_page || $('body').hasClass('woocommerce-cart') || $('body').hasClass('woocommerce-checkout');
 
-    if (reloadedProductId && popupAllowed() && (!onCartPage || lc_ajax_modal.popup_on_cart)) {
+    if (reloadedProductId && (!onCartPage || lc_ajax_modal.popup_on_cart) && !popupCancelled(reloadedProductId, "reload") && popupAllowed()) {
       openRecommendationPopup(reloadedProductId);
     }
   });
