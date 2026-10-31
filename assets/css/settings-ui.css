@@ -2694,8 +2694,8 @@ body.lpr-preview-open {
 /* Select inside a group: label above, like the number fields. */
 .lpr-setting-page .fields-container .child-select {
 	display: flex;
-	flex-direction: column-reverse;
-	justify-content: flex-end;
+	flex-direction: column;
+	justify-content: flex-start;
 	gap: 6px;
 }
 
@@ -3289,4 +3289,305 @@ body.lpr-preview-open {
 	color: #1d2327;
 	font-weight: 600;
 	text-decoration: none;
+}
+
+/* Store-wide rule options: a 3-column grid. The category choice gets its own
+   row, the category picker (only shown for "Categories I choose") sits under
+   it, then tags, sort and number on one row, then the on-sale switch.
+   No fixed rows, so hiding the picker leaves no gap. */
+.lpr-setting-page .lpr-row-selection_options .fields-container {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 20px 28px;
+	align-items: start;
+	max-width: 1100px;
+}
+
+.lpr-setting-page .lpr-row-selection_options .fields-container > * {
+	width: auto;
+	margin: 0;
+}
+
+.lpr-setting-page .lpr-row-selection_options .fields-container > .child-radio,
+.lpr-setting-page .lpr-row-selection_options .fields-container > .child-checkbox {
+	grid-column: 1 / -1;
+	margin: 0;
+}
+
+.lpr-setting-page .lpr-row-selection_options .fields-container > .category-selector {
+	grid-column: 1 / span 2;
+}
+
+.lpr-setting-page .lpr-row-selection_options .fields-container > .tags-selector {
+	grid-column: 1;
+}
+
+/* The on-sale switch comes before the number in the markup; show it last. */
+.lpr-setting-page .lpr-row-selection_options .fields-container > .child-checkbox {
+	order: 1;
+}
+
+/* Same label style above every control in the group. */
+.lpr-setting-page .lpr-row-selection_options .fields-container > .child-radio > strong,
+.lpr-setting-page .lpr-row-selection_options .fields-container > .category-selector > label,
+.lpr-setting-page .lpr-row-selection_options .fields-container > .tags-selector > label,
+.lpr-setting-page .lpr-row-selection_options .fields-container > .child-select > label,
+.lpr-setting-page .lpr-row-selection_options .fields-container > .child-number > label {
+	display: block;
+	margin: 0 0 6px;
+	color: #1d2327;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.lpr-setting-page .lpr-row-selection_options .fields-container > .child-select > label {
+	margin: 0;
+}
+
+.lpr-setting-page .lpr-row-selection_options .fields-container > .child-radio > strong {
+	margin: 0;
+}
+
+.lpr-setting-page .lpr-row-selection_options .fields-container select,
+.lpr-setting-page .lpr-row-selection_options .fields-container .select2-container {
+	width: 100% !important;
+	max-width: 100%;
+}
+
+.lpr-setting-page .lpr-row-selection_options .fields-container .select2-container--default .select2-selection--multiple,
+.lpr-setting-page .lpr-row-selection_options .fields-container .child-select select {
+	min-height: 40px;
+}
+
+@media (max-width: 960px) {
+	.lpr-setting-page .lpr-row-selection_options .fields-container {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.lpr-setting-page .lpr-row-selection_options .fields-container > * {
+		grid-column: 1 !important;
+	}
+}
+
+/* Feature request card (Get Started tab) */
+.lpr-fr__title {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 0 4px;
+	font-size: 15px;
+}
+
+.lpr-fr__intro {
+	margin: 0 0 16px;
+	color: #50575e;
+}
+
+.lpr-fr__field {
+	margin: 0 0 18px;
+}
+
+.lpr-fr__field label {
+	display: block;
+	margin: 0 0 6px;
+	font-weight: 600;
+}
+
+.lpr-fr__field textarea,
+.lpr-fr__field input[type="email"] {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.lpr-fr__req {
+	color: #b32d2e;
+}
+
+.lpr-fr__opt {
+	margin-left: 4px;
+	font-weight: 400;
+	color: #646970;
+}
+
+.lpr-fr__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin: 0;
+}
+
+.lpr-fr__status.is-success {
+	color: #1f7a53;
+}
+
+.lpr-fr__status.is-error {
+	color: #b32d2e;
+}
+
+.lpr-fr__privacy {
+	margin: 0;
+	font-size: 12px;
+	color: #646970;
+}
+
+
+
+/* Tab icons (dashicons) */
+.lpr-setting-page .nav-tab-wrapper .nav-tab::before {
+	font-family: dashicons;
+	font-size: 16px;
+	line-height: 1;
+	vertical-align: -3px;
+	margin-right: 6px;
+	opacity: 0.85;
+	-webkit-font-smoothing: antialiased;
+}
+.lpr-setting-page .nav-tab[href$="sec=lpr-global-settings"]::before { content: "\f312"; }   /* products */
+.lpr-setting-page .nav-tab[href$="sec=lpr-general-settings"]::before { content: "\f111"; }  /* admin-generic */
+.lpr-setting-page .nav-tab[href$="sec=lpr-style-settings"]::before { content: "\f116"; }    /* welcome-widgets-menus (popup) */
+.lpr-setting-page .nav-tab[href$="sec=lpr-drawer-settings"]::before { content: "\f174"; }   /* cart */
+.lpr-setting-page .nav-tab[href$="sec=lpr-places-settings"]::before { content: "\f230"; }   /* location */
+.lpr-setting-page .nav-tab[href$="sec=lpr-discounts-settings"]::before { content: "\f323"; }/* tag */
+.lpr-setting-page .nav-tab[href$="sec=lpr-documentation"]::before { content: "\f339"; opacity: 1; } /* lightbulb: Feature Request tab */
+
+/* Feature Request tab: light touch, green text and a faint tint */
+.lpr-setting-page .nav-tab[href$="sec=lpr-documentation"] {
+	color: #1a7f37;
+	background: #f4fbf6;
+	border-color: transparent;
+}
+.lpr-setting-page .nav-tab[href$="sec=lpr-documentation"]:hover {
+	background: #e9f6ed;
+	color: #146c2e;
+}
+.lpr-setting-page .nav-tab-active[href$="sec=lpr-documentation"],
+.lpr-setting-page .nav-tab-active[href$="sec=lpr-documentation"]:hover {
+	color: #146c2e;
+	background: #f4fbf6;
+	border-color: #c3e6cd;
+	border-bottom-color: #f4fbf6;
+}
+
+/* Feature Request tab layout: one card, then the docs and help buttons */
+.lpr-fr-page .lpr-fr {
+	max-width: 760px;
+}
+
+.lpr-fr-help {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 18px;
+	max-width: 760px;
+	margin: 14px 0 0;
+	padding: 0 4px;
+	color: #646970;
+}
+
+.lpr-fr-help a {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.lpr-fr-help a:hover span:not(.dashicons),
+.lpr-fr-help a:hover {
+	text-decoration: underline;
+}
+
+.lpr-fr-help .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+/* More Places (Free): where shoppers see recommendations today */
+.lpr-cover {
+	margin: 0 0 20px;
+	padding: 20px 24px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+}
+
+.lpr-cover__title {
+	margin: 0 0 12px;
+	font-size: 15px;
+}
+
+.lpr-cover__note {
+	margin: 0;
+	color: #50575e;
+}
+
+.lpr-cover__cta {
+	margin: 14px 0 0;
+}
+
+
+
+.lpr-cover__list {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 10px 24px;
+	margin: 0 0 14px;
+	padding: 0;
+	list-style: none;
+}
+
+.lpr-cover__list li {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	color: #50575e;
+}
+
+.lpr-cover__list li.is-on {
+	color: #1d2327;
+}
+
+.lpr-cover__list .dashicons {
+	flex: none;
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	color: #8c8f94;
+}
+
+.lpr-cover__list li.is-on .dashicons {
+	color: #00a32a;
+}
+
+.lpr-cover__badge {
+	flex: none;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1;
+	padding: 4px 7px;
+	border-radius: 4px;
+	background: #eef0fe;
+	color: #3c45c9;
+}
+
+.lpr-cover__list li.is-on .lpr-cover__badge {
+	background: #edfaef;
+	color: #00661b;
+}
+
+@media (max-width: 960px) {
+	.lpr-cover__list {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 600px) {
+	.lpr-cover__list {
+		grid-template-columns: 1fr;
+	}
 }

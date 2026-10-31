@@ -9,6 +9,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included from a class method, so these variables are local to that method.
 ?>
 
 <div id="lpr_product_recommendations_panel" class="panel woocommerce_options_panel" style="display: none;">

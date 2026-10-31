@@ -82,20 +82,20 @@
 	const SHOWCASE = [
 		{ id: "drawer", title: __("Cart drawer", "leo-product-recommendations"), text: __("After add to cart, the cart slides in from the side with recommendations under the items. Shoppers add more without leaving the page.", "leo-product-recommendations") },
 		{ id: "cart", title: __("Cart page: Complete your order", "leo-product-recommendations"), text: __("Under the cart, products that go with everything in it. Shown as a grid or a slider.", "leo-product-recommendations") },
-		{ id: "shipping", title: __("Free shipping bar", "leo-product-recommendations"), text: __("In the cart and the cart drawer: how much more gets free shipping, with products that cost about that much. One tap and shipping is free.", "leo-product-recommendations") },
 		{ id: "fbt", title: __("Product page: Frequently bought together", "leo-product-recommendations"), text: __("The product plus a few that go with it, ticked, with the total price and one button to add them all.", "leo-product-recommendations") },
 		{ id: "checkout", title: __("Checkout offer", "leo-product-recommendations"), text: __("One or two small extras above the payment options. One tick adds them to the order.", "leo-product-recommendations") },
 		{ id: "thankyou", title: __("Thank-you page", "leo-product-recommendations"), text: __("Right after the order, products that go with what was just bought, for the next order.", "leo-product-recommendations") },
+		{ id: "shipping", title: __("Free shipping bar", "leo-product-recommendations"), text: __("In the cart and the cart drawer: how much more gets free shipping, with products that cost about that much. One tap and shipping is free.", "leo-product-recommendations") },
 	];
 	let $showcase = null;
 	if (placesShowcase) {
 		$page.addClass("lpr-no-save"); // nothing to save on this tab in Free
 		const proLink = $form.find(".lpr-field-pro_note a.button").attr("href") || "";
+		// Each place drawn as it looks in a real store, numbered in the order shoppers meet them.
 		let html = '<div class="lpr-showcase">';
-		SHOWCASE.forEach((p, i) => {
-			html += '<section class="lpr-showcase__item" data-place="' + p.id + '"><div class="lpr-showcase__text"><span class="lpr-showcase__num">' + (i + 1) + "</span><h3>" + esc(p.title) + "</h3><p>" + esc(p.text) + '</p></div><div class="lpr-showcase__frame"><div class="lpr-showcase__screen"></div></div></section>';
+		SHOWCASE.forEach((s, i) => {
+			html += '<section class="lpr-showcase__item" data-place="' + s.id + '"><div class="lpr-showcase__text"><span class="lpr-showcase__num">' + (i + 1) + "</span><h3>" + esc(s.title) + "</h3><p>" + esc(s.text) + '</p></div><div class="lpr-showcase__frame"><div class="lpr-showcase__screen"></div></div></section>';
 		});
-		if (proLink) html += '<div class="lpr-showcase__cta"><h3>' + esc(__("Get all six places with Pro", "leo-product-recommendations")) + "</h3><p>" + esc(__("All six places come with Pro, together with the slider, popup colors and recommendation analytics.", "leo-product-recommendations")) + '</p><a class="button button-primary" href="' + esc(proLink) + '" target="_blank" rel="noopener">' + esc(__("Get Pro", "leo-product-recommendations")) + "</a></div>";
 		html += "</div>";
 		$showcase = $(html);
 		const $table = $form.find("table.form-table").filter(function () {
@@ -103,6 +103,33 @@
 		}).first();
 		if ($table.length) $table.after($showcase);
 		else $form.append($showcase);
+
+		// Coverage summary: where shoppers see recommendations today (Free) and where they don't (Pro).
+		const COVER = [
+			[__("Add-to-cart popup", "leo-product-recommendations"), true, ""],
+			[__("Cart drawer", "leo-product-recommendations"), false, "drawer"],
+			[__("Cart page", "leo-product-recommendations"), false, "cart"],
+			[__("Frequently bought together", "leo-product-recommendations"), false, "fbt"],
+			[__("Checkout last chance", "leo-product-recommendations"), false, "checkout"],
+			[__("Thank-you page", "leo-product-recommendations"), false, "thankyou"],
+		];
+		let cover = '<div class="lpr-cover"><h3 class="lpr-cover__title">' + esc(__("Where your shoppers are not seeing recommendations yet", "leo-product-recommendations")) + '</h3><ul class="lpr-cover__list">';
+		COVER.forEach((c) => {
+			cover += '<li class="' + (c[1] ? "is-on" : "is-off") + '"><span class="dashicons ' + (c[1] ? "dashicons-yes" : "dashicons-lock") + '" aria-hidden="true"></span><span class="lpr-cover__name">' + esc(c[0]) + '</span><span class="lpr-cover__badge">' + esc(c[1] ? __("Free", "leo-product-recommendations") : __("Pro", "leo-product-recommendations")) + "</span></li>";
+		});
+		cover += '</ul><p class="lpr-cover__note">' + esc(__("Today shoppers see recommendations only in the popup. Pro shows them at every step, from product page to thank-you page.", "leo-product-recommendations")) + "</p>";
+		if (proLink) cover += '<p class="lpr-cover__cta"><a class="button button-primary" href="' + esc(proLink) + '" target="_blank" rel="noopener">' + esc(__("Get Pro", "leo-product-recommendations")) + "</a></p>";
+		cover += "</div>";
+		const $cover = $(cover);
+		// One card: replaces the separate "More Places PRO" note and the repeated tab heading above it.
+		if ($table.length) {
+			$table.prevAll("h2").first().hide();
+			$table.prevAll(".lpr-section-intro").first().hide();
+			$table.before($cover);
+			$table.hide();
+		} else {
+			$showcase.before($cover);
+		}
 	}
 	if (isPlaces && PLACES.length) mode = PLACES[0].id;
 

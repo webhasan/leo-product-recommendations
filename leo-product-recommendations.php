@@ -3,7 +3,7 @@
  * Plugin Name: Leo Product Recommendations: Upsell & Cross-sell Popup for WooCommerce
  * Plugin URI: https://leocoder.com/leo-product-recommendations
  * Description: Shows upsell and cross-sell products in a popup right after add to cart, so shoppers can add more to their order in one click.
- * Version: 3.6.0
+ * Version: 3.7.0
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * Author: Md Hasanuzzaman

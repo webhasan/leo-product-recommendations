@@ -186,7 +186,7 @@ class Popup_Modern {
 
 		if ($product->is_type('simple') && $product->is_purchasable() && $product->is_in_stock() && !$product->is_sold_individually()) {
 			return sprintf(
-				'<a href="%1$s" data-quantity="1" data-product_id="%2$d" data-product_sku="%3$s" class="button add_to_cart_button ajax_add_to_cart lpr-pm-card__add" rel="nofollow" aria-label="%4$s">%5$s</a>',
+				'<a href="%1$s" data-quantity="1" data-product_id="%2$d" data-product_sku="%3$s" data-lpr_source="popup" class="button add_to_cart_button ajax_add_to_cart lpr-pm-card__add" rel="nofollow" aria-label="%4$s">%5$s</a>',
 				esc_url($product->add_to_cart_url()),
 				$product->get_id(),
 				esc_attr($product->get_sku()),
@@ -198,7 +198,7 @@ class Popup_Modern {
 		if ($product->is_type('simple') && $product->is_purchasable() && $product->is_in_stock()) {
 			// Sold individually: the AJAX button still works, quantity 1.
 			return sprintf(
-				'<a href="%1$s" data-quantity="1" data-product_id="%2$d" class="button add_to_cart_button ajax_add_to_cart lpr-pm-card__add" rel="nofollow">%3$s</a>',
+				'<a href="%1$s" data-quantity="1" data-product_id="%2$d" data-lpr_source="popup" class="button add_to_cart_button ajax_add_to_cart lpr-pm-card__add" rel="nofollow">%3$s</a>',
 				esc_url($product->add_to_cart_url()),
 				$product->get_id(),
 				esc_html($add)
@@ -225,7 +225,7 @@ class Popup_Modern {
 			}
 			if ($options) {
 				return sprintf(
-					'<select class="lpr-pm-card__select" aria-label="%1$s"><option value="">%2$s</option>%3$s</select><a href="%4$s" data-quantity="1" data-product_id="" class="button add_to_cart_button ajax_add_to_cart lpr-pm-card__add is-disabled" rel="nofollow" aria-disabled="true">%5$s</a>',
+					'<select class="lpr-pm-card__select" aria-label="%1$s"><option value="">%2$s</option>%3$s</select><a href="%4$s" data-quantity="1" data-product_id="" data-lpr_source="popup" class="button add_to_cart_button ajax_add_to_cart lpr-pm-card__add is-disabled" rel="nofollow" aria-disabled="true">%5$s</a>',
 					esc_attr(sprintf(/* translators: %s: product name */ __('Options for %s', 'leo-product-recommendations'), $product->get_name())),
 					esc_html__('Choose an option', 'leo-product-recommendations'),
 					$options,

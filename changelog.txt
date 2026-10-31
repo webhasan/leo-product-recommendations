@@ -1,4 +1,28 @@
-Leo Product Recommendations: changelog for versions before 3.6.0
+Leo Product Recommendations: changelog for versions before 3.7.0
+
+= 3.6.0 =
+* New: Modern popup design. After add to cart it shows what was added and the cart subtotal, a row of products that go with it (with arrows when there are more), and clear Checkout and View cart buttons. It draws its own product cards, so it looks the same in every theme. On phones it slides up from the bottom with a swipeable row. Products added from it say "Added" and the subtotal updates without closing it. Esc closes it and keyboard focus stays inside. New installs use it; existing stores keep the classic design until they switch in Settings > Popup > Popup Design. Theme template: yourtheme/lpr/templates/modern-popup.php.
+* Improvement: The default popup heading is now "Goes well with %title%".
+* New: More Places shows the Pro free shipping bar, drawn with your products.
+* New: Discounts tab shows the Pro discounts (bundle saving, add-on saving and checkout offer discount, as a percentage or fixed amount, with a bigger saving for more products) with your own products.
+* Improvement: The Default Recommendations tab is now called What to Recommend and comes first, with the store-wide rule at the top.
+* Improvement: The What to Recommend tab says these settings are for all products, with a link to set one product differently in its Recommendations tab. That tab links back.
+* New: Store-wide rule shows "Smart picks" (Pro): recommendations learned from your own orders, with a preview of products your customers already buy together.
+* Developer: `lpr_recommended_products_id`, `lpr_smart_available` and `lpr_smart_product_ids` filters.
+* Improvement: Clearer settings tabs, most useful first: What to Recommend, Popup, More Places, Discounts and Get Started.
+* Change: The Custom CSS field is removed. CSS you already saved there keeps working on the store. Add new CSS in Appearance > Customize > Additional CSS.
+* New: Settings page redesign with a live preview of the popup next to the settings, a products-per-row stepper, and More options for the rest.
+* New: Get Started tab with the setup steps, the setup video and help links.
+* Improvement: Settings keep numbers inside their allowed range and ignore unknown choices when saving.
+* Developer: New `lpr_before_popup` front-end event (cancelable) and `lpr_ajax_add_to_cart_always` filter, so other places can show the recommendations. Used by the Pro cart drawer.
+* Fix: Adding a product from inside the popup now always shows the "added to cart" notice, also after the popup limit is reached.
+* Fix: The popup now also opens after adding a product from block product grids (Product Collection, Product Button) in block themes like Twenty Twenty-Five.
+* Improvement: Better keyboard and screen reader use. Both popup designs keep focus inside while open, Esc closes them, the slider arrows are real buttons, and focus outlines are visible. In the product's Recommendations tab, products can be added and removed with the keyboard.
+* Improvement: Respects the "reduce motion" setting on phones and computers, and touch targets are bigger on touch screens.
+* Improvement: Buttons in the popup keep readable text with any Button Color you pick.
+* Fix: A quick double click on Add to cart no longer adds the product twice.
+* Fix: The product panel script no longer loads on admin pages where it isn't used.
+* Improvement: Clearer, shorter wording for settings titles and descriptions.
 
 = 3.5.0 =
 * New: Use WooCommerce's own Upsells and Cross-sells (Product data > Linked Products) as recommendations. Products with nothing set in their Recommendations tab show their linked products first, and the store-wide rule covers the rest. On by default for new installs. Existing stores: turn it on in LPR Settings > Default Recommendations.

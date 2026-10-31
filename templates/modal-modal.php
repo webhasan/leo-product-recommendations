@@ -1,5 +1,9 @@
 <?php
 // Popup shell, filled by JavaScript after add to cart.
+if (!defined('ABSPATH')) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included from a class method, so these variables are local to that method.
 $lpr_modern = class_exists('\\LoeCoder\\Plugin\\ProductRecommendations\\Popup_Modern') && \LoeCoder\Plugin\ProductRecommendations\Popup_Modern::is_modern($this);
 ?>
 <div class="lpr-modal woocommerce<?php echo $lpr_modern ? ' lpr-modal--modern' : ''; ?>" id="lpr-modal" style="display:none;"<?php echo $lpr_modern ? ' role="dialog" aria-modal="true" aria-labelledby="lpr-pm-title"' : ''; ?>>

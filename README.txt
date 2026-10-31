@@ -1,16 +1,16 @@
-=== Leo Product Recommendations: Upsell & Cross-sell Popup for WooCommerce ===
+=== Leo Product Recommendations: Upsell Popup, Frequently Bought Together & Cart Drawer for WooCommerce ===
 Contributors: webhasan, masum007
-Tags: product recommendations, upsell, cross-sell, add to cart popup, related products
+Tags: product recommendations, upsell, cross-sell, frequently bought together, cart drawer
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.6.0
+Stable tag: 3.7.0
 WC requires at least: 7.0
 WC tested up to: 11.2.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Show upsells and cross-sells in a popup right after add to cart. Shoppers add them in one click, so more orders end up with a second item.
+Upsell popup after add to cart, frequently bought together and a cart drawer with cross-sells. Shoppers add a second product in one click.
 
 == Description ==
 [youtube https://youtu.be/c20SsY1zsf8]
@@ -19,7 +19,7 @@ The best time to suggest a second product is right after a shopper adds the firs
 
 Leo Product Recommendations shows that suggestion. When a product goes into the cart, a popup confirms it and shows the products you want to recommend. The shopper adds one with a single click and keeps shopping or goes to checkout. No new page, no redirect.
 
-Install it, choose what to recommend, and it works on your shop, category and product pages.
+Install it, choose what to recommend, and it works on your shop, category and product pages. Pro adds "Frequently bought together" on the product page, a slide-in cart drawer, a free shipping bar and recommendations on the cart, checkout and thank-you pages.
 
 = What shoppers see =
 
@@ -90,7 +90,9 @@ The recommended products load only after something is added to the cart, so your
 
 == Privacy ==
 
-The plugin does not collect any data by itself. If you choose to send feedback when you deactivate it, only the reason you pick, any comment you write and the plugin version are sent to LeoCoder. No site URL or other site details are sent. You can skip the feedback form.
+The plugin does not send any data by itself. To show a few milestone notices in your admin (for example after the popup has been shown 100 times), it keeps simple counts in your own database: how often the popup was shown, how many products were added from it, and how many paid orders included them. These counts never leave your site. If you choose to send feedback when you deactivate it, only the reason you pick, any comment you write and the plugin version are sent to LeoCoder. No site URL or other site details are sent. You can skip the feedback form.
+
+The Feature Request tab in the settings works the same way: only when you click Send request, it sends what you typed, your email if you added one, and the plugin version to LeoCoder. No site URL or other site details are sent.
 
 The dataLayer events stay in the visitor's browser, in a dataLayer your site already has. The plugin does not send them anywhere.
 
@@ -159,33 +161,22 @@ Yes. Copy a file from the plugin's `templates` folder to `your-theme/lpr/templat
 
 == Upgrade Notice ==
 
-= 3.6.0 =
-New modern popup design. Existing stores keep the classic design until you switch in LPR Settings > Popup > Popup Design.
+= 3.7.0 =
+Fixes the popup's Add buttons on block themes and Top Rated sorting, and adds a Feature Request tab. Using Pro? Update it to 3.7.0 after this update.
 
 == Changelog ==
 
-= 3.6.0 =
-* New: Modern popup design. After add to cart it shows what was added and the cart subtotal, a row of products that go with it (with arrows when there are more), and clear Checkout and View cart buttons. It draws its own product cards, so it looks the same in every theme. On phones it slides up from the bottom with a swipeable row. Products added from it say "Added" and the subtotal updates without closing it. Esc closes it and keyboard focus stays inside. New installs use it; existing stores keep the classic design until they switch in Settings > Popup > Popup Design. Theme template: yourtheme/lpr/templates/modern-popup.php.
-* Improvement: The default popup heading is now "Goes well with %title%".
-* New: More Places shows the Pro free shipping bar, drawn with your products.
-* New: Discounts tab shows the Pro discounts (bundle saving, add-on saving and checkout offer discount, as a percentage or fixed amount, with a bigger saving for more products) with your own products.
-* Improvement: The Default Recommendations tab is now called What to Recommend and comes first, with the store-wide rule at the top.
-* Improvement: The What to Recommend tab says these settings are for all products, with a link to set one product differently in its Recommendations tab. That tab links back.
-* New: Store-wide rule shows "Smart picks" (Pro): recommendations learned from your own orders, with a preview of products your customers already buy together.
-* Developer: `lpr_recommended_products_id`, `lpr_smart_available` and `lpr_smart_product_ids` filters.
-* Improvement: Clearer settings tabs, most useful first: What to Recommend, Popup, More Places, Discounts and Get Started.
-* Change: The Custom CSS field is removed. CSS you already saved there keeps working on the store. Add new CSS in Appearance > Customize > Additional CSS.
-* New: Settings page redesign with a live preview of the popup next to the settings, a products-per-row stepper, and More options for the rest.
-* New: Get Started tab with the setup steps, the setup video and help links.
-* Improvement: Settings keep numbers inside their allowed range and ignore unknown choices when saving.
-* Developer: New `lpr_before_popup` front-end event (cancelable) and `lpr_ajax_add_to_cart_always` filter, so other places can show the recommendations. Used by the Pro cart drawer.
-* Fix: Adding a product from inside the popup now always shows the "added to cart" notice, also after the popup limit is reached.
-* Fix: The popup now also opens after adding a product from block product grids (Product Collection, Product Button) in block themes like Twenty Twenty-Five.
-* Improvement: Better keyboard and screen reader use. Both popup designs keep focus inside while open, Esc closes them, the slider arrows are real buttons, and focus outlines are visible. In the product's Recommendations tab, products can be added and removed with the keyboard.
-* Improvement: Respects the "reduce motion" setting on phones and computers, and touch targets are bigger on touch screens.
-* Improvement: Buttons in the popup keep readable text with any Button Color you pick.
-* Fix: A quick double click on Add to cart no longer adds the product twice.
-* Fix: The product panel script no longer loads on admin pages where it isn't used.
-* Improvement: Clearer, shorter wording for settings titles and descriptions.
+= 3.7.0 =
+* New: Feature Request tab in the settings. Tell us what you would like the plugin to do next. Only what you type, your email if you add one, and the plugin version are sent. The Plugins page has a Feature Request link too.
+* New: A few short notices in your admin when the popup reaches a milestone: shown 100 times, the first paid order with a product added from it, and a monthly summary with your store's own numbers. Admins only, one at a time, at least two days apart, and never when Pro is active. The counts stay in your database.
+* Improvement: The More Places tab starts with where your shoppers don't see recommendations yet, then previews each Pro place with your own products.
+* Improvement: Each settings tab has an icon. The last tab is now Feature Request, with links to the documentation and help.
+* Improvement: The "Go Pro" link on the Plugins page is now "Get Pro".
+* Fix: On block themes like Twenty Twenty-Five, the popup's Add buttons could open a page of code instead of adding the product. They now add it in place.
+* Fix: "Top Rated" sorting left out products that have no reviews yet.
+* Fix: No "translation loading was triggered too early" notice when WooCommerce is missing.
+* Improvement: Uninstalling also removes the milestone counts, on every site of a multisite network. Product recommendations are kept.
+* Improvement: Checked with Plugin Check: safer database queries and output.
+* Developer: `can_recommend()` tells whether a product can be recommended for another (also when the list is in random order), with the `lpr_random_pool_size` filter. New `lpr_popup_shown` action. The block theme add button fires `adding_to_cart` like WooCommerce does.
 
 Older versions are listed in changelog.txt.

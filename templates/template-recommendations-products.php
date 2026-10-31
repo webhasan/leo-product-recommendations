@@ -12,6 +12,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included from a class method, so these variables are local to that method.
 
 $tag_classes = 'product single-lpr ';
 

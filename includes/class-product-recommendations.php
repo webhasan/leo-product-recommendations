@@ -75,6 +75,14 @@ final class Product_Recommendations {
 	static protected $origins = array();
 
 	/**
+	 * Rule used for a product's last rule-based list (store-wide rule or the product's own
+	 * "Categories and tags"), so recommendation_pool() can repeat it without the limit.
+	 *
+	 * @var array<int, array>
+	 */
+	static protected $rule_data = array();
+
+	/**
 	 * Settings that turn on WooCommerce linked products as a source.
 	 *
 	 * @since 3.5.0
@@ -133,6 +141,10 @@ final class Product_Recommendations {
 		update_option('woocommerce_enable_ajax_add_to_cart', 'yes');
 		update_option('woocommerce_cart_redirect_after_add', 'no');
 		$this->add_default_settings();
+
+		// Start the milestone clock for a new install (updates never run this hook).
+		require_once $this->get_path('includes/class-milestones.php');
+		Milestones::activated();
 	}
 
 	/**
@@ -203,17 +215,19 @@ final class Product_Recommendations {
 	 * @return bool
 	 */
 	protected function has_satisfied_dependencies() {
-		$dependency_errors = $this->get_dependency_errors();
-		return 0 === count($dependency_errors);
+		// Checks only: the messages are translated when the notice prints (translations
+		// can't load this early).
+		return 0 === count($this->get_dependency_errors(false));
 	}
 
 	/**
 	 * Get an array of dependency error messages
 	 *
 	 * @since      1.0.0
+	 * @param bool $messages False: return only which checks failed, without translating.
 	 * @return array all dependency error message.
 	 */
-	protected function get_dependency_errors() {
+	protected function get_dependency_errors($messages = true) {
 		$errors = array();
 		$wordpress_version = get_bloginfo('version');
 		$minimum_wordpress_version = $this->get_min_wp();
@@ -223,6 +237,14 @@ final class Product_Recommendations {
 		$wordpress_minimum_met = version_compare($wordpress_version, $minimum_wordpress_version, '>=');
 		$woocommerce_minimum_met = class_exists('WooCommerce') && version_compare(WC_VERSION, $minimum_woocommerce_version, '>=');
 		$php_minimum_met = version_compare(phpversion(), $minium_php_version, '>=');
+
+		if (!$messages) {
+			return array_keys(array_filter(array(
+				'woocommerce' => !$woocommerce_minimum_met,
+				'wordpress'   => !$wordpress_minimum_met,
+				'php'         => !$php_minimum_met,
+			)));
+		}
 
 		if (!$woocommerce_minimum_met) {
 
@@ -309,14 +331,18 @@ final class Product_Recommendations {
 				'documentation' => '<a href="' . esc_url('https://leocoder.com/docs/woocommerce-product-recommendations/add-recommended-products/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=docs&utm_content=plugins-list') . '" target="_blank" rel="noopener noreferrer nofollow">' . __('Docs', 'leo-product-recommendations') . '</a>',
 			);
 
+			$feature_request = array(
+				'feature-request' => '<a href="' . esc_url(get_admin_url(null, 'admin.php?page=lpr-settings&sec=lpr-documentation#feature-request')) . '" style="color: #00661b; background: #edfaef; padding: 1px 6px; border-radius: 3px;">' . __('Feature Request', 'leo-product-recommendations') . '</a>',
+			);
+
 			if (!$this->has_pro_plugin()) {
 				$link_after = array(
-					'go-pro' => '<a href="' . esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=plugins-list') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: red; font-weight: bold;">' . __('Go Pro', 'leo-product-recommendations') . '</a>',
+					'get-pro' => '<a href="' . esc_url('https://leocoder.com/leo-product-recommendations-for-woocommerce/?utm_source=lpr-free&utm_medium=plugin-admin&utm_campaign=upgrade&utm_content=plugins-list') . '" target="_blank" rel="noopener noreferrer nofollow" style="color: #b45309; font-weight: 600;">' . __('Get Pro', 'leo-product-recommendations') . '</a>',
 				);
-				return array_merge($link_before, $links, $link_after);
+				return array_merge($link_before, $links, $feature_request, $link_after);
 			}
 
-			return array_merge($link_before, $links);
+			return array_merge($link_before, $links, $feature_request);
 		});
 	}
 
@@ -343,7 +369,14 @@ final class Product_Recommendations {
 		// Include required admin scripts
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 
-		// LPR Settings > Analytics: preview of the Pro dashboard. No tracking in the free version.
+		// Class only; its hooks are added in the admin below. Pro also reads its tab definition.
+		require_once $this->get_path('includes/class-feature-request.php');
+
+		// Milestone notices (Free only). Counts stay in this site's database.
+		require_once $this->get_path('includes/class-milestones.php');
+		new Milestones($this);
+
+		// LPR Settings > Analytics: preview of the Pro dashboard. Free keeps only the milestone counts.
 		if (is_admin()) {
 			require_once $this->get_path('includes/class-analytics-teaser.php');
 			new Analytics_Teaser($this);
@@ -351,6 +384,9 @@ final class Product_Recommendations {
 			// Simple settings and live preview on the settings page.
 			require_once $this->get_path('includes/class-settings-ui.php');
 			new Settings_UI($this);
+
+			// Feature request card in the Get Started tab (Free and Pro).
+			new Feature_Request($this);
 		}
 
 		// More places for recommendations: cart page (Pro adds more).
@@ -472,6 +508,11 @@ final class Product_Recommendations {
 
 		$modal_asset = $this->script_asset('modal', array('jquery', 'wp-i18n'));
 		wp_enqueue_script('lpr-modal', $this->get_url('assets/js/modal.min.js'), $modal_asset['dependencies'], $modal_asset['version'], true);
+		// Popup Add buttons when WooCommerce removes its classic add to cart script (block themes).
+		wp_enqueue_script('lpr-popup-add', $this->get_url('assets/js/popup-add.js'), array('jquery', 'lpr-modal'), $version . '.' . (int) @filemtime($this->get_path('assets/js/popup-add.js')), true);
+		wp_localize_script('lpr-popup-add', 'lpr_popup_add', array(
+			'wc_ajax_url' => class_exists('WC_AJAX') ? \WC_AJAX::get_endpoint('%%endpoint%%') : '',
+		));
 		wp_set_script_translations( 'lpr-modal', 'leo-product-recommendations' );
 
 		wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
@@ -849,13 +890,47 @@ final class Product_Recommendations {
 
 		if(!count($recommended_products_id)) wp_die();
 
+		/**
+		 * The popup is shown with products.
+		 *
+		 * @since 3.7.0
+		 */
+		do_action('lpr_popup_shown', $product_id);
+
 		$template_data = $this->get_template_data($product_id, $recommended_products_id);
+
+		// The popup is built in an AJAX request, so WooCommerce would point the plain Add links at
+		// admin-ajax.php. If the AJAX add to cart can't run, send them to the page the shopper is on.
+		$back = wp_validate_redirect(wp_get_referer(), get_permalink($product_id));
+		$add_url = function ($url, $product) use ($back) {
+			if (!$product || false === strpos((string) $url, 'add-to-cart=')) {
+				return $url;
+			}
+			return add_query_arg(array('add-to-cart' => $product->get_id(), 'lpr_source' => 'popup'), $back);
+		};
+		add_filter('woocommerce_product_add_to_cart_url', $add_url, 99, 2);
+
 		if (Popup_Modern::is_modern($this)) {
 			$added = Popup_Modern::added_item($product_id);
 			include $this->get_templates_path('templates/modern-popup.php');
 		} else {
+			// Mark the popup's add to cart buttons, so products added from it can be told apart.
+			$mark = function ($args) {
+				$args['attributes'] = isset($args['attributes']) ? (array) $args['attributes'] : array();
+				$args['attributes']['data-lpr_source'] = 'popup';
+				return $args;
+			};
+			// With "Products With Options" on, products show their own add to cart form instead.
+			$field = function () {
+				echo '<input type="hidden" name="lpr_source" value="popup" />';
+			};
+			add_filter('woocommerce_loop_add_to_cart_args', $mark, 99);
+			add_action('woocommerce_before_add_to_cart_button', $field);
 			include $this->get_templates_path('templates/template-modal-content.php');
+			remove_filter('woocommerce_loop_add_to_cart_args', $mark, 99);
+			remove_action('woocommerce_before_add_to_cart_button', $field);
 		}
+		remove_filter('woocommerce_product_add_to_cart_url', $add_url, 99);
 
 		if ($this->datalayer_enabled()) {
 			$this->print_datalayer_data($product_id, $recommended_products_id);
@@ -1046,7 +1121,7 @@ final class Product_Recommendations {
 
 			$post = get_post($id); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			setup_postdata($post);
-			$product = $item; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$product = $item; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 
 			ob_start();
 			do_action('woocommerce_after_add_to_cart_button');
@@ -1060,7 +1135,7 @@ final class Product_Recommendations {
 			);
 		}
 
-		$product = $original_product; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$product = $original_product; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$post = $original_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		wp_reset_postdata();
 
@@ -1445,8 +1520,11 @@ final class Product_Recommendations {
 
 			if ($order_ids) {
 				global $wpdb;
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
-				$rows = $wpdb->get_results("SELECT oi.order_id, im.meta_value AS product_id FROM {$wpdb->prefix}woocommerce_order_items oi STRAIGHT_JOIN {$wpdb->prefix}woocommerce_order_itemmeta im ON im.order_item_id = oi.order_item_id AND im.meta_key = '_product_id' WHERE oi.order_item_type = 'line_item' AND oi.order_id IN (" . implode(',', $order_ids) . ')');
+				// One query for the products of up to 300 orders; WooCommerce has no API for that.
+				// The result is cached for a day in the lpr_smart_teaser transient.
+				$placeholders = implode(',', array_fill(0, count($order_ids), '%d'));
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- cached above; $placeholders holds one %d per order ID.
+				$rows = $wpdb->get_results($wpdb->prepare("SELECT oi.order_id, im.meta_value AS product_id FROM {$wpdb->prefix}woocommerce_order_items oi STRAIGHT_JOIN {$wpdb->prefix}woocommerce_order_itemmeta im ON im.order_item_id = oi.order_item_id AND im.meta_key = '_product_id' WHERE oi.order_item_type = 'line_item' AND oi.order_id IN ($placeholders)", $order_ids));
 				$orders = array();
 				foreach ((array) $rows as $row) {
 					$orders[(int) $row->order_id][(int) $row->product_id] = true;
@@ -1539,6 +1617,7 @@ final class Product_Recommendations {
 	public function get_recommended_products_id($product_id) {
 		$ids  = array();
 		$from = '';
+		unset(self::$rule_data[(int) $product_id]);
 
 		if ($this->uses_linked_products($product_id)) {
 			$ids  = $this->get_linked_product_ids($product_id);
@@ -1557,6 +1636,7 @@ final class Product_Recommendations {
 				$from = 'smart';
 			} else {
 				$ids  = $this->dynamic_query_products($product_id, $global);
+				self::$rule_data[(int) $product_id] = $global;
 				$from = 'global-rule';
 			}
 		} else {
@@ -1569,6 +1649,7 @@ final class Product_Recommendations {
 				$from = 'manual';
 			} elseif ($this->is_dynamic_selection($product_id)) {
 				$ids  = $this->dynamic_query_products($product_id, $data);
+				self::$rule_data[(int) $product_id] = $data;
 				$from = 'dynamic';
 			}
 		}
@@ -1598,6 +1679,41 @@ final class Product_Recommendations {
 		self::$origins[(int) $product_id] = $map;
 
 		return $ids;
+	}
+
+	/**
+	 * Could this product be recommended for $product_id? True for the products in the list
+	 * now, and, when the list is in random order, for every product the same rule can pick.
+	 * A random list is drawn again on each request, so the product a shopper saw may not be
+	 * in the list drawn when they add it (Pro checks this before it gives a saving).
+	 *
+	 * @since 3.7.0
+	 * @param int $product_id    Product the recommendations are for.
+	 * @param int $recommended_id Product to check.
+	 * @return bool
+	 */
+	public function can_recommend($product_id, $recommended_id) {
+		$product_id     = absint($product_id);
+		$recommended_id = absint($recommended_id);
+		if (!$product_id || !$recommended_id || $product_id === $recommended_id) {
+			return false;
+		}
+
+		$ids = array_map('absint', (array) $this->get_recommended_products_id($product_id));
+		if (in_array($recommended_id, $ids, true)) {
+			return true;
+		}
+
+		$rule = isset(self::$rule_data[$product_id]) ? self::$rule_data[$product_id] : null;
+		if (!$rule || !isset($rule['orderby']) || 'rand' !== $rule['orderby']) {
+			return false;
+		}
+
+		// Same rule, no limit, a fixed order. Capped so a huge catalog stays cheap.
+		$rule['orderby'] = 'newest';
+		$rule['number']  = (int) apply_filters('lpr_random_pool_size', 500, $product_id);
+		$pool            = array_map('absint', (array) $this->dynamic_query_products($product_id, $rule));
+		return in_array($recommended_id, $pool, true);
 	}
 
 	/**
@@ -1699,13 +1815,14 @@ final class Product_Recommendations {
 	public function dynamic_query_products($product_id, $data) {
 		$args = array(
 			'post_type' => 'product',
-			'post__not_in' => array($product_id),
 			'post_status' => 'publish',
 		);
 
-		if (!empty($data['number'])) {
-			$args['posts_per_page'] = (int) $data['number'];
-		}
+		// The product itself is left out after the query (cheaper than post__not_in),
+		// so ask for one more.
+		// get_posts() returns 5 when no number is set.
+		$wanted = !empty($data['number']) ? (int) $data['number'] : 5;
+		$args['posts_per_page'] = $wanted > 0 ? $wanted + 1 : $wanted;
 
 		$categories = array();
 
@@ -1755,7 +1872,7 @@ final class Product_Recommendations {
 			);
 		}
 
-		$args['tax_query'] = $tax_query;
+		$args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- the category and tag rules are what the store owner chose; the query is limited to a few products.
 
 		$orderby = 'date';
 		$meta_key = '';
@@ -1787,9 +1904,13 @@ final class Product_Recommendations {
 			break;
 
 		case 'rating':
-			$orderby = 'meta_value_num';
-			$meta_key = '_wc_average_rating';
-			$order = 'desc';
+			// Sorted by WooCommerce's product lookup table in price_order_clauses(). Sorting by the
+			// rating meta key would leave out every product that has no reviews yet.
+			$orderby = '';
+			$meta_key = '';
+			$order = '';
+			$args['lpr_lookup_order'] = $data['orderby'];
+			$args['suppress_filters'] = false;
 			break;
 
 		case 'lowprice':
@@ -1821,7 +1942,7 @@ final class Product_Recommendations {
 		}
 
 		if (!empty($meta_key)) {
-			$args['meta_key'] = $meta_key;
+			$args['meta_key'] = $meta_key; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- needed to sort by sales or rating; the query is limited to a few products.
 		}
 
 		if (!empty($order)) {
@@ -1832,7 +1953,7 @@ final class Product_Recommendations {
 			$args['post__in'] = array_merge(array(0), wc_get_product_ids_on_sale());
 		}
 
-		$price_order = !empty($args['lpr_price_order']);
+		$price_order = !empty($args['lpr_price_order']) || !empty($args['lpr_lookup_order']);
 		if ($price_order) {
 			add_filter('posts_clauses', array($this, 'price_order_clauses'), 10, 2);
 		}
@@ -1843,9 +1964,15 @@ final class Product_Recommendations {
 			remove_filter('posts_clauses', array($this, 'price_order_clauses'), 10);
 		}
 
-		$recommended_products_ids = array_map(function ($post) {
-			return $post->ID;
-		}, $posts);
+		$recommended_products_ids = array_values(array_filter(array_map(function ($post) {
+			return (int) $post->ID;
+		}, $posts), function ($id) use ($product_id) {
+			return $id !== (int) $product_id;
+		}));
+
+		if ($wanted > 0) {
+			$recommended_products_ids = array_slice($recommended_products_ids, 0, $wanted);
+		}
 
 		return $recommended_products_ids;
 	}
@@ -1861,13 +1988,21 @@ final class Product_Recommendations {
 	 * @return array
 	 */
 	public function price_order_clauses($clauses, $query) {
+		global $wpdb;
+		$lookup = $wpdb->prefix . 'wc_product_meta_lookup';
+
+		// Top rated. Products with no reviews count as 0, and ties go to the newest product,
+		// so the list is the same on every request.
+		if ('rating' === $query->get('lpr_lookup_order')) {
+			$clauses['join'] .= " LEFT JOIN {$lookup} lpr_sort_lookup ON {$wpdb->posts}.ID = lpr_sort_lookup.product_id ";
+			$clauses['orderby'] = "COALESCE(lpr_sort_lookup.average_rating, 0) DESC, COALESCE(lpr_sort_lookup.rating_count, 0) DESC, {$wpdb->posts}.post_date DESC, {$wpdb->posts}.ID DESC";
+			return $clauses;
+		}
+
 		$direction = $query->get('lpr_price_order');
 		if (!in_array($direction, array('ASC', 'DESC'), true)) {
 			return $clauses;
 		}
-
-		global $wpdb;
-		$lookup = $wpdb->prefix . 'wc_product_meta_lookup';
 
 		$clauses['join'] .= " LEFT JOIN {$lookup} lpr_price_lookup ON {$wpdb->posts}.ID = lpr_price_lookup.product_id ";
 		$clauses['orderby'] = 'ASC' === $direction
@@ -2831,7 +2966,7 @@ final class Product_Recommendations {
 
 					array(
 						'id' => 'lpr-documentation',
-						'tab_title' => __('Get Started', 'leo-product-recommendations'),
+						'tab_title' => __('Feature Request', 'leo-product-recommendations'),
 						'title' => __('Get Started', 'leo-product-recommendations'),
 						'type' => 'article',
 						'template' => $this->get_path('includes/tutorials.php'),

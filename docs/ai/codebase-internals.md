@@ -250,9 +250,11 @@ it turns compatibility mode off and breaks the popup on stores still on Free 3.2
   (Free 3.2.0), Pro still runs `hooks()` (compatibility mode, see section 1).
 - Both plugins hook `plugins_loaded` at the default priority. Free fires
   `lpr_before_action` there; Pro attaches its listener in its own `plugins_loaded`
-  callback. This works only because WordPress loads `leo-product-recommendations-pro/`
-  before `leo-product-recommendations/` (alphabetical: `-` sorts before `/`).
-  Renaming a folder or loading order changes would silently disable Pro.
+  callback. WordPress usually loads `leo-product-recommendations-pro/` first
+  (alphabetical: `-` sorts before `/`), but Free can load first (Free network activated
+  on multisite, a load-order plugin, a renamed folder). In older Pro versions that silently
+  left Pro's settings, license page and REST routes off; Pro now runs its setup at once
+  when `did_action('lpr_before_action')` is already true (`when_free_ready()`).
 - Shared namespace `LoeCoder\Plugin\ProductRecommendations` for both plugins; classes
   and field functions with the same names exist in both and are guarded only by which
   file gets required first.

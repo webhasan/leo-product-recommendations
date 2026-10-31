@@ -13,6 +13,7 @@ namespace LoeCoder\Plugin\ProductRecommendations;
 if (!defined('ABSPATH')) {
 	exit;
 }
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included from a class method, so these variables are local to that method.
 
 $added_product = $added && !empty($added['data']) ? $added['data'] : wc_get_product($product_id);
 $added_name    = $added_product ? $added_product->get_name() : get_the_title($product_id);

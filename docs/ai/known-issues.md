@@ -33,6 +33,14 @@ Remove an item when it is fixed. Add new items as you find them.
 13. ~~Blocksy: two "Add to cart" buttons per popup card~~ Fixed in 3.4.0 with CSS
     (`.single-lpr:has(form.cart) .ct-woo-card-actions { display: none }`).
 
+- Pro add-on saving in the popup and drawer needs Pro's analytics tracker, which reads the
+  source product from the popup's dataLayer block. A store that turns either off with code
+  (`lpr_enable_analytics` or `lpr_popup_datalayer` set to false) still sees "save 10%" but
+  popup and drawer adds get full price. FBT and the checkout offer tag adds on the server
+  and are not affected. There is no setting for either filter.
+- Pro FBT box: the tier it shows counts only the ticked extras; the cart also counts bundle
+  extras already in the cart, so the shopper can be charged a bigger saving than shown.
+
 ## Security and hardening
 
 Security review (Oct 2026, Free 3.4.0 / Pro 3.2.0) fixed: public REST routes, `nopriv`
@@ -93,6 +101,24 @@ Still open:
    rules are free.
 
 ## Fixed (October 2026)
+
+Release test pass for Free 3.7.0 (not released yet):
+
+- Random sort: the popup, drawer and FBT showed a saving, but the add usually got full
+  price, because the server drew a new random list to check the product. Free 3.7.0 adds
+  `can_recommend()` (same rule, no limit, when the list is random); Pro uses it when present.
+  The checkout offer had the same problem when a shopper ticked a product (could fail with
+  "This product can't be added"); it now uses the same check.
+- Block themes: `popup-add.js` now fires WooCommerce's `adding_to_cart` event, so Pro tags the
+  add (saving and analytics) like it does with WooCommerce's own script.
+- Pro FBT and checkout offer run `woocommerce_add_to_cart_validation` before adding.
+- Pro uninstall cleans every site on multisite and clears the WP-Cron build step.
+- Pro drawer: Add link without the script goes to the cart (was the drawer AJAX URL);
+  variation prices shown the way the store displays prices (with tax when set).
+- Free milestones: a product removed from the cart no longer counts as added from the popup.
+- Free and Pro: dependency notices are translated when they print, not at plugins_loaded.
+- Top Rated sort includes products with no reviews.
+
 
 Shared settings framework (Free 3.4.0 + Pro 3.2.0, see `codebase-internals.md`):
 

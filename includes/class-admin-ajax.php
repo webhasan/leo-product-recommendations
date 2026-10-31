@@ -200,12 +200,12 @@ class Admin_Ajax {
         $args = array(
             'post_type'   => 'product',
             'posts_per_page' => 20,
-            'exclude'     => array($post_id),
+            'exclude'     => array($post_id), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- admin product picker, 20 per page: leave out the product being edited.
             'paged'       => $paged,
         );
 
         if (!empty($_GET['category'])) {
-            $args['tax_query'] = array(
+            $args['tax_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- admin product picker filtered by category, 20 per page.
                 array(
                     'taxonomy' => 'product_cat',
                     'field'    => 'term_id',

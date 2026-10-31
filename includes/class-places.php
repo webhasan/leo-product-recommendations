@@ -225,7 +225,7 @@ class Places {
 	 */
 	public function recommendations_for($source_ids, $limit, $args = array()) {
 		$args = wp_parse_args($args, array(
-			'exclude'     => array(),
+			'exclude'     => array(), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- an option of this method, not a WP_Query argument.
 			'max_price'   => 0,
 			'simple_only' => false,
 			'sources'     => 6,
@@ -387,7 +387,7 @@ class Places {
 				continue;
 			}
 			setup_postdata($post);
-			$product = wc_get_product($id); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$product = wc_get_product($id); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 
 			ob_start();
 			wc_get_template_part('content', 'product');
@@ -420,7 +420,7 @@ class Places {
 		echo '</section>';
 
 		$post    = $original_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		$product = $original_product; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$product = $original_product; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		if ($original_post) {
 			setup_postdata($original_post);
 		} else {
