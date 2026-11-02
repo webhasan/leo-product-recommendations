@@ -328,8 +328,15 @@
     const buttonId = parseInt($button.data("product_id"), 10);
     if (!variationId && buttonId && buttonId !== id) {
       extra.item_id = String(buttonId);
-      const label = $card.find(".lpr-pm-card__select option:selected").text();
-      if (label) extra.item_variant = label.replace(/\s*\([^)]*\)\s*$/, "");
+      const label = $card
+        .find(".lpr-vpick__select")
+        .map(function () {
+          return $(this).find("option:selected").text().replace(/\s*\([^)]*\)\s*$/, "");
+        })
+        .get()
+        .filter(Boolean)
+        .join(", ");
+      if (label) extra.item_variant = label;
     }
 
     const item = cardItem($card.get(0), extra);
@@ -404,19 +411,7 @@
 
   }
 
-  // A variation picked in a card: the Add button adds that variation.
-  $(document).on("change", "#lpr-modal .lpr-pm-card__select", function () {
-    const value = $(this).val();
-    const $add = $(this).siblings(".lpr-pm-card__add");
-    $add.attr("data-product_id", value || "").data("product_id", value || "");
-    $add.toggleClass("is-disabled", !value).attr("aria-disabled", value ? "false" : "true");
-  });
-
-  $(document).on("click", "#lpr-modal .lpr-pm-card__add.is-disabled", function (e) {
-    e.preventDefault();
-    $(this).siblings(".lpr-pm-card__select").trigger("focus");
-    return false;
-  });
+  // Option menus in the cards (variation picks, disabled Add): see variation-picker.js.
 
   function modernToast($modal, text) {
     const $toast = $modal.find(".lpr-pm__toast");
@@ -431,8 +426,70 @@
     const $summary = $modal.find("[data-lpr-pm-summary]");
     if (!$summary.length) return;
     $.get(lc_ajax_modal.url, { action: "lpr_popup_summary", nonce: lc_ajax_modal.nonce, _: Date.now() }).done(function (res) {
-      if (res && res.success && res.data) $summary.html(res.data.html || "");
+      if (res && res.success && res.data) {
+        $summary.html(res.data.html || "");
+        // Short bump on the new count and subtotal, so the change is noticed. Waits for
+        // a flying product image to land first.
+        const wait = Math.max(0, ($modal.data("lprFlyLands") || 0) - Date.now());
+        const $line = $summary.find(".lpr-pm__subtotal");
+        setTimeout(() => $line.addClass("is-updated"), wait);
+      }
     });
+  }
+
+  // A copy of the product image flies from its card to the cart subtotal line.
+  // Skipped when the line is scrolled out of sight or the shopper prefers less motion.
+  function flyToCart($modal, $card) {
+    const img = $card.find("img").get(0);
+    const target = $modal.find(".lpr-pm__subtotal").get(0);
+    const scroller = $modal.find(".lpr-pm__scroll").get(0);
+    if (!img || !target || reducedMotion() || typeof img.animate !== "function") return;
+
+    const from = img.getBoundingClientRect();
+    const to = target.getBoundingClientRect();
+    if (!from.width || !to.width) return;
+    if (scroller) {
+      const box = scroller.getBoundingClientRect();
+      if (to.top < box.top || to.bottom > box.bottom) return;
+    }
+
+    const fly = img.cloneNode(false);
+    fly.removeAttribute("loading");
+    fly.removeAttribute("id");
+    fly.className = "lpr-pm-fly";
+    fly.setAttribute("aria-hidden", "true");
+    fly.alt = "";
+    Object.assign(fly.style, {
+      position: "fixed",
+      left: from.left + "px",
+      top: from.top + "px",
+      width: from.width + "px",
+      height: from.height + "px",
+      margin: "0",
+      objectFit: "cover",
+      borderRadius: "12px",
+      boxShadow: "0 8px 24px rgba(0,0,0,.18)",
+      zIndex: "2147483647",
+      pointerEvents: "none",
+    });
+    document.body.appendChild(fly);
+
+    const scale = Math.min(1, 40 / from.width);
+    const dx = to.left + 28 - (from.left + from.width / 2);
+    const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    $modal.data("lprFlyLands", Date.now() + 650);
+    const anim = fly.animate(
+      [
+        { transform: "translate(0, 0) scale(1)", opacity: 1 },
+        { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 70}px) scale(${(1 + scale) / 2})`, opacity: 1, offset: 0.45 },
+        { transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0.2 },
+      ],
+      { duration: 650, easing: "cubic-bezier(.45,0,.25,1)" }
+    );
+    const done = () => fly.remove();
+    anim.onfinish = done;
+    anim.oncancel = done;
+    setTimeout(done, 1200);
   }
 
   function popupOpen() {
@@ -681,8 +738,13 @@
       // short notice in the popup, never a new popup.
       if ($(button).closest(".lpr-pm").length) {
         const $modal = $(button).closest(".lpr-modal");
-        const name = $(button).closest(".lpr-pm-card").find(".lpr-pm-card__name").text();
-        $(button).addClass("added").text(__("Added", "leo-product-recommendations"));
+        const $card = $(button).closest(".lpr-pm-card");
+        const name = $card.find(".lpr-pm-card__name").text();
+        $(button).addClass("added").empty().append(
+          '<svg class="lpr-pm-card__tick" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>',
+          $("<span>").text(__("Added", "leo-product-recommendations"))
+        );
+        flyToCart($modal, $card);
         /* translators: %s: product name */
         modernToast($modal, name ? __("%s has been added to your cart.", "leo-product-recommendations").replace("%s", name) : __("The product has been added to your cart.", "leo-product-recommendations"));
         refreshModernSummary($modal);

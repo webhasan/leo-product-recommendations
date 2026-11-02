@@ -365,6 +365,7 @@
 				if (!classic) rules[id] = false;
 				else if (!Object.prototype.hasOwnProperty.call(rules, id)) rules[id] = true;
 			});
+			rules.modern_color_settings = !classic;
 		}
 
 		// Discounts (Pro): percentage or fixed amount, and the bigger saving for more products.
@@ -380,6 +381,9 @@
 		// Free shipping bar (Pro): own amount only with "An amount I set", the number only with products.
 		if (has("freeship_source")) rules.freeship_amount = val("freeship_source", "auto") === "custom";
 		if (has("freeship_products")) rules.freeship_number = !!val("freeship_products", false);
+
+		// Checkout offer (Pro): the share of the cart only matters while the price limit is on.
+		if (has("checkout_offer_limit")) rules.checkout_offer_share = !!val("checkout_offer_limit", true);
 
 		Object.keys(rules).forEach((id) => row(id).toggleClass("lpr-rule-hidden", !rules[id]));
 
@@ -657,6 +661,14 @@
 		const d = DEVICES[device];
 		const phone = d.items === "sm";
 		const accent = safeColor(val("checkout_bg", ""), "#1d2327");
+		const pc = (name) => safeColor(val(name, ""), "");
+		const vars = { bg: "pm_bg_color", ink: "pm_text_color", muted: "pm_muted_color", line: "pm_line_color", check: "pm_check_color", save: "pm_save_color", add: "pm_add_color", on: "pm_checkout_text", "cart-bg": "pm_cart_bg", "cart-text": "pm_cart_text", close: "pm_close_color", "img-bg": "pm_image_bg" };
+		let style = "--a:" + accent;
+		Object.keys(vars).forEach((k) => {
+			const v = pc(vars[k]);
+			if (v) style += ";--pm-" + k + ":" + v;
+		});
+		const overlay = pc("pm_overlay_color") || "rgba(0,0,0,.45)";
 		const count = phone ? 3 : d.items === "md" ? 3 : 4;
 		const recs = [];
 		for (let i = 1; i <= Math.max(count, 4); i++) recs.push(sample(i));
@@ -671,8 +683,8 @@
 		const showClose = val("show_close_icon", true);
 		const total = cartTotal(2);
 
-		let html = '<div class="lpr-preview__overlay" style="background:rgba(0,0,0,.45)"></div>';
-		html += '<div class="lprm' + (phone ? " is-phone" : "") + '" style="--a:' + accent + (phone ? "" : ";width:" + Math.min(880, d.real - 60) + "px") + '">';
+		let html = '<div class="lpr-preview__overlay" style="background:' + overlay + '"></div>';
+		html += '<div class="lprm' + (phone ? " is-phone" : "") + '" style="' + style + (phone ? "" : ";width:" + Math.min(880, d.real - 60) + "px") + '">';
 		html += '<div class="lprm__head"><span class="lprm__check">&#10003;</span><strong>' + esc(__("Added to your cart", "leo-product-recommendations")) + "</strong>" + (showClose ? '<span class="lprm__close">&times;</span>' : "") + "</div>";
 		html += '<div class="lprm__added"><span class="lprm__img"' + img(added) + '></span><span class="lprm__name">' + esc(added.name) + "<small>" + esc(__("Qty 1", "leo-product-recommendations")) + '</small></span><span class="lprm__price">' + added.price + "</span></div>";
 		html += '<div class="lprm__sub"><span>' + esc(__("Cart subtotal (2 items)", "leo-product-recommendations")) + "</span><strong>" + money(total) + "</strong></div>";
@@ -754,6 +766,16 @@
 		return html + "</div></div>";
 	}
 
+	// Compact list layout: short rows next to the cart totals.
+	function recsList(heading, count) {
+		let html = '<div class="lprx-list"><h3>' + esc(heading) + "</h3>";
+		for (let i = 0; i < count; i++) {
+			const p = sample(i + 2);
+			html += '<div class="lprx-list__row"><span class="lprx-thumb"' + img(p) + '></span><span class="lprx-list__name">' + esc(p.name) + "<small>" + p.price + '</small></span><span class="lprx-card__btn">' + esc(__("Add", "leo-product-recommendations")) + "</span></div>";
+		}
+		return html + "</div>";
+	}
+
 	function cartRows(n) {
 		let html = "";
 		for (let i = 0; i < n; i++) {
@@ -773,8 +795,15 @@
 		const on = placeOn("cart_recs");
 		let html = '<div class="lprx-page is-cart"><h1>' + esc(__("Cart", "leo-product-recommendations")) + "</h1>";
 		html += '<div class="lprx-box">' + cartRows(2) + '<div class="lprx-actions"><span class="lprx-input">' + esc(__("Coupon code", "leo-product-recommendations")) + '</span><span class="lprx-btn is-light">' + esc(__("Update cart", "leo-product-recommendations")) + "</span></div></div>";
-		if (on) html += recsBlock(placeText("cart_recs_heading", __("Complete your order", "leo-product-recommendations")), placeNumber("cart_recs_number", 2, 8, 4), val("cart_recs_layout", "grid"));
-		html += '<div class="lprx-totals"><h3>' + esc(__("Cart totals", "leo-product-recommendations")) + '</h3><div class="lprx-line"><span>' + esc(__("Total", "leo-product-recommendations")) + "</span><strong>" + money(cartTotal(2)) + '</strong></div><span class="lprx-btn">' + esc(__("Proceed to checkout", "leo-product-recommendations")) + "</span></div>";
+		const layout = val("cart_recs_layout", "list");
+		const heading = placeText("cart_recs_heading", __("Complete your order", "leo-product-recommendations"));
+		const totals = '<div class="lprx-totals"><h3>' + esc(__("Cart totals", "leo-product-recommendations")) + '</h3><div class="lprx-line"><span>' + esc(__("Total", "leo-product-recommendations")) + "</span><strong>" + money(cartTotal(2)) + '</strong></div><span class="lprx-btn">' + esc(__("Proceed to checkout", "leo-product-recommendations")) + "</span></div>";
+		if (on && layout === "list") {
+			html += '<div class="lprx-split">' + recsList(heading, placeNumber("cart_recs_number", 2, 8, 4)) + totals + "</div>";
+			return html + "</div>";
+		}
+		if (on) html += recsBlock(heading, placeNumber("cart_recs_number", 2, 8, 4), layout);
+		html += totals;
 		return html + "</div>";
 	}
 
@@ -869,8 +898,11 @@
 			html += "<span>" + esc(r[0]) + "<strong>" + r[1] + "</strong></span>";
 		});
 		html += "</div>";
-		if (on) html += recsBlock(placeText("thankyou_heading", __("You may also like", "leo-product-recommendations")), placeNumber("thankyou_number", 2, 8, 4), val("thankyou_layout", "grid"));
+		const recs = on ? recsBlock(placeText("thankyou_heading", __("You may also like", "leo-product-recommendations")), placeNumber("thankyou_number", 2, 8, 4), val("thankyou_layout", "grid")) : "";
+		const bottom = val("thankyou_position", "top") === "bottom";
+		if (!bottom) html += recs;
 		html += '<div class="lprx-box"><h3>' + esc(__("Order details", "leo-product-recommendations")) + "</h3>" + cartRows(2) + "</div>";
+		if (bottom) html += recs;
 		return html + "</div>";
 	}
 
@@ -878,11 +910,11 @@
 		const place = PLACES.find((p) => p.id === mode) || PLACES[0];
 		const on = place ? placeOn(place.toggle) : false;
 		const notes = {
-			cart: __("The cart page with recommendations under the cart table.", "leo-product-recommendations"),
+			cart: val("cart_recs_layout", "list") === "list" ? __("The cart page with a short list next to the cart totals. In the cart block and on phones it shows under the cart items.", "leo-product-recommendations") : __("The cart page with recommendations under the cart table.", "leo-product-recommendations"),
 			shipping: __("The cart page with the free shipping bar above the cart. The cart drawer shows it under its header. The amount here is an example.", "leo-product-recommendations"),
 			fbt: __("The product page with Frequently bought together under the add to cart button.", "leo-product-recommendations"),
-			checkout: __("The checkout with the offer above the payment options. Only products up to the price limit are offered.", "leo-product-recommendations"),
-			thankyou: __("The order received page with recommendations for the next order.", "leo-product-recommendations"),
+			checkout: has("checkout_offer_limit") && !val("checkout_offer_limit", true) ? __("The checkout with the offer above the payment options. Any recommended product can be offered.", "leo-product-recommendations") : __("The checkout with the offer above the payment options. Only products up to the price limit are offered.", "leo-product-recommendations"),
+			thankyou: val("thankyou_position", "top") === "bottom" ? __("The order received page with recommendations for the next order, after the order details.", "leo-product-recommendations") : __("The order received page with recommendations for the next order, under the order summary.", "leo-product-recommendations"),
 		};
 		const html = { cart: renderCartPlace, shipping: renderShippingPlace, fbt: renderFbtPlace, checkout: renderCheckoutPlace, thankyou: renderThankyouPlace }[place ? place.id : "cart"]();
 		return {

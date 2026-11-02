@@ -410,6 +410,8 @@ final class Product_Recommendations {
 		// Modern popup: subtotal and free shipping bar after adding from the popup
 		add_action('wp_ajax_lpr_popup_summary', array(Popup_Modern::class, 'ajax_summary'));
 		add_action('wp_ajax_nopriv_lpr_popup_summary', array(Popup_Modern::class, 'ajax_summary'));
+		// Option menus: adds a variation with an "Any" value (Size: any) with the size picked.
+		add_action('wc_ajax_add_to_cart', array(Popup_Modern::class, 'ajax_add_any_variation'), 5);
 		// Tracking data for the popup products (GTM4WP), built in a front-end request
 		add_action('wc_ajax_lpr_tracking_data', array($this, 'lpr_tracking_data'));
 
@@ -514,6 +516,8 @@ final class Product_Recommendations {
 			'wc_ajax_url' => class_exists('WC_AJAX') ? \WC_AJAX::get_endpoint('%%endpoint%%') : '',
 		));
 		wp_set_script_translations( 'lpr-modal', 'leo-product-recommendations' );
+		// Option menus (Color, Size) in the popup cards and the cart page list.
+		wp_enqueue_script('lpr-variation-picker', $this->get_url('assets/js/variation-picker.js'), array('jquery'), $version . '.' . (int) @filemtime($this->get_path('assets/js/variation-picker.js')), true);
 
 		wp_localize_script('lpr-modal', 'lc_ajax_modal', array(
 			'url' => admin_url('admin-ajax.php'),
@@ -567,6 +571,10 @@ final class Product_Recommendations {
 		if (Popup_Modern::is_modern($this)) {
 			wp_enqueue_style('lpr-popup-modern', $this->get_url('assets/css/popup-modern.css'), array('lpr-modal'), $version . '.' . (int) @filemtime($this->get_path('assets/css/popup-modern.css')));
 			wp_enqueue_script('wc-add-to-cart');
+			$overlay = Popup_Modern::overlay_color($this);
+			if ($overlay) {
+				wp_add_inline_style('lpr-popup-modern', 'body .lpr-modal-overlay.lpr-modal-overlay{background-color:' . $overlay . ';}');
+			}
 		}
 		//recommend variable and group product add to cart
 		if ($this->get_setting('variable_add_to_cart')) {

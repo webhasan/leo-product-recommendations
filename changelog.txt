@@ -1,4 +1,17 @@
-Leo Product Recommendations: changelog for versions before 3.7.0
+Leo Product Recommendations: changelog for versions before 3.7.1
+
+= 3.7.0 =
+* New: Feature Request tab in the settings. Tell us what you would like the plugin to do next. Only what you type, your email if you add one, and the plugin version are sent. The Plugins page has a Feature Request link too.
+* New: A few short notices in your admin when the popup reaches a milestone: shown 100 times, the first paid order with a product added from it, and a monthly summary with your store's own numbers. Admins only, one at a time, at least two days apart, and never when Pro is active. The counts stay in your database.
+* Improvement: The More Places tab starts with where your shoppers don't see recommendations yet, then previews each Pro place with your own products.
+* Improvement: Each settings tab has an icon. The last tab is now Feature Request, with links to the documentation and help.
+* Improvement: The "Go Pro" link on the Plugins page is now "Get Pro".
+* Fix: On block themes like Twenty Twenty-Five, the popup's Add buttons could open a page of code instead of adding the product. They now add it in place.
+* Fix: "Top Rated" sorting left out products that have no reviews yet.
+* Fix: No "translation loading was triggered too early" notice when WooCommerce is missing.
+* Improvement: Uninstalling also removes the milestone counts, on every site of a multisite network. Product recommendations are kept.
+* Improvement: Checked with Plugin Check: safer database queries and output.
+* Developer: `can_recommend()` tells whether a product can be recommended for another (also when the list is in random order), with the `lpr_random_pool_size` filter. New `lpr_popup_shown` action. The block theme add button fires `adding_to_cart` like WooCommerce does.
 
 = 3.6.0 =
 * New: Modern popup design. After add to cart it shows what was added and the cart subtotal, a row of products that go with it (with arrows when there are more), and clear Checkout and View cart buttons. It draws its own product cards, so it looks the same in every theme. On phones it slides up from the bottom with a swipeable row. Products added from it say "Added" and the subtotal updates without closing it. Esc closes it and keyboard focus stays inside. New installs use it; existing stores keep the classic design until they switch in Settings > Popup > Popup Design. Theme template: yourtheme/lpr/templates/modern-popup.php.

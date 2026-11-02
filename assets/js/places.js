@@ -6,6 +6,8 @@
  * - jQuery events on document.body for the Pro analytics:
  *   lpr_place_viewed [section, data], lpr_place_clicked [section, productId, sourceId].
  * - Cart block: refreshes the block after an add and hides the added product.
+ * - List layout (cart page): option menus, the Added state, reloads itself after cart
+ *   changes, and sits under the cart items in the cart block.
  */
 (function ($) {
   "use strict";
@@ -145,6 +147,16 @@
       if (one) push(data, "lpr_popup_add_to_cart", [one], card.getAttribute("data-lpr-source"));
     }
 
+    // Cart block: WooCommerce still loads its classic cart script, which reloads the whole
+    // page on added_to_cart because it finds no cart form. Keep the event from reaching it
+    // (it listens on document); handlers on body, like cart fragments, still run.
+    if (section.classList.contains("lpr-place--block") && !document.querySelector(".woocommerce-cart-form")) {
+      e.stopPropagation();
+    }
+
+    const isList = section.classList.contains("lpr-place--list");
+    if (isList) listAdded(section, button);
+
     // Cart block: tell the block the cart changed and take the product off the list.
     if (section.classList.contains("lpr-place--block")) {
       document.body.dispatchEvent(new CustomEvent("wc-blocks_added_to_cart", { bubbles: true, cancelable: true }));
@@ -153,7 +165,10 @@
           wp.data.dispatch("wc/store/cart").invalidateResolutionForStore();
         }
       } catch (err) {}
-      if (card) {
+      if (isList) {
+        // The block has no jQuery cart events: reload the list once "Added" was seen.
+        listRefresh(section, 1200);
+      } else if (card) {
         $(card).fadeOut(300, function () {
           const left = cards(section).filter((c) => c.offsetParent !== null);
           if (!left.length) $(section).slideUp(200);
@@ -162,6 +177,140 @@
       }
     }
   });
+
+  /* ---------- List layout ---------- */
+
+  const TICK = '<svg class="lpr-list__tick" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+
+  // Option menus and the disabled Add button: see variation-picker.js.
+
+  function listAdded(section, button) {
+    const $button = $(button);
+    $button.addClass("added").empty().append(TICK, $("<span>").text(cfg.added || "Added"));
+    section.setAttribute("data-lpr-dirty", "1");
+  }
+
+  // Load the list again for the cart as it is now (the added product leaves, the next moves up).
+  const timers = new WeakMap();
+  function listRefresh(section, delay) {
+    const url = section.getAttribute("data-lpr-refresh");
+    if (!url) return;
+    clearTimeout(timers.get(section));
+    timers.set(
+      section,
+      setTimeout(function () {
+        const block = section.classList.contains("lpr-place--block") ? 1 : 0;
+        $.ajax({ url: url, data: { block: block }, cache: false, dataType: "json" }).done(function (res) {
+          if (!document.body.contains(section)) return;
+          const html = res && res.success && res.data ? res.data.html : "";
+          if (!html) {
+            $(section).slideUp(200, function () {
+              $(this).remove();
+            });
+            return;
+          }
+          const $next = $(html);
+          $next.css("opacity", 0);
+          if (section.classList.contains("is-in-block")) $next.addClass("is-in-block");
+          $(section).replaceWith($next);
+          const i = blockSections.indexOf(section);
+          if (i > -1) blockSections[i] = $next[0];
+          $next.animate({ opacity: 1 }, 200);
+          $(document.body).trigger("lpr_places_refresh");
+        });
+      }, delay || 0)
+    );
+  }
+
+  // Classic cart: totals were reloaded (an add from the list, a removed or changed line).
+  $(document.body).on("updated_cart_totals", function () {
+    document.querySelectorAll(".lpr-place--list:not(.lpr-place--block)").forEach(function (section) {
+      listRefresh(section, section.getAttribute("data-lpr-dirty") === "1" ? 900 : 0);
+    });
+  });
+
+  // Classic cart: themes lay out the area after the cart table in different ways.
+  // - WooCommerce, Storefront, Astra: totals float right, the list floats left beside them.
+  // - A narrow column (Kadence puts totals in a sidebar): the list takes the full width,
+  //   under the totals on wide screens so the checkout button stays in view.
+  // - A grid of cart form and totals (Blocksy): the list goes in the first column, under
+  //   the cart table, and the totals keep their place.
+  function layoutClassic() {
+    document.querySelectorAll(".lpr-place--list:not(.lpr-place--block)").forEach(function (section) {
+      const parent = section.parentElement;
+      if (!parent) return;
+      const totals = Array.prototype.find.call(parent.children, (c) => c.classList.contains("cart_totals"));
+      const wide = window.innerWidth > 768;
+      const cs = getComputedStyle(parent);
+
+      section.classList.remove("is-stacked");
+      section.style.gridColumn = "";
+
+      if (cs.display === "grid" && !parent.classList.contains("cart-collaterals")) {
+        const columns = cs.gridTemplateColumns.split(" ").filter(Boolean).length;
+        if (columns > 1 && totals) {
+          if (totals.nextElementSibling !== section) totals.after(section);
+          section.style.gridColumn = "1";
+        } else if (totals && section.nextElementSibling !== totals) {
+          totals.before(section);
+        }
+        section.classList.add("is-stacked");
+        return;
+      }
+
+      if (parent.getBoundingClientRect().width < 640) {
+        section.classList.add("is-stacked");
+        if (totals) {
+          if (wide && totals.nextElementSibling !== section) totals.after(section);
+          if (!wide && section.nextElementSibling !== totals) totals.before(section);
+        }
+      } else if (totals && section.nextElementSibling !== totals) {
+        totals.before(section);
+      }
+    });
+  }
+
+  let layoutFrame = 0;
+  function layoutSoon() {
+    cancelAnimationFrame(layoutFrame);
+    layoutFrame = requestAnimationFrame(layoutClassic);
+  }
+
+  $(layoutClassic);
+  $(window).on("resize", layoutSoon);
+  $(document.body).on("lpr_places_refresh updated_cart_totals", layoutSoon);
+
+  // Cart block: the block draws itself after the page loads. Put the list under the cart
+  // items (main column), and again if the block draws that column anew.
+  // Kept here, so a list the block took out of the page with an old column can go back.
+  const blockSections = [];
+
+  function placeInBlock(cart) {
+    const main = cart.querySelector(".wc-block-cart__main, .wc-block-components-main");
+    // An empty cart has no items column: the list has nothing to sit under.
+    if (!main) return;
+    blockSections.forEach(function (section) {
+      if (section.parentNode !== main) {
+        main.appendChild(section);
+        section.classList.add("is-in-block");
+      }
+    });
+  }
+
+  function watchBlock() {
+    const cart = document.querySelector(".wp-block-woocommerce-cart");
+    if (!cart) return;
+    document.querySelectorAll(".lpr-place--list.lpr-place--block").forEach((s) => blockSections.push(s));
+    if (!blockSections.length) return;
+    placeInBlock(cart);
+    let frame = 0;
+    new MutationObserver(function () {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => placeInBlock(cart));
+    }).observe(cart, { childList: true, subtree: true });
+  }
+
+  $(watchBlock);
 
   /* ---------- Slider layout ---------- */
 

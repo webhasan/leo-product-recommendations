@@ -181,3 +181,308 @@
 		height: 44px;
 	}
 }
+
+/* ---------- List layout (cart page) ---------- */
+.lpr-place--list {
+	--lpr-list-line: rgba(0, 0, 0, 0.1);
+	--lpr-list-accent: var(--lpr-pm-accent-ink, var(--lpr-pm-accent, currentColor));
+	box-sizing: border-box;
+	margin: 0 0 32px;
+	padding: 20px 20px 8px;
+	border: 1px solid var(--lpr-list-line);
+	border-radius: 10px;
+}
+
+.lpr-place--list .lpr-place__title {
+	margin: 0 0 8px;
+	font-size: 1.2em;
+}
+
+.lpr-place--list .lpr-list {
+	margin: 0 !important;
+	padding: 0 !important;
+	list-style: none !important;
+}
+
+.lpr-place--list .lpr-list__item {
+	display: grid;
+	grid-template-columns: 56px minmax(0, 1fr) auto;
+	gap: 14px;
+	align-items: center;
+	margin: 0 !important;
+	padding: 12px 0;
+	border-top: 1px solid var(--lpr-list-line);
+	list-style: none !important;
+}
+
+.lpr-place--list .lpr-list__item::before,
+.lpr-place--list .lpr-list__item::marker {
+	content: none !important;
+}
+
+.lpr-place--list .lpr-list__media {
+	display: block;
+	width: 56px;
+	height: 56px;
+	overflow: hidden;
+	border-radius: 8px;
+	background: rgba(0, 0, 0, 0.04);
+}
+
+.lpr-place--list .lpr-list__img {
+	display: block;
+	width: 100% !important;
+	height: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+	object-fit: cover;
+}
+
+.lpr-place--list .lpr-list__info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 2px;
+	min-width: 0;
+	line-height: 1.35;
+}
+
+.lpr-place--list .lpr-list__name {
+	color: inherit !important;
+	font-weight: 600;
+	text-decoration: none !important;
+	overflow-wrap: anywhere;
+}
+
+.lpr-place--list .lpr-list__name:hover {
+	text-decoration: underline !important;
+}
+
+.lpr-place--list .lpr-list__price {
+	display: block;
+	margin: 0 !important;
+	font-size: 0.9em;
+}
+
+.lpr-place--list .lpr-list__price del {
+	margin-right: 4px;
+	opacity: 0.6;
+}
+
+.lpr-place--list .lpr-list__price ins {
+	text-decoration: none;
+}
+
+/* Option menus: one per option (Color, Size), side by side when they fit. */
+.lpr-place--list .lpr-vpick {
+	display: flex;
+	flex-wrap: wrap;
+	grid-column: 2 / -1;
+	gap: 6px;
+	min-width: 0;
+	margin-top: -6px;
+}
+
+.lpr-place--list .lpr-vpick .lpr-list__select {
+	flex: 1 1 120px;
+	max-width: 220px;
+}
+
+.lpr-place--list .lpr-vpick .lpr-list__select {
+	margin-top: 0;
+}
+
+.lpr-place--list .lpr-list__select {
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	min-height: 32px;
+	margin: 6px 0 0;
+	padding: 4px 8px;
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	border-radius: 6px;
+	background-color: #fff;
+	color: inherit;
+	font-size: 13px;
+	line-height: 1.3;
+}
+
+.lpr-place--list .lpr-list__add {
+	display: inline-flex !important;
+	position: relative;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-width: 86px;
+	min-height: 38px;
+	margin: 0 !important;
+	padding: 6px 14px !important;
+	border: 1px solid var(--lpr-list-accent) !important;
+	border-radius: 8px !important;
+	background: transparent !important;
+	color: var(--lpr-list-accent) !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	line-height: 1.2 !important;
+	letter-spacing: 0 !important;
+	text-align: center;
+	text-decoration: none !important;
+	text-transform: none !important;
+	white-space: nowrap;
+	box-shadow: none !important;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+}
+
+.lpr-place--list .lpr-list__add:hover,
+.lpr-place--list .lpr-list__add:focus-visible,
+.lpr-place--list .lpr-list__add.added {
+	background: var(--lpr-pm-accent, #1d2327) !important;
+	border-color: var(--lpr-pm-accent, #1d2327) !important;
+	color: var(--lpr-pm-on-accent, #fff) !important;
+}
+
+.lpr-place--list .lpr-list__add.is-disabled {
+	opacity: 0.45;
+	cursor: default;
+}
+
+.lpr-place--list .lpr-list__add.is-disabled:hover {
+	background: transparent !important;
+	border-color: var(--lpr-list-accent) !important;
+	color: var(--lpr-list-accent) !important;
+}
+
+.lpr-place--list .lpr-list__add.is-link {
+	min-width: 0;
+	font-weight: 500 !important;
+}
+
+/* Adding: the label makes room for a spinner. */
+.lpr-place--list .lpr-list__add.loading {
+	opacity: 1 !important;
+	background: transparent !important;
+	color: transparent !important;
+	pointer-events: none;
+}
+
+.lpr-place--list .lpr-list__add.loading::before {
+	content: "";
+	display: block !important;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 18px;
+	height: 18px;
+	margin: -9px 0 0 -9px;
+	border: 2px solid var(--lpr-list-accent);
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: lpr-list-spin 0.7s linear infinite;
+}
+
+/* WooCommerce adds a "View cart" link after an add; the cart is right here. */
+.lpr-place--list .added_to_cart {
+	display: none !important;
+}
+
+/* WooCommerce's own loading and added icons. */
+.lpr-place--list .lpr-list__add.loading::after,
+.lpr-place--list .lpr-list__add.added::after {
+	display: none !important;
+}
+
+.lpr-place--list .lpr-list__add.added {
+	animation: lpr-list-pop 0.35s ease-out;
+}
+
+.lpr-place--list .lpr-list__tick {
+	flex: none;
+}
+
+.lpr-place--list .lpr-list__tick path {
+	stroke-dasharray: 24;
+	stroke-dashoffset: 24;
+	animation: lpr-list-tick 0.3s 0.1s ease-out forwards;
+}
+
+@keyframes lpr-list-spin {
+	to { transform: rotate(360deg); }
+}
+
+@keyframes lpr-list-pop {
+	0% { transform: scale(0.95); }
+	60% { transform: scale(1.04); }
+	100% { transform: scale(1); }
+}
+
+@keyframes lpr-list-tick {
+	to { stroke-dashoffset: 0; }
+}
+
+/* Classic cart: next to the cart totals, in the slot WooCommerce gives its cross-sells. */
+/* 41% leaves room for totals of 48% (WooCommerce) up to 55% (Storefront: 53%) with a gap. */
+.cart-collaterals .lpr-place--list {
+	float: left;
+	width: 41%;
+	clear: none;
+}
+
+/* Classic cart in a narrow column or a grid (see layoutClassic in places.js). */
+.lpr-place--list.is-stacked,
+.cart-collaterals .lpr-place--list.is-stacked {
+	float: none;
+	width: 100%;
+	margin-top: 24px;
+}
+
+/* Cart block: under the cart items. */
+.lpr-place--list.lpr-place--block {
+	max-width: none;
+	margin-top: 32px;
+}
+
+/* Cart block before it has drawn itself, or with no room for the list in its column. */
+.lpr-place--list.lpr-place--block:not(.is-in-block) {
+	max-width: var(--wp--style--global--content-size, 1200px);
+}
+
+@media (max-width: 768px) {
+	.cart-collaterals .lpr-place--list {
+		float: none;
+		width: 100%;
+	}
+}
+
+@media (max-width: 480px) {
+	.lpr-place--list {
+		padding: 16px 16px 6px;
+	}
+
+	.lpr-place--list .lpr-list__item {
+		grid-template-columns: 48px minmax(0, 1fr) auto;
+		gap: 12px;
+	}
+
+	.lpr-place--list .lpr-list__media {
+		width: 48px;
+		height: 48px;
+	}
+
+	.lpr-place--list .lpr-list__add {
+		min-width: 72px;
+		padding: 6px 10px !important;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.lpr-place--list .lpr-list__add.added,
+	.lpr-place--list .lpr-list__tick path {
+		animation: none;
+		stroke-dashoffset: 0;
+	}
+
+	.lpr-place--list .lpr-list__add.loading::before {
+		animation-duration: 1.5s;
+	}
+}

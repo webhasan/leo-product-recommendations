@@ -9,6 +9,7 @@
 	--lpr-pm-line: #ececec;
 	--lpr-pm-save: #1a7f37;
 	--lpr-pm-gap: 16px;
+	/* Pro "All Popup Colors" sets these on .lpr-pm; the fallbacks are the built-in look. */
 }
 
 #lpr-modal.lpr-modal--modern.show {
@@ -43,8 +44,9 @@
 	overflow: hidden;
 	pointer-events: auto;
 	border-radius: 16px;
-	background: #fff;
+	background: var(--lpr-pm-bg, #fff);
 	box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+	color: var(--lpr-pm-ink);
 	font-size: 15px;
 	line-height: 1.4;
 	text-align: start;
@@ -74,8 +76,8 @@
 	width: 24px;
 	height: 24px;
 	border-radius: 50%;
-	background: var(--lpr-pm-save);
-	color: #fff;
+	background: var(--lpr-pm-check, var(--lpr-pm-save));
+	color: var(--lpr-pm-on-check, #fff);
 }
 
 #lpr-modal.lpr-modal--modern .lpr-pm__title {
@@ -102,7 +104,7 @@
 	border: 0;
 	border-radius: 22px;
 	background: transparent;
-	color: var(--lpr-pm-muted);
+	color: var(--lpr-pm-close, var(--lpr-pm-muted));
 	box-shadow: none;
 	cursor: pointer;
 }
@@ -110,7 +112,8 @@
 #lpr-modal.lpr-modal--modern .lpr-pm__close:hover,
 #lpr-modal.lpr-modal--modern .lpr-pm__close:focus-visible {
 	background: #f1f2f3;
-	color: var(--lpr-pm-ink);
+	background: color-mix(in srgb, currentColor 10%, transparent);
+	color: var(--lpr-pm-close, var(--lpr-pm-ink));
 }
 
 /* ---------- body ---------- */
@@ -134,7 +137,7 @@
 	height: 64px;
 	overflow: hidden;
 	border-radius: 10px;
-	background: #f3f4f3;
+	background: var(--lpr-pm-img-bg, #f3f4f3);
 	line-height: 0;
 }
 
@@ -195,6 +198,7 @@
 	border: 0;
 	border-radius: 10px;
 	background: #f6f9f7;
+	background: color-mix(in srgb, var(--lpr-pm-save) 6%, var(--lpr-pm-bg, #fff));
 }
 
 #lpr-modal.lpr-modal--modern .lpr-pm__summary .lpr-freeship__msg {
@@ -265,9 +269,10 @@
 	height: 36px;
 	padding: 0;
 	border: 1px solid #dcdcde;
+	border-color: color-mix(in srgb, var(--lpr-pm-nav, var(--lpr-pm-ink)) 22%, transparent);
 	border-radius: 18px;
-	background: #fff;
-	color: var(--lpr-pm-ink);
+	background: var(--lpr-pm-bg, #fff);
+	color: var(--lpr-pm-nav, var(--lpr-pm-ink));
 	box-shadow: none;
 	cursor: pointer;
 }
@@ -319,7 +324,7 @@
 	aspect-ratio: 1 / 1;
 	overflow: hidden;
 	border-radius: 10px;
-	background: #f3f4f3;
+	background: var(--lpr-pm-img-bg, #f3f4f3);
 	line-height: 0;
 }
 
@@ -359,7 +364,7 @@
 }
 
 #lpr-modal.lpr-modal--modern .lpr-pm-card__price del {
-	color: #6b7076;
+	color: var(--lpr-pm-muted);
 	font-size: 13px;
 	font-weight: 400;
 	opacity: 1;
@@ -383,6 +388,13 @@
 	padding-top: 2px;
 }
 
+/* Option menus: one per option (Color, Size), stacked. */
+#lpr-modal.lpr-modal--modern .lpr-vpick {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
 #lpr-modal.lpr-modal--modern .lpr-pm-card__select {
 	width: 100%;
 	height: 36px;
@@ -390,7 +402,7 @@
 	padding: 0 8px;
 	border: 1px solid #c3c4c7;
 	border-radius: 8px;
-	background-color: #fff;
+	background-color: var(--lpr-pm-bg, #fff);
 	color: var(--lpr-pm-ink);
 	font-size: 13px;
 }
@@ -403,10 +415,10 @@
 	min-height: 40px;
 	margin: 0 !important;
 	padding: 6px 12px !important;
-	border: 1px solid var(--lpr-pm-accent-ink, var(--lpr-pm-accent)) !important;
+	border: 1px solid var(--lpr-pm-add-ink, var(--lpr-pm-accent-ink, var(--lpr-pm-accent))) !important;
 	border-radius: 8px !important;
-	background: #fff !important;
-	color: var(--lpr-pm-accent-ink, var(--lpr-pm-accent)) !important;
+	background: var(--lpr-pm-bg, #fff) !important;
+	color: var(--lpr-pm-add-ink, var(--lpr-pm-accent-ink, var(--lpr-pm-accent))) !important;
 	font-family: inherit !important;
 	font-size: 14px !important;
 	font-weight: 600 !important;
@@ -423,13 +435,74 @@
 #lpr-modal.lpr-modal--modern .lpr-pm-card__add:hover,
 #lpr-modal.lpr-modal--modern .lpr-pm-card__add:focus-visible,
 #lpr-modal.lpr-modal--modern .lpr-pm-card__add.added {
-	background: var(--lpr-pm-accent) !important;
-	color: var(--lpr-pm-on-accent, #fff) !important;
+	background: var(--lpr-pm-add, var(--lpr-pm-accent)) !important;
+	color: var(--lpr-pm-on-add, var(--lpr-pm-on-accent, #fff)) !important;
 }
 
+/* Adding: the label makes room for a spinner. */
 #lpr-modal.lpr-modal--modern .lpr-pm-card__add.loading {
-	opacity: 0.6;
+	position: relative;
+	background: var(--lpr-pm-bg, #fff) !important;
+	color: transparent !important;
+	opacity: 1 !important; /* WooCommerce and themes fade .loading buttons */
 	pointer-events: none;
+}
+
+#lpr-modal.lpr-modal--modern .lpr-pm-card__add.loading::before {
+	content: "";
+	display: block !important;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 18px;
+	height: 18px;
+	margin: -9px 0 0 -9px;
+	border: 2px solid var(--lpr-pm-add-ink, var(--lpr-pm-accent-ink, var(--lpr-pm-accent)));
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: lpr-pm-spin 0.7s linear infinite;
+}
+
+/* Added: a quick pop and a tick that draws itself. */
+#lpr-modal.lpr-modal--modern .lpr-pm-card__add.added {
+	gap: 6px;
+	animation: lpr-pm-pop 0.35s ease-out;
+}
+
+#lpr-modal.lpr-modal--modern .lpr-pm-card__tick {
+	flex: none;
+}
+
+#lpr-modal.lpr-modal--modern .lpr-pm-card__tick path {
+	stroke-dasharray: 24;
+	stroke-dashoffset: 24;
+	animation: lpr-pm-tick 0.3s 0.1s ease-out forwards;
+}
+
+/* The cart line bumps when its count and subtotal change. */
+#lpr-modal.lpr-modal--modern .lpr-pm__subtotal.is-updated > * {
+	display: inline-block;
+	animation: lpr-pm-bump 0.5s ease-out;
+}
+
+@keyframes lpr-pm-spin {
+	to { transform: rotate(360deg); }
+}
+
+@keyframes lpr-pm-pop {
+	0% { transform: scale(0.95); }
+	60% { transform: scale(1.04); }
+	100% { transform: scale(1); }
+}
+
+@keyframes lpr-pm-tick {
+	to { stroke-dashoffset: 0; }
+}
+
+@keyframes lpr-pm-bump {
+	0% { transform: scale(1); }
+	40% { transform: scale(1.1); color: var(--lpr-pm-accent-ink, var(--lpr-pm-accent)); }
+	100% { transform: scale(1); }
 }
 
 #lpr-modal.lpr-modal--modern .lpr-pm-card__add.loading::after,
@@ -455,7 +528,7 @@
 	gap: 12px;
 	padding: 16px 28px 20px;
 	border-top: 1px solid var(--lpr-pm-line);
-	background: #fff;
+	background: var(--lpr-pm-bg, #fff);
 }
 
 #lpr-modal.lpr-modal--modern .lpr-pm__continue {
@@ -500,12 +573,13 @@
 
 #lpr-modal.lpr-modal--modern .lpr-pm__btn--cart {
 	border: 1px solid #c3c4c7;
-	background: #fff;
-	color: var(--lpr-pm-ink) !important;
+	border-color: var(--lpr-pm-cart-bg, #c3c4c7);
+	background: var(--lpr-pm-cart-bg, var(--lpr-pm-bg, #fff));
+	color: var(--lpr-pm-cart-text, var(--lpr-pm-ink)) !important;
 }
 
 #lpr-modal.lpr-modal--modern .lpr-pm__btn--cart:hover {
-	background: #f6f7f7;
+	filter: brightness(0.96);
 }
 
 #lpr-modal.lpr-modal--modern .lpr-pm__btn--checkout {
@@ -535,7 +609,7 @@
 	padding: 10px 16px;
 	border-radius: 999px;
 	background: var(--lpr-pm-ink);
-	color: #fff;
+	color: var(--lpr-pm-bg, #fff);
 	font-size: 14px;
 	opacity: 0;
 	pointer-events: none;
@@ -590,6 +664,7 @@
 		height: 5px;
 		border-radius: 3px;
 		background: #d5d7da;
+		background: color-mix(in srgb, var(--lpr-pm-ink) 20%, var(--lpr-pm-bg, #fff));
 		transform: translateX(-50%);
 	}
 
@@ -665,6 +740,7 @@
 		min-height: 46px;
 		border-radius: 10px;
 		background: #f1f2f3;
+		background: color-mix(in srgb, var(--lpr-pm-ink) 7%, var(--lpr-pm-bg, #fff));
 		color: var(--lpr-pm-ink);
 		font-weight: 600;
 		text-decoration: none;
@@ -689,6 +765,17 @@
 	#lpr-modal.lpr-modal--modern .lpr-pm-card__img,
 	#lpr-modal.lpr-modal--modern .lpr-pm__toast {
 		transition: none;
+	}
+
+	#lpr-modal.lpr-modal--modern .lpr-pm-card__add.added,
+	#lpr-modal.lpr-modal--modern .lpr-pm-card__tick path,
+	#lpr-modal.lpr-modal--modern .lpr-pm__subtotal.is-updated > * {
+		animation: none;
+		stroke-dashoffset: 0;
+	}
+
+	#lpr-modal.lpr-modal--modern .lpr-pm-card__add.loading::before {
+		animation-duration: 1.5s;
 	}
 }
 

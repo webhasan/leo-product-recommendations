@@ -81,7 +81,13 @@ Run each with **Pro active** and **Pro inactive**.
     "Sort by price" for the same category, including variable and on-sale products.
 25. More Places, cart page (classic and block cart): recommendations show, products in the
     cart are left out, adding one does not open the popup, the block cart updates and the
-    card fades out. Grid and Slider; on a phone the add button is visible.
+    card fades out. Grid and Slider; on a phone the add button is visible. Compact list:
+    beside the totals (Storefront, Astra, OceanWP, Twenty Twenty-Five classic), under the
+    totals (Kadence), under the cart table (Blocksy), under the items (cart block, phones);
+    Add shows the tick, the list reloads without the added product, a removed product moves
+    to the end of the list (undo brings it back to its place).
+    Option menus (popup and list): a product with Color and Size shows two menus, an
+    out-of-stock combination is greyed out, the price follows the picked variation.
 26. Pro: Frequently bought together on a simple and a variable product (button waits for
     options, price follows the variation), "Add all" adds every ticked item once.
 27. Pro: checkout offer (classic and block checkout) ticks and unticks, totals update,

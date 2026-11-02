@@ -4,7 +4,7 @@ Tags: product recommendations, upsell, cross-sell, frequently bought together, c
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.7.0
+Stable tag: 3.7.1
 WC requires at least: 7.0
 WC tested up to: 11.2.1
 License: GPL-3.0-or-later
@@ -161,22 +161,23 @@ Yes. Copy a file from the plugin's `templates` folder to `your-theme/lpr/templat
 
 == Upgrade Notice ==
 
-= 3.7.0 =
-Fixes the popup's Add buttons on block themes and Top Rated sorting, and adds a Feature Request tab. Using Pro? Update it to 3.7.0 after this update.
+= 3.7.1 =
+A compact cart page list, one dropdown for each product option, and fixes for the cart page. Using Pro? Update it to 3.7.1 after this update.
 
 == Changelog ==
 
-= 3.7.0 =
-* New: Feature Request tab in the settings. Tell us what you would like the plugin to do next. Only what you type, your email if you add one, and the plugin version are sent. The Plugins page has a Feature Request link too.
-* New: A few short notices in your admin when the popup reaches a milestone: shown 100 times, the first paid order with a product added from it, and a monthly summary with your store's own numbers. Admins only, one at a time, at least two days apart, and never when Pro is active. The counts stay in your database.
-* Improvement: The More Places tab starts with where your shoppers don't see recommendations yet, then previews each Pro place with your own products.
-* Improvement: Each settings tab has an icon. The last tab is now Feature Request, with links to the documentation and help.
-* Improvement: The "Go Pro" link on the Plugins page is now "Get Pro".
-* Fix: On block themes like Twenty Twenty-Five, the popup's Add buttons could open a page of code instead of adding the product. They now add it in place.
-* Fix: "Top Rated" sorting left out products that have no reviews yet.
-* Fix: No "translation loading was triggered too early" notice when WooCommerce is missing.
-* Improvement: Uninstalling also removes the milestone counts, on every site of a multisite network. Product recommendations are kept.
-* Improvement: Checked with Plugin Check: safer database queries and output.
-* Developer: `can_recommend()` tells whether a product can be recommended for another (also when the list is in random order), with the `lpr_random_pool_size` filter. New `lpr_popup_shown` action. The block theme add button fires `adding_to_cart` like WooCommerce does.
+= 3.7.1 =
+* New: The cart page shows recommendations as a compact list next to the cart, so they don't push the totals and checkout button down. Choose List, Grid or Slider in More Places > Cart Page. New installs get the list. Stores that saved their settings before this update keep the grid until they switch.
+* New: Variable products get one dropdown for each option, named after it ("Choose Color", "Choose Size"), in the popup and on the cart page. The price follows the choice, and options that are out of stock can't be picked.
+* New: Products with "Any" options (for example "Any Size") can be added from the popup and the cart page. The shopper picks the option there instead of opening the product page.
+* New: With Pro, every color of the modern popup can be changed: background, text, lines, check mark, Add buttons, View cart and Checkout buttons, close button, arrows and the page overlay.
+* Improvement: Adding from the modern popup feels quicker: the Add button shows a spinner and then a tick, the product image flies to the cart, and the subtotal updates when it lands.
+* Fix: On the cart page WooCommerce's own "You may be interested in" products showed next to ours, sometimes twice. They are now hidden while our cart recommendations are on.
+* Fix: The cart page layout broke in some themes, such as Storefront, Kadence and Blocksy. It now fits the cart in classic and block themes.
+* Fix: The cart page ignored "Number of products" and could show nothing after the shopper removed products. It now shows the number you set, and removed products are offered again at the end of the list.
+* Fix: On the block cart page, adding a recommended product reloaded the whole page. The cart now updates in place.
+* Fix: With 2 or 3 products, grid and slider cards stretched across the whole row. Cards now keep the size of a 4-column row.
+* Developer: `lpr_variation_menu_label`, `lpr_cart_hide_wc_cross_sells` and `lpr_popup_modern_colors` filters. The `lpr_variation_change` event fires when a shopper changes an option.
+
 
 Older versions are listed in changelog.txt.

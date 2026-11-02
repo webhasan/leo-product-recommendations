@@ -38,6 +38,7 @@ Saved in `on_save_post()`, nonce `lc-panel-security` (field `lc_pr_panel_nonce`)
 | Action | Who | Purpose |
 |---|---|---|
 | `lpr_get_popup_data` | front end (priv + nopriv), nonce `lc-ajax-modal` | Returns popup HTML for `product_id`. Must stay on admin-ajax (see `codebase-internals.md`, wc-ajax breaks Astra) |
+| `lpr_cart_recs` | `?wc-ajax=lpr_cart_recs` (GET), no nonce (read only, the shopper's own cart), since 3.7.1 | Returns `{html}`: the cart page Compact list for the cart as it is now (`block=1` for the cart block). Empty when the place is off, the layout is not the list, or nothing is left to show |
 | `lpr_tracking_data` | `?wc-ajax=lpr_tracking_data` (POST), nonce `lc-ajax-modal`, since 3.4.0 | For `product_ids[]` returns `{id: {form, link}}`: output of `woocommerce_after_add_to_cart_button` and the filtered `woocommerce_loop_add_to_cart_link`, built in a front-end request so GTM4WP adds its data. modal.js copies only GTM4WP elements/attributes into the popup |
 | `lc_ajax_add_to_cart` | front end (priv + nopriv) | Adds simple, variable and grouped products, returns fragments and cart hash. For types with their own `woocommerce_add_to_cart_handler_{type}` it adds nothing and returns `{success:false, data:{fallback:true}}`, and the JS posts the form normally |
 | `lpr_initial_data`, `lpr_fetch_products`, `lpr_fetch_categories`, `wpr_fetch_tags` | product panel, nonce `lc-panel-security` | Panel data |

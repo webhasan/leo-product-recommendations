@@ -148,10 +148,10 @@ other rows hide while it is off). The tab has its own live preview per place.
 
 | Place | Plugin | Hook | List id |
 |---|---|---|---|
-| Cart page "Complete your order" | Pro (code in Free `includes/class-places.php`, shows only when Pro is active) | `woocommerce_after_cart_table`, `render_block_woocommerce/cart` | `lpr_cart` |
+| Cart page "Complete your order" | Pro (code in Free `includes/class-places.php`, shows only when Pro is active) | Grid/Slider: `woocommerce_after_cart_table`; Compact list: `woocommerce_cart_collaterals` (priority 5); cart block: `render_block_woocommerce/cart` | `lpr_cart` |
 | Product page "Frequently bought together" | Pro (`places/includes/class-fbt.php`) | `woocommerce_after_add_to_cart_form` | `lpr_fbt` |
 | Checkout "Last chance to add" | Pro (`places/includes/class-checkout-offer.php`) | `woocommerce_review_order_before_payment`, `render_block_woocommerce/checkout` | `lpr_checkout` |
-| Thank-you page | Pro (`places/includes/class-thankyou.php`) | `woocommerce_thankyou` (priority 30) | `lpr_thankyou` |
+| Thank-you page | Pro (`places/includes/class-thankyou.php`) | `thankyou_position` (filter `lpr_thankyou_position`): `top` (default) on `woocommerce_thankyou_{payment method}` priority 1, added from `woocommerce_before_thankyou`, so it sits under the order overview and above the payment text (no payment method: `woocommerce_thankyou` priority 1); `bottom` on `woocommerce_thankyou` priority 30 | `lpr_thankyou` |
 
 - Products come from `Places::recommendations_for()`: the usual sources of each product
   (manual picks, rule, linked products, store-wide rule, smart picks), minus the products
@@ -161,9 +161,41 @@ other rows hide while it is off). The tab has its own live preview per place.
   order of the source products. Filter `lpr_place_recommendations`.
 - Cart page and thank-you page: Grid or Slider (`*_layout`, filter `lpr_place_layout`).
   The slider is native scroll-snap with arrow buttons in `assets/js/places.js`, no library.
-- Frequently bought together and the checkout offer offer simple products only. The checkout
-  offer is off by default and limited to a share of the cart total
-  (`checkout_offer_share`, default 30%), with a best-seller fallback from the cart's categories.
+- While the cart page place is on, WooCommerce's own cross-sells ("You may be interested
+  in...") are removed from the cart page (classic `woocommerce_cross_sell_display`, block
+  `woocommerce/cart-cross-sells-block`); filter `lpr_cart_hide_wc_cross_sells`. Carts with
+  more than 6 products ask up to 20 of them for picks (not only the 6 newest).
+- Cart page "Compact list" (`cart_recs_layout` = `list`, default for new installs from 3.7.1;
+  stores whose saved settings have no `cart_recs_layout` keep `grid`): one row per product, up to the number set
+  (`Places::render_list()`, filter `lpr_place_list_row_html`) with a small image, name,
+  price and an AJAX Add button (`.lpr-list__add`, WooCommerce `ajax_add_to_cart`).
+  Classic cart: printed in `.cart-collaterals` before the totals and floated beside them
+  (41% wide); `layoutClassic()` in `places.js` stacks it when the column is narrow (under
+  the totals on wide screens, above them on phones) and puts it in the first column when the
+  theme lays out form and totals as a grid (Blocksy). Cart block: printed after the block
+  and moved into `.wc-block-cart__main` (under the items) by `places.js`, re-attached if the
+  block redraws. After an add the button shows a tick and "Added", then the list reloads
+  from `wc-ajax=lpr_cart_recs` (classic: after `updated_cart_totals`; block: after 1.2 s
+  and `wc/store/cart` is invalidated). On the cart block `places.js` stops `added_to_cart`
+  from a place at `body`, because WooCommerce's classic `cart.js` (loaded on the cart page
+  even with the block) listens on `document` and reloads the page when it finds no cart
+  form. Handlers bound on `body` (cart fragments) still run. Products removed from the cart in this visit
+  (`woocommerce_cart_item_removed`, WC session `lpr_removed_products`, cleared by undo and
+  when the cart is emptied) go to the end of the cart page list: they show only when the
+  other picks run out, so a shopper who cleared most of a big cart still sees products.
+- Frequently bought together offers simple products only. The checkout offer is off by
+  default and, while the "Price Limit" switch (`checkout_offer_limit`, default on, filter
+  `lpr_checkout_offer_price_limit`; stores that saved settings before 3.7.1 get it set on
+  once, option `lpr_offer_limit_switch`) is on, limited to a share of the cart total
+  (`checkout_offer_share`, default 30%; hidden in the settings while the switch is off),
+  with a best-seller fallback from the cart's categories. With Free 3.7.1+ it (and the
+  fallback) also offers variable products that have a variation in stock under the limit: option
+  menus (`Popup_Modern::variation_picker()` with an include filter) list only those
+  variations, the price shows their range with the offer saving, and the tick turns on once
+  every option is picked (`lpr_variation_change` event from variation-picker.js). The toggle
+  request sends `variation` and `attributes`; the server checks the variation belongs to the
+  product, is in stock and under the limit, then adds it with its values. Once added, the
+  item shows the options it was added with.
 - Analytics: places push the same `lpr_popup_*` dataLayer events with their list id, and
   items added from FBT and the checkout offer are tagged in the cart item (`lpr_analytics`).
 - New installs: cart page, FBT and thank-you are on. Existing stores: off until switched on
@@ -239,9 +271,11 @@ Without Pro, `smart_product_ids()` falls back to same-category best sellers.
 
 - Setting `popup_design`: `modern` (default for new installs) or `classic`. Stores with saved settings and no key get `classic` (`Popup_Modern::design()`, and `add_default_settings()` in Free and Pro on reactivation). Filter `lpr_popup_design`.
 - `lpr_get_popup_data` includes `templates/modern-popup.php` (theme override `yourtheme/lpr/templates/modern-popup.php`) instead of the classic template. It fires the same actions: `lpr_before_modal_content`, `lpr_before_products_loop` / `lpr_after_products_loop` (Pro add-on saving note and prices), `lpr_after_modal_content`, plus `lpr_popup_modern_summary` (Pro free shipping bar, where = popup, bar only).
-- Own cards (`li.lpr-pm-card.single-lpr[data-lpr-product]`): simple products get a WooCommerce AJAX Add button; variable products a variation select when "variable add to cart" is on and no attribute is "Any", else a link to the product. Filter `lpr_popup_modern_card_html`.
+- Own cards (`li.lpr-pm-card.single-lpr[data-lpr-product]`): simple products get a WooCommerce AJAX Add button; variable products get option menus when "variable add to cart" is on, else a link to the product. Filter `lpr_popup_modern_card_html`.
+- Option menus (`Popup_Modern::variation_picker()`, also used by the cart page list): one `select.lpr-vpick__select` per attribute in `.lpr-vpick[data-variations]` (JSON: id, attribute values, price HTML). First line "Choose Color" (`Popup_Modern::choose_label()`, filter `lpr_variation_menu_label`). Only in-stock, purchasable values are listed; with one attribute each choice shows its price. `assets/js/variation-picker.js` greys out choices that do not go with the other menus, puts the matching variation ID on the Add button and shows its price (Pro: with the add-on saving), and focuses the first empty menu when the disabled Add is clicked. A variation with an "Any" value (Size: any) fits every value of that option (the most specific variation wins, like WooCommerce); its add sends the picked values as `lpr_attributes`, and `Popup_Modern::ajax_add_any_variation()` (on `wc_ajax_add_to_cart`, priority 5) adds it with them, since WooCommerce's AJAX add only sends the variation ID. Pro's cart drawer uses the same menus (Free 3.7.1+; older Free gets the old single menu).
 - Heading: "Goes well with %title%" (new default); a store still on the old stock heading gets the new wording; own headings and Heading & Description show as set.
 - Accent: Pro `checkout_bg`, else #1d2327 (filter `lpr_popup_accent_color`). CSS `assets/css/popup-modern.css`, scoped to `#lpr-modal.lpr-modal--modern`; phones (600px and less) get a bottom sheet.
+- Modern colors (3.7.1, Pro): "All Popup Colors" (`modern_color_settings`, under More options, hidden for the classic design) with `pm_bg_color`, `pm_text_color`, `pm_muted_color`, `pm_line_color`, `pm_check_color`, `pm_save_color`, `pm_add_color`, `pm_checkout_text`, `pm_cart_bg`, `pm_cart_text`, `pm_close_color`, `pm_nav_color`, `pm_image_bg`, `pm_overlay_color`. Empty = built-in look. `Popup_Modern::colors()` (filter `lpr_popup_modern_colors`) and `popup_style()` print them as `--lpr-pm-*` variables on `.lpr-pm`; the Add and accent ink is worked out against the popup background (lighter on dark popups). The overlay is an inline style on `lpr-popup-modern`. Pro hides the group with an older Free (no `popup_style`).
 - `modal.js`: modern branch (no Owl slider), arrows with scroll snap, Esc and a Tab loop, focus on the dialog and back on close, "Added" state plus a short notice, `admin-ajax lpr_popup_summary` refreshes subtotal and bar. dataLayer and analytics work as before (cards carry `data-lpr-product`).
 - Both designs: block product grids (Product Collection, Product Button) open the popup too: `modal.js` remembers the clicked `[data-product_id]` and listens for `wc-blocks_added_to_cart` (skipped when a jQuery `added_to_cart` came for the same add). Focus loop, Esc, `prefers-reduced-motion`, 44px touch targets on coarse pointers, a stale-response guard (`openToken`) and a single set of namespaced close handlers. `Popup_Modern::readable()` picks the text colour on the accent (white, #1d2327 or black, whichever reaches 4.5:1) and an "ink" shade for accent text on white; the drawer uses the same.
 - Tests: `ui/popup.js`.

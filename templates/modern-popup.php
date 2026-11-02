@@ -31,7 +31,7 @@ $show_cont   = !empty($template_data['show_continue_shopping']) && apply_filters
 $show_check  = !empty($template_data['show_go_check_out']) && apply_filters('lpr_go_checkout', true);
 $show_close  = !empty($template_data['show_close_icon']) && apply_filters('lpr_show_close_icon', true);
 ?>
-<div class="lpr-pm" style="<?php echo esc_attr(Popup_Modern::accent_style($this)); ?>">
+<div class="lpr-pm" style="<?php echo esc_attr(Popup_Modern::popup_style($this)); ?>">
 	<?php do_action('lpr_before_modal_content', $product_id, $recommended_products_id); ?>
 
 	<div class="lpr-pm__head">
